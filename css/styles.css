@@ -1,0 +1,356 @@
+/**
+ * styles.css
+ * Identidade visual: Rei da Prancheta
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --br-green: #009c3b;
+    --br-green-dark: #007a2d;
+    --br-green-light: #e6f5ea;
+    --br-yellow: #ffdf00;
+    --br-blue: #002776;
+    --bg-color: #f4f6f8; 
+    --card-bg: #ffffff;
+    --sidebar-bg: #1a252f;
+    --sidebar-text: #b8c2cc;
+    --sidebar-hover: #2c3e50;
+    --sidebar-active: #009c3b;
+    --text-main: #2c3e50;
+    --text-muted: #7f8c8d;
+    --border-radius: 12px;
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 12px 25px rgba(0, 0, 0, 0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; }
+
+/* 1. LOADING */
+.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100%; }
+.spinner { width: 50px; height: 50px; border: 5px solid var(--br-green-light); border-top-color: var(--br-green); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 2. MENU INICIAL */
+.menu-inicial { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 100vh; padding: 20px; background: linear-gradient(135deg, var(--sidebar-bg), #111820); }
+.menu-content { background-color: var(--card-bg); padding: 40px; border-radius: var(--border-radius); box-shadow: 0 20px 40px rgba(0,0,0,0.4); max-width: 800px; width: 100%; }
+.logo-container { text-align: center; margin-bottom: 15px; }
+.game-logo-large { max-width: 180px; height: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+.form-group { margin-bottom: 30px; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+.form-group input { width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s; }
+.form-group input:focus { border-color: var(--br-green); }
+.club-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 15px; }
+.club-select-card { background-color: #f9f9f9; border: 1px solid #e1e8ed; border-radius: 8px; padding: 20px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; position: relative; overflow: hidden; }
+.club-select-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: var(--br-green); }
+.club-select-card .club-color-bar { position: absolute; top: 0; left: 0; width: 100%; height: 6px; }
+.club-select-card h4 { margin-top: 5px; font-size: 18px; color: var(--text-main); margin-bottom: 10px; }
+.club-select-card p { font-size: 13px; margin-bottom: 5px; color: var(--text-muted); }
+
+/* Continue Card */
+.continue-game-card { background: linear-gradient(135deg, var(--br-green), var(--br-green-dark)); color: white; border-radius: var(--border-radius); padding: 20px; margin-bottom: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(0,156,59,0.3); transition: transform 0.2s; }
+.continue-game-card:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(0,156,59,0.4); }
+.continue-content h3 { margin-bottom: 5px; font-size: 20px; }
+.continue-content p { margin-bottom: 2px; font-size: 14px; color: var(--br-green-light); }
+.btn-delete-save { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.btn-delete-save:hover { background: #e74c3c; }
+.divider { border: none; border-top: 1px solid #e1e8ed; margin: 30px 0; }
+
+/* 3. LAYOUT MAIN */
+.app-layout { display: flex; width: 100%; min-height: 100vh; }
+.sidebar { width: 260px; background-color: var(--sidebar-bg); color: var(--sidebar-text); display: flex; flex-direction: column; box-shadow: 4px 0 10px rgba(0,0,0,0.1); z-index: 10; position: fixed; height: 100vh; }
+.sidebar-header { padding: 25px 20px; background-color: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; }
+.game-logo-small { max-width: 130px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+.manager-name { font-size: 13px; color: var(--br-green); font-weight: 600; }
+.nav-links { list-style: none; padding: 20px 0; flex-grow: 1; }
+.nav-links li { padding: 15px 20px; cursor: pointer; font-size: 15px; font-weight: 500; transition: background 0.2s; display: flex; gap: 12px; }
+.nav-links li:hover { background-color: var(--sidebar-hover); color: white; }
+.nav-links li.active { background-color: var(--sidebar-active); color: white; border-left: 4px solid var(--br-yellow); }
+.sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+.btn-save { width: 100%; background-color: var(--br-blue); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(0,39,118,0.3); }
+.btn-save:hover { background-color: #001f5c; transform: translateY(-2px); }
+.btn-save:disabled { background-color: #7f8c8d; cursor: not-allowed; box-shadow: none; transform: none; }
+
+.main-content { flex-grow: 1; padding: 30px; margin-left: 260px; max-width: calc(100% - 260px); }
+.main-content header { background: linear-gradient(135deg, var(--br-green), var(--br-green-dark)); color: white; padding: 25px 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+.date-info { background: rgba(255, 255, 255, 0.2); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px; }
+
+/* 4. DASHBOARD */
+.club-card { background-color: var(--card-bg); border-radius: var(--border-radius); padding: 25px; box-shadow: var(--shadow); margin-bottom: 25px; display: flex; gap: 25px; border-top: 6px solid var(--br-green); }
+.club-color-stripe { width: 12px; border-radius: 6px; }
+.club-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+.club-info h2 { font-size: 32px; margin-bottom: 20px; color: var(--text-main); display: flex; gap: 10px; }
+.club-stats { display: flex; gap: 15px; flex-wrap: wrap; }
+.stat-box { background-color: var(--bg-color); padding: 15px 20px; border-radius: 10px; flex: 1; border: 1px solid #e1e8ed; }
+.stat-box .label { display: block; font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+.stat-box .value { display: block; font-size: 20px; font-weight: 700; color: var(--text-main); }
+
+.prancheta { background-color: var(--card-bg); border-radius: var(--border-radius); padding: 25px; box-shadow: var(--shadow); }
+.prancheta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--bg-color); }
+table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+th, td { padding: 15px 20px; text-align: left; }
+th { color: var(--text-muted); font-weight: 600; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #e1e8ed; }
+tbody tr { background-color: var(--card-bg); box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-radius: 8px; transition: all 0.2s ease; }
+tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01); }
+
+.posicao-badge { display: inline-flex; align-items: center; justify-content: center; width: 45px; height: 28px; border-radius: 6px; font-size: 12px; font-weight: 800; color: white; }
+.pos-ATA { background-color: #e74c3c; } 
+.pos-MEI { background-color: #3498db; } 
+.pos-VOL { background-color: #2980b9; } 
+.pos-ZAG { background-color: #f1c40f; color: #8e44ad; } 
+.pos-LAT { background-color: #e67e22; } 
+.pos-GOL { background-color: #9b59b6; } 
+.overall { font-weight: 800; color: var(--br-green-dark); font-size: 16px; }
+.placeholder-view { padding: 80px 20px; text-align: center; background: var(--card-bg); border-radius: var(--border-radius); color: var(--text-muted); border: 2px dashed #ccc; }
+
+/* 5. TÁTICAS E ESCALAÇÃO (DRAG & DROP) */
+.tactics-layout { display: flex; gap: 25px; align-items: flex-start; height: 600px; }
+.bench-area { width: 300px; background-color: var(--card-bg); border-radius: var(--border-radius); padding: 20px; box-shadow: var(--shadow); height: 100%; display: flex; flex-direction: column; }
+.bench-area h3 { font-size: 18px; color: var(--text-main); margin-bottom: 5px; }
+.bench-area .hint { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e1e8ed; }
+.bench-list { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+.bench-item { display: flex; align-items: center; background-color: var(--bg-color); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; cursor: grab; transition: transform 0.2s; border: 1px solid #e1e8ed; }
+.bench-item:active { cursor: grabbing; }
+.bench-item:hover { background-color: #e8f0fe; transform: translateX(5px); }
+.bench-item .jogador-nome { flex-grow: 1; margin-left: 10px; font-weight: 600; font-size: 14px; }
+.dragging { opacity: 0.5; }
+
+.pitch-area { flex-grow: 1; height: 100%; background-color: var(--card-bg); border-radius: var(--border-radius); padding: 20px; box-shadow: var(--shadow); }
+.pitch-container { width: 100%; height: 100%; background-color: #27ae60; background-image: linear-gradient(0deg, rgba(0,0,0,0.05) 50%, transparent 50%); background-size: 100% 40px; border-radius: 8px; border: 4px solid white; position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); overflow: hidden; }
+
+/* Direção do Ataque */
+.pitch-direction { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.3); font-size: 20px; font-weight: 800; letter-spacing: 5px; pointer-events: none; }
+
+.pitch-line { position: absolute; background-color: rgba(255, 255, 255, 0.7); }
+.pitch-center-line { width: 2px; height: 100%; left: 50%; top: 0; transform: translateX(-50%); }
+.pitch-circle { position: absolute; width: 120px; height: 120px; border: 2px solid rgba(255, 255, 255, 0.7); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.pitch-box { position: absolute; width: 15%; height: 40%; border: 2px solid rgba(255, 255, 255, 0.7); top: 50%; transform: translateY(-50%); }
+.box-left { left: 0; border-left: none; }
+.box-right { right: 0; border-right: none; }
+.pitch-info { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.6); font-size: 24px; font-weight: bold; pointer-events: none; }
+.pitch-counter { position: absolute; bottom: 10px; right: 15px; color: white; font-size: 12px; font-weight: 600; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 10px; }
+
+.player-token { position: absolute; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; cursor: grab; box-shadow: 0 4px 8px rgba(0,0,0,0.5); transform: translate(-50%, -50%); z-index: 5; border: 2px solid white; transition: transform 0.1s; }
+.player-token:hover { transform: translate(-50%, -50%) scale(1.1); z-index: 10; }
+.player-token:active { cursor: grabbing; }
+.token-overall { position: relative; z-index: 2; }
+.token-name { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); color: white; font-size: 10px; font-weight: 700; background-color: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
+
+
+/* =========================================
+   6. NOVO: MOTOR DE PARTIDA E CALENDÁRIO
+========================================= */
+
+/* Próximo Jogo Panel */
+.next-match-panel {
+    background: linear-gradient(135deg, #1a252f, #2c3e50);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--shadow);
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+.next-match-panel.finished-season {
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+}
+.match-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.match-info .badge {
+    background-color: var(--br-yellow);
+    color: #333;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    align-self: flex-start;
+}
+.match-info h2 {
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.match-info .vs {
+    font-size: 20px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 400;
+}
+.match-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.btn-play-quick, .btn-play-full {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-play-quick {
+    background-color: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+.btn-play-quick:hover {
+    background-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+.btn-play-full {
+    background-color: var(--br-green);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 156, 59, 0.4);
+}
+.btn-play-full:hover {
+    background-color: var(--br-green-dark);
+    transform: translateY(-2px);
+}
+
+
+/* Placar da Partida Ao Vivo */
+.scoreboard {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    box-shadow: var(--shadow);
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+.team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 200px;
+}
+.team-color {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    transition: transform 0.2s;
+}
+.team-color:hover {
+    transform: scale(1.05);
+}
+.team h3 {
+    font-size: 24px;
+    color: var(--text-main);
+    text-align: center;
+}
+.score-display {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--bg-color);
+    padding: 20px 40px;
+    border-radius: 16px;
+    border: 2px solid #e1e8ed;
+}
+.score {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--br-green-dark);
+}
+.score-display .divider {
+    font-size: 24px;
+    color: var(--text-muted);
+}
+
+/* Tempo da Partida */
+.match-time-bar {
+    background-color: #e1e8ed;
+    height: 30px;
+    border-radius: 15px;
+    position: relative;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+.time-progress {
+    background-color: var(--br-yellow);
+    height: 100%;
+    transition: width 0.15s linear;
+}
+.time-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 800;
+    color: #333;
+}
+
+/* Narração */
+.commentary-box {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+.commentary-box h3 {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1e8ed;
+}
+.commentary-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.commentary-item {
+    background-color: var(--bg-color);
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    border-left: 4px solid var(--br-blue);
+    animation: fadeIn 0.3s ease;
+}
+.commentary-item.goal {
+    border-left-color: var(--br-green);
+    background-color: var(--br-green-light);
+    font-weight: bold;
+    font-size: 16px;
+}
+.commentary-item.end {
+    border-left-color: #333;
+    text-align: center;
+    font-weight: bold;
+    background-color: #e1e8ed;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.post-match {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}

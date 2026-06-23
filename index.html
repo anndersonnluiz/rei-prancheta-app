@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="pt-BR" ng-app="ReiDaPranchetaApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rei da Prancheta</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="js/app.js"></script>
+</head>
+<body ng-controller="DashboardController">
+
+    <!-- Tela Loading -->
+    <div class="loading-screen" ng-if="telaAtual === 'loading'" ng-cloak>
+        <div class="spinner"></div>
+        <h2>Carregando Base de Dados... ⚽</h2>
+    </div>
+
+    <!-- Tela Menu Inicial -->
+    <div class="menu-inicial" ng-if="telaAtual === 'menu_inicial'" ng-cloak>
+        <div class="menu-content">
+            <div class="logo-container">
+                <img src="assets/logo.png" alt="Rei da Prancheta Logo" class="game-logo-large">
+            </div>
+            
+            <p style="text-align: center; margin-bottom: 30px; color: var(--text-muted);">Seja bem-vindo, Professor. Configure seu novo jogo ou continue de onde parou.</p>
+            
+            <div class="continue-game-card" ng-if="existeSave" ng-click="carregarJogo()">
+                <div class="continue-content">
+                    <h3>▶ Continuar Jogo Salvo</h3>
+                    <p>Treinador: <strong>{{ saveInfo.nomeTreinador }}</strong></p>
+                    <p>Salvo em: {{ saveInfo.dataSave }}</p>
+                </div>
+                <button class="btn-delete-save" ng-click="apagarSave($event)">🗑️ Apagar</button>
+            </div>
+
+            <hr ng-if="existeSave" class="divider">
+
+            <div class="form-group">
+                <label>Nome do Treinador (Para novo jogo):</label>
+                <input type="text" ng-model="dados.nomeTreinador" placeholder="Seu nome (ex: Telê Santana)">
+            </div>
+
+            <h3 style="color: var(--text-main); margin-bottom: 10px;">Iniciar Novo Jogo:</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Atenção: Iniciar um novo jogo apagará qualquer save anterior.</p>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;" ng-init="filtroDivisaoMenu = 'A'">
+                <button style="padding: 8px 15px; border-radius: 20px; border: 1px solid #ccc; cursor: pointer; font-weight: bold; background: {{filtroDivisaoMenu === '' ? 'var(--primary-color)' : 'white'}}; color: {{filtroDivisaoMenu === '' ? 'white' : '#333'}};" ng-click="filtroDivisaoMenu = ''">Todos</button>
+                <button style="padding: 8px 15px; border-radius: 20px; border: 1px solid #ccc; cursor: pointer; font-weight: bold; background: {{filtroDivisaoMenu === 'A' ? 'var(--br-green)' : 'white'}}; color: {{filtroDivisaoMenu === 'A' ? 'white' : '#333'}};" ng-click="filtroDivisaoMenu = 'A'">Série A</button>
+                <button style="padding: 8px 15px; border-radius: 20px; border: 1px solid #ccc; cursor: pointer; font-weight: bold; background: {{filtroDivisaoMenu === 'B' ? 'var(--br-blue)' : 'white'}}; color: {{filtroDivisaoMenu === 'B' ? 'white' : '#333'}};" ng-click="filtroDivisaoMenu = 'B'">Série B</button>
+                <button style="padding: 8px 15px; border-radius: 20px; border: 1px solid #ccc; cursor: pointer; font-weight: bold; background: {{filtroDivisaoMenu === 'C' ? '#f39c12' : 'white'}}; color: {{filtroDivisaoMenu === 'C' ? 'white' : '#333'}};" ng-click="filtroDivisaoMenu = 'C'">Série C</button>
+                <button style="padding: 8px 15px; border-radius: 20px; border: 1px solid #ccc; cursor: pointer; font-weight: bold; background: {{filtroDivisaoMenu === 'D' ? '#e74c3c' : 'white'}}; color: {{filtroDivisaoMenu === 'D' ? 'white' : '#333'}};" ng-click="filtroDivisaoMenu = 'D'">Série D</button>
+            </div>
+
+            <div class="club-grid">
+                <div class="club-select-card" ng-repeat="clube in clubes | filter: (filtroDivisaoMenu ? {divisao: filtroDivisaoMenu} : undefined):true" ng-click="iniciarNovoJogo(clube)">
+                    <div class="club-color-bar" ng-style="{ 'background-color': clube.cores[0] }"></div>
+                    <h4>{{ clube.nome }} <span style="font-size: 12px; color: var(--text-muted);">{{clube.sigla}}</span></h4>
+                    <p>Orçamento: {{ formatarMoeda(clube.orcamento) }}</p>
+                    <p>Estádio: {{ clube.estadio.nome }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout Principal do Jogo -->
+    <div class="app-layout" ng-if="telaAtual !== 'loading' && telaAtual !== 'menu_inicial'" ng-cloak>
+        
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo.png" alt="Rei da Prancheta" class="game-logo-small">
+                <div class="manager-name">👤 Prof. {{ dados.nomeTreinador }}</div>
+            </div>
+            
+            <ul class="nav-links">
+                <li ng-class="{'active': telaAtual === 'dashboard'}" ng-click="mudarTela('dashboard')">📊 Visão Geral</li>
+                <li ng-class="{'active': telaAtual === 'mensagens'}" ng-click="mudarTela('mensagens')">
+                    ✉️ Mensagens 
+                    <span class="badge" style="background: var(--br-green); font-size: 10px; margin-left: 5px;" ng-if="qtdMensagensNaoLidas() > 0">{{qtdMensagensNaoLidas()}}</span>
+                </li>
+                <li ng-class="{'active': telaAtual === 'calendario'}" ng-click="mudarTela('calendario')">📅 Calendário</li>
+                <li ng-class="{'active': telaAtual === 'tabela'}" ng-click="mudarTela('tabela')">🏆 Classificação</li>
+                <li ng-class="{'active': telaAtual === 'libertadores'}" ng-click="mudarTela('libertadores')" ng-if="libertadores">🌎 Libertadores</li>
+                <li ng-class="{'active': telaAtual === 'sulamericana'}" ng-click="mudarTela('sulamericana')" ng-if="sulAmericana">🏆 Sul-Americana</li>
+                <li ng-class="{'active': telaAtual === 'elenco'}" ng-click="mudarTela('elenco')">👕 Meu Elenco</li>
+                <li ng-class="{'active': telaAtual === 'medico'}" ng-click="mudarTela('medico')">🚑 Dep. Médico</li>
+                <li ng-class="{'active': telaAtual === 'taticas'}" ng-click="mudarTela('taticas')">⚽ Táticas / Escalação</li>
+                <li ng-class="{'active': telaAtual === 'mercado'}" ng-click="mudarTela('mercado')">🔄 Mercado da Bola</li>
+                <li ng-class="{'active': telaAtual === 'financas'}" ng-click="mudarTela('financas')">💰 Finanças</li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button class="btn-save" ng-click="salvarJogo()" ng-disabled="partidaEmAndamento" style="margin-bottom: 10px;">💾 Salvar Jogo</button>
+                <button class="btn" style="width: 100%; text-align: left; padding: 10px; background: transparent; color: var(--text-muted); border: 1px solid #ddd; border-radius: 6px; cursor: pointer;" ng-click="alternarSom()">
+                    {{ somAtivado ? '🔊 Som Ativado' : '🔇 Som Desativado' }}
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <h1 style="text-transform: capitalize;">{{ telaAtual.replace('_', ' ') }}</h1>
+                <div class="date-info">Temporada {{dados.anoAtual}}</div>
+            </header>
+
+            <!-- TELA: COLETIVA DE IMPRENSA (FASE 17) -->
+            <div ng-if="telaAtual === 'coletiva'">
+                <div class="card" style="margin-bottom: 20px; background: linear-gradient(135deg, #1abc9c, #16a085); color: white; text-align: center; padding: 40px 20px;">
+                    <h2 style="font-size: 28px; margin-bottom: 10px;">🎤 Coletiva de Imprensa Pré-Jogo</h2>
+                    <p style="opacity: 0.9; font-size: 16px;">Os jornalistas aguardam a sua palavra sobre a partida que se aproxima.</p>
+                </div>
+
+                <div class="card" style="padding: 30px; border-left: 5px solid #1abc9c;">
+                    <div style="display: flex; gap: 15px; margin-bottom: 30px;">
+                        <div style="font-size: 40px;">👨‍💼</div>
+                        <div>
+                            <h3 style="color: var(--text-dark); margin-bottom: 5px;">Repórter do Globo Esporte</h3>
+                            <p style="font-size: 18px; color: var(--text-main); font-style: italic;">"{{perguntaColetiva}}"</p>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-bottom: 15px; color: var(--text-muted);">Como você quer responder?</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button ng-repeat="opcao in opcoesColetiva" 
+                                style="text-align: left; padding: 15px 20px; font-size: 16px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; transition: 0.2s;"
+                                onmouseover="this.style.background='#eef2f5'; this.style.borderColor='#1abc9c';" 
+                                onmouseout="this.style.background='#f8f9fa'; this.style.borderColor='#ddd';"
+                                ng-click="responderColetiva(opcao)">
+                            {{opcao.texto}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: CALENDÁRIO (FASE 17) -->
+            <div ng-if="telaAtual === 'calendario'">
+                <div class="card" style="margin-bottom: 20px; padding: 20px; background: linear-gradient(to right, #2980b9, #2c3e50); color: white;">
+                    <h2 style="display: flex; align-items: center; gap: 10px;">📅 Calendário do Time</h2>
+                    <p style="opacity: 0.8; margin-top: 5px;">Acompanhe todos os jogos da temporada, resultados e dias de descanso. Dias livres recuperam o físico dos jogadores.</p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: 0 auto;">
+                    <div ng-repeat="(indice, dia) in calendarioGeral" 
+                         style="background: white; border-radius: 8px; box-shadow: var(--shadow); padding: 15px 20px; border-left: 5px solid {{indice == diaAtual ? 'var(--br-yellow)' : (indice < diaAtual ? '#ddd' : 'var(--br-green)')}}; opacity: {{indice < diaAtual ? '0.7' : '1'}}; display: flex; align-items: center; justify-content: space-between;">
+                        
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; font-weight: bold; color: var(--text-muted); margin-bottom: 5px;">
+                                Dia {{indice + 1}} <span style="font-weight: normal; font-size: 12px; margin-left: 5px;">({{dia.titulo}})</span>
+                            </div>
+                            <div ng-if="indice == diaAtual" style="background: var(--br-yellow); color: #333; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; display: inline-block;">HOJE</div>
+                        </div>
+                        
+                        <div style="flex: 2; text-align: center;">
+                            <div ng-if="obterMeuJogoNoDia(indice)" style="font-size: 16px; color: var(--text-dark); display: flex; align-items: center; justify-content: center; gap: 15px;">
+                                <span style="font-weight: {{obterMeuJogoNoDia(indice).mandante.id === clubeAtual.id ? 'bold' : 'normal'}}; width: 40%; text-align: right;">{{obterMeuJogoNoDia(indice).mandante.nome}}</span>
+                                <strong style="background: #f4f6f8; padding: 5px 15px; border-radius: 6px; white-space: nowrap;">
+                                    {{indice < diaAtual ? (obterMeuJogoNoDia(indice).golsMandante + ' x ' + obterMeuJogoNoDia(indice).golsVisitante) : 'x'}}
+                                </strong>
+                                <span style="font-weight: {{obterMeuJogoNoDia(indice).visitante.id === clubeAtual.id ? 'bold' : 'normal'}}; width: 40%; text-align: left;">{{obterMeuJogoNoDia(indice).visitante.nome}}</span>
+                            </div>
+
+                            <div ng-if="!obterMeuJogoNoDia(indice)" style="color: var(--text-muted); font-style: italic;">
+                                Dia de Descanso / Treino Livre
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; text-align: right;">
+                            <span ng-if="!obterMeuJogoNoDia(indice)" style="font-size: 12px; font-weight: bold; color: var(--br-green); background: #e8f5e9; padding: 4px 8px; border-radius: 4px;">
+                                +15% Físico
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: MENSAGENS (FASE 17) -->
+            <div ng-if="telaAtual === 'mensagens'">
+                <div class="card" style="margin-bottom: 20px; padding: 20px; background: linear-gradient(to right, #2c3e50, #34495e); color: white;">
+                    <h2 style="display: flex; align-items: center; gap: 10px;">✉️ Comunicações Internas</h2>
+                    <p style="opacity: 0.8; margin-top: 5px;">Caixa de entrada exclusiva para assuntos do clube (Diretoria, Médicos, Finanças, etc).</p>
+                </div>
+
+                <div ng-if="!caixaEntrada || caixaEntrada.length === 0" style="text-align: center; padding: 50px; background: white; border-radius: 8px; box-shadow: var(--shadow);">
+                    <h3 style="color: var(--text-muted);">Sua caixa de entrada está vazia.</h3>
+                    <p style="color: var(--text-muted); margin-top: 10px;">Continue avançando os dias no calendário para receber novidades.</p>
+                </div>
+
+                <div ng-if="caixaEntrada.length > 0" style="display: flex; gap: 20px;">
+                    <!-- Lista de Mensagens -->
+                    <div style="flex: 1; background: white; border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; max-height: 600px; overflow-y: auto;">
+                        <div ng-repeat="msg in caixaEntrada track by msg.id" 
+                             style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s;"
+                             ng-style="{'background-color': mensagemAberta.id === msg.id ? '#f0f8ff' : (msg.lida ? 'white' : '#fcf3cf'), 'border-left': '4px solid ' + (msg.lida ? 'transparent' : 'var(--br-green)')}"
+                             ng-click="abrirMensagem(msg)">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px;">
+                                <strong style="font-size: 14px; color: var(--text-dark);">{{msg.remetente}}</strong>
+                                <span style="font-size: 11px; color: var(--text-muted);">{{msg.dataStr}}</span>
+                            </div>
+                            <div style="font-size: 16px; font-weight: {{msg.lida ? 'normal' : 'bold'}}; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{msg.titulo}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mensagem Aberta -->
+                    <div style="flex: 2; background: white; border-radius: 8px; box-shadow: var(--shadow); padding: 25px; min-height: 400px;">
+                        <div ng-if="!mensagemAberta" style="height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                            Selecione uma mensagem para ler.
+                        </div>
+                        <div ng-if="mensagemAberta">
+                            <div style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 15px;">
+                                <h2 style="font-size: 24px; color: var(--text-dark); margin-bottom: 10px;">{{mensagemAberta.titulo}}</h2>
+                                <div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--text-muted);">
+                                    <span><strong>De:</strong> {{mensagemAberta.remetente}}</span>
+                                    <span><strong>Data:</strong> {{mensagemAberta.dataStr}}</span>
+                                </div>
+                            </div>
+                            <div style="font-size: 16px; line-height: 1.6; color: var(--text-main); white-space: pre-wrap;">{{mensagemAberta.conteudo || mensagemAberta.mensagem}}</div>
+                            
+                            <div ng-if="mensagemAberta.tipo === 'oferta_compra' && !mensagemAberta.respondida" style="margin-top: 30px; display: flex; gap: 15px; border-top: 1px solid #eee; padding-top: 20px;">
+                                <button class="btn btn-success" style="background: var(--br-green); color: white; padding: 10px 20px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; flex: 1;" ng-click="responderProposta(mensagemAberta, true)">✅ Aceitar ({{formatarMoeda(mensagemAberta.valorOferta)}})</button>
+                                <button class="btn btn-danger" style="background: #e74c3c; color: white; padding: 10px 20px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; flex: 1;" ng-click="responderProposta(mensagemAberta, false)">❌ Recusar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: DASHBOARD -->
+            <div ng-if="telaAtual === 'dashboard'">
+                
+                <!-- PAINEL: PRÓXIMO JOGO -->
+                <div class="next-match-panel" ng-if="calendarioGeral[diaAtual]">
+                    <div class="match-info">
+                        <span class="badge">{{ calendarioGeral[diaAtual].titulo }}</span>
+                        <div ng-if="obterMeuJogoHoje()" style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">
+                            <!-- Time mandante -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                <div style="width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); box-sizing: border-box;"
+                                     ng-style="{'background-color': corDoTime(obterMeuJogoHoje().mandante, 0), 'color': corDoTime(obterMeuJogoHoje().mandante, 1), 'border': '2px solid ' + corDoTime(obterMeuJogoHoje().mandante, 1)}">
+                                    {{ obterMeuJogoHoje().mandante.sigla }}
+                                </div>
+                                <span style="font-weight: bold; font-size: 14px;">{{ obterMeuJogoHoje().mandante.nome }}</span>
+                            </div>
+                            <span class="vs">X</span>
+                            <!-- Time visitante -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                <div style="width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); box-sizing: border-box;"
+                                     ng-style="{'background-color': corDoTime(obterMeuJogoHoje().visitante, 0), 'color': corDoTime(obterMeuJogoHoje().visitante, 1), 'border': '2px solid ' + corDoTime(obterMeuJogoHoje().visitante, 1)}">
+                                    {{ obterMeuJogoHoje().visitante.sigla }}
+                                </div>
+                                <span style="font-weight: bold; font-size: 14px;">{{ obterMeuJogoHoje().visitante.nome }}</span>
+                            </div>
+                        </div>
+                        <h2 ng-if="!obterMeuJogoHoje()">
+                            <span class="team-name" style="color: #888;">Folga</span>
+                            <span class="vs" style="font-size: 14px; margin: 0 15px;">(Sem jogo hoje)</span>
+                            <span class="team-name" style="color: #888;">Treino</span>
+                        </h2>
+                    </div>
+                    <div class="match-actions">
+                        <button class="btn-play-full" ng-click="prepararPartida('completo')" ng-if="obterMeuJogoHoje()">▶ Acompanhar Partida 3D</button>
+                        <button class="btn-play-quick" ng-click="prepararPartida('rapido')" ng-if="obterMeuJogoHoje()">⚡ Resultado Rápido</button>
+                        <button class="btn-play-full" style="background: var(--text-muted); border-bottom: 4px solid #555;" ng-click="avancarDiaLivre()" ng-if="!obterMeuJogoHoje()">⏩ Avançar Dia</button>
+                    </div>
+                </div>
+
+                <div class="next-match-panel finished-season" ng-if="!calendarioGeral[diaAtual]">
+                    <h2>🎉 Fim da Temporada!</h2>
+                    <p>Todos os jogos foram concluídos.</p>
+                    <button style="margin-top: 20px; padding: 12px 25px; background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(243, 156, 18, 0.6)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(243, 156, 18, 0.4)';" ng-click="mudarTela('cerimonia')">🏆 Visualizar Cerimônia</button>
+                </div>
+                <!-- Detalhes do Clube -->
+                <div class="club-card" ng-if="clubeAtual">
+                    <div class="club-color-stripe" ng-style="{ 'background-color': clubeAtual.cores[0] }"></div>
+                    <div class="club-info">
+                        <h2>{{ clubeAtual.nome }} <span style="color: var(--text-muted); font-size: 20px;">{{ clubeAtual.sigla }}</span></h2>
+                        <div class="club-stats">
+                            <div class="stat-box" style="border-left: 4px solid var(--br-green);">
+                                <span class="label">Orçamento</span>
+                                <span class="value" style="color: var(--br-green-dark);">{{ formatarMoeda(clubeAtual.orcamento) }}</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="label">Estádio</span>
+                                <span class="value">{{ clubeAtual.estadio.nome }}</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="label">Capacidade</span>
+                                <span class="value">{{ clubeAtual.estadio.capacidade | number }}</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="label">Reputação</span>
+                                <span class="value">⭐ {{ clubeAtual.reputacao }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="clubeAtual.metaDescricao" style="background: linear-gradient(135deg, var(--br-blue), #2c3e50); color: white; padding: 15px 20px; border-radius: 8px; margin-top: -15px; margin-bottom: 30px; box-shadow: var(--shadow); position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <span style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; display: block; margin-bottom: 5px;">🎯 Objetivo da Diretoria para a Temporada</span>
+                        <strong style="font-size: 18px;">{{clubeAtual.metaDescricao}}</strong>
+                    </div>
+                    <div style="font-size: 32px; opacity: 0.5;">📋</div>
+                </div>
+
+                <!-- FEED DE NOTÍCIAS (FASE 18) -->
+                <div class="news-feed" ng-if="clubeAtual" style="margin-top: 30px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                        <h3 style="color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 10px;">📰 Notícias do Mundo do Futebol</h3>
+                        <span style="font-size: 12px; color: var(--text-muted); background: #f1f2f6; padding: 4px 10px; border-radius: 20px;">Feed Atualizado</span>
+                    </div>
+                    
+                    <div ng-if="!noticiasFeed || noticiasFeed.length === 0" style="text-align: center; padding: 40px; background: white; border-radius: 8px; box-shadow: var(--shadow);">
+                        <h4 style="color: var(--text-muted); margin: 0;">O mundo do futebol está calmo hoje.</h4>
+                        <p style="color: #999; font-size: 14px; margin-top: 5px;">Avançe os dias para ver repercussões e novidades do campeonato.</p>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div ng-repeat="noticia in noticiasFeed track by noticia.id" 
+                             style="background: white; border-radius: 8px; box-shadow: var(--shadow); padding: 20px; border-left: 5px solid {{noticia.tipo === 'imprensa' ? '#3498db' : (noticia.tipo === 'transferencia' ? '#9b59b6' : '#f1c40f')}};">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span style="font-size: 12px; font-weight: bold; color: var(--text-muted); text-transform: uppercase;">{{noticia.remetente}}</span>
+                                <span style="font-size: 12px; color: #aaa;">{{noticia.dataStr}}</span>
+                            </div>
+                            <h4 style="color: var(--text-dark); margin-bottom: 8px; font-size: 18px;">{{noticia.titulo}}</h4>
+                            <p style="color: var(--text-main); font-size: 15px; line-height: 1.5; margin: 0;">{{noticia.conteudo}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: MEU ELENCO -->
+            <div ng-if="telaAtual === 'elenco'">
+                <div class="card" style="padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: var(--text-dark);">Meu Elenco</h3>
+                        <span style="background: var(--bg-light); padding: 8px 15px; border-radius: 6px; font-weight: bold; border: 1px solid #ddd;">Total: {{elencoAtual.length}} jogadores</span>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="tabela-classificacao">
+                            <thead>
+                                <tr>
+                                    <th>Posição</th>
+                                    <th>Nome</th>
+                                    <th>Idade</th>
+                                    <th>Moral</th>
+                                    <th>Overall</th>
+                                    <th>Físico</th>
+                                    <th>Gols (Temp)</th>
+                                    <th>Salário Mensal</th>
+                                    <th>Contrato</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="jogador in elencoAtual">
+                                    <td><span class="posicao-badge pos-{{ jogador.posicao }}">{{ jogador.posicao }}</span></td>
+                                    <td>
+                                        <strong>{{ jogador.nome }}</strong>
+                                        <span ng-if="jogador.lesionado" title="Lesionado ({{jogador.diasLesao}} dias restantes)" style="font-size: 14px; cursor: help;">🚑<span style="font-size: 10px; color: #e74c3c;">{{jogador.diasLesao}}d</span></span>
+                                        <span ng-if="jogador.suspenso" title="Suspenso" style="font-size: 14px;">🟥</span>
+                                        <span ng-if="!jogador.suspenso && jogador.cartoesAmarelos > 0" title="{{jogador.cartoesAmarelos}} Cartões Amarelos" style="font-size: 14px;">
+                                            <span ng-repeat="i in [].constructor(jogador.cartoesAmarelos) track by $index">🟨</span>
+                                        </span>
+                                    </td>
+                                    <td>{{ jogador.idade }}</td>
+                                    <td>
+                                        <div style="font-weight: bold;" ng-style="{'color': jogador.moral < 50 ? '#e74c3c' : (jogador.moral > 80 ? '#2ecc71' : '#f39c12')}">
+                                            {{ jogador.moral || 100 }}%
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="background: var(--br-blue); color: white; padding: 2px 8px; border-radius: 4px; display: inline-block; font-weight: bold;">
+                                            {{ calcularOverall(jogador) }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="width: 80px; background: #e1e8ed; height: 8px; border-radius: 4px; overflow: hidden; display: inline-block; vertical-align: middle;">
+                                            <div style="height: 100%; background: {{jogador.condicaoFisica > 60 ? 'var(--br-green)' : (jogador.condicaoFisica > 30 ? '#f39c12' : '#e74c3c')}}; width: {{jogador.condicaoFisica}}%;"></div>
+                                        </div>
+                                        <span style="font-size: 12px; margin-left: 5px;">{{Math.floor(jogador.condicaoFisica)}}%</span>
+                                    </td>
+                                    <td>{{ jogador.golsTemporada || 0 }}</td>
+                                    <td>{{ formatarMoeda(jogador.salario) }}</td>
+                                    <td><span style="font-weight: bold; color: {{jogador.anosContrato <= 1 ? '#e74c3c' : 'var(--text-main)'}};">{{jogador.anosContrato || 1}} Ano(s)</span></td>
+                                    <td style="display: flex; gap: 5px;">
+                                        <button class="btn btn-primary" style="background: var(--br-blue); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;" ng-click="iniciarNegociacao(jogador, true)">Renovar</button>
+                                        <button ng-disabled="jogador.emCampo" class="btn btn-danger" style="background: {{jogador.emCampo ? '#ccc' : '#e74c3c'}}; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: {{jogador.emCampo ? 'not-allowed' : 'pointer'}}; font-size: 11px; font-weight: bold;" ng-click="venderJogador(jogador)">Vender</button>
+                                    </td>
+                                </tr>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA DE DEPARTAMENTO MÉDICO -->
+            <div ng-show="telaAtual === 'medico'" style="padding: 20px;">
+                <div style="background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 30px;">
+                    <div style="background: var(--br-green); padding: 20px; color: white;">
+                        <h2 style="margin: 0;">🚑 Departamento Médico</h2>
+                        <p style="margin: 5px 0 0 0; opacity: 0.9;">Gerencie as instalações médicas para acelerar a recuperação de atletas lesionados.</p>
+                    </div>
+                    <div style="padding: 30px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                            <div style="border: 1px solid #eee; padding: 20px; border-radius: 8px;">
+                                <h3>Estrutura Atual: Nível {{ clubeAtual.nivelMedico || 1 }}</h3>
+                                <p style="color: var(--text-muted);">
+                                    Nível 1: Recuperação lenta (+0 bônus)<br>
+                                    Nível 2: Recuperação intermediária (Acelera 30%)<br>
+                                    Nível 3: Centro de Excelência (Acelera 60%)
+                                </p>
+                                
+                                <div ng-if="(clubeAtual.nivelMedico || 1) === 1" style="margin-top: 20px;">
+                                    <button style="background: var(--br-green); color: white; padding: 12px 20px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" ng-click="melhorarDM(2, 5000000)">🚀 Melhorar para Nível 2 (R$ 5.000.000)</button>
+                                </div>
+                                <div ng-if="clubeAtual.nivelMedico === 2" style="margin-top: 20px;">
+                                    <button style="background: var(--br-green); color: white; padding: 12px 20px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" ng-click="melhorarDM(3, 15000000)">🚀 Melhorar para Nível 3 (R$ 15.000.000)</button>
+                                </div>
+                                <div ng-if="clubeAtual.nivelMedico === 3" style="margin-top: 20px; background: #e8f5e9; padding: 15px; border-radius: 8px; text-align: center;">
+                                    <p style="color: var(--br-green); font-weight: bold; margin: 0;">✨ Seu DM já está no nível máximo (Padrão FIFA)!</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3>Jogadores Lesionados</h3>
+                                <div ng-if="(elencoAtual | filter:{lesionado:true}).length === 0" style="color: var(--text-muted); font-style: italic;">
+                                    Nenhum jogador no DM no momento.
+                                </div>
+                                <div ng-repeat="j in elencoAtual | filter:{lesionado:true}" style="background: #fdf2f2; border: 1px solid #f5c6cb; border-radius: 6px; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between;">
+                                    <strong style="color: #721c24;">{{j.nome}}</strong>
+                                    <span style="color: #721c24;">Retorna em {{j.diasLesao}} dia(s)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: TÁTICAS -->
+            <div ng-if="telaAtual === 'taticas'">
+                <div ng-if="partidaPausada" style="background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: #856404; margin-bottom: 10px;">Ajustando Tática durante o Jogo</h3>
+                    <p style="color: #856404; margin-bottom: 15px;">Atenção: Ao arrastar um novo jogador pro campo, conta como substituição. (Restam {{5 - substituicoesFeitas}}).</p>
+                    <button class="btn btn-success" ng-click="retomarPartida()" style="background: var(--br-green); color: white; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">▶ Pronto! Retomar Partida</button>
+                </div>
+                <div class="tactics-layout">
+                    <div class="bench-area" droppable-area="banco">
+                    <h3>Banco de Reservas</h3>
+
+                    <!-- FASE 7: Formações Automáticas -->
+                    <div class="formation-selector" style="margin-bottom: 15px;">
+                        <label style="font-size: 12px; font-weight: bold; color: var(--text-muted);">FORMAÇÃO RÁPIDA:</label>
+                        <div style="display: flex; gap: 5px; margin-top: 5px;">
+                            <select ng-model="formacaoEscolhida" style="flex-grow: 1; padding: 5px; border-radius: 4px;">
+                                <option value="4-3-3">4-3-3 Ofensivo</option>
+                                <option value="4-4-2">4-4-2 Clássico</option>
+                                <option value="3-5-2">3-5-2 Alas</option>
+                            </select>
+                            <button ng-click="aplicarFormacao(formacaoEscolhida)" style="padding: 5px 10px; background: var(--br-green); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Aplicar</button>
+                        </div>
+                    </div>
+
+                    <p class="hint">Arraste para o campo 👉</p>
+                    <div class="bench-list">
+                        <div class="bench-item" ng-repeat="jogador in elencoAtual | filter:{emCampo: false}" draggable-player style="display: flex; align-items: center; opacity: {{jogador.lesionado || jogador.suspenso ? '0.5' : '1'}};">
+                            <span class="posicao-badge pos-{{ jogador.posicao }}">{{ jogador.posicao }}</span>
+                            <div style="flex-grow: 1; display: flex; flex-direction: column; margin-left: 10px;">
+                                <span class="jogador-nome" style="margin-left: 0;">
+                                    {{ jogador.nome }}
+                                    <span ng-if="jogador.lesionado" title="Lesionado" style="font-size: 10px;">🚑</span>
+                                    <span ng-if="jogador.suspenso" title="Suspenso" style="font-size: 10px;">🟥</span>
+                                </span>
+                                <div style="width: 80%; background: #e1e8ed; height: 4px; border-radius: 2px; margin-top: 3px;">
+                                    <div style="height: 100%; background: {{jogador.condicaoFisica > 60 ? 'var(--br-green)' : (jogador.condicaoFisica > 30 ? '#f39c12' : '#e74c3c')}}; width: {{jogador.condicaoFisica}}%; border-radius: 2px;"></div>
+                                </div>
+                            </div>
+                            <span class="overall" style="margin-right: 10px;">{{ calcularOverall(jogador) }}</span>
+                        </div>
+                        <div ng-if="(elencoAtual | filter:{emCampo: false}).length === 0" style="text-align:center; color: #7f8c8d; padding: 20px;">
+                            Todos os jogadores estão em campo!
+                        </div>
+                    </div>
+                </div>
+                <div class="pitch-area">
+                    
+                    <!-- FASE 12: Painel de Estilo de Jogo -->
+                    <div style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <h4 style="margin-top: 0; margin-bottom: 10px; color: var(--primary-color);">Estilo de Jogo</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                            
+                            <div>
+                                <label style="font-size: 11px; font-weight: bold; color: var(--text-muted); display: block; margin-bottom: 5px;">MENTALIDADE</label>
+                                <select ng-model="taticas.mentalidade" ng-change="salvarJogoSilencioso()" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;">
+                                    <option value="Retranca">Retranca</option>
+                                    <option value="Equilibrado">Equilibrado</option>
+                                    <option value="Ofensivo">Ofensivo</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label style="font-size: 11px; font-weight: bold; color: var(--text-muted); display: block; margin-bottom: 5px;">FOCO DOS PASSES</label>
+                                <select ng-model="taticas.foco" ng-change="salvarJogoSilencioso()" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;">
+                                    <option value="Misto">Misto</option>
+                                    <option value="Pelo Meio">Pelo Meio</option>
+                                    <option value="Pelas Pontas">Pelas Pontas</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label style="font-size: 11px; font-weight: bold; color: var(--text-muted); display: block; margin-bottom: 5px;">MARCAÇÃO</label>
+                                <select ng-model="taticas.marcacao" ng-change="salvarJogoSilencioso()" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;">
+                                    <option value="Recuada">Recuada</option>
+                                    <option value="Pressão Alta">Pressão Alta</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="pitch-container" droppable-area="campo">
+                        
+                        <!-- FASE 7: Direção do Ataque -->
+                        <div class="pitch-direction">DEFESA ◀ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ATAQUE ▶</div>
+
+                        <div class="pitch-line pitch-center-line"></div>
+                        <div class="pitch-circle"></div>
+                        <div class="pitch-box box-left"></div>
+                        <div class="pitch-box box-right"></div>
+                        
+                        <div class="player-token pos-{{ jogador.posicao }}" 
+                             ng-repeat="jogador in elencoAtual | filter:{emCampo: true}"
+                             draggable-player
+                             ng-style="{'left': jogador.posX + '%', 'top': jogador.posY + '%', 'border': estaImprovisado(jogador) ? '2px solid #e74c3c' : '2px solid white'}">
+                             <div class="token-overall">{{ calcularOverall(jogador) }}</div>
+                             <div class="token-name" style="display: flex; flex-direction: column; align-items: center; position: relative;">
+                                <span ng-if="estaImprovisado(jogador)" style="position: absolute; top: -25px; font-size: 14px;" title="Jogador Improvisado (-25% Overall)">⚠️</span>
+                                {{ jogador.nome }}
+                                <div style="width: 100%; height: 3px; background: rgba(0,0,0,0.5); margin-top: 2px; border-radius: 2px;">
+                                    <div style="height: 100%; background: {{jogador.condicaoFisica > 60 ? '#2ecc71' : (jogador.condicaoFisica > 30 ? '#f1c40f' : '#e74c3c')}}; width: {{jogador.condicaoFisica}}%; border-radius: 2px;"></div>
+                                </div>
+                             </div>
+                        </div>
+                        
+                        <div class="pitch-info" ng-if="(elencoAtual | filter:{emCampo: true}).length === 0">
+                            Solte os jogadores aqui
+                        </div>
+                        <div class="pitch-counter">
+                            {{ (elencoAtual | filter:{emCampo: true}).length }} / 11 em campo
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fim TELA: TATICAS -->
+
+            <!-- TELA: TABELAS (FASE 15) -->
+            <div ng-if="telaAtual === 'tabela'" ng-init="filtroCompeticao = 'LIGA'; filtroDivisao = 'A'">
+                <!-- MENU DE COMPETIÇÕES -->
+                <div style="display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                    <button style="background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer; padding-bottom: 5px; border-bottom: 3px solid {{filtroCompeticao === 'LIGA' ? 'var(--br-green)' : 'transparent'}}; color: {{filtroCompeticao === 'LIGA' ? 'var(--text-dark)' : 'var(--text-muted)'}};" ng-click="filtroCompeticao = 'LIGA'">Brasileirão</button>
+                    <button style="background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer; padding-bottom: 5px; border-bottom: 3px solid {{filtroCompeticao === 'COPA' ? 'var(--br-green)' : 'transparent'}}; color: {{filtroCompeticao === 'COPA' ? 'var(--text-dark)' : 'var(--text-muted)'}};" ng-click="filtroCompeticao = 'COPA'">Copa do Brasil</button>
+                </div>
+
+                <!-- TELA BRASILEIRÃO -->
+                <div ng-if="filtroCompeticao === 'LIGA'">
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;" ng-style="{'background': filtroDivisao === 'A' ? 'var(--br-blue)' : '#e1e8ed', 'color': filtroDivisao === 'A' ? 'white' : 'var(--text-main)'}" ng-click="filtroDivisao = 'A'">Série A</button>
+                        <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;" ng-style="{'background': filtroDivisao === 'B' ? 'var(--br-blue)' : '#e1e8ed', 'color': filtroDivisao === 'B' ? 'white' : 'var(--text-main)'}" ng-click="filtroDivisao = 'B'">Série B</button>
+                        <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;" ng-style="{'background': filtroDivisao === 'C' ? 'var(--br-blue)' : '#e1e8ed', 'color': filtroDivisao === 'C' ? 'white' : 'var(--text-main)'}" ng-click="filtroDivisao = 'C'">Série C</button>
+                        <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;" ng-style="{'background': filtroDivisao === 'D' ? 'var(--br-blue)' : '#e1e8ed', 'color': filtroDivisao === 'D' ? 'white' : 'var(--text-main)'}" ng-click="filtroDivisao = 'D'">Série D</button>
+                    </div>
+
+                <div class="card" style="padding: 20px;">
+                    <h3 style="margin-bottom: 20px; color: var(--text-dark);">Tabela de Classificação - Série {{filtroDivisao || 'A'}}</h3>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="background: #f8f9fa; text-align: left; border-bottom: 2px solid #ddd;">
+                                <th style="padding: 10px; width: 40px; text-align: center;">Pos</th>
+                                <th style="padding: 10px;">Clube</th>
+                                <th style="padding: 10px; text-align: center;">Pts</th>
+                                <th style="padding: 10px; text-align: center;">J</th>
+                                <th style="padding: 10px; text-align: center;">V</th>
+                                <th style="padding: 10px; text-align: center;">E</th>
+                                <th style="padding: 10px; text-align: center;">D</th>
+                                <th style="padding: 10px; text-align: center;">SG</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="time in ordenarTabela(filtroDivisao || 'A')" style="border-bottom: 1px solid #eee;" ng-style="{'background': time.clube.id === clubeAtual.id ? '#eaf4ff' : 'transparent'}">
+                                <td style="padding: 10px; text-align: center; font-weight: bold;" 
+                                    ng-style="{'color': $index < 4 ? 'var(--br-green)' : ($index > 15 ? '#e74c3c' : 'inherit')}">
+                                    {{$index + 1}}º
+                                </td>
+                                <td style="padding: 10px; font-weight: bold; color: var(--text-main);">
+                                    {{time.clube.nome}} <span style="font-size: 11px; color: #888;">{{time.clube.sigla}}</span>
+                                </td>
+                                <td style="padding: 10px; text-align: center; font-weight: bold; font-size: 16px;">{{time.pontos}}</td>
+                                <td style="padding: 10px; text-align: center; color: var(--text-muted);">{{time.vitorias + time.empates + time.derrotas}}</td>
+                                <td style="padding: 10px; text-align: center; color: var(--text-muted);">{{time.vitorias}}</td>
+                                <td style="padding: 10px; text-align: center; color: var(--text-muted);">{{time.empates}}</td>
+                                <td style="padding: 10px; text-align: center; color: var(--text-muted);">{{time.derrotas}}</td>
+                                <td style="padding: 10px; text-align: center; font-weight: bold;" ng-style="{'color': time.saldo > 0 ? 'var(--br-green)' : (time.saldo < 0 ? '#e74c3c' : 'inherit')}">{{time.saldo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 12px; color: #666;">
+                        <span>🟩 Top 4: Promovidos (Sobe)</span>
+                        <span>🟥 Bottom 4: Rebaixados (Cai)</span>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- TELA COPA DO BRASIL (FASE 17) -->
+                <div ng-if="filtroCompeticao === 'COPA'">
+                    <div class="card" style="padding: 20px;">
+                        <h3 style="margin-bottom: 20px; color: var(--text-dark);">🏆 Copa do Brasil - Mata-Mata</h3>
+                        
+                        <div style="display: flex; gap: 30px; overflow-x: auto; padding-bottom: 20px;">
+                            <div ng-repeat="fase in copaBrasil.chaves" style="min-width: 250px;">
+                                <h4 style="text-align: center; color: var(--text-muted); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
+                                    {{fase.length === 32 ? '1ª Fase' : (fase.length === 16 ? 'Dezesseis-avos' : (fase.length === 8 ? 'Oitavas' : (fase.length === 4 ? 'Quartas' : (fase.length === 2 ? 'Semifinal' : 'Final'))))}}
+                                </h4>
+                                
+                                <div style="display: flex; flex-direction: column; gap: 15px;">
+                                    <div ng-repeat="jogo in fase" style="background: white; border: 1px solid #ddd; border-radius: 6px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative;">
+                                        
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #f0f0f0;">
+                                            <span style="font-weight: {{jogo.vencedor && jogo.vencedor.id === jogo.time1.id ? 'bold' : 'normal'}}; color: {{jogo.time1.id === clubeAtual.id ? 'var(--br-green-dark)' : 'var(--text-main)'}}">
+                                                {{jogo.time1.nome}}
+                                            </span>
+                                            <strong style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">{{jogo.jogadoIda ? (jogo.golsIda1 + jogo.golsVolta1) : '-'}}</strong>
+                                        </div>
+                                        
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="font-weight: {{jogo.vencedor && jogo.vencedor.id === jogo.time2.id ? 'bold' : 'normal'}}; color: {{jogo.time2.id === clubeAtual.id ? 'var(--br-green-dark)' : 'var(--text-main)'}}">
+                                                {{jogo.time2.nome}}
+                                            </span>
+                                            <strong style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">{{jogo.jogadoIda ? (jogo.golsIda2 + jogo.golsVolta2) : '-'}}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: LIBERTADORES -->
+            <div ng-if="telaAtual === 'libertadores'">
+                <!-- FASE DE GRUPOS -->
+                <div class="card" style="padding: 20px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 20px; color: var(--text-dark);">🌎 Copa Libertadores da América - Fase de Grupos</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                        <div ng-repeat="grupo in libertadores.grupos" style="background: white; border-radius: 8px; border: 1px solid #eee; overflow: hidden;">
+                            <div style="background: var(--br-green); color: white; padding: 10px; font-weight: bold; text-align: center;">{{grupo.nome}}</div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f8f9fa; border-bottom: 1px solid #eee;">
+                                        <th style="padding: 8px; text-align: left; font-size: 12px; color: #666;">CLUBE</th>
+                                        <th style="padding: 8px; text-align: center; font-size: 12px; color: #666;">P</th>
+                                        <th style="padding: 8px; text-align: center; font-size: 12px; color: #666;">SG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="time in grupo.tabela | orderBy:['-pontos', '-vitorias', '-saldo']" style="border-bottom: 1px solid #f0f0f0;" ng-style="{'background-color': time.clube.id === clubeAtual.id ? '#e8f5e9' : 'transparent'}">
+                                        <td style="padding: 8px; font-size: 14px;">
+                                            <span style="font-size: 12px; font-weight: bold; margin-right: 5px;" ng-style="{'color': $index < 2 ? 'var(--br-blue)' : '#999'}">{{$index + 1}}</span>
+                                            {{time.clube.nome}}
+                                        </td>
+                                        <td style="padding: 8px; text-align: center; font-weight: bold;">{{time.pontos}}</td>
+                                        <td style="padding: 8px; text-align: center; color: #666;">{{time.saldo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MATA-MATA -->
+                <div class="card" style="padding: 20px;" ng-if="libertadores.chaves && libertadores.chaves.length > 0">
+                    <h3 style="margin-bottom: 20px; color: var(--text-dark);">🌎 Copa Libertadores da América - Mata-Mata</h3>
+                    
+                    <div style="display: flex; gap: 30px; overflow-x: auto; padding-bottom: 20px;">
+                        <div ng-repeat="fase in libertadores.chaves" style="min-width: 250px;">
+                            <h4 style="text-align: center; color: var(--text-muted); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
+                                {{fase.length === 8 ? 'Oitavas' : (fase.length === 4 ? 'Quartas' : (fase.length === 2 ? 'Semifinal' : 'Final'))}}
+                            </h4>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <div ng-repeat="jogo in fase" style="background: white; border: 1px solid #ddd; border-radius: 6px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative;">
+                                    
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #f0f0f0;">
+                                        <span style="font-weight: {{jogo.vencedor && jogo.vencedor.id === jogo.time1.id ? 'bold' : 'normal'}}; color: {{jogo.time1.id === clubeAtual.id ? 'var(--br-green-dark)' : 'var(--text-main)'}}">
+                                            {{jogo.time1.nome}}
+                                        </span>
+                                        <strong style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">{{jogo.jogadoIda ? (jogo.golsIda1 + jogo.golsVolta1) : '-'}}</strong>
+                                    </div>
+                                    
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-weight: {{jogo.vencedor && jogo.vencedor.id === jogo.time2.id ? 'bold' : 'normal'}}; color: {{jogo.time2.id === clubeAtual.id ? 'var(--br-green-dark)' : 'var(--text-main)'}}">
+                                            {{jogo.time2.nome}}
+                                        </span>
+                                        <strong style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">{{jogo.jogadoIda ? (jogo.golsIda2 + jogo.golsVolta2) : '-'}}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: SUL-AMERICANA -->
+            <div ng-if="telaAtual === 'sulamericana'">
+                <!-- FASE DE GRUPOS -->
+                <div class="card" style="padding: 20px; margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 20px; color: var(--text-dark);">🏆 Copa Sul-Americana - Fase de Grupos</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                        <div ng-repeat="grupo in sulAmericana.grupos" style="background: white; border-radius: 8px; border: 1px solid #eee; overflow: hidden;">
+                            <div style="background: var(--br-blue); color: white; padding: 10px; font-weight: bold; text-align: center;">{{grupo.nome}}</div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f8f9fa; border-bottom: 1px solid #eee;">
+                                        <th style="padding: 8px; text-align: left; font-size: 12px; color: #666;">CLUBE</th>
+                                        <th style="padding: 8px; text-align: center; font-size: 12px; color: #666;">P</th>
+                                        <th style="padding: 8px; text-align: center; font-size: 12px; color: #666;">SG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="time in grupo.tabela | orderBy:['-pontos', '-vitorias', '-saldo']" style="border-bottom: 1px solid #f0f0f0;" ng-style="{'background-color': time.clube.id === clubeAtual.id ? '#e8f5e9' : 'transparent'}">
+                                        <td style="padding: 8px; font-size: 14px;">
+                                            <span style="font-size: 12px; font-weight: bold; margin-right: 5px;" ng-style="{'color': $index < 2 ? 'var(--br-blue)' : '#999'}">{{$index + 1}}</span>
+                                            {{time.clube.nome}}
+                                        </td>
+                                        <td style="padding: 8px; text-align: center; font-weight: bold;">{{time.pontos}}</td>
+                                        <td style="padding: 8px; text-align: center; color: #666;">{{time.saldo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MATA-MATA -->
+                <div class="card" style="padding: 20px;" ng-if="sulAmericana.chaves && sulAmericana.chaves.length > 0">
+                    <h3 style="margin-bottom: 20px; color: var(--text-dark);">🏆 Copa Sul-Americana - Mata-Mata</h3>
+                    
+                    <div style="display: flex; gap: 30px; overflow-x: auto; padding-bottom: 20px;">
+                        <div ng-repeat="fase in sulAmericana.chaves" style="min-width: 250px;">
+                            <h4 style="text-align: center; color: var(--text-muted); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
+                                {{fase.length === 8 ? 'Oitavas' : (fase.length === 4 ? 'Quartas' : (fase.length === 2 ? 'Semifinal' : 'Final'))}}
+                            </h4>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <div ng-repeat="jogo in fase" style="background: white; border: 1px solid #ddd; border-radius: 6px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative;">
+                                    
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #f0f0f0;">
+                                        <span style="font-weight: {{jogo.vencedor && jogo.vencedor.id === jogo.time1.id ? 'bold' : 'normal'}}; color: {{jogo.time1.id === clubeAtual.id ? 'var(--br-green-dark)' : 'var(--text-main)'}}">
+                                            {{jogo.time1.nome}}
+                                        </span>
+                                        <strong style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">{{jogo.jogadoIda ? (jogo.golsIda1 + jogo.golsVolta1) : '-'}}</strong>
+                                    </div>
+                                    
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-weight: {{jogo.vencedor && jogo.vencedor.id === jogo.time2.id ? 'bold' : 'normal'}}; color: {{jogo.time2.id === clubeAtual.id ? 'var(--br-green-dark)' : 'var(--text-main)'}}">
+                                            {{jogo.time2.nome}}
+                                        </span>
+                                        <strong style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">{{jogo.jogadoIda ? (jogo.golsIda2 + jogo.golsVolta2) : '-'}}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: PARTIDA AO VIVO (NOVO) -->
+            <div ng-if="telaAtual === 'partida'">
+                
+                <!-- FASE 8: Painel de Estatísticas da Partida -->
+                <div class="match-stats-panel" style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: var(--shadow);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px;">
+                        <span style="color: var(--text-muted); font-weight: bold; font-size: 14px;">🏟️ PÚBLICO: {{estatisticas.publico | number}}</span>
+                        <span style="color: var(--text-muted); font-weight: bold; font-size: 14px;">💰 RENDA: {{formatarMoeda(estatisticas.renda)}}</span>
+                    </div>
+
+                    <h4 style="text-align: center; margin-bottom: 10px; color: var(--br-blue);">Estatísticas da Partida</h4>
+                    
+                    <div class="stat-row" style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;">
+                            <span>{{estatisticas.posseMandante}}%</span>
+                            <span style="font-weight: bold;">Posse de Bola</span>
+                            <span>{{estatisticas.posseVisitante}}%</span>
+                        </div>
+                        <div style="width: 100%; height: 10px; background: #eee; border-radius: 5px; display: flex; overflow: hidden;">
+                            <div ng-style="{'height': '100%', 'background': 'var(--br-blue)', 'width': estatisticas.posseMandante + '%', 'transition': 'width 0.3s ease'}"></div>
+                            <div ng-style="{'height': '100%', 'background': '#ccc', 'width': estatisticas.posseVisitante + '%', 'transition': 'width 0.3s ease'}"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-row">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;">
+                            <span>{{estatisticas.chutesMandante}}</span>
+                            <span style="font-weight: bold;">Chutes a Gol</span>
+                            <span>{{estatisticas.chutesVisitante}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTROLES DO JOGO PAUSADO -->
+                <div ng-if="partidaPausada" style="background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: #856404; margin-bottom: 10px;">Partida Pausada</h3>
+                    <p style="color: #856404; margin-bottom: 15px;">Aproveite para ajustar sua formação!</p>
+                    <div style="display: flex; justify-content: center; gap: 10px;">
+                        <button class="btn btn-primary" ng-click="mudarTela('taticas')" style="background: var(--br-blue); color: white; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Abrir Prancheta (Táticas)</button>
+                        <button class="btn btn-success" ng-click="retomarPartida()" style="background: var(--br-green); color: white; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">▶ Retomar Partida</button>
+                    </div>
+                </div>
+
+                <div class="scoreboard">
+                    <div class="team">
+                        <div class="team-color" ng-style="{'background-color': corDoTime(partidaAoVivo.mandante, 0), 'border': '3px solid ' + corDoTime(partidaAoVivo.mandante, 1)}">
+                            <span style="color: {{corDoTime(partidaAoVivo.mandante, 1)}}; font-size: 11px; font-weight: bold;">{{ partidaAoVivo.mandante.sigla }}</span>
+                        </div>
+                        <h3>{{ partidaAoVivo.mandante.nome }}</h3>
+                    </div>
+                    
+                    <div class="score-display">
+                        <span class="score">{{ partidaAoVivo.golsMandante }}</span>
+                        <span class="divider">x</span>
+                        <span class="score">{{ partidaAoVivo.golsVisitante }}</span>
+                    </div>
+
+                    <div class="team">
+                        <h3>{{ partidaAoVivo.visitante.nome }}</h3>
+                        <div class="team-color" ng-style="{'background-color': corDoTime(partidaAoVivo.visitante, 0), 'border': '3px solid ' + corDoTime(partidaAoVivo.visitante, 1)}">
+                            <span style="color: {{corDoTime(partidaAoVivo.visitante, 1)}}; font-size: 11px; font-weight: bold;">{{ partidaAoVivo.visitante.sigla }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="match-time-bar">
+                    <div class="time-progress" ng-style="{'width': (minutoAtual/90 * 100) + '%'}"></div>
+                    <span class="time-text">{{ minutoAtual }}' Minutos</span>
+                </div>
+
+                <div class="commentary-box">
+                    <h3>Minuto a Minuto</h3>
+                    <div class="commentary-list">
+                        <div class="commentary-item" ng-repeat="lance in narracao track by $index" 
+                             ng-class="{'goal': lance.includes('GOOOO'), 'end': lance.includes('Fim de papo')}">
+                            {{ lance }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-match" ng-if="!partidaEmAndamento">
+                    <button class="btn-play-full" ng-click="mudarTela('dashboard')">Voltar ao Painel</button>
+                </div>
+
+            </div>
+
+            <!-- TELAS EM BREVE -->
+            <!-- TELA: MERCADO DA BOLA -->
+            <div ng-if="telaAtual === 'mercado'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Mercado da Bola</h3>
+                    <div style="background: var(--bg-light); padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd;">
+                        <span style="font-size: 12px; color: var(--text-muted); margin-right: 10px;">SEU ORÇAMENTO:</span>
+                        <strong style="font-size: 18px; color: var(--br-green);">{{formatarMoeda(clubeAtual.orcamento)}}</strong>
+                    </div>
+                </div>
+
+                <!-- Sub-Navegação do Mercado -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: 0.2s;" 
+                            ng-style="{'background': (!subTelaMercado || subTelaMercado === 'geral') ? 'var(--br-blue)' : '#e1e8ed', 'color': (!subTelaMercado || subTelaMercado === 'geral') ? 'white' : 'var(--text-main)'}"
+                            ng-click="subTelaMercado = 'geral'">
+                        🌍 Mercado de Transferências
+                    </button>
+                    <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; transition: 0.2s;" 
+                            ng-style="{'background': subTelaMercado === 'olheiros' ? 'var(--br-blue)' : '#e1e8ed', 'color': subTelaMercado === 'olheiros' ? 'white' : 'var(--text-main)'}"
+                            ng-click="subTelaMercado = 'olheiros'">
+                        🕵️ Rede de Olheiros
+                    </button>
+                </div>
+
+                <div ng-show="!subTelaMercado || subTelaMercado === 'geral'">
+                    <div ng-if="!isJanelaTransferenciaAberta()" style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; border: 1px solid #ffeeba; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">🔒</span>
+                        <div>
+                            <strong style="display: block; font-size: 16px;">A Janela de Transferências está FECHADA!</strong>
+                            <span style="font-size: 14px;">Você não pode comprar ou vender jogadores fora do período de transferências (Início e Meio do Ano). Você ainda pode pesquisar e sondar opções.</span>
+                        </div>
+                    </div>
+                    <div ng-if="isJanelaTransferenciaAberta()" style="background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; border: 1px solid #c3e6cb; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">🔓</span>
+                        <div>
+                            <strong style="display: block; font-size: 16px;">A Janela de Transferências está ABERTA!</strong>
+                            <span style="font-size: 14px;">O mercado está aquecido! Negocie compras e vendas antes que a janela feche. A CPU também está fazendo propostas.</span>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 20px; padding: 15px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: var(--text-main);">🔍 Nome do Jogador:</label>
+                            <input type="text" ng-model="filtroBusca.nome" placeholder="Digite o nome..." style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: var(--text-main);">📍 Posição:</label>
+                            <select ng-model="filtroBusca.posicao" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
+                                <option value="TODOS">Todas as Posições</option>
+                                <option value="GOL">Goleiro (GOL)</option>
+                                <option value="ZAG">Zagueiro (ZAG)</option>
+                                <option value="LAT">Lateral (LAT)</option>
+                                <option value="VOL">Volante (VOL)</option>
+                                <option value="MEI">Meia (MEI)</option>
+                                <option value="ATA">Atacante (ATA)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: var(--text-main);">🏆 Divisão do Clube:</label>
+                            <select ng-model="filtroBusca.divisao" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
+                                <option value="TODOS">Qualquer Divisão</option>
+                                <option value="A">Série A</option>
+                                <option value="B">Série B</option>
+                                <option value="C">Série C</option>
+                                <option value="D">Série D</option>
+                                <option value="LIVRE">Livre no Mercado</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: bold; margin-bottom: 5px; color: var(--text-main);">📄 Situação do Contrato:</label>
+                            <select ng-model="filtroBusca.contrato" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;">
+                                <option value="TODOS">Qualquer Situação</option>
+                                <option value="FIM">Em fim de contrato (1 ano)</option>
+                                <option value="LONGO">Contrato longo (+2 anos)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="text-align: right; margin-top: 10px;">
+                        <button style="padding: 12px 30px; background: var(--br-green); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" ng-click="buscarNoMercado()">
+                            🔍 Buscar Jogadores
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding-bottom: 30px;">
+                    <div ng-repeat="jogador in resultadosBuscaMercado" style="background: white; border: 1px solid #ccc; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; padding: 20px; position: relative;">
+                        <div style="position: absolute; top: -10px; right: 10px; background: {{jogador.clubeId === 'mercado' ? '#e74c3c' : 'var(--br-blue)'}}; color: white; padding: 4px 10px; border-radius: 15px; font-size: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                            {{jogador.clubeId === 'mercado' ? 'LIVRE NO MERCADO' : obterNomeClube(jogador.clubeId)}}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; margin-top: 5px;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 18px; color: var(--text-main);">{{jogador.nome}}</h4>
+                                <div style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">{{jogador.idade}} anos &bull; Salário Atual/Base: {{formatarMoeda(jogador.salario)}}</div>
+                            </div>
+                            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                                <span class="posicao-badge pos-{{jogador.posicao}}" style="margin-bottom: 8px;">{{jogador.posicao}}</span>
+                                <div style="background: var(--br-blue); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px;">
+                                    {{calcularOverall(jogador)}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Passe (Estimado)</div>
+                                <div style="font-weight: bold; font-size: 16px; color: var(--text-dark);">{{formatarMoeda(calcularValorPasse(jogador))}}</div>
+                            </div>
+                            <button style="padding: 10px 24px; background: var(--br-blue); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" ng-click="iniciarNegociacao(jogador)">
+                                🤝 Negociar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div ng-if="resultadosBuscaMercado.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); background: white; border-radius: 8px; border: 1px solid #ddd;">
+                        Nenhum jogador encontrado.
+                    </div>
+                </div>
+                </div>
+
+                <!-- FASE 14: ABA REDE DE OLHEIROS -->
+                <div ng-show="subTelaMercado === 'olheiros'">
+                    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0;">Departamento de Scouting</h4>
+                            <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Contrate olheiros para buscar jovens promessas (Wonderkids) escondidas pelo mundo.</p>
+                            <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">Custo de Contratação: R$ 50.000 | Salário: R$ 15.000/mês</p>
+                        </div>
+                        <button class="btn btn-success" style="padding: 12px 24px; font-weight: bold; border-radius: 6px;" ng-click="contratarOlheiro()" ng-disabled="clubeAtual.olheiros.length >= 3">
+                            ➕ Contratar Olheiro ({{clubeAtual.olheiros.length || 0}}/3)
+                        </button>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                        
+                        <div ng-repeat="olheiro in clubeAtual.olheiros" style="background: var(--bg-light); border: 1px solid #ddd; border-radius: 8px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                <h4 style="margin: 0;">🕵️ {{olheiro.nome}}</h4>
+                                <span style="font-size: 11px; background: #e74c3c; color: white; padding: 3px 6px; border-radius: 4px;" ng-if="!olheiro.emMissao && olheiro.relatorio.length === 0">Livre</span>
+                                <span style="font-size: 11px; background: #f39c12; color: white; padding: 3px 6px; border-radius: 4px;" ng-if="olheiro.emMissao && olheiro.rodadasRestantes > 0">Em Missão</span>
+                                <span style="font-size: 11px; background: var(--br-green); color: white; padding: 3px 6px; border-radius: 4px;" ng-if="olheiro.validadeRelatorio > 0">Relatório Pronto</span>
+                            </div>
+
+                            <!-- Olheiro Livre -->
+                            <div ng-if="!olheiro.emMissao && olheiro.relatorio.length === 0">
+                                <p style="font-size: 13px; margin-bottom: 10px;">Enviar para missão (Duração: 3 rodadas):</p>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <button style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; text-align: left; background: white;" ng-click="enviarOlheiro(olheiro, 'BASE')">
+                                        👶 Categorias de Base <br><span style="font-size: 10px; color: #666;">Foco em jogadores de 16 a 19 anos</span>
+                                    </button>
+                                    <button style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; text-align: left; background: white;" ng-click="enviarOlheiro(olheiro, 'INTERIOR')">
+                                        🚜 Clubes do Interior <br><span style="font-size: 10px; color: #666;">Foco em jogadores baratos (22-26 anos)</span>
+                                    </button>
+                                    <button style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; text-align: left; background: white;" ng-click="enviarOlheiro(olheiro, 'SUL-AMERICANO')">
+                                        🌎 Mercado Sul-Americano <br><span style="font-size: 10px; color: #666;">Foco em estrangeiros (18-24 anos)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Olheiro em Missão -->
+                            <div ng-if="olheiro.emMissao && olheiro.rodadasRestantes > 0" style="text-align: center; padding: 20px 0;">
+                                <div style="font-size: 40px; margin-bottom: 10px;">✈️</div>
+                                <p style="font-weight: bold; margin: 0 0 5px 0;">Procurando talentos...</p>
+                                <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Destino: {{olheiro.tipoMissao}}</p>
+                                <p style="font-size: 12px; color: #f39c12; font-weight: bold; margin-top: 15px;">Retorna em {{olheiro.rodadasRestantes}} rodada(s)</p>
+                            </div>
+
+                            <!-- Relatório Pronto -->
+                            <div ng-if="olheiro.validadeRelatorio > 0">
+                                <div style="background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 8px; border-radius: 4px; font-size: 11px; text-align: center; font-weight: bold; margin-bottom: 15px;">
+                                    ⚠️ OFERTA RELÂMPAGO!<br>Válida apenas por {{olheiro.validadeRelatorio}} rodada(s).
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto;">
+                                    <div ng-repeat="j in olheiro.relatorio" style="background: white; border: 1px solid #eee; border-radius: 6px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                            <strong style="font-size: 14px;">{{j.nome}}</strong>
+                                            <span class="posicao-badge pos-{{j.posicao}}" style="transform: scale(0.8); margin: 0;">{{j.posicao}}</span>
+                                        </div>
+                                        <div style="font-size: 11px; color: #666; margin-bottom: 5px;">Idade: {{j.idade}} anos | Salário: {{formatarMoeda(j.salario)}}</div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                            <div style="font-size: 12px;">Overall Atual: <strong>{{calcularOverall(j)}}</strong></div>
+                                            <div style="font-size: 12px; color: #8e44ad; font-weight: bold;" title="Potencial Oculto">⭐ Potencial: Alto</div>
+                                        </div>
+                                        <button style="width: 100%; padding: 6px; background: var(--br-green); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px;" ng-click="comprarJoia(olheiro, j, $index)" ng-disabled="clubeAtual.orcamento < (calcularValorPasse(j) * 0.8)">
+                                            Comprar ({{formatarMoeda(calcularValorPasse(j) * 0.8)}})
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-if="!clubeAtual.olheiros || clubeAtual.olheiros.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: 8px; color: var(--text-muted);">
+                            Você ainda não contratou nenhum olheiro. Seu departamento de scouting está vazio!
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div ng-if="telaAtual === 'financas'">
+                <div class="card" style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 20px; color: var(--primary-color);">🏢 Gestão do Clube & Estádio</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <!-- Coluna 1: Informações do Estádio e Patrocínio -->
+                        <div style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                                <span style="font-weight: bold; color: var(--text-muted);">Estádio Atual:</span>
+                                <span style="font-weight: bold; color: var(--text-dark);">{{clubeAtual.estadio.nome}} ({{clubeAtual.estadio.capacidade | number}} lugares)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                                <span style="font-weight: bold; color: var(--text-muted);">Patrocínio Master:</span>
+                                <span style="font-weight: bold; color: {{patrocinioAtual ? 'var(--br-green)' : '#e74c3c'}};">{{patrocinioAtual ? patrocinioAtual.nome : 'Sem Patrocínio'}}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="font-weight: bold; color: var(--text-muted);">Manutenção Mensal do Estádio:</span>
+                                <span style="font-weight: bold; color: #e74c3c;">- {{formatarMoeda(clubeAtual.estadio.capacidade * 20)}}</span>
+                            </div>
+                        </div>
+
+                        <!-- Coluna 2: Ações de Expansão -->
+                        <div style="background: var(--bg-light); border: 1px solid #ddd; border-radius: 8px; padding: 15px; display: flex; flex-direction: column; justify-content: center;">
+                            <div ng-if="!clubeAtual.estadio.obraEmAndamento" style="text-align: center;">
+                                <h4 style="margin-top: 0; margin-bottom: 10px; color: var(--text-dark);">Projeto de Expansão</h4>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Aumente o estádio em +5.000 lugares para faturar mais na bilheteria!</p>
+                                <button class="btn" style="background: var(--br-blue); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s;" ng-click="expandirEstadio()" ng-disabled="clubeAtual.orcamento < 5000000" ng-style="{'opacity': clubeAtual.orcamento < 5000000 ? '0.5' : '1'}">
+                                    🏗️ Expandir Arquibancadas ({{formatarMoeda(5000000)}})
+                                </button>
+                            </div>
+                            
+                            <div ng-if="clubeAtual.estadio.obraEmAndamento" style="text-align: center;">
+                                <h4 style="margin-top: 0; margin-bottom: 10px; color: #f39c12;">🚧 Obra em Andamento</h4>
+                                <div style="width: 100%; background: #e1e8ed; height: 10px; border-radius: 5px; margin-bottom: 10px;">
+                                    <div style="height: 100%; background: #f39c12; width: {{(3 - clubeAtual.estadio.rodadasRestantesObra) / 3 * 100}}%; border-radius: 5px; transition: width 0.3s ease;"></div>
+                                </div>
+                                <p style="font-size: 13px; font-weight: bold; color: var(--text-main);">Conclusão em: {{clubeAtual.estadio.rodadasRestantesObra}} rodada(s)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TELA PATROCÍNIO MASTER (FASE 17) -->
+                <div class="card" style="margin-bottom: 20px; padding: 25px; border-left: 5px solid #f1c40f;" ng-if="!patrocinioAtual">
+                    <h3 style="margin-bottom: 15px; color: var(--text-dark); display: flex; align-items: center; gap: 10px;">🤝 Negociações de Patrocínio Master</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Você precisa escolher uma marca para estampar no seu uniforme este ano. Escolha com sabedoria, pois este contrato vale até o fim da temporada!</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                        <div ng-repeat="pat in patrocinadoresDisponiveis" style="background: white; border: 1px solid #e1e8ed; border-radius: 8px; padding: 20px; box-shadow: var(--shadow); position: relative; display: flex; flex-direction: column;">
+                            <div style="background: var(--text-dark); color: white; position: absolute; top: 0; right: 0; padding: 5px 15px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; font-size: 12px; font-weight: bold;">
+                                {{pat.tipo}}
+                            </div>
+                            <h4 style="font-size: 20px; color: var(--primary-color); margin-bottom: 5px;">{{pat.nome}}</h4>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px; height: 35px;">{{pat.descricao}}</p>
+                            
+                            <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 13px;">Na Assinatura:</span>
+                                    <strong style="color: var(--br-green-dark);">{{formatarMoeda(pat.pagamentoFixo)}}</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 13px;">Bônus por Vitória:</span>
+                                    <strong style="color: var(--br-green-dark);">+ {{formatarMoeda(pat.bonusPorVitoria)}}</strong>
+                                </div>
+                            </div>
+                            
+                            <button style="margin-top: auto; padding: 12px; font-weight: bold; font-size: 14px; background: var(--br-green); color: white; border: none; border-radius: 6px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='#218c53'" onmouseout="this.style.background='var(--br-green)'" ng-click="assinarPatrocinio(pat)">
+                                Assinar Contrato
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FASE 22: NOVAS RECEITAS (INGRESSOS E MARKETING) -->
+                    <h3 style="margin-top: 30px; margin-bottom: 20px; color: var(--primary-color);">📈 Novas Fontes de Receita</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                        <!-- Ingressos -->
+                        <div style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: var(--shadow);">
+                            <h4 style="margin-top: 0; color: var(--text-dark); margin-bottom: 15px;">🎟️ Preço dos Ingressos</h4>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Ajuste o valor para a próxima partida em casa. Ingressos caros reduzem o público, mas aumentam o lucro por cabeça.</p>
+                            <select ng-model="configFinanceira.precoIngresso" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px;">
+                                <option value="40">Ingresso Popular (R$ 40) - Estádio Cheio</option>
+                                <option value="80">Ingresso Normal (R$ 80) - Público Médio</option>
+                                <option value="150">Ingresso Premium (R$ 150) - Público Seleto</option>
+                            </select>
+                        </div>
+
+                        <!-- Marketing -->
+                        <div style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: var(--shadow);">
+                            <h4 style="margin-top: 0; color: var(--text-dark); margin-bottom: 15px;">👕 Venda de Camisas & Marketing</h4>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">Seu clube vende em média <strong style="color: var(--br-green);">{{formatarMoeda(clubeAtual.reputacao * 25000)}}</strong> por mês em produtos oficiais.</p>
+                            
+                            <div ng-if="configFinanceira.marketingAtivo === 0">
+                                <button class="btn btn-success" style="width: 100%; padding: 10px; border: none; border-radius: 6px; background: var(--br-green); color: white; font-weight: bold; cursor: pointer;" ng-click="iniciarCampanhaMarketing()" ng-disabled="clubeAtual.orcamento < 1500000" ng-style="{'opacity': clubeAtual.orcamento < 1500000 ? '0.5' : '1'}">
+                                    🚀 Campanha de Marketing (R$ 1.500.000)
+                                </button>
+                                <div style="font-size: 11px; text-align: center; margin-top: 5px; color: var(--text-muted);">Aumenta vendas em 50% por 30 dias</div>
+                            </div>
+                            
+                            <div ng-if="configFinanceira.marketingAtivo > 0" style="background: #e8f5e9; padding: 15px; border-radius: 6px; text-align: center; border: 1px solid var(--br-green);">
+                                <h5 style="color: var(--br-green-dark); margin-top: 0; margin-bottom: 5px;">Campanha Ativa! (+50% vendas)</h5>
+                                <div style="font-size: 13px; color: var(--text-main);">Duração restante: <strong>{{configFinanceira.marketingAtivo}} dias</strong></div>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 20px;">Resumo Financeiro</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+                        <div style="background: var(--br-blue); color: white; padding: 20px; border-radius: 8px; box-shadow: var(--shadow);">
+                            <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;">Orçamento em Caixa</div>
+                            <div style="font-size: 24px; font-weight: bold;">{{formatarMoeda(clubeAtual.orcamento)}}</div>
+                        </div>
+                        <div style="background: #e74c3c; color: white; padding: 20px; border-radius: 8px; box-shadow: var(--shadow);">
+                            <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;">Folha Salarial (Mensal)</div>
+                            <div style="font-size: 24px; font-weight: bold;">{{formatarMoeda(calcularFolhaSalarial())}}</div>
+                        </div>
+                        <div style="background: var(--bg-light); color: var(--text-dark); padding: 20px; border-radius: 8px; box-shadow: var(--shadow); border: 1px solid #ddd;">
+                            <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 5px;">Balanço Estimado (Pós-Salários)</div>
+                            <div style="font-size: 24px; font-weight: bold;" ng-style="{'color': (clubeAtual.orcamento - calcularFolhaSalarial()) > 0 ? 'var(--br-green)' : '#e74c3c'}">
+                                {{formatarMoeda(clubeAtual.orcamento - calcularFolhaSalarial())}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 15px;">Histórico de Transações</h3>
+                    <div ng-if="financasHistorico.length === 0" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                        Nenhuma movimentação financeira ainda. Jogue partidas para gerar receitas!
+                    </div>
+                    
+                    <div ng-if="financasHistorico.length > 0" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                        <div ng-repeat="transacao in financasHistorico" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: white;">
+                            <div>
+                                <div style="font-weight: bold; color: var(--text-dark);">{{transacao.descricao}}</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">{{transacao.data}}</div>
+                            </div>
+                            <div style="font-weight: bold; font-size: 16px;" ng-style="{'color': transacao.tipo === 'receita' ? 'var(--br-green)' : '#e74c3c'}">
+                                <span ng-if="transacao.tipo === 'receita'">+ </span>
+                                <span ng-if="transacao.tipo === 'despesa'">- </span>
+                                {{formatarMoeda(transacao.valor)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- TELA: CERIMÔNIA (FASE 16) -->
+        <div ng-if="telaAtual === 'cerimonia'">
+            <div class="card" style="text-align: center; background: linear-gradient(135deg, #f39c12, #d35400); color: white; padding: 50px 40px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 10px 20px rgba(211, 84, 0, 0.3);">
+                <h1 style="font-size: 42px; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">🏆 Fim da Temporada!</h1>
+                <p style="font-size: 20px; opacity: 0.95; max-width: 600px; margin: 0 auto; font-weight: 300;">Mais um ano de muito suor, táticas e gols chegou ao fim no Rei da Prancheta.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
+                <!-- Campeões -->
+                <div class="card" style="border-top: 5px solid #3498db; box-shadow: var(--shadow);">
+                    <h3 style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 24px;">👑</span> Galeria de Campeões</h3>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;">
+                        <span style="font-size: 12px; color: var(--text-muted); display: block; text-transform: uppercase; letter-spacing: 1px;">Campeão Brasileiro (Série A)</span>
+                        <div style="font-size: 22px; font-weight: bold; color: var(--text-dark); margin-top: 5px;">{{relatorioFimAno.campeaoSerieA.nome}}</div>
+                    </div>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;" ng-if="relatorioFimAno.campeaoCopa">
+                        <span style="font-size: 12px; color: var(--text-muted); display: block; text-transform: uppercase; letter-spacing: 1px;">Campeão da Copa do Brasil</span>
+                        <div style="font-size: 22px; font-weight: bold; color: var(--text-dark); margin-top: 5px;">{{relatorioFimAno.campeaoCopa.nome}}</div>
+                    </div>
+                </div>
+
+                <!-- Meu Desempenho -->
+                <div class="card" style="border-top: 5px solid #9b59b6; box-shadow: var(--shadow);">
+                    <h3 style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 24px;">📊</span> Desempenho do {{clubeAtual.nome}}</h3>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;">
+                        <span style="font-size: 12px; color: var(--text-muted); display: block; text-transform: uppercase; letter-spacing: 1px;">Brasileirão</span>
+                        <div style="font-size: 20px; font-weight: bold; color: var(--text-main); margin-top: 5px;">{{relatorioFimAno.meuDesempenhoLiga}}</div>
+                    </div>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <span style="font-size: 12px; color: var(--text-muted); display: block; text-transform: uppercase; letter-spacing: 1px;">Copa do Brasil</span>
+                        <div style="font-size: 20px; font-weight: bold; color: var(--text-main); margin-top: 5px;">{{relatorioFimAno.meuDesempenhoCopa}}</div>
+                    </div>
+                </div>
+
+                <!-- Artilheiro -->
+                <div class="card" style="border-top: 5px solid var(--br-green); box-shadow: var(--shadow); text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="margin-bottom: 15px;">⚽ Artilheiro do Ano</h3>
+                    <div ng-if="relatorioFimAno.artilheiro">
+                        <div style="font-size: 36px; font-weight: 900; color: var(--br-green); margin: 10px 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">{{relatorioFimAno.artilheiro.golsTemporada}} Gols</div>
+                        <div style="font-size: 22px; font-weight: bold; color: var(--text-dark);">{{relatorioFimAno.artilheiro.nome}}</div>
+                        <div style="font-size: 14px; color: var(--text-muted); margin-top: 5px; padding: 5px 15px; background: #eee; border-radius: 20px; display: inline-block;">{{(clubes | filter:{id: relatorioFimAno.artilheiro.clubeId})[0].nome}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Balanço da Diretoria -->
+            <div class="card" style="margin-bottom: 20px; border-left: 8px solid {{relatorioFimAno.demitido ? '#e74c3c' : (relatorioFimAno.statusDiretoria === 'Aprovado' ? 'var(--br-green)' : '#f39c12')}}; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                <h3 style="margin-bottom: 10px;">📋 Avaliação da Diretoria</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <div>
+                        <p style="font-size: 18px; margin-bottom: 8px;"><strong>Status:</strong> 
+                            <span style="font-weight: bold; padding: 4px 10px; border-radius: 4px; background: {{relatorioFimAno.demitido ? '#fadbd8' : (relatorioFimAno.statusDiretoria === 'Aprovado' ? '#d5f5e3' : '#fcf3cf')}};" ng-style="{'color': relatorioFimAno.demitido ? '#c0392b' : (relatorioFimAno.statusDiretoria === 'Aprovado' ? '#27ae60' : '#d68910')}">{{relatorioFimAno.statusDiretoria}}</span>
+                        </p>
+                        <p style="font-size: 16px; color: var(--text-dark); font-style: italic; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-top: 10px;">"{{relatorioFimAno.msgDiretoria}}"</p>
+                    </div>
+                    <button class="btn-play" ng-click="avancarAposCerimonia()" style="font-size: 18px; padding: 20px 40px; border-radius: 50px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); font-weight: bold;">
+                        {{relatorioFimAno.demitido ? 'Pegar as Malas 🧳' : 'Avançar para ' + (anoAtual + 1) + ' ➡️'}}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA: MERCADO DE TRABALHO (FASE 16) -->
+        <div ng-if="telaAtual === 'mercado_trabalho'">
+            <div class="card" style="text-align: center; background: #34495e; color: white; padding: 40px; margin-bottom: 20px;">
+                <h1 style="font-size: 32px; margin-bottom: 10px;">Mercado de Trabalho</h1>
+                <p style="font-size: 16px; opacity: 0.9;">Sua reputação atual: <strong>{{dados.reputacaoTreinador}} ⭐</strong></p>
+                <p style="font-size: 14px; opacity: 0.7; margin-top: 10px;">Você foi demitido, mas o futebol não para. Avalie as propostas de emprego abaixo para reiniciar sua carreira.</p>
+            </div>
+
+            <div class="club-grid">
+                <div class="club-select-card" ng-repeat="clube in propostasEmprego" ng-click="aceitarProposta(clube.id)">
+                    <div class="club-color-bar" ng-style="{ 'background-color': clube.cores[0] }"></div>
+                    <h4>{{ clube.nome }} <span style="font-size: 12px; color: var(--text-muted);">{{clube.sigla}}</span></h4>
+                    <p style="margin-top: 10px;">Reputação do Clube: {{clube.reputacao}}</p>
+                    <p>Série: {{clube.divisao}}</p>
+                    <button style="width: 100%; margin-top: 20px; padding: 12px; background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 15px rgba(39, 174, 96, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(39, 174, 96, 0.3)';" ng-click="aceitarProposta(clube.id)">✍️ Assinar Contrato</button>
+                </div>
+            </div>
+            
+            <div ng-if="propostasEmprego.length === 0" style="text-align: center; padding: 40px;">
+                <p>Nenhum clube está interessado no momento. O jogo não suporta passar o ano desempregado. (Este é um fallback, se isso aparecer, recarregue o save).</p>
+            </div>
+        </div>
+
+        </main>
+    </div>
+
+    <!-- SISTEMA DE NEGOCIAÇÃO -->
+    <div ng-if="negociacaoAtiva" class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; justify-content: center; align-items: center;" ng-cloak>
+        <div class="modal-content" style="background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                <h2 style="margin: 0; color: var(--text-dark);">🤝 Negociação</h2>
+                <button style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;" ng-click="fecharNegociacao()">&times;</button>
+            </div>
+            
+            <div style="display: flex; gap: 15px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                <div style="background: var(--br-blue); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold;">
+                    {{calcularOverall(jogadorNegociacao)}}
+                </div>
+                <div>
+                    <h3 style="margin: 0; font-size: 18px; color: var(--text-main);">{{jogadorNegociacao.nome}}</h3>
+                    <div style="font-size: 13px; color: var(--text-muted);">{{jogadorNegociacao.idade}} anos &bull; {{jogadorNegociacao.posicao}}</div>
+                    <div style="font-size: 13px; color: var(--text-muted); font-weight: bold;">{{obterNomeClube(jogadorNegociacao.clubeId)}}</div>
+                </div>
+            </div>
+
+            <!-- PASSO 1: PROPOSTA AO CLUBE -->
+            <div ng-if="estadoNegociacao === 'proposta_clube'">
+                <p style="font-size: 14px; margin-bottom: 15px;">Este jogador tem contrato com o <strong>{{obterNomeClube(jogadorNegociacao.clubeId)}}</strong>. O passe está avaliado em <strong style="color: var(--br-green-dark);">{{formatarMoeda(calcularValorPasse(jogadorNegociacao))}}</strong>.</p>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Sua Oferta de Compra (R$):</label>
+                    <input type="range" min="{{calcularValorPasse(jogadorNegociacao) * 0.5}}" max="{{clubeAtual.orcamento}}" step="100000" ng-model="ofertaValores.clube" style="width: 100%;">
+                    <div style="font-size: 24px; font-weight: bold; color: var(--br-blue); text-align: center; margin-top: 10px;">{{formatarMoeda(ofertaValores.clube)}}</div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button style="flex: 1; padding: 12px; background: var(--br-green); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="enviarPropostaClube(ofertaValores.clube)">Enviar Proposta</button>
+                    <button style="padding: 12px; background: #ccc; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="fecharNegociacao()">Cancelar</button>
+                </div>
+            </div>
+
+            <!-- PASSO 2: PROPOSTA AO JOGADOR -->
+            <div ng-if="estadoNegociacao === 'proposta_jogador'">
+                <p style="font-size: 14px; margin-bottom: 15px;" ng-if="jogadorNegociacao.clubeId === 'mercado' || tipoNegociacao === 'renovacao'">Você está negociando diretamente com o jogador e seus empresários.</p>
+                <p style="font-size: 14px; margin-bottom: 15px; color: var(--br-green-dark); font-weight: bold;" ng-if="jogadorNegociacao.clubeId !== 'mercado' && tipoNegociacao === 'compra'">O clube aceitou sua oferta de {{formatarMoeda(ofertaValores.clubeAceita)}}! Agora negocie com o jogador.</p>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Duração do Contrato:</label>
+                    <select ng-model="ofertaValores.anos" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px;">
+                        <option value="1">1 Temporada</option>
+                        <option value="2">2 Temporadas</option>
+                        <option value="3">3 Temporadas</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Salário Mensal Oferecido (R$):</label>
+                    <input type="range" min="{{jogadorNegociacao.salario * 0.5}}" max="{{jogadorNegociacao.salario * 5}}" step="10000" ng-model="ofertaValores.salario" style="width: 100%;">
+                    <div style="font-size: 24px; font-weight: bold; color: var(--br-blue); text-align: center; margin-top: 10px;">{{formatarMoeda(ofertaValores.salario)}}</div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button style="flex: 1; padding: 12px; background: var(--br-green); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="enviarPropostaJogador(ofertaValores.salario, ofertaValores.anos)">Fazer Oferta</button>
+                    <button style="padding: 12px; background: #ccc; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="fecharNegociacao()">Desistir</button>
+                </div>
+            </div>
+
+            <!-- RESULTADOS -->
+            <div ng-if="estadoNegociacao === 'rejeitado'" style="text-align: center;">
+                <h3 style="color: #e74c3c;">Negociação Encerrada ❌</h3>
+                <p>{{motivoRejeicao}}</p>
+                <button style="margin-top: 15px; padding: 10px 20px; background: #34495e; color: white; border: none; border-radius: 6px; cursor: pointer;" ng-click="fecharNegociacao()">Fechar</button>
+            </div>
+            
+            <div ng-if="estadoNegociacao === 'sucesso'" style="text-align: center;">
+                <h3 style="color: var(--br-green);">Contrato Assinado! ✍️</h3>
+                <p>{{motivoRejeicao}}</p>
+                <button style="margin-top: 15px; padding: 10px 20px; background: var(--br-green-dark); color: white; border: none; border-radius: 6px; cursor: pointer;" ng-click="fecharNegociacao()">Continuar</button>
+            </div>
+        </div>
+    </div>
+    <style>[ng-cloak] { display: none !important; }</style>
+</body>
+</html>

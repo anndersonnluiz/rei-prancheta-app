@@ -1,0 +1,1282 @@
+[
+  {
+    "id": 1,
+    "nome": "Flamengo",
+    "sigla": "FLA",
+    "divisao": "A",
+    "cores": [
+      "#c62828",
+      "#000000"
+    ],
+    "reputacao": 95,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Maracanã",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 2,
+    "nome": "Palmeiras",
+    "sigla": "PAL",
+    "divisao": "A",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 95,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Allianz Parque",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 3,
+    "nome": "São Paulo",
+    "sigla": "SÃO",
+    "divisao": "A",
+    "cores": [
+      "#c62828",
+      "#ffffff"
+    ],
+    "reputacao": 93,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Morumbis",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 4,
+    "nome": "Corinthians",
+    "sigla": "COR",
+    "divisao": "A",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 92,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Neo Química Arena",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 5,
+    "nome": "Atlético-MG",
+    "sigla": "ATL",
+    "divisao": "A",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 92,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Estádio Atlético-MG",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 6,
+    "nome": "Fluminense",
+    "sigla": "FLU",
+    "divisao": "A",
+    "cores": [
+      "#881c1c",
+      "#146b3a"
+    ],
+    "reputacao": 90,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Maracanã",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 7,
+    "nome": "Grêmio",
+    "sigla": "GRÊ",
+    "divisao": "A",
+    "cores": [
+      "#0d47a1",
+      "#000000"
+    ],
+    "reputacao": 91,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Arena do Grêmio",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 8,
+    "nome": "Internacional",
+    "sigla": "INT",
+    "divisao": "A",
+    "cores": [
+      "#d32f2f",
+      "#ffffff"
+    ],
+    "reputacao": 91,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Beira-Rio",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 9,
+    "nome": "Cruzeiro",
+    "sigla": "CRU",
+    "divisao": "A",
+    "cores": [
+      "#1565c0",
+      "#ffffff"
+    ],
+    "reputacao": 90,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Mineirão",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 10,
+    "nome": "Botafogo",
+    "sigla": "BOT",
+    "divisao": "A",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 89,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Nilton Santos",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 11,
+    "nome": "Athletico-PR",
+    "sigla": "ATH",
+    "divisao": "A",
+    "cores": [
+      "#d32f2f",
+      "#000000"
+    ],
+    "reputacao": 88,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Estádio Athletico-PR",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 12,
+    "nome": "Vasco",
+    "sigla": "VAS",
+    "divisao": "A",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 89,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "São Januário",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 13,
+    "nome": "Bahia",
+    "sigla": "BAH",
+    "divisao": "A",
+    "cores": [
+      "#1565c0",
+      "#c62828"
+    ],
+    "reputacao": 86,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Fonte Nova",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 14,
+    "nome": "Fortaleza",
+    "sigla": "FOR",
+    "divisao": "A",
+    "cores": [
+      "#1565c0",
+      "#c62828"
+    ],
+    "reputacao": 86,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Arena Castelão",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 15,
+    "nome": "Ceará",
+    "sigla": "CEA",
+    "divisao": "A",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 84,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Arena Castelão",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 16,
+    "nome": "Goiás",
+    "sigla": "GOI",
+    "divisao": "A",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 83,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Estádio Goiás",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 17,
+    "nome": "Coritiba",
+    "sigla": "COR",
+    "divisao": "A",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 83,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Couto Pereira",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 18,
+    "nome": "Santos",
+    "sigla": "SAN",
+    "divisao": "A",
+    "cores": [
+      "#ffffff",
+      "#000000"
+    ],
+    "reputacao": 89,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Vila Belmiro",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 19,
+    "nome": "Sport",
+    "sigla": "SPO",
+    "divisao": "A",
+    "cores": [
+      "#c62828",
+      "#000000"
+    ],
+    "reputacao": 80,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Ilha do Retiro",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 20,
+    "nome": "Vitória",
+    "sigla": "VIT",
+    "divisao": "A",
+    "cores": [
+      "#c62828",
+      "#000000"
+    ],
+    "reputacao": 80,
+    "orcamento": 100000000,
+    "estadio": {
+      "nome": "Barradão",
+      "capacidade": 40000
+    }
+  },
+  {
+    "id": 21,
+    "nome": "América-MG",
+    "sigla": "AMÉ",
+    "divisao": "B",
+    "cores": [
+      "#2e7d32",
+      "#000000"
+    ],
+    "reputacao": 79,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio América-MG",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 22,
+    "nome": "Atlético-GO",
+    "sigla": "ATL",
+    "divisao": "B",
+    "cores": [
+      "#c62828",
+      "#000000"
+    ],
+    "reputacao": 79,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Atlético-GO",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 23,
+    "nome": "Juventude",
+    "sigla": "JUV",
+    "divisao": "B",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 70,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Juventude",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 24,
+    "nome": "Criciúma",
+    "sigla": "CRI",
+    "divisao": "B",
+    "cores": [
+      "#fbc02d",
+      "#000000"
+    ],
+    "reputacao": 73,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Criciúma",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 25,
+    "nome": "Ponte Preta",
+    "sigla": "PON",
+    "divisao": "B",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 78,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Ponte Preta",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 26,
+    "nome": "Guarani",
+    "sigla": "GUA",
+    "divisao": "B",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 76,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Guarani",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 27,
+    "nome": "Vila Nova",
+    "sigla": "VIL",
+    "divisao": "B",
+    "cores": [
+      "#c62828",
+      "#ffffff"
+    ],
+    "reputacao": 76,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Vila Nova",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 28,
+    "nome": "CRB",
+    "sigla": "CRB",
+    "divisao": "B",
+    "cores": [
+      "#c62828",
+      "#ffffff"
+    ],
+    "reputacao": 75,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio CRB",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 29,
+    "nome": "Chapecoense",
+    "sigla": "CHA",
+    "divisao": "B",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 73,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Chapecoense",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 30,
+    "nome": "Avaí",
+    "sigla": "AVA",
+    "divisao": "B",
+    "cores": [
+      "#1565c0",
+      "#ffffff"
+    ],
+    "reputacao": 74,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Avaí",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 31,
+    "nome": "Novorizontino",
+    "sigla": "NOV",
+    "divisao": "B",
+    "cores": [
+      "#fbc02d",
+      "#000000"
+    ],
+    "reputacao": 73,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Novorizontino",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 32,
+    "nome": "Mirassol",
+    "sigla": "MIR",
+    "divisao": "B",
+    "cores": [
+      "#fbc02d",
+      "#2e7d32"
+    ],
+    "reputacao": 76,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Mirassol",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 33,
+    "nome": "Ceará",
+    "sigla": "CEA",
+    "divisao": "B",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 78,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Arena Castelão",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 34,
+    "nome": "Tombense",
+    "sigla": "TOM",
+    "divisao": "B",
+    "cores": [
+      "#d32f2f",
+      "#ffffff"
+    ],
+    "reputacao": 72,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Tombense",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 35,
+    "nome": "Sampaio Corrêa",
+    "sigla": "SAM",
+    "divisao": "B",
+    "cores": [
+      "#fbc02d",
+      "#2e7d32"
+    ],
+    "reputacao": 71,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Sampaio Corrêa",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 36,
+    "nome": "Ituano",
+    "sigla": "ITU",
+    "divisao": "B",
+    "cores": [
+      "#d32f2f",
+      "#000000"
+    ],
+    "reputacao": 78,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Ituano",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 37,
+    "nome": "Botafogo-SP",
+    "sigla": "BOT",
+    "divisao": "B",
+    "cores": [
+      "#d32f2f",
+      "#ffffff"
+    ],
+    "reputacao": 79,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Botafogo-SP",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 38,
+    "nome": "ABC",
+    "sigla": "ABC",
+    "divisao": "B",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 70,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio ABC",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 39,
+    "nome": "Londrina",
+    "sigla": "LON",
+    "divisao": "B",
+    "cores": [
+      "#0288d1",
+      "#ffffff"
+    ],
+    "reputacao": 76,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Londrina",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 40,
+    "nome": "Operário-PR",
+    "sigla": "OPE",
+    "divisao": "B",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 72,
+    "orcamento": 30000000,
+    "estadio": {
+      "nome": "Estádio Operário-PR",
+      "capacidade": 20000
+    }
+  },
+  {
+    "id": 41,
+    "nome": "Figueirense",
+    "sigla": "FIG",
+    "divisao": "C",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 61,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Figueirense",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 42,
+    "nome": "Paysandu",
+    "sigla": "PAY",
+    "divisao": "C",
+    "cores": [
+      "#0288d1",
+      "#ffffff"
+    ],
+    "reputacao": 55,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Paysandu",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 43,
+    "nome": "Remo",
+    "sigla": "REM",
+    "divisao": "C",
+    "cores": [
+      "#0d47a1",
+      "#ffffff"
+    ],
+    "reputacao": 61,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Remo",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 44,
+    "nome": "Náutico",
+    "sigla": "NÁU",
+    "divisao": "C",
+    "cores": [
+      "#c62828",
+      "#ffffff"
+    ],
+    "reputacao": 60,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Náutico",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 45,
+    "nome": "Santa Cruz",
+    "sigla": "SAN",
+    "divisao": "C",
+    "cores": [
+      "#c62828",
+      "#000000"
+    ],
+    "reputacao": 62,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Santa Cruz",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 46,
+    "nome": "Paraná",
+    "sigla": "PAR",
+    "divisao": "C",
+    "cores": [
+      "#c62828",
+      "#0288d1"
+    ],
+    "reputacao": 61,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Paraná",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 47,
+    "nome": "Caxias",
+    "sigla": "CAX",
+    "divisao": "C",
+    "cores": [
+      "#881c1c",
+      "#000000"
+    ],
+    "reputacao": 55,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Caxias",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 48,
+    "nome": "Joinville",
+    "sigla": "JOI",
+    "divisao": "C",
+    "cores": [
+      "#d32f2f",
+      "#000000"
+    ],
+    "reputacao": 58,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Joinville",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 49,
+    "nome": "CSA",
+    "sigla": "CSA",
+    "divisao": "C",
+    "cores": [
+      "#0288d1",
+      "#ffffff"
+    ],
+    "reputacao": 61,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio CSA",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 50,
+    "nome": "Brusque",
+    "sigla": "BRU",
+    "divisao": "C",
+    "cores": [
+      "#fbc02d",
+      "#d32f2f"
+    ],
+    "reputacao": 59,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Brusque",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 51,
+    "nome": "Volta Redonda",
+    "sigla": "VOL",
+    "divisao": "C",
+    "cores": [
+      "#fbc02d",
+      "#000000"
+    ],
+    "reputacao": 61,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Volta Redonda",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 52,
+    "nome": "São Bernardo",
+    "sigla": "SÃO",
+    "divisao": "C",
+    "cores": [
+      "#fbc02d",
+      "#000000"
+    ],
+    "reputacao": 64,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio São Bernardo",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 53,
+    "nome": "Ypiranga-RS",
+    "sigla": "YPI",
+    "divisao": "C",
+    "cores": [
+      "#fbc02d",
+      "#2e7d32"
+    ],
+    "reputacao": 57,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Ypiranga-RS",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 54,
+    "nome": "Botafogo-PB",
+    "sigla": "BOT",
+    "divisao": "C",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 55,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Botafogo-PB",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 55,
+    "nome": "Confiança",
+    "sigla": "CON",
+    "divisao": "C",
+    "cores": [
+      "#0d47a1",
+      "#ffffff"
+    ],
+    "reputacao": 60,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Confiança",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 56,
+    "nome": "Floresta",
+    "sigla": "FLO",
+    "divisao": "C",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 57,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Floresta",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 57,
+    "nome": "Aparecidense",
+    "sigla": "APA",
+    "divisao": "C",
+    "cores": [
+      "#1565c0",
+      "#000000"
+    ],
+    "reputacao": 60,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Aparecidense",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 58,
+    "nome": "Altos",
+    "sigla": "ALT",
+    "divisao": "C",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 64,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Altos",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 59,
+    "nome": "Manaus",
+    "sigla": "MAN",
+    "divisao": "C",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 64,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Manaus",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 60,
+    "nome": "Amazonas",
+    "sigla": "AMA",
+    "divisao": "C",
+    "cores": [
+      "#fbc02d",
+      "#000000"
+    ],
+    "reputacao": 56,
+    "orcamento": 5000000,
+    "estadio": {
+      "nome": "Estádio Amazonas",
+      "capacidade": 10000
+    }
+  },
+  {
+    "id": 61,
+    "nome": "Ferroviária",
+    "sigla": "FER",
+    "divisao": "D",
+    "cores": [
+      "#881c1c",
+      "#ffffff"
+    ],
+    "reputacao": 49,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Ferroviária",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 62,
+    "nome": "Caldense",
+    "sigla": "CAL",
+    "divisao": "D",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 40,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Caldense",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 63,
+    "nome": "Campinense",
+    "sigla": "CAM",
+    "divisao": "D",
+    "cores": [
+      "#d32f2f",
+      "#000000"
+    ],
+    "reputacao": 47,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Campinense",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 64,
+    "nome": "Treze",
+    "sigla": "TRE",
+    "divisao": "D",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 40,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Treze",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 65,
+    "nome": "Brasil de Pelotas",
+    "sigla": "BRA",
+    "divisao": "D",
+    "cores": [
+      "#d32f2f",
+      "#000000"
+    ],
+    "reputacao": 40,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Brasil de Pelotas",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 66,
+    "nome": "Retrô",
+    "sigla": "RET",
+    "divisao": "D",
+    "cores": [
+      "#fbc02d",
+      "#000000"
+    ],
+    "reputacao": 44,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Retrô",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 67,
+    "nome": "Moto Club",
+    "sigla": "MOT",
+    "divisao": "D",
+    "cores": [
+      "#d32f2f",
+      "#000000"
+    ],
+    "reputacao": 48,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Moto Club",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 68,
+    "nome": "Tuna Luso",
+    "sigla": "TUN",
+    "divisao": "D",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 45,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Tuna Luso",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 69,
+    "nome": "Bangu",
+    "sigla": "BAN",
+    "divisao": "D",
+    "cores": [
+      "#c62828",
+      "#ffffff"
+    ],
+    "reputacao": 41,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Bangu",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 70,
+    "nome": "Portuguesa-RJ",
+    "sigla": "POR",
+    "divisao": "D",
+    "cores": [
+      "#c62828",
+      "#2e7d32"
+    ],
+    "reputacao": 44,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Portuguesa-RJ",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 71,
+    "nome": "Cianorte",
+    "sigla": "CIA",
+    "divisao": "D",
+    "cores": [
+      "#1565c0",
+      "#ffffff"
+    ],
+    "reputacao": 43,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Cianorte",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 72,
+    "nome": "Sergipe",
+    "sigla": "SER",
+    "divisao": "D",
+    "cores": [
+      "#c62828",
+      "#ffffff"
+    ],
+    "reputacao": 48,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Sergipe",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 73,
+    "nome": "ASA",
+    "sigla": "ASA",
+    "divisao": "D",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 41,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio ASA",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 74,
+    "nome": "Sousa",
+    "sigla": "SOU",
+    "divisao": "D",
+    "cores": [
+      "#2e7d32",
+      "#ffffff"
+    ],
+    "reputacao": 47,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Sousa",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 75,
+    "nome": "Nacional-AM",
+    "sigla": "NAC",
+    "divisao": "D",
+    "cores": [
+      "#1565c0",
+      "#ffffff"
+    ],
+    "reputacao": 44,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Nacional-AM",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 76,
+    "nome": "Rio Branco-AC",
+    "sigla": "RIO",
+    "divisao": "D",
+    "cores": [
+      "#d32f2f",
+      "#ffffff"
+    ],
+    "reputacao": 48,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Rio Branco-AC",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 77,
+    "nome": "Atlético-AC",
+    "sigla": "ATL",
+    "divisao": "D",
+    "cores": [
+      "#0288d1",
+      "#ffffff"
+    ],
+    "reputacao": 49,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Atlético-AC",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 78,
+    "nome": "Inter de Limeira",
+    "sigla": "INT",
+    "divisao": "D",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 45,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Inter de Limeira",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 79,
+    "nome": "Santo André",
+    "sigla": "SAN",
+    "divisao": "D",
+    "cores": [
+      "#0d47a1",
+      "#ffffff"
+    ],
+    "reputacao": 46,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio Santo André",
+      "capacidade": 5000
+    }
+  },
+  {
+    "id": 80,
+    "nome": "XV de Piracicaba",
+    "sigla": "XV ",
+    "divisao": "D",
+    "cores": [
+      "#000000",
+      "#ffffff"
+    ],
+    "reputacao": 48,
+    "orcamento": 1000000,
+    "estadio": {
+      "nome": "Estádio XV de Piracicaba",
+      "capacidade": 5000
+    }
+  }
+]
