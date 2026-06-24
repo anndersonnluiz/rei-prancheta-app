@@ -6,6 +6,10 @@ const clubes = JSON.parse(fs.readFileSync(clubesPath, 'utf8'));
 const jogadores = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'jogadores.json'), 'utf8'));
 const clubs = clubes.filter(c => typeof c.reputacao === 'number');
 
+// Telemetria (emulara export CSV após execução)
+const telemetryRows = []; // per-shot rows
+const matchSummaries = []; // per-match summary rows
+
 function aleatorizarZona() {
   var r = Math.random();
   if (r < 0.45) return 'ATA';
@@ -53,20 +57,26 @@ function calcularPlacarAleatorioCPU(mandante, visitante, aplicaCasa) {
 
   let gM = 0, gV = 0;
   const eventos = Math.floor(Math.random() * 6) + 4; // 4..9
-  for (let i = 0; i < eventos; i++) {
+  for (let evt = 0; evt < eventos; evt++) {
     if (Math.random() < 0.9) {
       var atacanteEhMandante = Math.random() < bias;
       if (atacanteEhMandante) {
         var zona = aleatorizarZona();
         var xg = calcularXG(forcaM, forcaV, zona, avgFinalM, avgReflexoV);
-        if (Math.random() < xg) gM++;
+        var isGoal = (Math.random() < xg);
+        telemetryRows.push([/*matchId*/ mandante.id + '-' + visitante.id, mandante.id, visitante.id, evt, 'mandante', zona, xg.toFixed(4), avgFinalM, avgReflexoV, isGoal ? 1 : 0].join(','));
+        if (isGoal) gM++;
       } else {
         var zona2 = aleatorizarZona();
         var xg2 = calcularXG(forcaV, forcaM, zona2, avgFinalV, avgReflexoM);
-        if (Math.random() < xg2) gV++;
+        var isGoal2 = (Math.random() < xg2);
+        telemetryRows.push([mandante.id + '-' + visitante.id, mandante.id, visitante.id, evt, 'visitante', zona2, xg2.toFixed(4), avgFinalV, avgReflexoM, isGoal2 ? 1 : 0].join(','));
+        if (isGoal2) gV++;
       }
     }
   }
+
+  matchSummaries.push([mandante.id + '-' + visitante.id, mandante.id, visitante.id, gM, gV].join(','));
   return { golsMandante: gM, golsVisitante: gV };
 }
 
@@ -103,6 +113,17 @@ for (let i = 0; i < N; i++) {
   if (gh > ga) stats.homeWins++;
   else if (gh < ga) stats.awayWins++;
   else stats.draws++;
+}
+
+// Escrever telemetria em CSV
+try {
+  const hdr = 'matchKey,homeId,awayId,eventIndex,team,zona,xg,finalizacao,reflexo,goal\n';
+  fs.writeFileSync('telemetry_shots.csv', hdr + telemetryRows.join('\n'), 'utf8');
+  const hdr2 = 'matchKey,homeId,awayId,goalsHome,goalsAway\n';
+  fs.writeFileSync('match_summaries.csv', hdr2 + matchSummaries.join('\n'), 'utf8');
+  console.log('Telemetry written to telemetry_shots.csv and match_summaries.csv');
+} catch (e) {
+  console.error('Failed to write telemetry:', e);
 }
 
 stats.avgGoalsHome = stats.goalsHome / N;

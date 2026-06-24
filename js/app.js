@@ -904,6 +904,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         partida.golsMandante = 0;
         partida.golsVisitante = 0;
         $scope.minutoAtual = 0;
+        // Telemetria de chutes/xG desta partida
+        $scope.partidaAoVivo.telemetriaShots = [];
         
         // FASE 8: Estatísticas e Lógica
         var preco = ($scope.configFinanceira && $scope.configFinanceira.precoIngresso) ? parseInt($scope.configFinanceira.precoIngresso) : 80;
@@ -1075,7 +1077,26 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var finalAtt = atacante && atacante.atributos ? atacante.atributos.finalizacao : 75;
                     var reflexoAdv = goleiroAdv && goleiroAdv.atributos ? goleiroAdv.atributos.reflexo : 75;
                     var xg = $scope.calcularXG(forcaAtaqueMandante, forcaDefesaMandante, zona, finalAtt, reflexoAdv);
-                    if (Math.random() < xg) {
+                    var isGoal = (Math.random() < xg);
+
+                    // Registrar telemetria do chute
+                    if ($scope.partidaAoVivo) {
+                        if (!$scope.partidaAoVivo.telemetriaShots) $scope.partidaAoVivo.telemetriaShots = [];
+                        $scope.partidaAoVivo.telemetriaShots.push({
+                            minuto: $scope.minutoAtual,
+                            time: 'mandante',
+                            zona: zona,
+                            xg: parseFloat(xg.toFixed(4)),
+                            finalizacao: finalAtt,
+                            reflexo_oponente: reflexoAdv,
+                            shooterId: atacante ? atacante.id : null,
+                            shooterNome: atacante ? atacante.nome : null,
+                            goalieId: goleiroAdv ? goleiroAdv.id : null,
+                            result: isGoal ? 'GOL' : 'NAO'
+                        });
+                    }
+
+                    if (isGoal) {
                         $scope.partidaAoVivo.golsMandante++;
                         $scope.tocarSom('gol');
                         var emCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo; });
@@ -1099,7 +1120,26 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var finalAttV = atacanteV && atacanteV.atributos ? atacanteV.atributos.finalizacao : 75;
                     var reflexoMand = goleiroMand && goleiroMand.atributos ? goleiroMand.atributos.reflexo : 75;
                     var xgV = $scope.calcularXG(forcaAdv, forcaDefesaMandante, zonaV, finalAttV, reflexoMand);
-                    if (Math.random() < xgV) {
+                    var isGoalV = (Math.random() < xgV);
+
+                    // Registrar telemetria do chute visitante
+                    if ($scope.partidaAoVivo) {
+                        if (!$scope.partidaAoVivo.telemetriaShots) $scope.partidaAoVivo.telemetriaShots = [];
+                        $scope.partidaAoVivo.telemetriaShots.push({
+                            minuto: $scope.minutoAtual,
+                            time: 'visitante',
+                            zona: zonaV,
+                            xg: parseFloat(xgV.toFixed(4)),
+                            finalizacao: finalAttV,
+                            reflexo_oponente: reflexoMand,
+                            shooterId: atacanteV ? atacanteV.id : null,
+                            shooterNome: atacanteV ? atacanteV.nome : null,
+                            goalieId: goleiroMand ? goleiroMand.id : null,
+                            result: isGoalV ? 'GOL' : 'NAO'
+                        });
+                    }
+
+                    if (isGoalV) {
                         $scope.partidaAoVivo.golsVisitante++;
                         $scope.tocarSom('gol');
                         var jogadorGolAdv = $scope.escolherMarcadorGol($scope.jogadores.filter(function(j) { return j.clubeId === $scope.partidaAoVivo.visitante.id; }));
