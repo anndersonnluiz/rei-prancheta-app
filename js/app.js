@@ -1053,10 +1053,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if ($scope.partidaPausada) return; 
             }
 
-            if (Math.random() < 0.06) { 
+            if (Math.random() < 0.08) { 
                 var forcaAtaqueMandante = forcaUsuario;
                 var forcaDefesaMandante = forcaUsuario;
-                
+
                 // FASE 12: Mentalidade Tática
                 if ($scope.taticas.mentalidade === 'Retranca') {
                     forcaAtaqueMandante *= 0.8;
@@ -1069,7 +1069,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var atacaMandante = Math.random() > 0.5;
                 if (atacaMandante) {
                     $scope.estatisticas.chutesMandante++;
-                    if (Math.random() < (forcaAtaqueMandante / 100)) {
+                    var zona = $scope.aleatorizarZona();
+                    var atacante = $scope.obterJogadorAleatorio($scope.partidaAoVivo.mandante.id, ['ATA','MEI','VOL','LAT']);
+                    var goleiroAdv = $scope.obterJogadorAleatorio($scope.partidaAoVivo.visitante.id, ['GOL']);
+                    var finalAtt = atacante && atacante.atributos ? atacante.atributos.finalizacao : 75;
+                    var reflexoAdv = goleiroAdv && goleiroAdv.atributos ? goleiroAdv.atributos.reflexo : 75;
+                    var xg = $scope.calcularXG(forcaAtaqueMandante, forcaDefesaMandante, zona, finalAtt, reflexoAdv);
+                    if (Math.random() < xg) {
                         $scope.partidaAoVivo.golsMandante++;
                         $scope.tocarSom('gol');
                         var emCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo; });
@@ -1087,8 +1093,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     }
                 } else {
                     $scope.estatisticas.chutesVisitante++;
-                    var chanceGolAdversario = (forcaAdv / 100) * (forcaAdv / forcaDefesaMandante);
-                    if (Math.random() < chanceGolAdversario) {
+                    var zonaV = $scope.aleatorizarZona();
+                    var atacanteV = $scope.obterJogadorAleatorio($scope.partidaAoVivo.visitante.id, ['ATA','MEI','VOL','LAT']);
+                    var goleiroMand = $scope.obterJogadorAleatorio($scope.partidaAoVivo.mandante.id, ['GOL']);
+                    var finalAttV = atacanteV && atacanteV.atributos ? atacanteV.atributos.finalizacao : 75;
+                    var reflexoMand = goleiroMand && goleiroMand.atributos ? goleiroMand.atributos.reflexo : 75;
+                    var xgV = $scope.calcularXG(forcaAdv, forcaDefesaMandante, zonaV, finalAttV, reflexoMand);
+                    if (Math.random() < xgV) {
                         $scope.partidaAoVivo.golsVisitante++;
                         $scope.tocarSom('gol');
                         var jogadorGolAdv = $scope.escolherMarcadorGol($scope.jogadores.filter(function(j) { return j.clubeId === $scope.partidaAoVivo.visitante.id; }));
@@ -1368,17 +1379,74 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     // FASE 15/16: Low-Res Engine & Tabelas & Artilharia
+    // helpers xG
+    $scope.aleatorizarZona = function() {
+        var r = Math.random();
+        if (r < 0.45) return 'ATA';
+        if (r < 0.70) return 'MEI';
+        if (r < 0.82) return 'VOL';
+        if (r < 0.92) return 'LAT';
+        return 'ZAG';
+    };
+
+    $scope.calcularXG = function(forcaAtaque, forcaDefesa, zona, finalizacao, reflexo) {
+        var zonaMultipliers = { 'ATA':1.0, 'MEI':0.6, 'VOL':0.25, 'LAT':0.15, 'ZAG':0.05, 'INDEFINIDO':0.08 };
+        var zm = zonaMultipliers[zona] || 0.08;
+        var adv = forcaAtaque / Math.max(1, forcaDefesa);
+        var base = 1.5 * adv * zm; // increased base to compensate per-player modifiers
+
+        // Player-level modifiers (defaults if not provided)
+        finalizacao = (typeof finalizacao === 'number') ? finalizacao : 75;
+        reflexo = (typeof reflexo === 'number') ? reflexo : 75;
+
+        // Shooter: small boost per finalizacao above/below baseline (clamped)
+        var shooterBoost = 1 + Math.max(-0.4, Math.min(0.8, (finalizacao - 75) * 0.012));
+        // Goalkeeper: reduces effective xG (clamped to avoid full nullification) — reduced impact
+        var goalieReduction = Math.max(0, Math.min(0.85, reflexo * 0.006));
+
+        var xg = base * shooterBoost * (1 - goalieReduction);
+        return Math.max(0.005, Math.min(0.6, xg));
+    };
+
     $scope.calcularPlacarAleatorioCPU = function(mandante, visitante, aplicaCasa) {
-        var forcaM = mandante.reputacao + (aplicaCasa ? 5 : 0);
+        // Usa xG por finalização em vez de "chanceM" direta e incorpora média de atributos dos jogadores
+        var forcaM = mandante.reputacao + (aplicaCasa ? 10 : 0);
         var forcaV = visitante.reputacao;
-        var chanceM = forcaM / (forcaM + forcaV);
-        var gM = 0; var gV = 0;
-        var eventos = Math.floor(Math.random() * 4) + 2;
+        var diff = forcaM - forcaV;
+        var bias = 0.5 + (diff / (forcaM + forcaV)) * 0.35;
+        bias = Math.max(0.05, Math.min(0.95, bias));
+
+        function mediaAtributoTime(clubeId, atributo, posFilter) {
+            if (!$scope.jogadores) return 75;
+            var jTime = $scope.jogadores.filter(function(j) { return j.clubeId === clubeId && j.atributos; });
+            if (posFilter && posFilter.length > 0) jTime = jTime.filter(function(j) { return posFilter.indexOf(j.posicao) !== -1; });
+            if (!jTime || jTime.length === 0) return 75;
+            var soma = jTime.reduce(function(s, j) { return s + (j.atributos[atributo] || 75); }, 0);
+            return Math.round(soma / jTime.length);
+        }
+
+        var avgFinalM = mediaAtributoTime(mandante.id, 'finalizacao', ['ATA','MEI','VOL','LAT']);
+        var avgReflexoM = mediaAtributoTime(mandante.id, 'reflexo', ['GOL']);
+        var avgFinalV = mediaAtributoTime(visitante.id, 'finalizacao', ['ATA','MEI','VOL','LAT']);
+        var avgReflexoV = mediaAtributoTime(visitante.id, 'reflexo', ['GOL']);
+
+        var gM = 0, gV = 0;
+        var eventos = Math.floor(Math.random() * 6) + 4; // 4..9 eventos (aumentado para gerar mais finalizações)
         for (var i = 0; i < eventos; i++) {
-            if (Math.random() < 0.4) {
-                if (Math.random() < chanceM) gM++; else gV++;
+            if (Math.random() < 0.9) { // chance de gerar uma finalização (mais chutes por partida)
+                var atacanteEhMandante = Math.random() < bias;
+                if (atacanteEhMandante) {
+                    var zona = $scope.aleatorizarZona();
+                    var xg = $scope.calcularXG(forcaM, forcaV, zona, avgFinalM, avgReflexoV);
+                    if (Math.random() < xg) gM++;
+                } else {
+                    var zona2 = $scope.aleatorizarZona();
+                    var xg2 = $scope.calcularXG(forcaV, forcaM, zona2, avgFinalV, avgReflexoM);
+                    if (Math.random() < xg2) gV++;
+                }
             }
         }
+
         $scope.registrarGolsNaDB(mandante.id, gM, null);
         $scope.registrarGolsNaDB(visitante.id, gV, null);
         return { golsMandante: gM, golsVisitante: gV };
@@ -2453,6 +2521,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (posX > 55 && posX <= 70) return 'MEI';
         if (posX > 70) return 'ATA';
         return 'INDEFINIDO';
+    };
+
+    // Retorna um jogador aleatório do time (prioriza elencoAtual quando for o clube do player)
+    $scope.obterJogadorAleatorio = function(clubeId, posicoes) {
+        if (!$scope.jogadores) return null;
+        var elenco = [];
+        if ($scope.clubeAtual && clubeId === $scope.clubeAtual.id) {
+            elenco = $scope.elencoAtual || [];
+        } else {
+            elenco = $scope.jogadores.filter(function(j) { return j.clubeId === clubeId; });
+        }
+
+        var candidatos = elenco.filter(function(j) {
+            if (!j) return false;
+            if (j.lesionado || j.expulso) return false;
+            if (!posicoes || posicoes.length === 0) return true;
+            return posicoes.indexOf(j.posicao) !== -1;
+        });
+
+        if (!candidatos || candidatos.length === 0) return null;
+        return candidatos[Math.floor(Math.random() * candidatos.length)];
     };
 
     $scope.estaImprovisado = function(jogador) {
