@@ -19,7 +19,25 @@ function aleatorizarZona() {
   return 'ZAG';
 }
 
-function calcularXG(forcaAtaque, forcaDefesa, zona, finalizacao, reflexo) {
+function aleatorizarTipoChance() {
+  var r = Math.random();
+  if (r < 0.02) return 'PENALTY';
+  if (r < 0.06) return 'CORNER';
+  if (r < 0.09) return 'DIRECT_FK';
+  return 'NORMAL';
+}
+
+function calcularXGPorTipoChance(chanceType) {
+  var baseXG = {
+    'PENALTY': 0.75,
+    'CORNER': 0.06,
+    'DIRECT_FK': 0.08,
+    'NORMAL': 0.0
+  };
+  return baseXG[chanceType] || 0.0;
+}
+
+function calcularXG(forcaAtaque, forcaDefesa, zona, finalizacao, reflexo, chanceType) {
   var zonaMultipliers = { 'ATA':1.0, 'MEI':0.6, 'VOL':0.25, 'LAT':0.15, 'ZAG':0.05, 'INDEFINIDO':0.08 };
   var zm = zonaMultipliers[zona] || 0.08;
   var adv = forcaAtaque / Math.max(1, forcaDefesa);
@@ -27,6 +45,14 @@ function calcularXG(forcaAtaque, forcaDefesa, zona, finalizacao, reflexo) {
 
   finalizacao = (typeof finalizacao === 'number') ? finalizacao : 75;
   reflexo = (typeof reflexo === 'number') ? reflexo : 75;
+
+  // Chance type base xG (overrides zone-based if set-piece)
+  if (chanceType && chanceType !== 'NORMAL') {
+    var baseXGType = calcularXGPorTipoChance(chanceType);
+    if (baseXGType > 0) {
+      base = baseXGType;
+    }
+  }
 
   var shooterBoost = 1 + Math.max(-0.4, Math.min(0.8, (finalizacao - 75) * 0.012));
   var goalieReduction = Math.max(0, Math.min(0.85, reflexo * 0.006));
@@ -62,15 +88,17 @@ function calcularPlacarAleatorioCPU(mandante, visitante, aplicaCasa) {
       var atacanteEhMandante = Math.random() < bias;
       if (atacanteEhMandante) {
         var zona = aleatorizarZona();
-        var xg = calcularXG(forcaM, forcaV, zona, avgFinalM, avgReflexoV);
+        var chanceType = aleatorizarTipoChance();
+        var xg = calcularXG(forcaM, forcaV, zona, avgFinalM, avgReflexoV, chanceType);
         var isGoal = (Math.random() < xg);
-        telemetryRows.push([/*matchId*/ mandante.id + '-' + visitante.id, mandante.id, visitante.id, evt, 'mandante', zona, xg.toFixed(4), avgFinalM, avgReflexoV, isGoal ? 1 : 0].join(','));
+        telemetryRows.push([/*matchId*/ mandante.id + '-' + visitante.id, mandante.id, visitante.id, evt, 'mandante', zona, chanceType, xg.toFixed(4), avgFinalM, avgReflexoV, isGoal ? 1 : 0].join(','));
         if (isGoal) gM++;
       } else {
         var zona2 = aleatorizarZona();
-        var xg2 = calcularXG(forcaV, forcaM, zona2, avgFinalV, avgReflexoM);
+        var chanceType2 = aleatorizarTipoChance();
+        var xg2 = calcularXG(forcaV, forcaM, zona2, avgFinalV, avgReflexoM, chanceType2);
         var isGoal2 = (Math.random() < xg2);
-        telemetryRows.push([mandante.id + '-' + visitante.id, mandante.id, visitante.id, evt, 'visitante', zona2, xg2.toFixed(4), avgFinalV, avgReflexoM, isGoal2 ? 1 : 0].join(','));
+        telemetryRows.push([mandante.id + '-' + visitante.id, mandante.id, visitante.id, evt, 'visitante', zona2, chanceType2, xg2.toFixed(4), avgFinalV, avgReflexoM, isGoal2 ? 1 : 0].join(','));
         if (isGoal2) gV++;
       }
     }
@@ -117,7 +145,7 @@ for (let i = 0; i < N; i++) {
 
 // Escrever telemetria em CSV
 try {
-  const hdr = 'matchKey,homeId,awayId,eventIndex,team,zona,xg,finalizacao,reflexo,goal\n';
+  const hdr = 'matchKey,homeId,awayId,eventIndex,team,zona,chanceType,xg,finalizacao,reflexo,goal\n';
   fs.writeFileSync('telemetry_shots.csv', hdr + telemetryRows.join('\n'), 'utf8');
   const hdr2 = 'matchKey,homeId,awayId,goalsHome,goalsAway\n';
   fs.writeFileSync('match_summaries.csv', hdr2 + matchSummaries.join('\n'), 'utf8');

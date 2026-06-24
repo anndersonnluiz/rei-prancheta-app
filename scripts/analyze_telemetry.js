@@ -21,11 +21,11 @@ const stats = {
 
 data.forEach((line, idx) => {
   const parts = line.split(',');
-  if (parts.length < 10) return;
+  if (parts.length < 11) return;
   
   const zona = parts[5].trim();
-  const xg = parseFloat(parts[6].trim()) || 0;
-  const goal = parseInt(parts[9].trim()) || 0;
+  const xg = parseFloat(parts[7].trim()) || 0;
+  const goal = parseInt(parts[10].trim()) || 0;
 
   if (!zones[zona]) {
     zones[zona] = { shots: 0, goals: 0, xgSum: 0, xgList: [] };

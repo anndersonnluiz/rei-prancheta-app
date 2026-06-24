@@ -1072,11 +1072,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if (atacaMandante) {
                     $scope.estatisticas.chutesMandante++;
                     var zona = $scope.aleatorizarZona();
+                    var chanceType = $scope.aleatorizarTipoChance();
                     var atacante = $scope.obterJogadorAleatorio($scope.partidaAoVivo.mandante.id, ['ATA','MEI','VOL','LAT']);
                     var goleiroAdv = $scope.obterJogadorAleatorio($scope.partidaAoVivo.visitante.id, ['GOL']);
                     var finalAtt = atacante && atacante.atributos ? atacante.atributos.finalizacao : 75;
                     var reflexoAdv = goleiroAdv && goleiroAdv.atributos ? goleiroAdv.atributos.reflexo : 75;
-                    var xg = $scope.calcularXG(forcaAtaqueMandante, forcaDefesaMandante, zona, finalAtt, reflexoAdv);
+                    var xg = $scope.calcularXG(forcaAtaqueMandante, forcaDefesaMandante, zona, finalAtt, reflexoAdv, chanceType);
                     var isGoal = (Math.random() < xg);
 
                     // Registrar telemetria do chute
@@ -1086,6 +1087,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                             minuto: $scope.minutoAtual,
                             time: 'mandante',
                             zona: zona,
+                            chanceType: chanceType,
                             xg: parseFloat(xg.toFixed(4)),
                             finalizacao: finalAtt,
                             reflexo_oponente: reflexoAdv,
@@ -1110,16 +1112,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         }
                     } else {
                         $scope.tocarSom('chute');
-                        $scope.narracao.unshift($scope.minutoAtual + "' - Uuuuh! Chute perigoso do " + $scope.partidaAoVivo.mandante.sigla + " quase entra.");
+                        var narracaoChute = $scope.minutoAtual + "' - ";
+                        if (chanceType === 'PENALTY') narracaoChute += "Penalti desperdiçado!";
+                        else if (chanceType === 'CORNER') narracaoChute += "Escanteio desperdiçado!";
+                        else if (chanceType === 'DIRECT_FK') narracaoChute += "Falta direta na trave!";
+                        else narracaoChute += "Uuuuh! Chute perigoso do " + $scope.partidaAoVivo.mandante.sigla + " quase entra.";
+                        $scope.narracao.unshift(narracaoChute);
                     }
                 } else {
                     $scope.estatisticas.chutesVisitante++;
                     var zonaV = $scope.aleatorizarZona();
+                    var chanceTypeV = $scope.aleatorizarTipoChance();
                     var atacanteV = $scope.obterJogadorAleatorio($scope.partidaAoVivo.visitante.id, ['ATA','MEI','VOL','LAT']);
                     var goleiroMand = $scope.obterJogadorAleatorio($scope.partidaAoVivo.mandante.id, ['GOL']);
                     var finalAttV = atacanteV && atacanteV.atributos ? atacanteV.atributos.finalizacao : 75;
                     var reflexoMand = goleiroMand && goleiroMand.atributos ? goleiroMand.atributos.reflexo : 75;
-                    var xgV = $scope.calcularXG(forcaAdv, forcaDefesaMandante, zonaV, finalAttV, reflexoMand);
+                    var xgV = $scope.calcularXG(forcaAdv, forcaDefesaMandante, zonaV, finalAttV, reflexoMand, chanceTypeV);
                     var isGoalV = (Math.random() < xgV);
 
                     // Registrar telemetria do chute visitante
@@ -1129,6 +1137,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                             minuto: $scope.minutoAtual,
                             time: 'visitante',
                             zona: zonaV,
+                            chanceType: chanceTypeV,
                             xg: parseFloat(xgV.toFixed(4)),
                             finalizacao: finalAttV,
                             reflexo_oponente: reflexoMand,
@@ -1152,7 +1161,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         }
                     } else {
                         $scope.tocarSom('chute');
-                        $scope.narracao.unshift($scope.minutoAtual + "' - Defesa espetacular do goleiro do " + $scope.partidaAoVivo.mandante.sigla + "!");
+                        var narracaoVisitante = $scope.minutoAtual + "' - ";
+                        if (chanceTypeV === 'PENALTY') narracaoVisitante += "Penalti desperdiçado!";
+                        else if (chanceTypeV === 'CORNER') narracaoVisitante += "Escanteio desperdiçado!";
+                        else if (chanceTypeV === 'DIRECT_FK') narracaoVisitante += "Falta direta na trave!";
+                        else narracaoVisitante += "Defesa espetacular do goleiro do " + $scope.partidaAoVivo.mandante.sigla + "!";
+                        $scope.narracao.unshift(narracaoVisitante);
                     }
                 }
             }
@@ -1440,7 +1454,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return 'ZAG';
     };
 
-    $scope.calcularXG = function(forcaAtaque, forcaDefesa, zona, finalizacao, reflexo) {
+    // Gera tipo de chance aleatório com probabilidades realistas
+    $scope.aleatorizarTipoChance = function() {
+        var r = Math.random();
+        if (r < 0.02) return 'PENALTY';      // 2% de chances
+        if (r < 0.06) return 'CORNER';       // 4% de escanteios
+        if (r < 0.09) return 'DIRECT_FK';    // 3% de faltas diretas
+        return 'NORMAL';                      // 91% chutes normais
+    };
+
+    // xG base por tipo de chance
+    $scope.calcularXGPorTipoChance = function(chanceType) {
+        var baseXG = {
+            'PENALTY': 0.75,
+            'CORNER': 0.06,
+            'DIRECT_FK': 0.08,
+            'NORMAL': 0.0
+        };
+        return baseXG[chanceType] || 0.0;
+    };
+
+    $scope.calcularXG = function(forcaAtaque, forcaDefesa, zona, finalizacao, reflexo, chanceType) {
         var zonaMultipliers = { 'ATA':1.0, 'MEI':0.6, 'VOL':0.25, 'LAT':0.15, 'ZAG':0.05, 'INDEFINIDO':0.08 };
         var zm = zonaMultipliers[zona] || 0.08;
         var adv = forcaAtaque / Math.max(1, forcaDefesa);
@@ -1449,6 +1483,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         // Player-level modifiers (defaults if not provided)
         finalizacao = (typeof finalizacao === 'number') ? finalizacao : 75;
         reflexo = (typeof reflexo === 'number') ? reflexo : 75;
+
+        // Chance type base xG (overrides zone-based if set-piece)
+        if (chanceType && chanceType !== 'NORMAL') {
+            var baseXGType = $scope.calcularXGPorTipoChance(chanceType);
+            if (baseXGType > 0) {
+                base = baseXGType; // Use set-piece xG base directly
+            }
+        }
 
         // Shooter: small boost per finalizacao above/below baseline (clamped)
         var shooterBoost = 1 + Math.max(-0.4, Math.min(0.8, (finalizacao - 75) * 0.012));
@@ -1488,11 +1530,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var atacanteEhMandante = Math.random() < bias;
                 if (atacanteEhMandante) {
                     var zona = $scope.aleatorizarZona();
-                    var xg = $scope.calcularXG(forcaM, forcaV, zona, avgFinalM, avgReflexoV);
+                    var chanceType = $scope.aleatorizarTipoChance();
+                    var xg = $scope.calcularXG(forcaM, forcaV, zona, avgFinalM, avgReflexoV, chanceType);
                     if (Math.random() < xg) gM++;
                 } else {
                     var zona2 = $scope.aleatorizarZona();
-                    var xg2 = $scope.calcularXG(forcaV, forcaM, zona2, avgFinalV, avgReflexoM);
+                    var chanceType2 = $scope.aleatorizarTipoChance();
+                    var xg2 = $scope.calcularXG(forcaV, forcaM, zona2, avgFinalV, avgReflexoM, chanceType2);
                     if (Math.random() < xg2) gV++;
                 }
             }
