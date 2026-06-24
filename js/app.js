@@ -1199,6 +1199,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             } else {
                 $scope.atualizarTabela(partida, $scope.clubeAtual.divisao);
             }
+
+            // Persistir telemetria da partida no histórico local para salvar/analise
+            if (partida.telemetriaShots && partida.telemetriaShots.length > 0) {
+                $scope.telemetriaHistorico = $scope.telemetriaHistorico || [];
+                try {
+                    var matchKey = (partida.mandante && partida.visitante) ? (partida.mandante.id + '-' + partida.visitante.id + '-' + ($scope.diaAtual || Date.now())) : ('match-' + Date.now());
+                    $scope.telemetriaHistorico.push({ matchKey: matchKey, homeId: partida.mandante ? partida.mandante.id : null, awayId: partida.visitante ? partida.visitante.id : null, shots: partida.telemetriaShots });
+                } catch (e) {
+                    // Falha silenciosa para não quebrar a conclusão da partida
+                }
+            }
         }
         
         // FASE 15: Simular CPU
@@ -2147,7 +2158,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             taticas: $scope.taticas,
             configFinanceira: $scope.configFinanceira,
             clubeAtualInfo: $scope.clubeAtual, // Adicionado para persistir o estado do estadio modificado
-            dataSave: new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            dataSave: new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+            telemetriaHistorico: $scope.telemetriaHistorico || []
         };
         window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveObj));
         $scope.checarSaveExistente(); 
@@ -2156,6 +2168,30 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.salvarJogo = function() {
         $scope.salvarJogoSilencioso();
         alert('Jogo salvo com sucesso!');
+    };
+
+    // Exportar telemetria da partida atual como CSV para download
+    $scope.exportTelemetriaPartida = function() {
+        if (!$scope.partidaAoVivo || !$scope.partidaAoVivo.telemetriaShots || $scope.partidaAoVivo.telemetriaShots.length === 0) {
+            alert('Nenhuma telemetria disponível nesta partida.');
+            return;
+        }
+
+        var rows = ['minuto,time,zona,xg,finalizacao,reflexo_oponente,shooterId,shooterNome,goal'];
+        $scope.partidaAoVivo.telemetriaShots.forEach(function(s) {
+            rows.push([s.minuto, s.time, s.zona, s.xg, s.finalizacao, s.reflexo_oponente, s.shooterId, '"' + (s.shooterNome || '') + '"', s.result === 'GOL' ? 1 : 0].join(','));
+        });
+
+        var csv = rows.join('\n');
+        var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        var url = (window.URL || window.webkitURL).createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'telemetria_partida_' + ($scope.partidaAoVivo.mandante ? $scope.partidaAoVivo.mandante.sigla : 'M') + '_vs_' + ($scope.partidaAoVivo.visitante ? $scope.partidaAoVivo.visitante.sigla : 'V') + '.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        (window.URL || window.webkitURL).revokeObjectURL(url);
     };
 
     $scope.carregarJogo = function() {
