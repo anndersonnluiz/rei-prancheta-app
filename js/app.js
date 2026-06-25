@@ -12,6 +12,10 @@ app.directive('draggablePlayer', function() {
         link: function(scope, element, attrs) {
             element[0].setAttribute('draggable', true);
             element[0].addEventListener('dragstart', function(e) {
+                if (scope.jogadorBloqueadoParaEntrar && scope.jogadorBloqueadoParaEntrar(scope.jogador)) {
+                    e.preventDefault();
+                    return false;
+                }
                 e.dataTransfer.setData('jogadorId', scope.jogador.id);
                 e.dataTransfer.effectAllowed = 'move';
                 element[0].classList.add('dragging');
@@ -58,6 +62,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.elencoAtual = [];
     $scope.telaAtual = 'loading'; 
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
+    var SAVE_VERSION_ATUAL = 4;
 
     // FASE 21: Efeitos Sonoros
     $scope.somAtivado = true;
@@ -113,6 +118,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     // FASE 6: CALENDÁRIO E JOGOS
     $scope.calendario = [];
     $scope.rodadaAtual = 0;
+    $scope.filtroCalendario = 'TODOS';
+    $scope.calendarioFiltrado = [];
+    $scope.proximosEventosOffsets = [0, 1, 2, 3, 4];
+    $scope.definirFiltroCalendario = function(filtro) {
+        $scope.filtroCalendario = filtro || 'TODOS';
+        $scope.atualizarCalendarioFiltrado();
+    };
+    $scope.isFiltroCalendarioAtivo = function(filtro) {
+        return ($scope.filtroCalendario || 'TODOS') === filtro;
+    };
     
     // Variáveis da Partida Ao Vivo
     $scope.partidaAoVivo = null;
@@ -127,17 +142,50 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         marcacao: 'Recuada'
     };
 
+    function valorNumericoOuPadrao(valor, padrao) {
+        return (typeof valor === 'number') ? valor : padrao;
+    }
+
+    function normalizarJogadorSalvo(jogador) {
+        if (!jogador) return;
+        if (!jogador.atributos) jogador.atributos = {};
+
+        var attr = jogador.atributos;
+        var finalizacao = valorNumericoOuPadrao(attr.finalizacao, 75);
+        var passe = valorNumericoOuPadrao(attr.passe, 75);
+
+        if (jogador.condicaoFisica === undefined) jogador.condicaoFisica = 100;
+        if (jogador.cartoesAmarelos === undefined) jogador.cartoesAmarelos = 0;
+        if (jogador.lesionado === undefined) jogador.lesionado = false;
+        if (jogador.diasLesao === undefined) jogador.diasLesao = 0;
+        if (jogador.suspenso === undefined) jogador.suspenso = false;
+        if (jogador.substituidoNaPartida === undefined) jogador.substituidoNaPartida = false;
+
+        if (jogador.posicao === 'GOL') {
+            if (attr.posicionamento === undefined) attr.posicionamento = valorNumericoOuPadrao(attr.reflexo, 75);
+            if (attr.distribuicao === undefined) attr.distribuicao = passe;
+        }
+
+        if (attr.penalti === undefined) attr.penalti = finalizacao;
+        if (attr.escanteio === undefined) attr.escanteio = passe;
+        if (attr.cobrador === undefined) attr.cobrador = Math.round((finalizacao + passe) / 2);
+    }
+
+    function normalizarListaJogadoresSalvos(jogadores) {
+        if (!Array.isArray(jogadores)) return;
+        jogadores.forEach(function(jogador) {
+            normalizarJogadorSalvo(jogador);
+        });
+    }
+
     // FASE 11 / 13: INICIALIZAR VARIÁVEIS EXTRAS (Retrocompatibilidade)
     $scope.verificarVariaveisExtras = function() {
         if ($scope.elencoAtual) {
             $scope.elencoAtual.forEach(function(jogador) {
-                if (jogador.condicaoFisica === undefined) jogador.condicaoFisica = 100;
-                if (jogador.cartoesAmarelos === undefined) jogador.cartoesAmarelos = 0;
-                if (jogador.lesionado === undefined) jogador.lesionado = false;
-                if (jogador.diasLesao === undefined) jogador.diasLesao = 0;
-                if (jogador.suspenso === undefined) jogador.suspenso = false;
+                normalizarJogadorSalvo(jogador);
             });
         }
+        normalizarListaJogadoresSalvos($scope.jogadores);
         if ($scope.clubeAtual && $scope.clubeAtual.estadio) {
             if ($scope.clubeAtual.estadio.obraEmAndamento === undefined) {
                 $scope.clubeAtual.estadio.obraEmAndamento = false;
@@ -156,6 +204,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         if ($scope.configFinanceira === undefined) {
             $scope.configFinanceira = { precoIngresso: 80, marketingAtivo: 0 };
+        }
+        if (!Array.isArray($scope.transferenciasHistorico)) {
+            $scope.transferenciasHistorico = [];
+        }
+        if (!Array.isArray($scope.propostasPendentes)) {
+            $scope.propostasPendentes = [];
+        }
+        if (!$scope.mercadoUI) {
+            $scope.mercadoUI = { aba: 'busca' };
         }
     };
 
@@ -231,6 +288,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.responderProposta = function(msg, aceitar) {
         var jogadorAlvo = $scope.elencoAtual.find(function(j) { return j.id === msg.jogadorOfertaId; });
         if (!jogadorAlvo) return; // Jogador já não existe mais no elenco (vendido?)
+        var campoResposta = msg.conteudo !== undefined ? 'conteudo' : 'mensagem';
+        var clubeCompradorId = msg.clubeCompradorId || msg.clubeDestinoId || 'vendido_ia';
+        var clubeCompradorNome = msg.remetente || 'Clube interessado';
 
         if (aceitar) {
             $scope.clubeAtual.orcamento += msg.valorOferta;
@@ -240,17 +300,59 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 valor: msg.valorOferta,
                 data: new Date().toLocaleDateString('pt-BR')
             });
+
+            $scope.registrarTransferenciaHistorico({
+                tipo: 'venda',
+                jogadorId: jogadorAlvo.id,
+                jogadorNome: jogadorAlvo.nome,
+                clubeOrigemId: $scope.clubeAtual.id,
+                clubeOrigemNome: $scope.clubeAtual.nome,
+                clubeDestinoId: clubeCompradorId,
+                clubeDestinoNome: clubeCompradorNome,
+                valor: msg.valorOferta,
+                salario: jogadorAlvo.salario,
+                anosContrato: jogadorAlvo.anosContrato
+            });
+            $scope.registrarOuAtualizarProposta({
+                id: msg.propostaPendenteId,
+                tipo: 'venda',
+                status: 'aceita',
+                jogadorId: jogadorAlvo.id,
+                jogadorNome: jogadorAlvo.nome,
+                clubeOrigemId: $scope.clubeAtual.id,
+                clubeDestinoId: clubeCompradorId,
+                clubeDestinoNome: clubeCompradorNome,
+                valorOferta: msg.valorOferta
+            });
             
             // Remover do elencoAtual e colocar na IA
-            jogadorAlvo.clubeId = "vendido_ia"; // Fictício
+            jogadorAlvo.clubeId = clubeCompradorId;
             jogadorAlvo.emCampo = false;
+            jogadorAlvo.emNegociacao = false;
+            var jogadorBase = ($scope.jogadores || []).find(function(j) { return j.id === jogadorAlvo.id; });
+            if (jogadorBase) {
+                jogadorBase.clubeId = clubeCompradorId;
+                jogadorBase.emCampo = false;
+                jogadorBase.emNegociacao = false;
+            }
             var idx = $scope.elencoAtual.findIndex(function(j) { return j.id === jogadorAlvo.id; });
             if (idx > -1) $scope.elencoAtual.splice(idx, 1);
             
-            msg.conteudo += '\n\n✅ VOCÊ ACEITOU A PROPOSTA. Jogador foi vendido.';
+            msg[campoResposta] = (msg[campoResposta] || '') + '\n\n✅ VOCÊ ACEITOU A PROPOSTA. Jogador foi vendido.';
         } else {
             jogadorAlvo.emNegociacao = false;
-            msg.conteudo += '\n\n❌ VOCÊ RECUSOU A PROPOSTA. Jogador fica no elenco.';
+            $scope.registrarOuAtualizarProposta({
+                id: msg.propostaPendenteId,
+                tipo: 'venda',
+                status: 'recusada',
+                jogadorId: jogadorAlvo.id,
+                jogadorNome: jogadorAlvo.nome,
+                clubeOrigemId: $scope.clubeAtual.id,
+                clubeDestinoId: clubeCompradorId,
+                clubeDestinoNome: clubeCompradorNome,
+                valorOferta: msg.valorOferta
+            });
+            msg[campoResposta] = (msg[campoResposta] || '') + '\n\n❌ VOCÊ RECUSOU A PROPOSTA. Jogador fica no elenco.';
         }
         
         msg.respondida = true;
@@ -284,6 +386,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.dados.anoAtual = 2024;
         $scope.selecionarClube(clube.id);
         $scope.financasHistorico = []; // FASE 9: Inicializa o histórico zerado
+        $scope.transferenciasHistorico = [];
+        $scope.transferenciasHistoricoVisivel = [];
+        $scope.propostasPendentes = [];
+        $scope.mercadoUI = { aba: 'busca' };
+        $scope.propostaNegociacaoAtualId = null;
         
         if ($scope.jogadores) {
             $scope.jogadores.forEach(function(j) { 
@@ -301,7 +408,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             id: 'msg_janela_inicio',
             remetente: 'Federação',
             assunto: 'Janela de Transferências ABERTA!',
-            mensagem: 'O período de transferências acaba de começar! Os clubes estão livres para comprar e vender atletas. A janela fechará na rodada 15 do calendário.',
+            mensagem: 'O período de transferências acaba de começar! Os clubes estão livres para comprar e vender atletas durante a janela inicial da temporada.',
             lida: false,
             tipo: 'info',
             data: new Date().toLocaleDateString('pt-BR')
@@ -309,6 +416,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.mensagensNaoLidas++;
 
         $scope.gerarCalendario(); // Gera o calendário do zero
+        if ($scope.atualizarResumoJanelaMercado) $scope.atualizarResumoJanelaMercado();
         $scope.mudarTela('dashboard');
     };
 
@@ -582,7 +690,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             'L', 'C_ida', 'L', 'LibSul_G', 'C_volta', 'L', 'L', 'C_ida', 'L', 'LibSul_G', 'C_volta', 'L', 
             'L', 'LibSul_G', 'L', 'LibSul_G', 'L', 'C_ida', 'L', 'LibSul_ida', 'C_volta', 'L', 'LibSul_volta', 'L', 
             'L', 'LibSul_ida', 'L', 'LibSul_volta', 'L', 'LibSul_ida', 'L', 'LibSul_volta', 'L', 'LibSul_ida', 'L', 'LibSul_volta', 
-            'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'
+            'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'C_ida', 'C_volta'
         ];
         
         for(var i=0; i<masterLayout.length; i++) {
@@ -618,7 +726,302 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             }
         }
         
+        $scope.normalizarCalendarioGeral();
+        $scope.atualizarCalendarioFiltrado();
         $scope.diaAtual = 0;
+        if ($scope.atualizarResumoJanelaMercado) $scope.atualizarResumoJanelaMercado();
+    };
+
+    $scope.normalizarCalendarioGeral = function() {
+        if (!$scope.calendarioGeral || !$scope.calendarioGeral.length) return;
+
+        var eventosCopa = $scope.calendarioGeral.filter(function(dia) { return dia.tipo === 'COPA'; });
+        var temFinalCopa = eventosCopa.some(function(dia) { return dia.fase === 5; });
+        if (temFinalCopa || eventosCopa.length !== 10 || $scope.calendarioGeral.length < 2) return;
+
+        var penultimoIndice = $scope.calendarioGeral.length - 2;
+        var ultimoIndice = $scope.calendarioGeral.length - 1;
+        var penultimo = $scope.calendarioGeral[penultimoIndice];
+        var ultimo = $scope.calendarioGeral[ultimoIndice];
+        if (!penultimo || !ultimo || penultimo.tipo !== 'TREINO' || ultimo.tipo !== 'TREINO') return;
+
+        $scope.calendarioGeral[penultimoIndice] = {
+            dia: penultimoIndice,
+            tipo: 'COPA',
+            titulo: 'Copa do Brasil - Final (Ida)',
+            fase: 5,
+            perna: 'ida'
+        };
+        $scope.calendarioGeral[ultimoIndice] = {
+            dia: ultimoIndice,
+            tipo: 'COPA',
+            titulo: 'Copa do Brasil - Final (Volta)',
+            fase: 5,
+            perna: 'volta'
+        };
+    };
+
+    $scope.obterIndiceRodadaLiga = function(numeroRodada) {
+        if (!$scope.calendarioGeral) return null;
+        var rodadaLiga = numeroRodada - 1;
+        for (var i = 0; i < $scope.calendarioGeral.length; i++) {
+            var dia = $scope.calendarioGeral[i];
+            if (dia && dia.tipo === 'LIGA' && dia.rodadaLiga >= rodadaLiga) return i;
+        }
+        return null;
+    };
+
+    $scope.obterJanelasTransferencia = function() {
+        var totalDias = $scope.calendarioGeral ? $scope.calendarioGeral.length : 0;
+        if (!totalDias) return [];
+
+        var inicioMeioAno = $scope.obterIndiceRodadaLiga(18);
+        if (inicioMeioAno === null) inicioMeioAno = Math.floor(totalDias * 0.55);
+
+        return [
+            { id: 'inicio', inicio: 0, fim: Math.min(15, totalDias - 1), nome: 'inicio da temporada' },
+            { id: 'meio', inicio: inicioMeioAno, fim: Math.min(inicioMeioAno + 10, totalDias - 1), nome: 'meio da temporada' }
+        ];
+    };
+
+    $scope.obterJanelaTransferenciaAtual = function(diaIndice) {
+        var dia = (typeof diaIndice === 'number') ? diaIndice : $scope.diaAtual;
+        var janelas = $scope.obterJanelasTransferencia();
+        for (var i = 0; i < janelas.length; i++) {
+            if (dia >= janelas[i].inicio && dia <= janelas[i].fim) return janelas[i];
+        }
+        return null;
+    };
+
+    $scope.isJanelaTransferenciaAbertaNoDia = function(diaIndice) {
+        return !!$scope.obterJanelaTransferenciaAtual(diaIndice);
+    };
+
+    $scope.obterEventoJanelaTransferencia = function(diaIndice) {
+        var dia = (typeof diaIndice === 'number') ? diaIndice : $scope.diaAtual;
+        var janelas = $scope.obterJanelasTransferencia();
+        for (var i = 0; i < janelas.length; i++) {
+            var janela = janelas[i];
+            if (dia === janela.inicio && janela.inicio > 0) return { tipo: 'abertura', janela: janela };
+            if (dia === janela.fim - 2) return { tipo: 'aviso', janela: janela };
+            if (dia === janela.fim + 1) return { tipo: 'fechamento', janela: janela };
+        }
+        return null;
+    };
+
+    $scope.isFechamentoFinanceiro = function(diaIndice) {
+        var dia = (typeof diaIndice === 'number') ? diaIndice : $scope.diaAtual;
+        return dia > 0 && dia % 5 === 0;
+    };
+
+    $scope.obterMesFinanceiro = function(diaIndice) {
+        var dia = (typeof diaIndice === 'number') ? diaIndice : $scope.diaAtual;
+        return Math.max(1, Math.ceil(dia / 5));
+    };
+
+    $scope.obterLabelTipoCalendario = function(dia) {
+        if (!dia) return 'Evento';
+        if (dia.tipo === 'LIGA') return 'Brasileirao';
+        if (dia.tipo === 'COPA') return 'Copa do Brasil';
+        if (dia.tipo === 'CONTINENTAL') return 'Continental';
+        if (dia.tipo === 'TREINO') return 'Treino';
+        return dia.tipo;
+    };
+
+    $scope.obterCorTipoCalendario = function(dia) {
+        if (!dia) return '#95a5a6';
+        if (dia.tipo === 'LIGA') return 'var(--br-green)';
+        if (dia.tipo === 'COPA') return '#f39c12';
+        if (dia.tipo === 'CONTINENTAL') return 'var(--br-blue)';
+        if (dia.tipo === 'TREINO') return '#7f8c8d';
+        return '#95a5a6';
+    };
+
+    $scope.isDiaDecisivoCalendario = function(dia) {
+        if (!dia) return false;
+        if (dia.tipo === 'COPA' && dia.fase >= 3) return true;
+        if (dia.tipo === 'CONTINENTAL' && dia.fase >= 6) return true;
+        return false;
+    };
+
+    $scope.calcularCargaCalendario = function(diaIndice) {
+        diaIndice = (typeof diaIndice === 'number') ? diaIndice : $scope.diaAtual;
+
+        var janelaDias = 5;
+        var inicio = Math.max(0, diaIndice - janelaDias);
+        var jogosUltimos5 = 0;
+        var jogosDecisivosUltimos5 = 0;
+        var jogosContinentaisUltimos5 = 0;
+
+        for (var i = inicio; i < diaIndice; i++) {
+            var dia = $scope.calendarioGeral ? $scope.calendarioGeral[i] : null;
+            var teveJogo = !!($scope.obterMeuJogoNoDia && $scope.obterMeuJogoNoDia(i));
+            if (!dia || !teveJogo) continue;
+
+            if (dia.tipo === 'LIGA' || dia.tipo === 'COPA' || dia.tipo === 'CONTINENTAL') {
+                jogosUltimos5++;
+                if (dia.tipo === 'CONTINENTAL') jogosContinentaisUltimos5++;
+                if ($scope.isDiaDecisivoCalendario(dia)) jogosDecisivosUltimos5++;
+            }
+        }
+
+        var elencoDisponivel = ($scope.elencoAtual || []).filter(function(j) {
+            return j && !j.lesionado && !j.suspenso;
+        });
+        var somaCondicao = 0;
+        elencoDisponivel.forEach(function(j) {
+            somaCondicao += (typeof j.condicaoFisica === 'number') ? j.condicaoFisica : 100;
+        });
+        var condicaoMediaElenco = elencoDisponivel.length > 0 ? Math.round(somaCondicao / elencoDisponivel.length) : 100;
+
+        var profundidadeDisponivel = elencoDisponivel.length;
+        var penalidadeCondicao = Math.max(0, (100 - condicaoMediaElenco) * 0.8);
+        var penalidadeProfundidade = profundidadeDisponivel < 18 ? (18 - profundidadeDisponivel) * 2 : 0;
+        var bonusProfundidade = profundidadeDisponivel > 18 ? Math.min(10, (profundidadeDisponivel - 18) * 1.5) : 0;
+
+        var indiceCarga = jogosUltimos5 * 16 + jogosDecisivosUltimos5 * 10 + jogosContinentaisUltimos5 * 7 + penalidadeCondicao + penalidadeProfundidade - bonusProfundidade;
+        indiceCarga = Math.round(Math.max(0, Math.min(100, indiceCarga)));
+
+        var nivel = 'BAIXA';
+        if (indiceCarga >= 75) nivel = 'CRITICA';
+        else if (indiceCarga >= 55) nivel = 'ALTA';
+        else if (indiceCarga >= 30) nivel = 'MEDIA';
+
+        return {
+            diasAnalisados: diaIndice - inicio,
+            jogosUltimos5: jogosUltimos5,
+            jogosDecisivosUltimos5: jogosDecisivosUltimos5,
+            jogosContinentaisUltimos5: jogosContinentaisUltimos5,
+            condicaoMediaElenco: condicaoMediaElenco,
+            profundidadeDisponivel: profundidadeDisponivel,
+            indiceCarga: indiceCarga,
+            nivel: nivel,
+            multiplicadorLesao: 1 + (indiceCarga / 100) * 0.9,
+            fatorRecuperacao: Math.max(0.8, 1 - (indiceCarga / 500))
+        };
+    };
+
+    $scope.calcularRecuperacaoFisicaDiaria = function(partida, diaIndice) {
+        var base = partida ? 28 : 32;
+        var minimo = partida ? 20 : 24;
+        var carga = $scope.calcularCargaCalendario(diaIndice);
+        return Math.max(minimo, Math.round(base * (carga.fatorRecuperacao || 1)));
+    };
+
+    $scope.calcularQuedaFisicaPorTick = function(jogador, multiplicadorCansaco) {
+        var fisico = jogador && jogador.atributos && typeof jogador.atributos.fisico === 'number' ? jogador.atributos.fisico : 75;
+        var multiplicador = multiplicadorCansaco || 1;
+        var base = 0.72 + (Math.max(0, 100 - fisico) / 250);
+        return Math.max(0.55, base * multiplicador);
+    };
+
+    $scope.calcularChanceLesaoPorFadiga = function(condicaoFisica, cargaCalendario) {
+        condicaoFisica = (typeof condicaoFisica === 'number') ? condicaoFisica : 100;
+        if (condicaoFisica >= 60) return 0;
+
+        var multiplicador = cargaCalendario && cargaCalendario.multiplicadorLesao ? cargaCalendario.multiplicadorLesao : 1;
+        return Math.min(0.02, (60 - condicaoFisica) * 0.00015 * multiplicador);
+    };
+
+    $scope.calcularChanceLesaoTreino = function(cargaCalendario) {
+        var multiplicador = cargaCalendario && cargaCalendario.multiplicadorLesao ? cargaCalendario.multiplicadorLesao : 1;
+        return Math.min(0.05, 0.015 * multiplicador);
+    };
+
+    $scope.obterAlertaCargaCalendario = function() {
+        if (!$scope.calendarioGeral || !$scope.calendarioGeral[$scope.diaAtual]) return null;
+
+        var assinaturaElenco = 'sem-elenco';
+        if ($scope.elencoAtual && $scope.elencoAtual.length) {
+            var somaCondicao = 0;
+            var indisponiveis = 0;
+            $scope.elencoAtual.forEach(function(j) {
+                somaCondicao += Math.round(j.condicaoFisica || 100);
+                if (j.lesionado || j.suspenso) indisponiveis++;
+            });
+            assinaturaElenco = $scope.elencoAtual.length + '-' + somaCondicao + '-' + indisponiveis;
+        }
+        var cacheKey = $scope.diaAtual + '|' + assinaturaElenco;
+        if ($scope._alertaCargaCalendarioCacheKey === cacheKey) return $scope._alertaCargaCalendarioCache;
+
+        var dia = $scope.calendarioGeral[$scope.diaAtual];
+        var temJogoHoje = !!($scope.obterMeuJogoHoje && $scope.obterMeuJogoHoje());
+        var jogoDecisivo = temJogoHoje && $scope.isDiaDecisivoCalendario(dia);
+        var carga = $scope.calcularCargaCalendario($scope.diaAtual);
+
+        if (!jogoDecisivo && carga.indiceCarga < 55) {
+            $scope._alertaCargaCalendarioCacheKey = cacheKey;
+            $scope._alertaCargaCalendarioCache = null;
+            return null;
+        }
+
+        var titulo = jogoDecisivo ? 'Jogo decisivo com carga acumulada' : 'Sequencia pesada no calendario';
+        var mensagem = 'Carga ' + carga.nivel + ' (' + carga.indiceCarga + '/100): ' + carga.jogosUltimos5 + ' jogo(s) nos ultimos 5 dias, condicao media do elenco em ' + carga.condicaoMediaElenco + '% e ' + carga.profundidadeDisponivel + ' atletas disponiveis.';
+
+        if (jogoDecisivo && carga.indiceCarga >= 55) {
+            mensagem += ' Considere rodar o elenco e poupar jogadores mais cansados.';
+        } else if (jogoDecisivo) {
+            mensagem += ' O calendario esta controlado, mas a partida exige atencao maxima.';
+        } else {
+            mensagem += ' A recuperacao fisica sera menor enquanto a sequencia seguir pesada.';
+        }
+
+        $scope._alertaCargaCalendarioCacheKey = cacheKey;
+        $scope._alertaCargaCalendarioCache = {
+            titulo: titulo,
+            mensagem: mensagem,
+            nivel: carga.nivel,
+            carga: carga,
+            decisivo: jogoDecisivo
+        };
+        return $scope._alertaCargaCalendarioCache;
+    };
+
+    $scope.obterStatusDiaCalendario = function(indice) {
+        indice = parseInt(indice, 10);
+        if (indice === $scope.diaAtual) return 'HOJE';
+        if (indice < $scope.diaAtual) return 'CONCLUIDO';
+        return 'PROXIMO';
+    };
+
+    $scope.deveMostrarDiaCalendario = function(dia, indice) {
+        var filtro = $scope.filtroCalendario || 'TODOS';
+        indice = parseInt(indice, 10);
+        if (filtro === 'TODOS') return true;
+        if (filtro === 'JOGOS') return !!$scope.obterMeuJogoNoDia(indice);
+        if (filtro === 'LIVRES') return !$scope.obterMeuJogoNoDia(indice);
+        if (filtro === 'MERCADO') return $scope.isJanelaTransferenciaAbertaNoDia(indice);
+        if (filtro === 'FINANCEIRO') return $scope.isFechamentoFinanceiro(indice);
+        return dia && dia.tipo === filtro;
+    };
+
+    $scope.atualizarCalendarioFiltrado = function() {
+        if (!$scope.calendarioGeral) {
+            $scope.calendarioFiltrado = [];
+            return $scope.calendarioFiltrado;
+        }
+        var dias = [];
+        for (var i = 0; i < $scope.calendarioGeral.length; i++) {
+            var dia = $scope.calendarioGeral[i];
+            if ($scope.deveMostrarDiaCalendario(dia, i)) {
+                dias.push({ indice: i, dia: dia });
+            }
+        }
+        $scope.calendarioFiltrado = dias;
+        return $scope.calendarioFiltrado;
+    };
+
+    $scope.obterDiasCalendarioFiltrados = function() {
+        if (!$scope.calendarioFiltrado || !$scope.calendarioFiltrado.length) {
+            return $scope.atualizarCalendarioFiltrado();
+        }
+        return $scope.calendarioFiltrado;
+    };
+
+    $scope.obterTextoJanelaCalendario = function(indice) {
+        var janela = $scope.obterJanelaTransferenciaAtual(parseInt(indice, 10));
+        if (!janela) return '';
+        return 'Janela aberta ate Dia ' + (janela.fim + 1);
     };
 
     // FASE 15: MASTER CALENDAR
@@ -641,8 +1044,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var ch = meusJogos[0];
                 var mandante = diaObj.perna === 'ida' ? ch.time1 : ch.time2;
                 var visitante = diaObj.perna === 'ida' ? ch.time2 : ch.time1;
-                var golsM = diaObj.perna === 'ida' ? ch.golsIdaTime1 : ch.golsVoltaTime2;
-                var golsV = diaObj.perna === 'ida' ? ch.golsIdaTime2 : ch.golsVoltaTime1;
+                var golsM = diaObj.perna === 'ida' ? ch.golsIda1 : ch.golsVolta2;
+                var golsV = diaObj.perna === 'ida' ? ch.golsIda2 : ch.golsVolta1;
+                var jogoJaFoiDisputado = diaObj.perna === 'ida' ? ch.jogadoIda : ch.jogadoVolta;
                 
                 if (!diaObj._meuJogoProxy) diaObj._meuJogoProxy = { éCopa: true, isGrupo: false };
                 diaObj._meuJogoProxy.chaveCopa = ch;
@@ -651,7 +1055,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 diaObj._meuJogoProxy.visitante = visitante;
                 diaObj._meuJogoProxy.golsMandante = golsM !== undefined ? golsM : 0;
                 diaObj._meuJogoProxy.golsVisitante = golsV !== undefined ? golsV : 0;
-                diaObj._meuJogoProxy.jogado = (golsM !== undefined);
+                diaObj._meuJogoProxy.jogado = !!jogoJaFoiDisputado;
                 return diaObj._meuJogoProxy;
             }
         } else if (diaObj.tipo === 'CONTINENTAL') {
@@ -705,8 +1109,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var ch = meusJogos[0];
                     var mandante = diaObj.perna === 'ida' ? ch.time1 : ch.time2;
                     var visitante = diaObj.perna === 'ida' ? ch.time2 : ch.time1;
-                    var golsM = diaObj.perna === 'ida' ? ch.golsIdaTime1 : ch.golsVoltaTime2;
-                    var golsV = diaObj.perna === 'ida' ? ch.golsIdaTime2 : ch.golsVoltaTime1;
+                    var golsM = diaObj.perna === 'ida' ? ch.golsIda1 : ch.golsVolta2;
+                    var golsV = diaObj.perna === 'ida' ? ch.golsIda2 : ch.golsVolta1;
+                    var jogoJaFoiDisputado = diaObj.perna === 'ida' ? ch.jogadoIda : ch.jogadoVolta;
                     
                     if (!diaObj._meuJogoProxy) diaObj._meuJogoProxy = { éCopa: true, isGrupo: false };
                     diaObj._meuJogoProxy.chaveCopa = ch;
@@ -715,7 +1120,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     diaObj._meuJogoProxy.visitante = visitante;
                     diaObj._meuJogoProxy.golsMandante = golsM !== undefined ? golsM : 0;
                     diaObj._meuJogoProxy.golsVisitante = golsV !== undefined ? golsV : 0;
-                    diaObj._meuJogoProxy.jogado = (golsM !== undefined && golsM !== null && ch.jogadoIda !== undefined && ch.jogadoVolta !== undefined && (diaObj.perna === 'ida' ? ch.jogadoIda : ch.jogadoVolta));
+                    diaObj._meuJogoProxy.jogado = !!jogoJaFoiDisputado;
                     return diaObj._meuJogoProxy;
                 }
             }
@@ -734,16 +1139,6 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return;
         }
 
-        // Descanso do elenco
-        if ($scope.elencoAtual) {
-            $scope.elencoAtual.forEach(function(j) {
-                if (j.condicaoFisica < 100 && !j.lesionado) {
-                    j.condicaoFisica += 15;
-                    if (j.condicaoFisica > 100) j.condicaoFisica = 100;
-                }
-            });
-        }
-        
         $scope.concluirPartida(null);
     };
 
@@ -792,9 +1187,26 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (j.moral !== undefined && j.moral < 50) {
                 penalty = 0.8 + ((j.moral / 50) * 0.2); // Moral 0 = 80% do overall. Moral 50 = 100%.
             }
-            forcaTime += ($scope.calcularOverall(j) * penalty); 
+            var fatorFadiga = $scope.calcularFatorFadiga(j.condicaoFisica);
+            forcaTime += ($scope.calcularOverall(j) * penalty * fatorFadiga);
         });
         return forcaTime / 11;
+    };
+
+    $scope.calcularFatorFadiga = function(condicaoFisica) {
+        condicaoFisica = (typeof condicaoFisica === 'number') ? condicaoFisica : 100;
+        return Math.max(0.55, Math.min(1, condicaoFisica / 100));
+    };
+
+    $scope.aplicarFadigaAtributo = function(valor, condicaoFisica) {
+        valor = (typeof valor === 'number') ? valor : 75;
+        return Math.round(valor * $scope.calcularFatorFadiga(condicaoFisica));
+    };
+
+    $scope.aplicarFadigaAtributoGoleiro = function(valor, condicaoFisica) {
+        valor = (typeof valor === 'number') ? valor : 75;
+        var perda = 1 - $scope.calcularFatorFadiga(condicaoFisica);
+        return Math.round(valor * (1 - perda * 0.35));
     };
 
     $scope.gerarGols = function(forcaBase) {
@@ -923,6 +1335,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.estatisticas.renda = $scope.estatisticas.publico * preco;
 
         $scope.substituicoesFeitas = 0;
+        $scope.elencoAtual.forEach(function(j) { j.substituidoNaPartida = false; });
         $scope.partidaPausada = false;
         $scope.intervaloJaAconteceu = false;
         $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
@@ -987,15 +1400,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
             // FASE 11 e 12: Estamina e Lesões
             var jogadoresEmCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo && !j.expulso && !j.lesionado; });
-            var multiplicadorCansaco = ($scope.taticas.marcacao === 'Pressão Alta') ? 1.5 : 1.0;
+            var multiplicadorCansaco = ($scope.taticas.marcacao === 'Pressão Alta') ? 1.25 : 1.0;
+            var cargaCalendarioPartida = $scope.calcularCargaCalendario($scope.diaAtual);
+            if ($scope.isDiaDecisivoCalendario($scope.calendarioGeral[$scope.diaAtual])) {
+                cargaCalendarioPartida.multiplicadorLesao = Math.min(2.2, cargaCalendarioPartida.multiplicadorLesao * 1.08);
+            }
             
             jogadoresEmCampo.forEach(function(j) {
-                var queda = (2.0 - (j.atributos.fisico / 100)) * multiplicadorCansaco; 
+                var queda = $scope.calcularQuedaFisicaPorTick(j, multiplicadorCansaco);
                 j.condicaoFisica -= queda;
                 if (j.condicaoFisica < 0) j.condicaoFisica = 0;
                 
                 if (j.condicaoFisica < 60) {
-                    var chanceLesao = (60 - j.condicaoFisica) * 0.00015; // Reduzido drasticamente para evitar excesso de machucados
+                    var chanceLesao = $scope.calcularChanceLesaoPorFadiga(j.condicaoFisica, cargaCalendarioPartida);
                     if (Math.random() < chanceLesao) {
                         j.lesionado = true;
                         j.diasLesao = Math.floor(Math.random() * 4) + 1; 
@@ -1007,6 +1424,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     }
                 }
             });
+
+            if (!$scope.partidaPausada) {
+                $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
+                forcaUsuario = $scope.forcaMandanteAoVivo;
+            }
 
             // FASE 8 / FASE 11: Cartões e Suspensões
             var chanceCartao = Math.random() * 100;
@@ -1052,10 +1474,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         else $scope.forcaVisitanteAoVivo *= 0.9;
                     }
                 }
-                if ($scope.partidaPausada) return; 
+                if ($scope.partidaPausada) return;
             }
 
-            if (Math.random() < 0.08) { 
+            if (Math.random() < $scope.calcularChanceEventoTatico()) {
                 var forcaAtaqueMandante = forcaUsuario;
                 var forcaDefesaMandante = forcaUsuario;
 
@@ -1068,17 +1490,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     forcaDefesaMandante *= 0.8;
                 }
 
-                var atacaMandante = Math.random() > 0.5;
+                var atacaMandante = Math.random() < $scope.calcularBiasAtaqueMandante();
                 if (atacaMandante) {
                     $scope.estatisticas.chutesMandante++;
-                    var zona = $scope.aleatorizarZona();
+                    var zona = $scope.aleatorizarZonaTatica('mandante');
                     var chanceType = $scope.aleatorizarTipoChance();
                     var atacante = $scope.obterJogadorAleatorio($scope.partidaAoVivo.mandante.id, ['ATA','MEI','VOL','LAT']);
                     var goleiroAdv = $scope.obterJogadorAleatorio($scope.partidaAoVivo.visitante.id, ['GOL']);
-                    var finalAtt = atacante && atacante.atributos ? atacante.atributos.finalizacao : 75;
-                    var reflexoAdv = goleiroAdv && goleiroAdv.atributos ? goleiroAdv.atributos.reflexo : 75;
-                    var xg = $scope.calcularXG(forcaAtaqueMandante, forcaDefesaMandante, zona, finalAtt, reflexoAdv, chanceType);
+                    var finalAttBase = atacante && atacante.atributos ? atacante.atributos.finalizacao : 75;
+                    var reflexoAdvBase = goleiroAdv && goleiroAdv.atributos ? goleiroAdv.atributos.reflexo : 75;
+                    var finalAtt = $scope.aplicarFadigaAtributo(finalAttBase, atacante ? atacante.condicaoFisica : 100);
+                    var reflexoAdv = $scope.aplicarFadigaAtributoGoleiro(reflexoAdvBase, goleiroAdv ? goleiroAdv.condicaoFisica : 100);
+                    var posicionamentoAdv = goleiroAdv && goleiroAdv.atributos ? goleiroAdv.atributos.posicionamento : 75;
+                    var bolaParadaAtt = $scope.obterAtributoBolaParada(atacante, chanceType);
+                    var xg = $scope.calcularXG(forcaAtaqueMandante, forcaDefesaMandante, zona, finalAtt, reflexoAdv, chanceType, posicionamentoAdv, bolaParadaAtt);
+                    xg = Math.max(0.005, Math.min(0.6, xg * $scope.calcularModificadorTaticoXG('mandante', zona, chanceType)));
                     var isGoal = (Math.random() < xg);
+                    $scope.registrarUltimaChanceXG('mandante', xg, chanceType, zona, isGoal, atacante);
 
                     // Registrar telemetria do chute
                     if ($scope.partidaAoVivo) {
@@ -1090,7 +1518,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                             chanceType: chanceType,
                             xg: parseFloat(xg.toFixed(4)),
                             finalizacao: finalAtt,
+                            finalizacao_base: finalAttBase,
+                            condicao_atacante: atacante ? Math.round(atacante.condicaoFisica || 100) : 100,
+                            bola_parada: bolaParadaAtt,
                             reflexo_oponente: reflexoAdv,
+                            reflexo_base_oponente: reflexoAdvBase,
+                            condicao_goleiro_oponente: goleiroAdv ? Math.round(goleiroAdv.condicaoFisica || 100) : 100,
+                            posicionamento_oponente: posicionamentoAdv,
                             shooterId: atacante ? atacante.id : null,
                             shooterNome: atacante ? atacante.nome : null,
                             goalieId: goleiroAdv ? goleiroAdv.id : null,
@@ -1110,6 +1544,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         } else {
                             $scope.narracao.unshift($scope.minutoAtual + "' - ⚽ GOOOOOOOL! Do " + $scope.partidaAoVivo.mandante.sigla + "!");
                         }
+                        if ($scope.narracao.length > 0) $scope.narracao.shift();
+                        $scope.narracao.unshift($scope.minutoAtual + "' - " + $scope.gerarNarracaoChute(true, xg, chanceType, zona, atacante || jogadorGol, goleiroAdv, $scope.partidaAoVivo.mandante.sigla));
                     } else {
                         $scope.tocarSom('chute');
                         var narracaoChute = $scope.minutoAtual + "' - ";
@@ -1117,18 +1553,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         else if (chanceType === 'CORNER') narracaoChute += "Escanteio desperdiçado!";
                         else if (chanceType === 'DIRECT_FK') narracaoChute += "Falta direta na trave!";
                         else narracaoChute += "Uuuuh! Chute perigoso do " + $scope.partidaAoVivo.mandante.sigla + " quase entra.";
+                        narracaoChute = $scope.minutoAtual + "' - " + $scope.gerarNarracaoChute(false, xg, chanceType, zona, atacante, goleiroAdv, $scope.partidaAoVivo.mandante.sigla);
                         $scope.narracao.unshift(narracaoChute);
                     }
                 } else {
                     $scope.estatisticas.chutesVisitante++;
-                    var zonaV = $scope.aleatorizarZona();
+                    var zonaV = $scope.aleatorizarZonaTatica('visitante');
                     var chanceTypeV = $scope.aleatorizarTipoChance();
                     var atacanteV = $scope.obterJogadorAleatorio($scope.partidaAoVivo.visitante.id, ['ATA','MEI','VOL','LAT']);
                     var goleiroMand = $scope.obterJogadorAleatorio($scope.partidaAoVivo.mandante.id, ['GOL']);
-                    var finalAttV = atacanteV && atacanteV.atributos ? atacanteV.atributos.finalizacao : 75;
-                    var reflexoMand = goleiroMand && goleiroMand.atributos ? goleiroMand.atributos.reflexo : 75;
-                    var xgV = $scope.calcularXG(forcaAdv, forcaDefesaMandante, zonaV, finalAttV, reflexoMand, chanceTypeV);
+                    var finalAttVBase = atacanteV && atacanteV.atributos ? atacanteV.atributos.finalizacao : 75;
+                    var reflexoMandBase = goleiroMand && goleiroMand.atributos ? goleiroMand.atributos.reflexo : 75;
+                    var finalAttV = $scope.aplicarFadigaAtributo(finalAttVBase, atacanteV ? atacanteV.condicaoFisica : 100);
+                    var reflexoMand = $scope.aplicarFadigaAtributoGoleiro(reflexoMandBase, goleiroMand ? goleiroMand.condicaoFisica : 100);
+                    var posicionamentoMand = goleiroMand && goleiroMand.atributos ? goleiroMand.atributos.posicionamento : 75;
+                    var bolaParadaAttV = $scope.obterAtributoBolaParada(atacanteV, chanceTypeV);
+                    var xgV = $scope.calcularXG(forcaAdv, forcaDefesaMandante, zonaV, finalAttV, reflexoMand, chanceTypeV, posicionamentoMand, bolaParadaAttV);
+                    xgV = Math.max(0.005, Math.min(0.6, xgV * $scope.calcularModificadorTaticoXG('visitante', zonaV, chanceTypeV)));
                     var isGoalV = (Math.random() < xgV);
+                    $scope.registrarUltimaChanceXG('visitante', xgV, chanceTypeV, zonaV, isGoalV, atacanteV);
 
                     // Registrar telemetria do chute visitante
                     if ($scope.partidaAoVivo) {
@@ -1140,7 +1583,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                             chanceType: chanceTypeV,
                             xg: parseFloat(xgV.toFixed(4)),
                             finalizacao: finalAttV,
+                            finalizacao_base: finalAttVBase,
+                            condicao_atacante: atacanteV ? Math.round(atacanteV.condicaoFisica || 100) : 100,
+                            bola_parada: bolaParadaAttV,
                             reflexo_oponente: reflexoMand,
+                            reflexo_base_oponente: reflexoMandBase,
+                            condicao_goleiro_oponente: goleiroMand ? Math.round(goleiroMand.condicaoFisica || 100) : 100,
+                            posicionamento_oponente: posicionamentoMand,
                             shooterId: atacanteV ? atacanteV.id : null,
                             shooterNome: atacanteV ? atacanteV.nome : null,
                             goalieId: goleiroMand ? goleiroMand.id : null,
@@ -1159,6 +1608,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         } else {
                             $scope.narracao.unshift($scope.minutoAtual + "' - ⚽ GOOOOOOOL! Do " + $scope.partidaAoVivo.visitante.sigla + "!");
                         }
+                        if ($scope.narracao.length > 0) $scope.narracao.shift();
+                        $scope.narracao.unshift($scope.minutoAtual + "' - " + $scope.gerarNarracaoChute(true, xgV, chanceTypeV, zonaV, atacanteV || jogadorGolAdv, goleiroMand, $scope.partidaAoVivo.visitante.sigla));
                     } else {
                         $scope.tocarSom('chute');
                         var narracaoVisitante = $scope.minutoAtual + "' - ";
@@ -1166,6 +1617,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         else if (chanceTypeV === 'CORNER') narracaoVisitante += "Escanteio desperdiçado!";
                         else if (chanceTypeV === 'DIRECT_FK') narracaoVisitante += "Falta direta na trave!";
                         else narracaoVisitante += "Defesa espetacular do goleiro do " + $scope.partidaAoVivo.mandante.sigla + "!";
+                        narracaoVisitante = $scope.minutoAtual + "' - " + $scope.gerarNarracaoChute(false, xgV, chanceTypeV, zonaV, atacanteV, goleiroMand, $scope.partidaAoVivo.visitante.sigla);
                         $scope.narracao.unshift(narracaoVisitante);
                     }
                 }
@@ -1195,6 +1647,60 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }, 100);
     };
 
+    $scope.gerarResumoTaticoPartida = function(partida) {
+        if (!partida || !partida.telemetriaShots || partida.telemetriaShots.length === 0) return null;
+        var resumo = {
+            mandante: partida.mandante ? partida.mandante.nome : '',
+            visitante: partida.visitante ? partida.visitante.nome : '',
+            placar: (partida.golsMandante || 0) + ' x ' + (partida.golsVisitante || 0),
+            totalShots: partida.telemetriaShots.length,
+            totalGoals: 0,
+            totalXg: 0,
+            xgMandante: 0,
+            xgVisitante: 0,
+            byZone: {},
+            byType: {},
+            taticas: angular.copy($scope.taticas || {})
+        };
+
+        partida.telemetriaShots.forEach(function(s) {
+            var xg = parseFloat(s.xg) || 0;
+            var goal = s.result === 'GOL' ? 1 : 0;
+            resumo.totalXg += xg;
+            resumo.totalGoals += goal;
+            if (s.time === 'mandante') resumo.xgMandante += xg;
+            else resumo.xgVisitante += xg;
+
+            var zona = s.zona || 'INDEFINIDO';
+            if (!resumo.byZone[zona]) resumo.byZone[zona] = { shots: 0, goals: 0, xg: 0 };
+            resumo.byZone[zona].shots++;
+            resumo.byZone[zona].goals += goal;
+            resumo.byZone[zona].xg += xg;
+
+            var tipo = s.chanceType || 'NORMAL';
+            if (!resumo.byType[tipo]) resumo.byType[tipo] = { shots: 0, goals: 0, xg: 0 };
+            resumo.byType[tipo].shots++;
+            resumo.byType[tipo].goals += goal;
+            resumo.byType[tipo].xg += xg;
+        });
+
+        function melhorEntrada(map) {
+            var melhor = null;
+            Object.keys(map).forEach(function(k) {
+                if (!melhor || map[k].xg > melhor.xg) melhor = { nome: k, shots: map[k].shots, goals: map[k].goals, xg: parseFloat(map[k].xg.toFixed(2)) };
+            });
+            return melhor;
+        }
+
+        resumo.totalXg = parseFloat(resumo.totalXg.toFixed(2));
+        resumo.xgMandante = parseFloat(resumo.xgMandante.toFixed(2));
+        resumo.xgVisitante = parseFloat(resumo.xgVisitante.toFixed(2));
+        resumo.eficiencia = resumo.totalXg > 0 ? Math.round((resumo.totalGoals / resumo.totalXg) * 100) : 0;
+        resumo.zonaPrincipal = melhorEntrada(resumo.byZone);
+        resumo.tipoPrincipal = melhorEntrada(resumo.byType);
+        return resumo;
+    };
+
     $scope.concluirPartida = function(partida) {
         var hoje = $scope.calendarioGeral[$scope.diaAtual];
         
@@ -1220,6 +1726,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 try {
                     var matchKey = (partida.mandante && partida.visitante) ? (partida.mandante.id + '-' + partida.visitante.id + '-' + ($scope.diaAtual || Date.now())) : ('match-' + Date.now());
                     $scope.telemetriaHistorico.push({ matchKey: matchKey, homeId: partida.mandante ? partida.mandante.id : null, awayId: partida.visitante ? partida.visitante.id : null, shots: partida.telemetriaShots });
+                    $scope.ultimoResumoPartida = $scope.gerarResumoTaticoPartida(partida);
                 } catch (e) {
                     // Falha silenciosa para não quebrar a conclusão da partida
                 }
@@ -1237,7 +1744,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.simularFaseContinentalCPU(hoje);
         }
         
+        var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
+        var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
+
         $scope.diaAtual++;
+        $scope.atualizarPropostasPendentes();
+        $scope.atualizarResumoJanelaMercado();
         $scope.elencoAtual.forEach(function(j) { 
             j.expulso = false; 
             if (j.moral === undefined) j.moral = 100;
@@ -1259,7 +1771,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             }
 
             // FASE 11: Recuperação e Punições
-            j.condicaoFisica += 30;
+            j.condicaoFisica += recuperacaoFisicaDia;
             if (j.condicaoFisica > 100) j.condicaoFisica = 100;
             
             if (j.suspenso && !j.acabouDeSerSuspenso) {
@@ -1284,7 +1796,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         j.diasLesao = 0;
                     }
                 }
-            } else if (!partida && Math.random() < 0.015) { // 1.5% de chance de lesão no treino
+            } else if (!partida && Math.random() < $scope.calcularChanceLesaoTreino(cargaCalendarioRecuperacao)) {
                 j.lesionado = true;
                 j.acabouDeSerLesionado = true;
                 j.diasLesao = Math.floor(Math.random() * 5) + 2; // de 2 a 6 dias de lesão
@@ -1326,12 +1838,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         
         // 2. Pagamento de Salários e Receitas Mensais (A cada 5 dias - Mensal)
-        if ($scope.diaAtual > 0 && $scope.diaAtual % 5 === 0) {
+        if ($scope.isFechamentoFinanceiro($scope.diaAtual)) {
+            var mesFinanceiro = $scope.obterMesFinanceiro($scope.diaAtual);
             var folha = $scope.calcularFolhaSalarial();
             $scope.clubeAtual.orcamento -= folha;
             $scope.financasHistorico.unshift({
                 tipo: 'despesa',
-                descricao: 'Pagamento de Salários (Mensal - Dia ' + $scope.diaAtual + ')',
+                descricao: 'Pagamento de Salários (Mês ' + mesFinanceiro + ')',
                 valor: folha,
                 data: new Date().toLocaleDateString('pt-BR')
             });
@@ -1349,6 +1862,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 valor: baseVendaCamisas,
                 data: new Date().toLocaleDateString('pt-BR')
             });
+
+            var valorManutencao = $scope.clubeAtual.estadio.capacidade * 20;
+            $scope.clubeAtual.orcamento -= valorManutencao;
+            $scope.financasHistorico.unshift({
+                tipo: 'despesa',
+                descricao: 'Manutenção do Estádio (Mês ' + mesFinanceiro + ')',
+                valor: valorManutencao,
+                data: new Date().toLocaleDateString('pt-BR')
+            });
         }
 
         // FASE 13: Andamento de Obras no Estádio
@@ -1360,20 +1882,6 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 $scope.clubeAtual.estadio.rodadasRestantesObra = 0;
                 $scope.adicionarMensagem('Engenharia', 'Estádio Ampliado', 'As obras de expansão terminaram! Capacidade ampliada em 5.000 lugares.', false, 'estadio');
             }
-        }
-
-        // FASE 13: Fechamento do Mês Financeiro (a cada 4 datas)
-        if ($scope.diaAtual > 0 && $scope.diaAtual % 4 === 0) {
-
-            // Custo de Manutenção do Estádio
-            var valorManutencao = $scope.clubeAtual.estadio.capacidade * 20;
-            $scope.clubeAtual.orcamento -= valorManutencao;
-            $scope.financasHistorico.unshift({
-                tipo: 'despesa',
-                descricao: 'Manutenção do Estádio Mensal',
-                valor: valorManutencao,
-                data: new Date().toLocaleDateString('pt-BR')
-            });
         }
 
         // FASE 14: Progressão dos Olheiros e Validade de Relatórios
@@ -1399,34 +1907,26 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.simularMercadoCPU();
 
         // Notificações de Janela
-        if ($scope.diaAtual === 35) {
+        var eventoJanela = $scope.obterEventoJanelaTransferencia($scope.diaAtual);
+        if (eventoJanela) {
+            var assuntoJanela = '';
+            var mensagemJanela = '';
+            if (eventoJanela.tipo === 'abertura') {
+                assuntoJanela = 'Janela de Transferências ABERTA!';
+                mensagemJanela = 'O período de transferências de ' + eventoJanela.janela.nome + ' acaba de começar. A janela ficará aberta até o dia ' + (eventoJanela.janela.fim + 1) + ' do calendário.';
+            } else if (eventoJanela.tipo === 'aviso') {
+                assuntoJanela = 'Janela fechando em breve!';
+                mensagemJanela = 'Atenção! Faltam apenas mais 2 dias de calendário para o fechamento definitivo do mercado de transferências.';
+            } else if (eventoJanela.tipo === 'fechamento') {
+                assuntoJanela = 'Janela de Transferências FECHADA!';
+                mensagemJanela = 'O período de contratações se encerrou. As equipes não podem mais comprar nem vender novos atletas até a próxima abertura do mercado.';
+            }
+
             $scope.caixaEntrada.unshift({
                 id: 'msg_janela_' + Date.now(),
                 remetente: 'Federação',
-                assunto: 'Janela de Transferências ABERTA!',
-                mensagem: 'O período de transferências acaba de começar! Os clubes estão livres para comprar e vender atletas. A janela fechará na rodada 45 do calendário.',
-                lida: false,
-                tipo: 'info',
-                data: new Date().toLocaleDateString('pt-BR')
-            });
-            $scope.mensagensNaoLidas++;
-        } else if ($scope.diaAtual === 13 || $scope.diaAtual === 43) {
-            $scope.caixaEntrada.unshift({
-                id: 'msg_janela_' + Date.now(),
-                remetente: 'Federação',
-                assunto: 'Janela fechando em breve!',
-                mensagem: 'Atenção! Faltam apenas mais 2 rodadas para o fechamento definitivo do mercado de transferências. Acelere as suas negociações pendentes.',
-                lida: false,
-                tipo: 'info',
-                data: new Date().toLocaleDateString('pt-BR')
-            });
-            $scope.mensagensNaoLidas++;
-        } else if ($scope.diaAtual === 16 || $scope.diaAtual === 46) {
-            $scope.caixaEntrada.unshift({
-                id: 'msg_janela_' + Date.now(),
-                remetente: 'Federação',
-                assunto: 'Janela de Transferências FECHADA!',
-                mensagem: 'O período de contratações se encerrou. As equipes não podem mais comprar nem vender novos atletas até a próxima abertura do mercado.',
+                assunto: assuntoJanela,
+                mensagem: mensagemJanela,
                 lida: false,
                 tipo: 'info',
                 data: new Date().toLocaleDateString('pt-BR')
@@ -1454,6 +1954,94 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return 'ZAG';
     };
 
+    $scope.calcularChanceEventoTatico = function() {
+        var chance = 0.08;
+        if ($scope.taticas.mentalidade === 'Retranca') chance *= 0.88;
+        else if ($scope.taticas.mentalidade === 'Ofensivo') chance *= 1.12;
+        if ($scope.taticas.marcacao === 'Pressão Alta') chance *= 1.08;
+        return Math.max(0.04, Math.min(0.13, chance));
+    };
+
+    $scope.calcularBiasAtaqueMandante = function() {
+        var bias = 0.5;
+        if ($scope.taticas.mentalidade === 'Retranca') bias -= 0.08;
+        else if ($scope.taticas.mentalidade === 'Ofensivo') bias += 0.08;
+        if ($scope.taticas.marcacao === 'Pressão Alta') bias += 0.04;
+        if ($scope.taticas.marcacao === 'Recuada') bias -= 0.03;
+        return Math.max(0.25, Math.min(0.75, bias));
+    };
+
+    $scope.aleatorizarZonaTatica = function(timeAtacante) {
+        var zona = $scope.aleatorizarZona();
+        if (timeAtacante !== 'mandante') return zona;
+        var r = Math.random();
+        if ($scope.taticas.foco === 'Pelo Meio') {
+            if (r < 0.18) return 'MEI';
+            if (r < 0.30) return 'VOL';
+        } else if ($scope.taticas.foco === 'Pelas Pontas') {
+            if (r < 0.22) return 'LAT';
+            if (r < 0.34) return 'ATA';
+        }
+        return zona;
+    };
+
+    $scope.calcularModificadorTaticoXG = function(timeAtacante, zona, chanceType) {
+        if (timeAtacante !== 'mandante') {
+            if ($scope.taticas.mentalidade === 'Ofensivo') return 1.08;
+            if ($scope.taticas.mentalidade === 'Retranca') return 0.92;
+            return 1;
+        }
+
+        var mod = 1;
+        if ($scope.taticas.foco === 'Pelo Meio') {
+            if (zona === 'MEI' || zona === 'VOL') mod *= 1.08;
+            if (zona === 'LAT') mod *= 0.92;
+        } else if ($scope.taticas.foco === 'Pelas Pontas') {
+            if (zona === 'LAT' || chanceType === 'CORNER') mod *= 1.10;
+            if (zona === 'VOL') mod *= 0.93;
+        }
+        if ($scope.taticas.marcacao === 'Pressão Alta' && zona === 'ATA') mod *= 1.04;
+        return mod;
+    };
+
+    $scope.sortearTaticaCPU = function() {
+        var r = Math.random();
+        var mentalidade = r < 0.25 ? 'Retranca' : (r < 0.55 ? 'Ofensivo' : 'Equilibrado');
+        var f = Math.random();
+        var foco = f < 0.34 ? 'Pelo Meio' : (f < 0.68 ? 'Pelas Pontas' : 'Misto');
+        var m = Math.random();
+        var marcacao = m < 0.35 ? 'Pressão Alta' : 'Recuada';
+        return { mentalidade: mentalidade, foco: foco, marcacao: marcacao };
+    };
+
+    $scope.calcularModificadorAtaqueTatica = function(tatica) {
+        if (!tatica) return 1;
+        if (tatica.mentalidade === 'Retranca') return 0.88;
+        if (tatica.mentalidade === 'Ofensivo') return 1.10;
+        return 1;
+    };
+
+    $scope.calcularModificadorDefesaTatica = function(tatica) {
+        if (!tatica) return 1;
+        if (tatica.mentalidade === 'Retranca') return 1.08;
+        if (tatica.mentalidade === 'Ofensivo') return 0.92;
+        return 1;
+    };
+
+    $scope.calcularModificadorZonaPorTatica = function(tatica, zona, chanceType) {
+        if (!tatica) return 1;
+        var mod = 1;
+        if (tatica.foco === 'Pelo Meio') {
+            if (zona === 'MEI' || zona === 'VOL') mod *= 1.06;
+            if (zona === 'LAT') mod *= 0.94;
+        } else if (tatica.foco === 'Pelas Pontas') {
+            if (zona === 'LAT' || chanceType === 'CORNER') mod *= 1.08;
+            if (zona === 'VOL') mod *= 0.95;
+        }
+        if (tatica.marcacao === 'Pressão Alta' && zona === 'ATA') mod *= 1.03;
+        return mod;
+    };
+
     // Gera tipo de chance aleatório com probabilidades realistas
     $scope.aleatorizarTipoChance = function() {
         var r = Math.random();
@@ -1474,15 +2062,59 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return baseXG[chanceType] || 0.0;
     };
 
-    $scope.calcularXG = function(forcaAtaque, forcaDefesa, zona, finalizacao, reflexo, chanceType) {
+    $scope.obterAtributoBolaParada = function(jogador, chanceType) {
+        if (!jogador || !jogador.atributos) return 75;
+        if (chanceType === 'PENALTY') return jogador.atributos.penalti || jogador.atributos.finalizacao || 75;
+        if (chanceType === 'CORNER') return jogador.atributos.escanteio || jogador.atributos.passe || 75;
+        if (chanceType === 'DIRECT_FK') return jogador.atributos.cobrador || Math.round(((jogador.atributos.finalizacao || 75) + (jogador.atributos.passe || 75)) / 2);
+        return 75;
+    };
+
+    $scope.calcularModificadorBolaParada = function(chanceType, atributoBolaParada) {
+        if (!chanceType || chanceType === 'NORMAL') return 1;
+        atributoBolaParada = (typeof atributoBolaParada === 'number') ? atributoBolaParada : 75;
+        return 1 + Math.max(-0.18, Math.min(0.24, (atributoBolaParada - 75) * 0.008));
+    };
+
+    $scope.calcularReducaoPosicionamentoGoleiro = function(zona, posicionamento) {
+        posicionamento = (typeof posicionamento === 'number') ? posicionamento : 75;
+        if (zona !== 'VOL' && zona !== 'LAT') return 0;
+        return Math.max(0, Math.min(0.15, (posicionamento - 60) * 0.003));
+    };
+
+    $scope.gerarNarracaoChute = function(isGoal, xg, chanceType, zona, atacante, goleiro, siglaAtacante) {
+        if (chanceType === 'PENALTY') return isGoal ? "Penalti convertido por " + siglaAtacante + "!" : "Penalti desperdicado!";
+        if (chanceType === 'CORNER') return isGoal ? "Escanteio vira gol do " + siglaAtacante + "!" : "Escanteio afastado pela defesa!";
+        if (chanceType === 'DIRECT_FK') return isGoal ? "Falta direta perfeita do " + siglaAtacante + "!" : "Falta direta defendida!";
+        if (isGoal && xg < 0.05) return "Gol improvavel do " + siglaAtacante + "!";
+        if (!isGoal && xg > 0.4) return "Grande chance desperdicada pelo " + siglaAtacante + "!";
+        if (!isGoal && goleiro && goleiro.atributos && goleiro.atributos.reflexo >= 90) return "Defesa espetacular de " + goleiro.nome + "!";
+        if (!isGoal && goleiro && goleiro.atributos && goleiro.atributos.posicionamento >= 85 && (zona === 'VOL' || zona === 'LAT')) return goleiro.nome + " estava muito bem posicionado!";
+        return isGoal ? "GOOOOOOOL! Do " + siglaAtacante + "!" : "Uuuuh! Chute perigoso do " + siglaAtacante + " quase entra.";
+    };
+
+    $scope.registrarUltimaChanceXG = function(time, xg, chanceType, zona, isGoal, atacante) {
+        if (!$scope.partidaAoVivo) return;
+        $scope.partidaAoVivo.ultimaChanceXG = {
+            time: time,
+            xg: parseFloat(xg.toFixed(4)),
+            chanceType: chanceType || 'NORMAL',
+            zona: zona,
+            result: isGoal ? 'GOL' : 'NAO',
+            jogador: atacante ? atacante.nome : null
+        };
+    };
+
+    $scope.calcularXG = function(forcaAtaque, forcaDefesa, zona, finalizacao, reflexo, chanceType, posicionamento, atributoBolaParada) {
         var zonaMultipliers = { 'ATA':1.0, 'MEI':0.6, 'VOL':0.25, 'LAT':0.15, 'ZAG':0.05, 'INDEFINIDO':0.08 };
         var zm = zonaMultipliers[zona] || 0.08;
         var adv = forcaAtaque / Math.max(1, forcaDefesa);
-        var base = 1.5 * adv * zm; // increased base to compensate per-player modifiers
+        var base = 1.42 * adv * zm; // calibrated for top-XI/depth and fatigue modifiers
 
         // Player-level modifiers (defaults if not provided)
         finalizacao = (typeof finalizacao === 'number') ? finalizacao : 75;
         reflexo = (typeof reflexo === 'number') ? reflexo : 75;
+        posicionamento = (typeof posicionamento === 'number') ? posicionamento : 75;
 
         // Chance type base xG (overrides zone-based if set-piece)
         if (chanceType && chanceType !== 'NORMAL') {
@@ -1496,8 +2128,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var shooterBoost = 1 + Math.max(-0.4, Math.min(0.8, (finalizacao - 75) * 0.012));
         // Goalkeeper: reduces effective xG (clamped to avoid full nullification) — reduced impact
         var goalieReduction = Math.max(0, Math.min(0.85, reflexo * 0.006));
+        var positioningReduction = $scope.calcularReducaoPosicionamentoGoleiro(zona, posicionamento);
+        var setPieceBoost = $scope.calcularModificadorBolaParada(chanceType, atributoBolaParada);
 
-        var xg = base * shooterBoost * (1 - goalieReduction);
+        var xg = base * shooterBoost * setPieceBoost * (1 - goalieReduction) * (1 - positioningReduction);
         return Math.max(0.005, Math.min(0.6, xg));
     };
 
@@ -1505,23 +2139,38 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         // Usa xG por finalização em vez de "chanceM" direta e incorpora média de atributos dos jogadores
         var forcaM = mandante.reputacao + (aplicaCasa ? 10 : 0);
         var forcaV = visitante.reputacao;
+        var taticaM = $scope.sortearTaticaCPU();
+        var taticaV = $scope.sortearTaticaCPU();
+        var ataqueM = forcaM * $scope.calcularModificadorAtaqueTatica(taticaM);
+        var defesaM = forcaM * $scope.calcularModificadorDefesaTatica(taticaM);
+        var ataqueV = forcaV * $scope.calcularModificadorAtaqueTatica(taticaV);
+        var defesaV = forcaV * $scope.calcularModificadorDefesaTatica(taticaV);
         var diff = forcaM - forcaV;
         var bias = 0.5 + (diff / (forcaM + forcaV)) * 0.35;
         bias = Math.max(0.05, Math.min(0.95, bias));
 
         function mediaAtributoTime(clubeId, atributo, posFilter) {
             if (!$scope.jogadores) return 75;
-            var jTime = $scope.jogadores.filter(function(j) { return j.clubeId === clubeId && j.atributos; });
+            var jTime = $scope.jogadores.filter(function(j) { return j.clubeId === clubeId && j.atributos && !j.lesionado && !j.suspenso; });
             if (posFilter && posFilter.length > 0) jTime = jTime.filter(function(j) { return posFilter.indexOf(j.posicao) !== -1; });
             if (!jTime || jTime.length === 0) return 75;
+            jTime = jTime.sort(function(a, b) { return $scope.calcularOverall(b) - $scope.calcularOverall(a); }).slice(0, $scope.obterLimiteProfundidadePorPosicao(posFilter));
             var soma = jTime.reduce(function(s, j) { return s + (j.atributos[atributo] || 75); }, 0);
             return Math.round(soma / jTime.length);
         }
 
         var avgFinalM = mediaAtributoTime(mandante.id, 'finalizacao', ['ATA','MEI','VOL','LAT']);
         var avgReflexoM = mediaAtributoTime(mandante.id, 'reflexo', ['GOL']);
+        var avgPosicionamentoM = mediaAtributoTime(mandante.id, 'posicionamento', ['GOL']);
+        var avgPenaltiM = mediaAtributoTime(mandante.id, 'penalti', ['ATA','MEI','VOL','LAT']);
+        var avgEscanteioM = mediaAtributoTime(mandante.id, 'escanteio', ['ATA','MEI','VOL','LAT']);
+        var avgCobradorM = mediaAtributoTime(mandante.id, 'cobrador', ['ATA','MEI','VOL','LAT']);
         var avgFinalV = mediaAtributoTime(visitante.id, 'finalizacao', ['ATA','MEI','VOL','LAT']);
         var avgReflexoV = mediaAtributoTime(visitante.id, 'reflexo', ['GOL']);
+        var avgPosicionamentoV = mediaAtributoTime(visitante.id, 'posicionamento', ['GOL']);
+        var avgPenaltiV = mediaAtributoTime(visitante.id, 'penalti', ['ATA','MEI','VOL','LAT']);
+        var avgEscanteioV = mediaAtributoTime(visitante.id, 'escanteio', ['ATA','MEI','VOL','LAT']);
+        var avgCobradorV = mediaAtributoTime(visitante.id, 'cobrador', ['ATA','MEI','VOL','LAT']);
 
         var gM = 0, gV = 0;
         var eventos = Math.floor(Math.random() * 6) + 4; // 4..9 eventos (aumentado para gerar mais finalizações)
@@ -1531,12 +2180,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if (atacanteEhMandante) {
                     var zona = $scope.aleatorizarZona();
                     var chanceType = $scope.aleatorizarTipoChance();
-                    var xg = $scope.calcularXG(forcaM, forcaV, zona, avgFinalM, avgReflexoV, chanceType);
+                    var bolaParadaM = chanceType === 'PENALTY' ? avgPenaltiM : (chanceType === 'CORNER' ? avgEscanteioM : (chanceType === 'DIRECT_FK' ? avgCobradorM : 75));
+                    var xg = $scope.calcularXG(ataqueM, defesaV, zona, avgFinalM, avgReflexoV, chanceType, avgPosicionamentoV, bolaParadaM);
+                    xg = Math.max(0.005, Math.min(0.6, xg * $scope.calcularModificadorZonaPorTatica(taticaM, zona, chanceType)));
                     if (Math.random() < xg) gM++;
                 } else {
                     var zona2 = $scope.aleatorizarZona();
                     var chanceType2 = $scope.aleatorizarTipoChance();
-                    var xg2 = $scope.calcularXG(forcaV, forcaM, zona2, avgFinalV, avgReflexoM, chanceType2);
+                    var bolaParadaV = chanceType2 === 'PENALTY' ? avgPenaltiV : (chanceType2 === 'CORNER' ? avgEscanteioV : (chanceType2 === 'DIRECT_FK' ? avgCobradorV : 75));
+                    var xg2 = $scope.calcularXG(ataqueV, defesaM, zona2, avgFinalV, avgReflexoM, chanceType2, avgPosicionamentoM, bolaParadaV);
+                    xg2 = Math.max(0.005, Math.min(0.6, xg2 * $scope.calcularModificadorZonaPorTatica(taticaV, zona2, chanceType2)));
                     if (Math.random() < xg2) gV++;
                 }
             }
@@ -2036,7 +2689,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             id: 'msg_janela_inicio_ano_' + $scope.dados.anoAtual,
             remetente: 'Federação',
             assunto: 'Janela de Transferências ABERTA!',
-            mensagem: 'O período de transferências acaba de começar! Os clubes estão livres para comprar e vender atletas. A janela fechará na rodada 15 do calendário.',
+            mensagem: 'O período de transferências acaba de começar! Os clubes estão livres para comprar e vender atletas durante a janela inicial da temporada.',
             lida: false,
             tipo: 'info',
             data: new Date().toLocaleDateString('pt-BR')
@@ -2180,9 +2833,42 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    $scope.migrarSave = function(saveInfo) {
+        if (!saveInfo) return saveInfo;
+
+        var version = saveInfo.saveVersion || 1;
+
+        if (!saveInfo.savedAt) saveInfo.savedAt = new Date().toISOString();
+
+        // v1 -> v2: calendario/continentais sao reconciliados apos aplicar no $scope.
+        if (!Array.isArray(saveInfo.calendarioGeral)) saveInfo.calendarioGeral = [];
+
+        // v2 -> v3: atributos, fadiga e telemetria adicionados ao modelo.
+        normalizarListaJogadoresSalvos(saveInfo.elencoAtual);
+        normalizarListaJogadoresSalvos(saveInfo.jogadores);
+        normalizarListaJogadoresSalvos($scope.jogadores);
+        if (!Array.isArray(saveInfo.telemetriaHistorico)) saveInfo.telemetriaHistorico = [];
+        if (!Array.isArray(saveInfo.transferenciasHistorico)) saveInfo.transferenciasHistorico = [];
+        if (!Array.isArray(saveInfo.propostasPendentes)) saveInfo.propostasPendentes = [];
+        if (saveInfo.ultimoResumoPartida === undefined) saveInfo.ultimoResumoPartida = null;
+
+        // v3 -> v4: estado de UI derivado nao deve persistir no save.
+        saveInfo.filtroCalendario = 'TODOS';
+        delete saveInfo.calendarioFiltrado;
+        delete saveInfo.proximosEventosOffsets;
+
+        if (version < SAVE_VERSION_ATUAL || saveInfo.saveVersion !== SAVE_VERSION_ATUAL) {
+            saveInfo.saveVersion = SAVE_VERSION_ATUAL;
+        }
+
+        return saveInfo;
+    };
+
     $scope.salvarJogoSilencioso = function() {
         if (!$scope.clubeAtual) return;
         var saveObj = {
+            saveVersion: SAVE_VERSION_ATUAL,
+            savedAt: new Date().toISOString(),
             nomeTreinador: $scope.dados.nomeTreinador,
             anoAtual: $scope.dados.anoAtual || 2024,
             caixaEntrada: $scope.caixaEntrada || [],
@@ -2197,13 +2883,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             diaAtual: $scope.diaAtual,
             calendarioGeral: $scope.calendarioGeral,
             copaBrasil: $scope.copaBrasil,
+            libertadores: $scope.libertadores,
+            sulAmericana: $scope.sulAmericana,
             jogosCPU: $scope.jogosCPU,
             tabelas: $scope.tabelas,
             taticas: $scope.taticas,
             configFinanceira: $scope.configFinanceira,
             clubeAtualInfo: $scope.clubeAtual, // Adicionado para persistir o estado do estadio modificado
             dataSave: new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-            telemetriaHistorico: $scope.telemetriaHistorico || []
+            telemetriaHistorico: $scope.telemetriaHistorico || [],
+            ultimoResumoPartida: $scope.ultimoResumoPartida || null,
+            transferenciasHistorico: $scope.transferenciasHistorico || [],
+            propostasPendentes: $scope.propostasPendentes || []
         };
         window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveObj));
         $scope.checarSaveExistente(); 
@@ -2221,9 +2912,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return;
         }
 
-        var rows = ['minuto,time,zona,xg,finalizacao,reflexo_oponente,shooterId,shooterNome,goal'];
+        var rows = ['minuto,time,zona,chanceType,xg,finalizacao,finalizacao_base,condicao_atacante,bola_parada,reflexo_oponente,reflexo_base_oponente,condicao_goleiro_oponente,posicionamento_oponente,shooterId,shooterNome,goal'];
         $scope.partidaAoVivo.telemetriaShots.forEach(function(s) {
-            rows.push([s.minuto, s.time, s.zona, s.xg, s.finalizacao, s.reflexo_oponente, s.shooterId, '"' + (s.shooterNome || '') + '"', s.result === 'GOL' ? 1 : 0].join(','));
+            rows.push([s.minuto, s.time, s.zona, s.chanceType || 'NORMAL', s.xg, s.finalizacao, s.finalizacao_base || s.finalizacao, s.condicao_atacante || 100, s.bola_parada || 75, s.reflexo_oponente, s.reflexo_base_oponente || s.reflexo_oponente, s.condicao_goleiro_oponente || 100, s.posicionamento_oponente || 75, s.shooterId, '"' + (s.shooterNome || '') + '"', s.result === 'GOL' ? 1 : 0].join(','));
         });
 
         var csv = rows.join('\n');
@@ -2240,6 +2931,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.carregarJogo = function() {
         if (!$scope.saveInfo) return;
+        $scope.saveInfo = $scope.migrarSave($scope.saveInfo);
         $scope.dados.nomeTreinador = $scope.saveInfo.nomeTreinador;
         $scope.dados.anoAtual = $scope.saveInfo.anoAtual || 2024;
         $scope.caixaEntrada = $scope.saveInfo.caixaEntrada || [];
@@ -2248,6 +2940,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.clubeAtual = $scope.clubes.find(function(c) { return c.id === $scope.saveInfo.clubeAtualId; });
         if (!$scope.patrocinioAtual) $scope.gerarPatrocinadores();
         $scope.elencoAtual = $scope.saveInfo.elencoAtual;
+        if ($scope.elencoAtual && $scope.jogadores) {
+            $scope.elencoAtual.forEach(function(jogadorElenco) {
+                var jogadorBase = $scope.jogadores.find(function(j) { return j.id === jogadorElenco.id; });
+                if (jogadorBase) {
+                    jogadorBase.clubeId = $scope.clubeAtual.id;
+                    jogadorBase.salario = jogadorElenco.salario;
+                    jogadorBase.anosContrato = jogadorElenco.anosContrato;
+                }
+            });
+        }
         
         // Recupera dados Financeiros
         if ($scope.saveInfo.orcamentoAtual) {
@@ -2259,12 +2961,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.calendario = $scope.saveInfo.calendario || [];
         $scope.rodadaAtual = $scope.saveInfo.rodadaAtual || 0;
         $scope.diaAtual = $scope.saveInfo.diaAtual || 0;
+        $scope.filtroCalendario = $scope.saveInfo.filtroCalendario || 'TODOS';
         
         if ($scope.saveInfo.calendarioGeral) {
             $scope.calendarioGeral = $scope.saveInfo.calendarioGeral;
         }
+        $scope.normalizarCalendarioGeral();
+        $scope.atualizarCalendarioFiltrado();
         if ($scope.saveInfo.copaBrasil) {
             $scope.copaBrasil = $scope.saveInfo.copaBrasil;
+        }
+        if ($scope.saveInfo.libertadores) {
+            $scope.libertadores = $scope.saveInfo.libertadores;
+        }
+        if ($scope.saveInfo.sulAmericana) {
+            $scope.sulAmericana = $scope.saveInfo.sulAmericana;
+        }
+        if ((!$scope.libertadores || !$scope.sulAmericana) && $scope.calendarioGeral && $scope.calendarioGeral.some(function(d) { return d.tipo === 'CONTINENTAL'; })) {
+            var libertadoresExistente = $scope.libertadores;
+            var sulAmericanaExistente = $scope.sulAmericana;
+            $scope.gerarCompeticoesContinentais();
+            if (libertadoresExistente) $scope.libertadores = libertadoresExistente;
+            if (sulAmericanaExistente) $scope.sulAmericana = sulAmericanaExistente;
         }
         
         if ($scope.saveInfo.jogosCPU) {
@@ -2281,6 +2999,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.saveInfo.configFinanceira) {
             $scope.configFinanceira = $scope.saveInfo.configFinanceira;
         }
+        $scope.ultimoResumoPartida = $scope.saveInfo.ultimoResumoPartida || null;
+        $scope.transferenciasHistorico = $scope.saveInfo.transferenciasHistorico || [];
+        $scope.propostasPendentes = $scope.saveInfo.propostasPendentes || [];
+        if ($scope.atualizarPropostasPendentes) $scope.atualizarPropostasPendentes();
+        if ($scope.atualizarHistoricoMercadoVisivel) $scope.atualizarHistoricoMercadoVisivel();
+        if ($scope.atualizarResumoJanelaMercado) $scope.atualizarResumoJanelaMercado();
 
         if ($scope.saveInfo.clubeAtualInfo) {
             $scope.clubeAtual.estadio = $scope.saveInfo.clubeAtualInfo.estadio;
@@ -2425,7 +3149,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     marcacao: baseAttr + Math.floor(Math.random() * 20),
                     velocidade: baseAttr + Math.floor(Math.random() * 20),
                     fisico: baseAttr + Math.floor(Math.random() * 20),
-                    reflexo: baseAttr + Math.floor(Math.random() * 20)
+                    reflexo: baseAttr + Math.floor(Math.random() * 20),
+                    posicionamento: baseAttr + Math.floor(Math.random() * 20),
+                    distribuicao: baseAttr + Math.floor(Math.random() * 20),
+                    penalti: baseAttr + Math.floor(Math.random() * 20),
+                    escanteio: baseAttr + Math.floor(Math.random() * 20),
+                    cobrador: baseAttr + Math.floor(Math.random() * 20)
                 },
                 potencial: 85 + Math.floor(Math.random() * 11) // Potencial entre 85 e 95
             };
@@ -2448,6 +3177,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.clubeAtual.orcamento -= valorMulta;
         jogador.clubeId = $scope.clubeAtual.id;
         $scope.elencoAtual.push(jogador);
+        $scope.registrarTransferenciaHistorico({
+            tipo: 'compra',
+            jogadorId: jogador.id,
+            jogadorNome: jogador.nome,
+            clubeOrigemId: 'mercado',
+            clubeOrigemNome: 'Relatorio de olheiro',
+            clubeDestinoId: $scope.clubeAtual.id,
+            clubeDestinoNome: $scope.clubeAtual.nome,
+            valor: valorMulta,
+            salario: jogador.salario,
+            anosContrato: jogador.anosContrato
+        });
         
         $scope.financasHistorico.unshift({
             tipo: 'despesa',
@@ -2475,7 +3216,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         $scope.telaAtual = novaTela;
         if (novaTela === 'mercado') {
+            if (!$scope.mercadoUI || !$scope.mercadoUI.aba) $scope.mercadoUI = { aba: 'busca' };
+            $scope.atualizarResumoJanelaMercado();
+            $scope.atualizarPropostasPendentes();
+            $scope.atualizarHistoricoMercadoVisivel();
             $scope.atualizarMercado();
+        }
+        if (novaTela === 'calendario') {
+            $scope.atualizarCalendarioFiltrado();
         }
     };
 
@@ -2555,10 +3303,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         
         posicoes.forEach(function(slot) {
             // Procura o melhor da posição que não esteja machucado/suspenso e nem expulso
-            var jogador = banco.find(function(j) { return !j.emCampo && !j.expulso && j.posicao === slot.pos && !j.lesionado && !j.suspenso; });
+            var jogador = banco.find(function(j) { return !j.emCampo && j.posicao === slot.pos && !$scope.jogadorBloqueadoParaEntrar(j); });
             if (!jogador) {
                 // Se não achar, pega o melhor geral disponível (improviso)
-                jogador = banco.find(function(j) { return !j.emCampo && !j.expulso && !j.lesionado && !j.suspenso; });
+                jogador = banco.find(function(j) { return !j.emCampo && !$scope.jogadorBloqueadoParaEntrar(j); });
             }
             if (jogador) {
                 jogador.emCampo = true;
@@ -2568,9 +3316,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
     };
 
+    $scope.jogadorBloqueadoParaEntrar = function(jogador) {
+        return !!(jogador && (jogador.expulso || jogador.lesionado || jogador.suspenso || ($scope.partidaEmAndamento && jogador.substituidoNaPartida)));
+    };
+
+    $scope.marcarSubstituidoNaPartida = function(jogador) {
+        if (jogador && $scope.partidaEmAndamento && $scope.partidaPausada && !jogador.expulso && !jogador.lesionado) {
+            jogador.substituidoNaPartida = true;
+        }
+    };
+
     $scope.moverJogador = function(jogadorId, areaTipo, posX, posY) {
         var jogador = $scope.elencoAtual.find(function(j) { return j.id === jogadorId; });
-        if (jogador && !jogador.expulso && !jogador.lesionado && !jogador.suspenso) {
+        if (jogador && !$scope.jogadorBloqueadoParaEntrar(jogador)) {
             if (areaTipo === 'campo') {
                 var jogadoresEmCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo; });
                 
@@ -2588,16 +3346,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
                 if (jogadorSobreposto) {
                     // Substituição! O jogador sobreposto vai pro banco.
-                    jogadorSobreposto.emCampo = false;
-                    
                     if (!jogador.emCampo && $scope.partidaEmAndamento && $scope.partidaPausada) {
                         if ($scope.substituicoesFeitas >= 5) {
                             alert("Limite de 5 substituições atingido!");
-                            jogadorSobreposto.emCampo = true; // Desfaz
                             return;
                         }
                         $scope.substituicoesFeitas++;
+                        $scope.marcarSubstituidoNaPartida(jogadorSobreposto);
                     }
+
+                    jogadorSobreposto.emCampo = false;
                     
                     jogador.emCampo = true;
                     jogador.posX = jogadorSobreposto.posX;
@@ -2626,10 +3384,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     jogador.posY = posY;
                 }
             } else {
+                $scope.marcarSubstituidoNaPartida(jogador);
                 jogador.emCampo = false;
             }
         } else if (jogador && jogador.expulso) {
             alert("Este jogador foi expulso e não pode voltar pro campo!");
+        } else if (jogador && jogador.lesionado) {
+            alert("Este jogador está lesionado e não pode voltar pro campo!");
+        } else if (jogador && jogador.suspenso) {
+            alert("Este jogador está suspenso e não pode voltar pro campo!");
+        } else if (jogador && jogador.substituidoNaPartida) {
+            alert("Este jogador já foi substituído nesta partida e não pode voltar pro campo!");
         }
     };
 
@@ -2644,22 +3409,43 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     // Retorna um jogador aleatório do time (prioriza elencoAtual quando for o clube do player)
-    $scope.obterJogadorAleatorio = function(clubeId, posicoes) {
-        if (!$scope.jogadores) return null;
+    $scope.obterLimiteProfundidadePorPosicao = function(posicoes) {
+        if (!posicoes || posicoes.length === 0) return 11;
+        if (posicoes.length === 1 && posicoes[0] === 'GOL') return 1;
+        if (posicoes.indexOf('ATA') !== -1 && posicoes.indexOf('MEI') !== -1) return 7;
+        return Math.min(8, Math.max(3, posicoes.length * 2));
+    };
+
+    $scope.obterElencoElegivelParaMotor = function(clubeId, posicoes) {
         var elenco = [];
         if ($scope.clubeAtual && clubeId === $scope.clubeAtual.id) {
             elenco = $scope.elencoAtual || [];
+            if ($scope.partidaEmAndamento) {
+                elenco = elenco.filter(function(j) { return j.emCampo; });
+            }
         } else {
-            elenco = $scope.jogadores.filter(function(j) { return j.clubeId === clubeId; });
+            elenco = ($scope.jogadores || []).filter(function(j) { return j.clubeId === clubeId; });
         }
 
         var candidatos = elenco.filter(function(j) {
-            if (!j) return false;
-            if (j.lesionado || j.expulso) return false;
+            if (!j || !j.atributos) return false;
+            if (j.lesionado || j.expulso || j.suspenso) return false;
             if (!posicoes || posicoes.length === 0) return true;
             return posicoes.indexOf(j.posicao) !== -1;
         });
 
+        if ($scope.clubeAtual && clubeId === $scope.clubeAtual.id && $scope.partidaEmAndamento) {
+            return candidatos;
+        }
+
+        return candidatos.sort(function(a, b) {
+            return $scope.calcularOverall(b) - $scope.calcularOverall(a);
+        }).slice(0, $scope.obterLimiteProfundidadePorPosicao(posicoes));
+    };
+
+    $scope.obterJogadorAleatorio = function(clubeId, posicoes) {
+        if (!$scope.jogadores) return null;
+        var candidatos = $scope.obterElencoElegivelParaMotor(clubeId, posicoes);
         if (!candidatos || candidatos.length === 0) return null;
         return candidatos[Math.floor(Math.random() * candidatos.length)];
     };
@@ -2673,7 +3459,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.calcularOverall = function(jogador) {
         var attr = jogador.atributos;
         var base = 0;
-        if (jogador.posicao === 'GOL') base = (attr.reflexo * 2 + attr.fisico + attr.passe) / 4;
+        if (jogador.posicao === 'GOL') {
+            var posicionamento = (typeof attr.posicionamento === 'number') ? attr.posicionamento : attr.reflexo;
+            var distribuicao = (typeof attr.distribuicao === 'number') ? attr.distribuicao : attr.passe;
+            base = (attr.reflexo * 2 + posicionamento + distribuicao + attr.fisico) / 5;
+        }
         else base = (attr.finalizacao + attr.passe + attr.marcacao + attr.velocidade + attr.fisico) / 5;
         
         // FASE 12: Penalidade por Improviso
@@ -2690,12 +3480,274 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     // FASE 10: MERCADO DA BOLA
     $scope.isJanelaTransferenciaAberta = function() {
         if (!$scope.calendarioGeral || !$scope.calendarioGeral[$scope.diaAtual]) return false;
-        var rodadaLiga = $scope.calendarioGeral[$scope.diaAtual].rodadaLiga;
-        // Se a rodadaLiga não existe (Copa, etc), a gente aproxima pelo diaAtual
-        var dia = $scope.diaAtual;
-        // Janela Início do Ano: Dias 0 a 15
-        // Janela Meio do Ano: Dias 35 a 45
-        return (dia >= 0 && dia <= 15) || (dia >= 35 && dia <= 45);
+        return !!$scope.obterJanelaTransferenciaAtual($scope.diaAtual);
+    };
+
+    $scope.transferenciasHistorico = $scope.transferenciasHistorico || [];
+    $scope.transferenciasHistoricoVisivel = [];
+    $scope.propostasPendentes = $scope.propostasPendentes || [];
+    $scope.mercadoUI = $scope.mercadoUI || { aba: 'busca' };
+    $scope.propostaNegociacaoAtualId = null;
+    $scope.resumoJanelaMercado = {
+        aberta: false,
+        titulo: 'Janela fechada',
+        detalhe: 'Calendario ainda nao carregado.',
+        diasRestantes: 0,
+        proxima: ''
+    };
+
+    function criarIdMercado(prefixo) {
+        return (prefixo || 'mercado') + '_' + Date.now() + '_' + Math.floor(Math.random() * 1000000);
+    }
+
+    function statusPropostaFinal(status) {
+        return status === 'aceita' || status === 'recusada' || status === 'expirada';
+    }
+
+    function obterDataStrMercado() {
+        if ($scope.calendarioGeral && $scope.calendarioGeral[$scope.diaAtual]) {
+            return $scope.calendarioGeral[$scope.diaAtual].titulo;
+        }
+        return new Date().toLocaleDateString('pt-BR');
+    }
+
+    function obterNomeClubeMercado(clubeId) {
+        if (!clubeId || clubeId === 'mercado') return 'Livre no mercado';
+        if ($scope.clubeAtual && clubeId === $scope.clubeAtual.id) return $scope.clubeAtual.nome;
+        var clube = ($scope.clubes || []).find(function(c) { return c.id == clubeId; });
+        return clube ? clube.nome : 'Desconhecido';
+    }
+
+    function obterJogadorPorId(jogadorId) {
+        var jogadorElenco = ($scope.elencoAtual || []).find(function(j) { return j.id == jogadorId; });
+        if (jogadorElenco) return jogadorElenco;
+        return ($scope.jogadores || []).find(function(j) { return j.id == jogadorId; }) || null;
+    }
+
+    function desbloquearJogadorNegociacao(jogadorId) {
+        var jogadorElenco = ($scope.elencoAtual || []).find(function(j) { return j.id == jogadorId; });
+        if (jogadorElenco) jogadorElenco.emNegociacao = false;
+        var jogadorBase = ($scope.jogadores || []).find(function(j) { return j.id == jogadorId; });
+        if (jogadorBase) jogadorBase.emNegociacao = false;
+    }
+
+    function montarChaveTransferencia(item) {
+        return [
+            item.tipo,
+            item.jogadorId,
+            item.dia,
+            item.clubeOrigemId || '',
+            item.clubeDestinoId || '',
+            item.valor || 0,
+            item.salario || 0,
+            item.anosContrato || ''
+        ].join('|');
+    }
+
+    function obterPropostaAberta(jogadorId, tipo) {
+        return ($scope.propostasPendentes || []).find(function(proposta) {
+            return proposta.jogadorId == jogadorId && proposta.tipo === tipo && !statusPropostaFinal(proposta.status);
+        });
+    }
+
+    $scope.atualizarResumoJanelaMercado = function() {
+        var diaAtual = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        var janelaAtual = $scope.obterJanelaTransferenciaAtual(diaAtual);
+        var janelas = $scope.obterJanelasTransferencia ? $scope.obterJanelasTransferencia() : [];
+
+        if (janelaAtual) {
+            var diasRestantes = Math.max(0, janelaAtual.fim - diaAtual + 1);
+            $scope.resumoJanelaMercado = {
+                aberta: true,
+                titulo: 'Janela aberta',
+                detalhe: 'Periodo de ' + janelaAtual.nome + ' em andamento.',
+                diasRestantes: diasRestantes,
+                proxima: diasRestantes === 1 ? 'Fecha ao fim deste dia.' : 'Fecha em ' + diasRestantes + ' dias.'
+            };
+            return;
+        }
+
+        var proximaJanela = null;
+        for (var i = 0; i < janelas.length; i++) {
+            if (janelas[i].inicio > diaAtual) {
+                proximaJanela = janelas[i];
+                break;
+            }
+        }
+
+        $scope.resumoJanelaMercado = {
+            aberta: false,
+            titulo: 'Janela fechada',
+            detalhe: 'Compras e vendas estao bloqueadas fora da janela.',
+            diasRestantes: 0,
+            proxima: proximaJanela ? 'Proxima janela: ' + proximaJanela.nome + ' em ' + (proximaJanela.inicio - diaAtual) + ' dias.' : 'Nao ha novas janelas nesta temporada.'
+        };
+    };
+
+    $scope.atualizarHistoricoMercadoVisivel = function() {
+        $scope.transferenciasHistorico = Array.isArray($scope.transferenciasHistorico) ? $scope.transferenciasHistorico : [];
+        $scope.transferenciasHistoricoVisivel = $scope.transferenciasHistorico.slice(0, 50);
+    };
+
+    $scope.registrarTransferenciaHistorico = function(dados) {
+        if (!dados || dados.jogadorId === undefined || dados.jogadorId === null) return null;
+        $scope.transferenciasHistorico = Array.isArray($scope.transferenciasHistorico) ? $scope.transferenciasHistorico : [];
+
+        var item = {
+            id: dados.id || criarIdMercado('transf'),
+            dia: (typeof dados.dia === 'number') ? dados.dia : ($scope.diaAtual || 0),
+            temporada: dados.temporada || ($scope.dados && $scope.dados.anoAtual) || 2024,
+            tipo: dados.tipo || 'compra',
+            jogadorId: dados.jogadorId,
+            jogadorNome: dados.jogadorNome || 'Jogador',
+            clubeOrigemId: dados.clubeOrigemId || null,
+            clubeOrigemNome: dados.clubeOrigemNome || obterNomeClubeMercado(dados.clubeOrigemId),
+            clubeDestinoId: dados.clubeDestinoId || null,
+            clubeDestinoNome: dados.clubeDestinoNome || obterNomeClubeMercado(dados.clubeDestinoId),
+            valor: parseFloat(dados.valor) || 0,
+            salario: parseFloat(dados.salario) || 0,
+            anosContrato: parseInt(dados.anosContrato, 10) || null,
+            dataStr: dados.dataStr || obterDataStrMercado()
+        };
+        item.chave = dados.chave || montarChaveTransferencia(item);
+
+        var existente = $scope.transferenciasHistorico.find(function(transferencia) {
+            return transferencia.chave === item.chave;
+        });
+        if (existente) return existente;
+
+        $scope.transferenciasHistorico.unshift(item);
+        $scope.atualizarHistoricoMercadoVisivel();
+        return item;
+    };
+
+    $scope.registrarOuAtualizarProposta = function(dados) {
+        if (!dados || dados.jogadorId === undefined || dados.jogadorId === null) return null;
+        $scope.propostasPendentes = Array.isArray($scope.propostasPendentes) ? $scope.propostasPendentes : [];
+
+        var proposta = dados.id ? $scope.propostasPendentes.find(function(p) { return p.id === dados.id; }) : obterPropostaAberta(dados.jogadorId, dados.tipo);
+        if (!proposta) {
+            proposta = {
+                id: dados.id || criarIdMercado('prop'),
+                diaCriacao: (typeof dados.diaCriacao === 'number') ? dados.diaCriacao : ($scope.diaAtual || 0),
+                validadeDias: dados.validadeDias || 3
+            };
+            $scope.propostasPendentes.unshift(proposta);
+        }
+
+        proposta.tipo = dados.tipo || proposta.tipo || 'compra';
+        proposta.status = dados.status || proposta.status || 'em_clube';
+        proposta.jogadorId = dados.jogadorId;
+        proposta.jogadorNome = dados.jogadorNome || proposta.jogadorNome || 'Jogador';
+        proposta.clubeOrigemId = dados.clubeOrigemId !== undefined ? dados.clubeOrigemId : proposta.clubeOrigemId;
+        proposta.clubeDestinoId = dados.clubeDestinoId !== undefined ? dados.clubeDestinoId : proposta.clubeDestinoId;
+        proposta.clubeOrigemNome = dados.clubeOrigemNome || obterNomeClubeMercado(proposta.clubeOrigemId);
+        proposta.clubeDestinoNome = dados.clubeDestinoNome || obterNomeClubeMercado(proposta.clubeDestinoId);
+        proposta.valorOferta = dados.valorOferta !== undefined ? parseFloat(dados.valorOferta) || 0 : (proposta.valorOferta || 0);
+        proposta.salarioOferta = dados.salarioOferta !== undefined ? parseFloat(dados.salarioOferta) || 0 : (proposta.salarioOferta || 0);
+        proposta.anosContrato = dados.anosContrato !== undefined ? parseInt(dados.anosContrato, 10) || null : proposta.anosContrato;
+        proposta.dataStr = dados.dataStr || proposta.dataStr || obterDataStrMercado();
+        proposta.validadeDias = proposta.validadeDias || 3;
+
+        if (statusPropostaFinal(proposta.status) && proposta.diaResposta === undefined) {
+            proposta.diaResposta = $scope.diaAtual || 0;
+        }
+
+        $scope.atualizarPropostasPendentes();
+        return proposta;
+    };
+
+    $scope.atualizarPropostasPendentes = function() {
+        $scope.propostasPendentes = Array.isArray($scope.propostasPendentes) ? $scope.propostasPendentes : [];
+        var diaAtual = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+
+        $scope.propostasPendentes.forEach(function(proposta) {
+            if (typeof proposta.diaCriacao !== 'number') proposta.diaCriacao = diaAtual;
+            proposta.validadeDias = proposta.validadeDias || 3;
+
+            var idade = diaAtual - proposta.diaCriacao;
+            proposta.diasRestantes = Math.max(0, proposta.validadeDias - idade);
+
+            if (!statusPropostaFinal(proposta.status) && idade >= proposta.validadeDias) {
+                proposta.status = 'expirada';
+                proposta.diasRestantes = 0;
+                proposta.diaResposta = diaAtual;
+                desbloquearJogadorNegociacao(proposta.jogadorId);
+            }
+        });
+    };
+
+    $scope.definirAbaMercado = function(aba) {
+        $scope.mercadoUI = $scope.mercadoUI || {};
+        $scope.mercadoUI.aba = aba || 'busca';
+        $scope.subTelaMercado = $scope.mercadoUI.aba;
+        if ($scope.mercadoUI.aba === 'busca') $scope.atualizarMercado();
+        if ($scope.mercadoUI.aba === 'historico') $scope.atualizarHistoricoMercadoVisivel();
+    };
+
+    $scope.isAbaMercado = function(aba) {
+        return (($scope.mercadoUI && $scope.mercadoUI.aba) || 'busca') === aba;
+    };
+
+    $scope.obterStatusPropostaLabel = function(proposta) {
+        if (!proposta) return '';
+        if (proposta.status === 'em_clube') return proposta.tipo === 'venda' ? 'Aguardando sua resposta' : 'Aguardando clube';
+        if (proposta.status === 'clube_aceitou') return 'Clube aceitou';
+        if (proposta.status === 'em_jogador') return 'Aguardando jogador';
+        if (proposta.status === 'aceita') return 'Aceita';
+        if (proposta.status === 'recusada') return 'Recusada';
+        if (proposta.status === 'expirada') return 'Expirada';
+        return proposta.status;
+    };
+
+    $scope.obterClasseStatusProposta = function(proposta) {
+        if (!proposta) return 'neutro';
+        if (proposta.status === 'aceita') return 'sucesso';
+        if (proposta.status === 'recusada' || proposta.status === 'expirada') return 'erro';
+        if (proposta.status === 'clube_aceitou') return 'alerta';
+        return 'neutro';
+    };
+
+    $scope.propostaPermiteContinuar = function(proposta) {
+        return !!proposta && proposta.tipo !== 'venda' && !statusPropostaFinal(proposta.status);
+    };
+
+    $scope.cancelarPropostaPendente = function(proposta) {
+        if (!proposta || statusPropostaFinal(proposta.status)) return;
+        proposta.status = 'recusada';
+        proposta.diaResposta = $scope.diaAtual || 0;
+        proposta.diasRestantes = 0;
+        desbloquearJogadorNegociacao(proposta.jogadorId);
+        $scope.salvarJogoSilencioso();
+    };
+
+    $scope.continuarPropostaPendente = function(proposta) {
+        if (!$scope.propostaPermiteContinuar(proposta)) return;
+        var jogador = obterJogadorPorId(proposta.jogadorId);
+        if (!jogador) {
+            alert('Jogador nao encontrado para continuar a negociacao.');
+            return;
+        }
+
+        $scope.jogadorNegociacao = jogador;
+        $scope.tipoNegociacao = proposta.tipo;
+        $scope.negociacaoAtiva = true;
+        $scope.motivoRejeicao = '';
+        $scope.propostaNegociacaoAtualId = proposta.id;
+        $scope.ofertaValores = {
+            clube: proposta.valorOferta || $scope.calcularValorPasse(jogador),
+            salario: proposta.salarioOferta || jogador.salario || 10000,
+            anos: String(proposta.anosContrato || jogador.anosContrato || 1),
+            clubeAceita: proposta.status === 'clube_aceitou' ? (proposta.valorOferta || 0) : 0
+        };
+        $scope.estadoNegociacao = proposta.status === 'clube_aceitou' || proposta.status === 'em_jogador' ? 'proposta_jogador' : 'proposta_clube';
+    };
+
+    $scope.limparHistoricoTransferencias = function() {
+        if (!confirm('Deseja limpar o historico de transferencias?')) return;
+        $scope.transferenciasHistorico = [];
+        $scope.atualizarHistoricoMercadoVisivel();
+        $scope.salvarJogoSilencioso();
     };
 
     $scope.filtroBusca = {
@@ -2707,6 +3759,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.resultadosBuscaMercado = [];
 
     $scope.atualizarMercado = function() {
+        $scope.atualizarResumoJanelaMercado();
+        $scope.atualizarPropostasPendentes();
         if (!$scope.jogadores || !$scope.elencoAtual) return;
         var idsNoElenco = $scope.elencoAtual.map(function(j) { return j.id; });
         
@@ -2766,15 +3820,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.tipoNegociacao = ehRenovacao ? 'renovacao' : 'compra';
         $scope.negociacaoAtiva = true;
         $scope.motivoRejeicao = "";
+        var propostaAberta = obterPropostaAberta(jogador.id, $scope.tipoNegociacao);
+        $scope.propostaNegociacaoAtualId = propostaAberta ? propostaAberta.id : null;
         
         $scope.ofertaValores = {
-            clube: $scope.calcularValorPasse(jogador),
-            salario: jogador.salario || 10000,
-            anos: "1",
-            clubeAceita: 0
+            clube: propostaAberta && propostaAberta.valorOferta ? propostaAberta.valorOferta : $scope.calcularValorPasse(jogador),
+            salario: propostaAberta && propostaAberta.salarioOferta ? propostaAberta.salarioOferta : jogador.salario || 10000,
+            anos: String((propostaAberta && propostaAberta.anosContrato) || 1),
+            clubeAceita: propostaAberta && propostaAberta.status === 'clube_aceitou' ? propostaAberta.valorOferta : 0
         };
 
-        if ($scope.tipoNegociacao === 'compra' && jogador.clubeId !== 'mercado') {
+        if (propostaAberta && (propostaAberta.status === 'clube_aceitou' || propostaAberta.status === 'em_jogador')) {
+            $scope.estadoNegociacao = 'proposta_jogador';
+        } else if ($scope.tipoNegociacao === 'compra' && jogador.clubeId !== 'mercado') {
             $scope.estadoNegociacao = 'proposta_clube';
         } else {
             $scope.estadoNegociacao = 'proposta_jogador';
@@ -2784,43 +3842,149 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.fecharNegociacao = function() {
         $scope.negociacaoAtiva = false;
         $scope.jogadorNegociacao = null;
+        $scope.propostaNegociacaoAtualId = null;
     };
 
     $scope.enviarPropostaClube = function(oferta) {
         var valorPasse = $scope.calcularValorPasse($scope.jogadorNegociacao);
         var margemAceitacao = valorPasse * 0.85;
+        var proposta = $scope.registrarOuAtualizarProposta({
+            id: $scope.propostaNegociacaoAtualId,
+            tipo: 'compra',
+            status: 'em_clube',
+            jogadorId: $scope.jogadorNegociacao.id,
+            jogadorNome: $scope.jogadorNegociacao.nome,
+            clubeOrigemId: $scope.jogadorNegociacao.clubeId,
+            clubeDestinoId: $scope.clubeAtual.id,
+            valorOferta: oferta
+        });
+        $scope.propostaNegociacaoAtualId = proposta ? proposta.id : null;
 
         if (oferta >= margemAceitacao) {
             $scope.ofertaValores.clubeAceita = oferta;
             $scope.estadoNegociacao = 'proposta_jogador';
+            $scope.jogadorNegociacao.emNegociacao = true;
+            $scope.registrarOuAtualizarProposta({
+                id: $scope.propostaNegociacaoAtualId,
+                tipo: 'compra',
+                status: 'clube_aceitou',
+                jogadorId: $scope.jogadorNegociacao.id,
+                jogadorNome: $scope.jogadorNegociacao.nome,
+                clubeOrigemId: $scope.jogadorNegociacao.clubeId,
+                clubeDestinoId: $scope.clubeAtual.id,
+                valorOferta: oferta
+            });
         } else {
             $scope.estadoNegociacao = 'rejeitado';
             $scope.motivoRejeicao = "A diretoria do clube rejeitou sua oferta. Eles não aceitariam menos de " + $scope.formatarMoeda(margemAceitacao) + ".";
+            $scope.registrarOuAtualizarProposta({
+                id: $scope.propostaNegociacaoAtualId,
+                tipo: 'compra',
+                status: 'recusada',
+                jogadorId: $scope.jogadorNegociacao.id,
+                jogadorNome: $scope.jogadorNegociacao.nome,
+                clubeOrigemId: $scope.jogadorNegociacao.clubeId,
+                clubeDestinoId: $scope.clubeAtual.id,
+                valorOferta: oferta
+            });
+            desbloquearJogadorNegociacao($scope.jogadorNegociacao.id);
         }
     };
 
     $scope.enviarPropostaJogador = function(salario, anos) {
         var salarioBase = $scope.jogadorNegociacao.salario || 10000;
         var margemAceitacao = salarioBase * 0.9;
+        var origemId = $scope.tipoNegociacao === 'renovacao' ? $scope.clubeAtual.id : $scope.jogadorNegociacao.clubeId;
+        var proposta = $scope.registrarOuAtualizarProposta({
+            id: $scope.propostaNegociacaoAtualId,
+            tipo: $scope.tipoNegociacao,
+            status: 'em_jogador',
+            jogadorId: $scope.jogadorNegociacao.id,
+            jogadorNome: $scope.jogadorNegociacao.nome,
+            clubeOrigemId: origemId,
+            clubeDestinoId: $scope.clubeAtual.id,
+            valorOferta: $scope.ofertaValores.clubeAceita || 0,
+            salarioOferta: salario,
+            anosContrato: anos
+        });
+        $scope.propostaNegociacaoAtualId = proposta ? proposta.id : null;
 
         if (salario >= margemAceitacao) {
             $scope.estadoNegociacao = 'sucesso';
             $scope.motivoRejeicao = $scope.tipoNegociacao === 'compra' ? "O jogador aceitou sua oferta de salário e assinou o contrato!" : "Renovação concluída com sucesso!";
+            $scope.registrarOuAtualizarProposta({
+                id: $scope.propostaNegociacaoAtualId,
+                tipo: $scope.tipoNegociacao,
+                status: 'aceita',
+                jogadorId: $scope.jogadorNegociacao.id,
+                jogadorNome: $scope.jogadorNegociacao.nome,
+                clubeOrigemId: origemId,
+                clubeDestinoId: $scope.clubeAtual.id,
+                valorOferta: $scope.ofertaValores.clubeAceita || 0,
+                salarioOferta: salario,
+                anosContrato: anos
+            });
             $scope.concluirTransferencia($scope.jogadorNegociacao, salario, anos, $scope.ofertaValores.clubeAceita);
         } else {
             $scope.estadoNegociacao = 'rejeitado';
             $scope.motivoRejeicao = "O jogador e seu agente recusaram a oferta salarial. Eles esperavam algo na casa de " + $scope.formatarMoeda(salarioBase) + ".";
+            $scope.registrarOuAtualizarProposta({
+                id: $scope.propostaNegociacaoAtualId,
+                tipo: $scope.tipoNegociacao,
+                status: 'recusada',
+                jogadorId: $scope.jogadorNegociacao.id,
+                jogadorNome: $scope.jogadorNegociacao.nome,
+                clubeOrigemId: origemId,
+                clubeDestinoId: $scope.clubeAtual.id,
+                valorOferta: $scope.ofertaValores.clubeAceita || 0,
+                salarioOferta: salario,
+                anosContrato: anos
+            });
+            desbloquearJogadorNegociacao($scope.jogadorNegociacao.id);
         }
     };
 
     $scope.concluirTransferencia = function(jogador, salario, anos, valorPagoClube) {
         if ($scope.tipoNegociacao === 'compra') {
+            var clubeOrigemId = jogador.clubeId;
+            var clubeOrigemNome = obterNomeClubeMercado(clubeOrigemId);
+            valorPagoClube = parseFloat(valorPagoClube) || 0;
+            salario = parseFloat(salario) || jogador.salario || 10000;
+            anos = parseInt(anos, 10) || 1;
+
+            if (valorPagoClube > 0 && $scope.clubeAtual.orcamento < valorPagoClube) {
+                $scope.estadoNegociacao = 'rejeitado';
+                $scope.motivoRejeicao = "Orçamento insuficiente para concluir a contratação.";
+                return;
+            }
+
             if (valorPagoClube > 0) {
                 $scope.clubeAtual.orcamento -= valorPagoClube;
-                $scope.registrarTransacao("Compra do passe: " + jogador.nome, valorPagoClube, 'despesa');
+                $scope.financasHistorico = $scope.financasHistorico || [];
+                $scope.financasHistorico.unshift({
+                    data: new Date().toLocaleDateString('pt-BR'),
+                    tipo: 'despesa',
+                    descricao: "Compra do passe: " + jogador.nome,
+                    valor: parseFloat(valorPagoClube) || 0
+                });
             }
             
-            var novoJogador = angular.copy(jogador);
+            var jogadorBase = ($scope.jogadores || []).find(function(j) { return j.id === jogador.id; });
+            if (jogadorBase) {
+                jogadorBase.clubeId = $scope.clubeAtual.id;
+                jogadorBase.salario = salario;
+                jogadorBase.anosContrato = anos;
+                jogadorBase.emCampo = false;
+                jogadorBase.condicaoFisica = 100;
+                jogadorBase.cartoesAmarelos = 0;
+                jogadorBase.lesionado = false;
+                jogadorBase.diasLesao = 0;
+                jogadorBase.suspenso = false;
+                jogadorBase.substituidoNaPartida = false;
+                jogadorBase.emNegociacao = false;
+            }
+
+            var novoJogador = angular.copy(jogadorBase || jogador);
             novoJogador.clubeId = $scope.clubeAtual.id;
             novoJogador.emCampo = false;
             novoJogador.condicaoFisica = 100;
@@ -2828,16 +3992,54 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             novoJogador.lesionado = false;
             novoJogador.diasLesao = 0;
             novoJogador.suspenso = false;
+            novoJogador.substituidoNaPartida = false;
             novoJogador.salario = salario;
-            novoJogador.anosContrato = parseInt(anos);
+            novoJogador.anosContrato = anos;
+            novoJogador.emNegociacao = false;
             
-            $scope.elencoAtual.push(novoJogador);
+            var idxElenco = $scope.elencoAtual.findIndex(function(j) { return j.id === novoJogador.id; });
+            if (idxElenco >= 0) $scope.elencoAtual[idxElenco] = novoJogador;
+            else $scope.elencoAtual.push(novoJogador);
+
+            $scope.registrarTransferenciaHistorico({
+                tipo: 'compra',
+                jogadorId: novoJogador.id,
+                jogadorNome: novoJogador.nome,
+                clubeOrigemId: clubeOrigemId,
+                clubeOrigemNome: clubeOrigemNome,
+                clubeDestinoId: $scope.clubeAtual.id,
+                clubeDestinoNome: $scope.clubeAtual.nome,
+                valor: valorPagoClube,
+                salario: salario,
+                anosContrato: anos
+            });
+
+            $scope.resultadosBuscaMercado = ($scope.resultadosBuscaMercado || []).filter(function(j) { return j.id !== novoJogador.id; });
             $scope.atualizarMercado();
             $scope.salvarJogoSilencioso();
             $scope.adicionarMensagem('Diretoria', 'Contratação Concluída', jogador.nome + ' foi contratado e assinou por ' + anos + ' temporada(s)!', false, 'transferencia');
         } else {
-            jogador.salario = salario;
-            jogador.anosContrato = parseInt(anos);
+            jogador.salario = parseFloat(salario) || jogador.salario;
+            jogador.anosContrato = parseInt(anos, 10) || jogador.anosContrato || 1;
+            jogador.emNegociacao = false;
+            var jogadorRenovadoBase = ($scope.jogadores || []).find(function(j) { return j.id === jogador.id; });
+            if (jogadorRenovadoBase) {
+                jogadorRenovadoBase.salario = jogador.salario;
+                jogadorRenovadoBase.anosContrato = jogador.anosContrato;
+                jogadorRenovadoBase.emNegociacao = false;
+            }
+            $scope.registrarTransferenciaHistorico({
+                tipo: 'renovacao',
+                jogadorId: jogador.id,
+                jogadorNome: jogador.nome,
+                clubeOrigemId: $scope.clubeAtual.id,
+                clubeOrigemNome: $scope.clubeAtual.nome,
+                clubeDestinoId: $scope.clubeAtual.id,
+                clubeDestinoNome: $scope.clubeAtual.nome,
+                valor: 0,
+                salario: jogador.salario,
+                anosContrato: jogador.anosContrato
+            });
             $scope.salvarJogoSilencioso();
             $scope.adicionarMensagem('Diretoria', 'Renovação Concluída', jogador.nome + ' renovou contrato por ' + anos + ' temporada(s)!', false, 'transferencia');
         }
@@ -2868,8 +4070,31 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 valor: valorVenda,
                 data: new Date().toLocaleDateString('pt-BR')
             });
+
+            $scope.registrarTransferenciaHistorico({
+                tipo: 'venda',
+                jogadorId: jogador.id,
+                jogadorNome: jogador.nome,
+                clubeOrigemId: $scope.clubeAtual.id,
+                clubeOrigemNome: $scope.clubeAtual.nome,
+                clubeDestinoId: 'mercado',
+                clubeDestinoNome: 'Livre no mercado',
+                valor: valorVenda,
+                salario: jogador.salario,
+                anosContrato: jogador.anosContrato
+            });
+
+            var jogadorBaseVenda = ($scope.jogadores || []).find(function(j) { return j.id === jogador.id; });
+            if (jogadorBaseVenda) {
+                jogadorBaseVenda.clubeId = 'mercado';
+                jogadorBaseVenda.emCampo = false;
+                jogadorBaseVenda.emNegociacao = false;
+            }
+            jogador.clubeId = 'mercado';
+            jogador.emNegociacao = false;
             
             $scope.elencoAtual = $scope.elencoAtual.filter(function(j) { return j.id !== jogador.id; });
+            $scope.atualizarMercado();
             $scope.salvarJogoSilencioso();
         }
     };
@@ -2887,6 +4112,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var valorOferta = Math.floor($scope.calcularValorPasse(jAlvo) * (0.8 + Math.random() * 0.7)); 
                     
                     jAlvo.emNegociacao = true;
+                    var propostaRecebida = $scope.registrarOuAtualizarProposta({
+                        tipo: 'venda',
+                        status: 'em_clube',
+                        jogadorId: jAlvo.id,
+                        jogadorNome: jAlvo.nome,
+                        clubeOrigemId: $scope.clubeAtual.id,
+                        clubeDestinoId: clubeComprador.id,
+                        clubeDestinoNome: clubeComprador.nome,
+                        valorOferta: valorOferta
+                    });
                     $scope.caixaEntrada.unshift({
                         id: 'msg_' + Date.now(),
                         remetente: clubeComprador.nome,
@@ -2896,7 +4131,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         tipo: 'oferta_compra',
                         data: new Date().toLocaleDateString('pt-BR'),
                         jogadorOfertaId: jAlvo.id,
-                        valorOferta: valorOferta
+                        valorOferta: valorOferta,
+                        clubeCompradorId: clubeComprador.id,
+                        propostaPendenteId: propostaRecebida ? propostaRecebida.id : null
                     });
                     $scope.mensagensNaoLidas++;
                 }
@@ -2913,8 +4150,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var livresBons = $scope.jogadores.filter(function(j) { return j.clubeId === 'mercado' && $scope.calcularOverall(j) > 70; });
             if (livresBons.length > 0) {
                 var contratacao = livresBons[Math.floor(Math.random() * livresBons.length)];
+                var clubeOrigemCPU = contratacao.clubeId;
                 contratacao.clubeId = cComprador.id;
                 contratacao.anosContrato = 2;
+                $scope.registrarTransferenciaHistorico({
+                    tipo: 'cpu',
+                    jogadorId: contratacao.id,
+                    jogadorNome: contratacao.nome,
+                    clubeOrigemId: clubeOrigemCPU,
+                    clubeOrigemNome: obterNomeClubeMercado(clubeOrigemCPU),
+                    clubeDestinoId: cComprador.id,
+                    clubeDestinoNome: cComprador.nome,
+                    valor: 0,
+                    salario: contratacao.salario,
+                    anosContrato: contratacao.anosContrato
+                });
 
                 $scope.caixaEntrada.unshift({
                     id: 'msg_m_' + Date.now(),
