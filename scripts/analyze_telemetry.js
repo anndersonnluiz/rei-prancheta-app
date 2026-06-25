@@ -8,10 +8,12 @@ if (!fs.existsSync(telemetryPath)) {
 }
 
 const lines = fs.readFileSync(telemetryPath, 'utf8').split('\n').filter(l => l.trim());
-const header = lines[0];
+const header = lines[0].split(',');
 const data = lines.slice(1);
+const xgIndex = header.indexOf('xg');
+const goalIndex = header.indexOf('goal');
 
-// Parse: matchId,homeId,awayId,eventIndex,team,zona,xg,finalizacao,reflexo,goal
+// Parse by header to support both legacy and current telemetry schemas.
 const zones = {};
 const stats = {
   totalShots: 0,
@@ -24,8 +26,8 @@ data.forEach((line, idx) => {
   if (parts.length < 11) return;
   
   const zona = parts[5].trim();
-  const xg = parseFloat(parts[7].trim()) || 0;
-  const goal = parseInt(parts[10].trim()) || 0;
+  const xg = parseFloat(parts[xgIndex].trim()) || 0;
+  const goal = parseInt(parts[goalIndex].trim()) || 0;
 
   if (!zones[zona]) {
     zones[zona] = { shots: 0, goals: 0, xgSum: 0, xgList: [] };
@@ -72,7 +74,7 @@ results.forEach(r => {
 const csvContent = csvRows.join('\n');
 fs.writeFileSync('zones_summary.csv', csvContent, 'utf8');
 
-console.log('=== Telemetry Analysis (5000 matches) ===');
+console.log('=== Telemetry Analysis ===');
 console.log('Total shots:', stats.totalShots);
 console.log('Total goals:', stats.totalGoals);
 console.log('Overall conversion rate:', ((stats.totalGoals / stats.totalShots) * 100).toFixed(2) + '%');

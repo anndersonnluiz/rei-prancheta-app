@@ -7,10 +7,13 @@ if (!fs.existsSync(telemetryPath)) {
 }
 
 const lines = fs.readFileSync(telemetryPath, 'utf8').split('\n').filter(l => l.trim());
-const header = lines[0];
+const header = lines[0].split(',');
 const data = lines.slice(1);
+const chanceTypeIndex = header.indexOf('chanceType');
+const xgIndex = header.indexOf('xg');
+const goalIndex = header.indexOf('goal');
 
-// Parse: matchKey,homeId,awayId,eventIndex,team,zona,chanceType,xg,finalizacao,reflexo,goal
+// Parse by header to support both legacy and current telemetry schemas.
 const chancetypes = {};
 const stats = {
   totalShots: 0,
@@ -22,9 +25,9 @@ data.forEach((line, idx) => {
   const parts = line.split(',');
   if (parts.length < 11) return;
   
-  const chanceType = parts[6].trim();
-  const xg = parseFloat(parts[7].trim()) || 0;
-  const goal = parseInt(parts[10].trim()) || 0;
+  const chanceType = chanceTypeIndex >= 0 ? parts[chanceTypeIndex].trim() : 'NORMAL';
+  const xg = parseFloat(parts[xgIndex].trim()) || 0;
+  const goal = parseInt(parts[goalIndex].trim()) || 0;
 
   if (!chancetypes[chanceType]) {
     chancetypes[chanceType] = { shots: 0, goals: 0, xgSum: 0 };
@@ -61,7 +64,7 @@ typeOrder.forEach(type => {
   });
 });
 
-console.log('=== Chance Types Analysis (5000 matches) ===');
+console.log('=== Chance Types Analysis ===');
 console.log('Total shots:', stats.totalShots);
 console.log('Total goals:', stats.totalGoals);
 console.log('');
