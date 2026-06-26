@@ -62,7 +62,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.elencoAtual = [];
     $scope.telaAtual = 'loading'; 
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
-    var SAVE_VERSION_ATUAL = 4;
+    var SAVE_VERSION_ATUAL = 5;
 
     // FASE 21: Efeitos Sonoros
     $scope.somAtivado = true;
@@ -135,6 +135,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.narracao = [];
     $scope.partidaEmAndamento = false;
 
+    $scope.preJogo = {
+        visivel: false,
+        modo: null,
+        partida: null,
+        analise: null,
+        telaAnterior: 'dashboard'
+    };
+
+    $scope.posJogo = {
+        disponivel: false,
+        resumo: null
+    };
+
+    $scope.relatorioEvolucao = [];
+    $scope.relatorioEvolucaoVisivel = [];
+    $scope.ultimoDiaEvolucao = 0;
+
     // FASE 12: ESTILO DE JOGO
     $scope.taticas = {
         mentalidade: 'Equilibrado',
@@ -144,6 +161,48 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     function valorNumericoOuPadrao(valor, padrao) {
         return (typeof valor === 'number') ? valor : padrao;
+    }
+
+    function obterChaveNumericaJogador(jogador) {
+        var id = jogador && jogador.id !== undefined ? jogador.id : 0;
+        if (typeof id === 'number') return id;
+        var texto = String(id);
+        var soma = 0;
+        for (var i = 0; i < texto.length; i++) soma += texto.charCodeAt(i) * (i + 1);
+        return soma;
+    }
+
+    function calcularOverallBaseJogador(jogador) {
+        if (!jogador || !jogador.atributos) return 70;
+        var attr = jogador.atributos;
+        if (jogador.posicao === 'GOL') {
+            var reflexo = valorNumericoOuPadrao(attr.reflexo, 75);
+            var posicionamento = valorNumericoOuPadrao(attr.posicionamento, reflexo);
+            var distribuicao = valorNumericoOuPadrao(attr.distribuicao, valorNumericoOuPadrao(attr.passe, 75));
+            var fisicoGol = valorNumericoOuPadrao(attr.fisico, 75);
+            return Math.round((reflexo * 2 + posicionamento + distribuicao + fisicoGol) / 5);
+        }
+        return Math.round((
+            valorNumericoOuPadrao(attr.finalizacao, 75) +
+            valorNumericoOuPadrao(attr.passe, 75) +
+            valorNumericoOuPadrao(attr.marcacao, 75) +
+            valorNumericoOuPadrao(attr.velocidade, 75) +
+            valorNumericoOuPadrao(attr.fisico, 75)
+        ) / 5);
+    }
+
+    function calcularPotencialDeterministico(jogador) {
+        var overall = calcularOverallBaseJogador(jogador);
+        var idade = valorNumericoOuPadrao(jogador && jogador.idade, 24);
+        var chave = obterChaveNumericaJogador(jogador);
+        var bonus = 0;
+
+        if (idade <= 21) bonus = 8 + ((chave * 7 + idade * 3) % 11);
+        else if (idade <= 25) bonus = 4 + ((chave * 7 + idade * 3) % 9);
+        else if (idade <= 29) bonus = ((chave * 7 + idade * 3) % 7);
+        else bonus = -Math.min(3, ((chave * 5 + idade) % 4));
+
+        return Math.max(10, Math.min(99, overall + bonus));
     }
 
     function normalizarJogadorSalvo(jogador) {
@@ -160,6 +219,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (jogador.diasLesao === undefined) jogador.diasLesao = 0;
         if (jogador.suspenso === undefined) jogador.suspenso = false;
         if (jogador.substituidoNaPartida === undefined) jogador.substituidoNaPartida = false;
+
+        if (jogador.potencial === undefined || jogador.potencial === null) jogador.potencial = calcularPotencialDeterministico(jogador);
+        if (jogador.xpTemporada === undefined) jogador.xpTemporada = 0;
+        if (jogador.jogosTemporada === undefined) jogador.jogosTemporada = 0;
+        if (jogador.minutosTemporada === undefined) jogador.minutosTemporada = 0;
+        if (jogador.evolucaoTemporada === undefined) jogador.evolucaoTemporada = 0;
+        if (!Array.isArray(jogador.historicoEvolucao)) jogador.historicoEvolucao = [];
 
         if (jogador.posicao === 'GOL') {
             if (attr.posicionamento === undefined) attr.posicionamento = valorNumericoOuPadrao(attr.reflexo, 75);
@@ -210,6 +276,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         if (!Array.isArray($scope.propostasPendentes)) {
             $scope.propostasPendentes = [];
+        }
+        if (!Array.isArray($scope.relatorioEvolucao)) {
+            $scope.relatorioEvolucao = [];
+        }
+        if (!Array.isArray($scope.relatorioEvolucaoVisivel)) {
+            $scope.relatorioEvolucaoVisivel = [];
+        }
+        if ($scope.ultimoDiaEvolucao === undefined) {
+            $scope.ultimoDiaEvolucao = 0;
+        }
+        if ($scope.atualizarRelatorioEvolucaoVisivel) {
+            $scope.atualizarRelatorioEvolucaoVisivel();
         }
         if (!$scope.mercadoUI) {
             $scope.mercadoUI = { aba: 'busca' };
@@ -389,15 +467,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.transferenciasHistorico = [];
         $scope.transferenciasHistoricoVisivel = [];
         $scope.propostasPendentes = [];
+        $scope.relatorioEvolucao = [];
+        $scope.relatorioEvolucaoVisivel = [];
+        $scope.ultimoDiaEvolucao = 0;
         $scope.mercadoUI = { aba: 'busca' };
         $scope.propostaNegociacaoAtualId = null;
         
         if ($scope.jogadores) {
             $scope.jogadores.forEach(function(j) { 
+                normalizarJogadorSalvo(j);
                 j.golsTemporada = 0; 
+                j.xpTemporada = 0;
+                j.jogosTemporada = 0;
+                j.minutosTemporada = 0;
+                j.evolucaoTemporada = 0;
+                j.historicoEvolucao = [];
                 if (!j.anosContrato) j.anosContrato = Math.floor(Math.random() * 3) + 1;
             });
         }
+        normalizarListaJogadoresSalvos($scope.elencoAtual);
 
         $scope.patrocinioAtual = null;
         $scope.gerarPatrocinadores(); // Gera as opções de patrocínio inicial
@@ -1142,23 +1230,338 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.concluirPartida(null);
     };
 
-    // FASE 6: MOTOR DE JOGO
-    $scope.prepararPartida = function(modo) {
-        var emCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo; });
-        if (emCampo.length !== 11) {
-            alert("⚠️ Escalação Incompleta! Você precisa de exatos 11 jogadores escalados na Prancheta Tática para jogar.");
-            return;
+    function resumirTimePreJogo(time) {
+        return {
+            id: time && time.id !== undefined ? time.id : null,
+            nome: time && time.nome ? time.nome : 'Time indefinido',
+            sigla: time && time.sigla ? time.sigla : '---',
+            reputacao: time && typeof time.reputacao === 'number' ? time.reputacao : 70,
+            divisao: time && time.divisao ? time.divisao : null
+        };
+    }
+
+    function obterNumeroPreJogo(valor, padrao) {
+        return (typeof valor === 'number' && isFinite(valor)) ? valor : padrao;
+    }
+
+    function calcularOverallPreJogo(jogador) {
+        if (!jogador || !jogador.atributos) return 70;
+        var attr = jogador.atributos;
+        if (jogador.posicao === 'GOL') {
+            var reflexo = obterNumeroPreJogo(attr.reflexo, 75);
+            var posicionamento = obterNumeroPreJogo(attr.posicionamento, reflexo);
+            var distribuicao = obterNumeroPreJogo(attr.distribuicao, obterNumeroPreJogo(attr.passe, 75));
+            var fisicoGol = obterNumeroPreJogo(attr.fisico, 75);
+            return Math.round((reflexo * 2 + posicionamento + distribuicao + fisicoGol) / 5);
         }
-        
+        var finalizacao = obterNumeroPreJogo(attr.finalizacao, 75);
+        var passe = obterNumeroPreJogo(attr.passe, 75);
+        var marcacao = obterNumeroPreJogo(attr.marcacao, 75);
+        var velocidade = obterNumeroPreJogo(attr.velocidade, 75);
+        var fisico = obterNumeroPreJogo(attr.fisico, 75);
+        return Math.round((finalizacao + passe + marcacao + velocidade + fisico) / 5);
+    }
+
+    function obterElencoPreJogo(clube) {
+        if (!clube) return [];
+        if ($scope.clubeAtual && clube.id === $scope.clubeAtual.id) {
+            return ($scope.elencoAtual || []).slice();
+        }
+        return ($scope.jogadores || []).filter(function(j) {
+            return j && j.clubeId === clube.id;
+        });
+    }
+
+    function obterJogadoresDisponiveisPreJogo(elenco) {
+        return (elenco || []).filter(function(j) {
+            return j && !j.lesionado && !j.suspenso && !j.expulso;
+        });
+    }
+
+    function ordenarPorOverallPreJogo(jogadores) {
+        return (jogadores || []).slice().sort(function(a, b) {
+            return calcularOverallPreJogo(b) - calcularOverallPreJogo(a);
+        });
+    }
+
+    function calcularCondicaoMediaPreJogo(elenco) {
+        var disponiveis = obterJogadoresDisponiveisPreJogo(elenco);
+        if (disponiveis.length === 0) return elenco && elenco.length > 0 ? 0 : 100;
+
+        var soma = 0;
+        disponiveis.forEach(function(j) {
+            soma += obterNumeroPreJogo(j.condicaoFisica, 100);
+        });
+        return Math.round(soma / disponiveis.length);
+    }
+
+    function calcularIndisponiveisPreJogo(elenco) {
+        var total = 0;
+        (elenco || []).forEach(function(j) {
+            if (j && (j.lesionado || j.suspenso)) total++;
+        });
+        return total;
+    }
+
+    function isPressaoAltaPreJogo(marcacao) {
+        return marcacao === 'Pressão Alta' || marcacao === 'Pressao Alta';
+    }
+
+    function normalizarNivelCargaPreJogo(carga) {
+        return carga && carga.nivel ? carga.nivel : 'BAIXA';
+    }
+
+    function calcularRiscoFisicoPreJogo(condicaoMedia, indisponiveis, carga) {
+        var nivel = normalizarNivelCargaPreJogo(carga);
+        if (condicaoMedia < 65 || nivel === 'ALTA' || nivel === 'CRITICA' || indisponiveis >= 4) return 'Alto';
+        if (condicaoMedia < 80 || nivel === 'MEDIA' || indisponiveis >= 2) return 'Medio';
+        return 'Baixo';
+    }
+
+    function montarRecomendacoesPreJogo(analiseBase, carga) {
+        var recomendacoes = [];
+        var nivelCarga = normalizarNivelCargaPreJogo(carga);
+        var indiceCarga = carga && typeof carga.indiceCarga === 'number' ? carga.indiceCarga : 0;
+
+        if (analiseBase.condicaoMedia < 70) {
+            recomendacoes.push({ tipo: 'fisico', texto: 'Elenco cansado: considere rotacao e poupar titulares abaixo de 70%.' });
+        } else if (nivelCarga === 'ALTA' || nivelCarga === 'CRITICA') {
+            recomendacoes.push({ tipo: 'fisico', texto: 'Sequencia pesada no calendario: monitore fadiga e risco de lesao.' });
+        } else {
+            recomendacoes.push({ tipo: 'fisico', texto: 'Condicao fisica controlada para manter o plano inicial.' });
+        }
+
+        if (analiseBase.diferencaForca <= -5) {
+            recomendacoes.push({ tipo: 'tatica', texto: 'Adversario mais forte: uma postura cautelosa pode reduzir espacos e controlar riscos.' });
+        } else if (analiseBase.diferencaForca >= 8) {
+            recomendacoes.push({ tipo: 'tatica', texto: 'Seu time chega mais forte: da para pressionar e buscar postura ofensiva.' });
+        } else {
+            recomendacoes.push({ tipo: 'tatica', texto: 'Confronto equilibrado: ajuste mentalidade conforme mando e momento fisico.' });
+        }
+
+        if (isPressaoAltaPreJogo(analiseBase.taticasAtuais.marcacao) && (analiseBase.condicaoMedia < 78 || indiceCarga >= 45)) {
+            recomendacoes.push({ tipo: 'fisico', texto: 'Pressao alta com elenco desgastado aumenta fadiga; tenha substituicoes planejadas.' });
+        }
+
+        if (analiseBase.indisponiveis >= 2) {
+            recomendacoes.push({ tipo: 'elenco', texto: 'Ha muitos indisponiveis: revise a escalacao antes de confirmar.' });
+        } else if (analiseBase.indisponiveis > 0) {
+            recomendacoes.push({ tipo: 'elenco', texto: 'Existe indisponivel no elenco: confirme se o banco cobre a posicao.' });
+        }
+
+        if (recomendacoes.length < 2) {
+            recomendacoes.push({ tipo: 'jogo', texto: 'Use o pre-jogo para confirmar plano, mando e encaixes principais.' });
+        }
+
+        return recomendacoes.slice(0, 4);
+    }
+
+    $scope.calcularForcaElencoPreJogo = function(clube, preferirEscalacao) {
+        var elenco = obterElencoPreJogo(clube);
+        var candidatos = obterJogadoresDisponiveisPreJogo(elenco);
+        var jogadoresBase = [];
+
+        if (preferirEscalacao) {
+            jogadoresBase = candidatos.filter(function(j) { return j.emCampo; });
+        }
+        if (jogadoresBase.length === 0) {
+            jogadoresBase = ordenarPorOverallPreJogo(candidatos).slice(0, 11);
+        }
+        if (jogadoresBase.length === 0) {
+            var reputacao = clube && typeof clube.reputacao === 'number' ? clube.reputacao : 70;
+            return Math.round(reputacao);
+        }
+
+        var soma = 0;
+        jogadoresBase.forEach(function(j) {
+            var overall = calcularOverallPreJogo(j);
+            var fatorFadiga = ($scope.clubeAtual && clube && clube.id === $scope.clubeAtual.id) ? $scope.calcularFatorFadiga(j.condicaoFisica) : 1;
+            var fatorMoral = (typeof j.moral === 'number' && j.moral < 50) ? (0.8 + ((j.moral / 50) * 0.2)) : 1;
+            soma += overall * fatorFadiga * fatorMoral;
+        });
+        return Math.round(soma / jogadoresBase.length);
+    };
+
+    $scope.obterJogadoresChavePreJogo = function(clube) {
+        return ordenarPorOverallPreJogo(obterJogadoresDisponiveisPreJogo(obterElencoPreJogo(clube))).slice(0, 3).map(function(j, index) {
+            return {
+                id: j.id !== undefined ? j.id : ((clube && clube.id !== undefined ? clube.id : 'time') + '_chave_' + index),
+                nome: j.nome || 'Jogador sem nome',
+                posicao: j.posicao || '-',
+                overall: calcularOverallPreJogo(j)
+            };
+        });
+    };
+
+    $scope.montarAnalisePreJogo = function(partida, modo) {
+        var clubeAtual = $scope.clubeAtual || {};
+        var mandante = partida && partida.mandante ? partida.mandante : {};
+        var visitante = partida && partida.visitante ? partida.visitante : {};
+        var usuarioMandante = mandante && clubeAtual && mandante.id === clubeAtual.id;
+        var adversario = usuarioMandante ? visitante : mandante;
+        var calendarioDia = $scope.calendarioGeral && $scope.calendarioGeral[$scope.diaAtual] ? $scope.calendarioGeral[$scope.diaAtual] : null;
+        var elencoMeuTime = obterElencoPreJogo(clubeAtual);
+        var carga = $scope.calcularCargaCalendario ? $scope.calcularCargaCalendario($scope.diaAtual) : { nivel: 'BAIXA', indiceCarga: 0 };
+        var forcaMeuTime = $scope.calcularForcaElencoPreJogo(clubeAtual, true);
+        var forcaAdversario = $scope.calcularForcaElencoPreJogo(adversario, false);
+        var condicaoMedia = calcularCondicaoMediaPreJogo(elencoMeuTime);
+        var indisponiveis = calcularIndisponiveisPreJogo(elencoMeuTime);
+        var diferencaForca = forcaMeuTime - forcaAdversario;
+        var taticasAtuais = {
+            mentalidade: $scope.taticas && $scope.taticas.mentalidade ? $scope.taticas.mentalidade : 'Equilibrado',
+            foco: $scope.taticas && $scope.taticas.foco ? $scope.taticas.foco : 'Misto',
+            marcacao: $scope.taticas && $scope.taticas.marcacao ? $scope.taticas.marcacao : 'Recuada'
+        };
+
+        var analise = {
+            modo: modo === 'rapido' ? 'rapido' : 'completo',
+            modoLabel: modo === 'rapido' ? 'Resultado rapido' : 'Partida 3D',
+            competicao: calendarioDia && calendarioDia.titulo ? calendarioDia.titulo : 'Partida',
+            dia: (typeof $scope.diaAtual === 'number' ? $scope.diaAtual : 0) + 1,
+            mandante: resumirTimePreJogo(mandante),
+            visitante: resumirTimePreJogo(visitante),
+            meuTime: resumirTimePreJogo(clubeAtual),
+            adversario: resumirTimePreJogo(adversario),
+            mando: usuarioMandante ? 'Mandante' : 'Visitante',
+            forcaMeuTime: forcaMeuTime,
+            forcaAdversario: forcaAdversario,
+            diferencaForca: diferencaForca,
+            riscoFisico: calcularRiscoFisicoPreJogo(condicaoMedia, indisponiveis, carga),
+            condicaoMedia: condicaoMedia,
+            indisponiveis: indisponiveis,
+            cargaCalendario: {
+                nivel: normalizarNivelCargaPreJogo(carga),
+                indiceCarga: carga && typeof carga.indiceCarga === 'number' ? carga.indiceCarga : 0
+            },
+            taticasAtuais: taticasAtuais,
+            recomendacoes: [],
+            jogadoresChaveAdversario: $scope.obterJogadoresChavePreJogo(adversario)
+        };
+
+        if (diferencaForca <= -5) {
+            analise.statusConfronto = 'Adversario mais forte';
+            analise.statusClasse = 'danger';
+        } else if (diferencaForca >= 8) {
+            analise.statusConfronto = 'Seu time e favorito';
+            analise.statusClasse = 'success';
+        } else {
+            analise.statusConfronto = 'Confronto equilibrado';
+            analise.statusClasse = 'balanced';
+        }
+
+        analise.recomendacoes = montarRecomendacoesPreJogo(analise, carga);
+        return analise;
+    };
+
+    $scope.abrirPreJogo = function(modo) {
         var partida = $scope.obterMeuJogoHoje();
         if (!partida) {
             alert("Você não tem jogo hoje!");
             return;
         }
 
+        var emCampo = ($scope.elencoAtual || []).filter(function(j) { return j.emCampo; });
+        if (emCampo.length !== 11) {
+            alert("⚠️ Escalação Incompleta! Você precisa de exatos 11 jogadores escalados na Prancheta Tática para jogar.");
+            return;
+        }
+
+        var modoNormalizado = modo === 'rapido' ? 'rapido' : 'completo';
+        $scope.preJogo = {
+            visivel: true,
+            modo: modoNormalizado,
+            partida: partida,
+            analise: $scope.montarAnalisePreJogo(partida, modoNormalizado),
+            telaAnterior: $scope.telaAtual || 'dashboard'
+        };
+        $scope.telaAtual = 'pre_jogo';
+    };
+
+    $scope.fecharPreJogo = function() {
+        var telaAnterior = $scope.preJogo && $scope.preJogo.telaAnterior ? $scope.preJogo.telaAnterior : 'dashboard';
+        $scope.preJogo = {
+            visivel: false,
+            modo: null,
+            partida: null,
+            analise: null,
+            telaAnterior: 'dashboard'
+        };
+        $scope.telaAtual = telaAnterior === 'pre_jogo' ? 'dashboard' : telaAnterior;
+    };
+
+    $scope.ajustarTaticasPreJogo = function() {
+        if ($scope.preJogo && $scope.preJogo.partida) {
+            $scope.preJogo.visivel = false;
+            $scope.preJogo.telaAnterior = 'dashboard';
+        }
+        $scope.mudarTela('taticas');
+    };
+
+    $scope.voltarAoPreJogo = function() {
+        if (!$scope.preJogo || !$scope.preJogo.partida) {
+            alert("Nenhuma partida preparada.");
+            $scope.mudarTela('dashboard');
+            return;
+        }
+
+        var partidaHoje = $scope.obterMeuJogoHoje();
+        if (!partidaHoje || partidaHoje.jogado) {
+            alert("A partida preparada não está mais disponível.");
+            $scope.preJogo = {
+                visivel: false,
+                modo: null,
+                partida: null,
+                analise: null,
+                telaAnterior: 'dashboard'
+            };
+            $scope.mudarTela('dashboard');
+            return;
+        }
+
+        var emCampo = ($scope.elencoAtual || []).filter(function(j) { return j.emCampo; });
+        if (emCampo.length !== 11) {
+            alert("Escalação incompleta: você precisa de exatos 11 jogadores escalados para voltar ao pré-jogo.");
+            return;
+        }
+
+        var modo = $scope.preJogo.modo || 'completo';
+        $scope.preJogo.partida = partidaHoje;
+        $scope.preJogo.analise = $scope.montarAnalisePreJogo(partidaHoje, modo);
+        $scope.preJogo.visivel = true;
+        $scope.preJogo.telaAnterior = 'dashboard';
+        $scope.telaAtual = 'pre_jogo';
+    };
+
+    $scope.confirmarPreJogo = function() {
+        if (!$scope.preJogo || !$scope.preJogo.partida) {
+            alert("Nenhuma partida preparada.");
+            $scope.fecharPreJogo();
+            return;
+        }
+        var partida = $scope.preJogo.partida;
+        var modo = $scope.preJogo.modo || 'completo';
+        $scope.preJogo = {
+            visivel: false,
+            modo: null,
+            partida: null,
+            analise: null,
+            telaAnterior: 'dashboard'
+        };
+        $scope.executarPartidaPreparada(partida, modo);
+    };
+
+    // FASE 6: MOTOR DE JOGO
+    $scope.executarPartidaPreparada = function(partida, modo) {
+        if (!partida) {
+            alert("Você não tem jogo hoje!");
+            $scope.fecharPreJogo();
+            return;
+        }
+
         // FASE 17: COLETIVA DE IMPRENSA ANTES DE JOGOS IMPORTANTES
         if (!$scope.coletivaRespondida) {
-            var eClassicoOuDecisivo = ($scope.calendarioGeral[$scope.diaAtual].tipo === 'COPA') || (partida.mandante.reputacao >= 80 && partida.visitante.reputacao >= 80);
+            var diaCalendario = $scope.calendarioGeral && $scope.calendarioGeral[$scope.diaAtual] ? $scope.calendarioGeral[$scope.diaAtual] : null;
+            var eClassicoOuDecisivo = (diaCalendario && diaCalendario.tipo === 'COPA') || (partida.mandante.reputacao >= 80 && partida.visitante.reputacao >= 80);
             if (eClassicoOuDecisivo) {
                 $scope.iniciarColetiva(partida, modo);
                 return;
@@ -1168,15 +1571,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         if (modo === 'rapido') {
             $scope.calcularResultadoRapido(partida);
-            $scope.concluirPartida(partida);
-            $scope.mudarTela('dashboard');
-            
-            $timeout(function() {
-                alert("Fim de Jogo! \n\n" + partida.mandante.nome + " " + partida.golsMandante + " x " + partida.golsVisitante + " " + partida.visitante.nome);
-            }, 100);
+            $scope.finalizarPartidaUsuario(partida, 'rapido');
         } else {
             $scope.iniciarPartidaCompleta(partida);
         }
+    };
+
+    $scope.prepararPartida = function(modo) {
+        $scope.abrirPreJogo(modo);
     };
 
     $scope.calcularForcaTime = function() {
@@ -1373,7 +1775,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.tocarSom('apito');
             $scope.narracao.unshift("Fim de papo! O árbitro encerra a partida!");
             $scope.partidaEmAndamento = false;
-            $scope.concluirPartida($scope.partidaAoVivo);
+            $scope.finalizarPartidaUsuario($scope.partidaAoVivo, 'completo');
             return;
         }
 
@@ -1701,6 +2103,542 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return resumo;
     };
 
+    function numeroPosJogo(valor, padrao) {
+        return (typeof valor === 'number' && isFinite(valor)) ? valor : padrao;
+    }
+
+    function arredondarPosJogo(valor) {
+        return parseFloat((numeroPosJogo(valor, 0)).toFixed(2));
+    }
+
+    function calcularOverallPosJogo(jogador) {
+        if (!jogador || !jogador.atributos) return 70;
+        var attr = jogador.atributos;
+        if (jogador.posicao === 'GOL') {
+            var reflexo = numeroPosJogo(attr.reflexo, 75);
+            var posicionamento = numeroPosJogo(attr.posicionamento, reflexo);
+            var distribuicao = numeroPosJogo(attr.distribuicao, numeroPosJogo(attr.passe, 75));
+            var fisicoGol = numeroPosJogo(attr.fisico, 75);
+            return Math.round((reflexo * 2 + posicionamento + distribuicao + fisicoGol) / 5);
+        }
+        return Math.round((
+            numeroPosJogo(attr.finalizacao, 75) +
+            numeroPosJogo(attr.passe, 75) +
+            numeroPosJogo(attr.marcacao, 75) +
+            numeroPosJogo(attr.velocidade, 75) +
+            numeroPosJogo(attr.fisico, 75)
+        ) / 5);
+    }
+
+    function obterJogadorResumoPosJogo(jogadorId) {
+        var jogadorElenco = ($scope.elencoAtual || []).find(function(j) { return j && j.id == jogadorId; });
+        if (jogadorElenco) return jogadorElenco;
+        return ($scope.jogadores || []).find(function(j) { return j && j.id == jogadorId; }) || null;
+    }
+
+    function obterLadoMeuTimePosJogo(partida) {
+        if (!partida || !$scope.clubeAtual) return 'mandante';
+        return partida.mandante && partida.mandante.id === $scope.clubeAtual.id ? 'mandante' : 'visitante';
+    }
+
+    function calcularResultadoMeuTimePosJogo(partida) {
+        var meuLado = obterLadoMeuTimePosJogo(partida);
+        var golsMeuTime = meuLado === 'mandante' ? numeroPosJogo(partida.golsMandante, 0) : numeroPosJogo(partida.golsVisitante, 0);
+        var golsAdversario = meuLado === 'mandante' ? numeroPosJogo(partida.golsVisitante, 0) : numeroPosJogo(partida.golsMandante, 0);
+        if (golsMeuTime > golsAdversario) return 'Vitoria';
+        if (golsMeuTime < golsAdversario) return 'Derrota';
+        return 'Empate';
+    }
+
+    function montarEstatisticasPosJogo(partida, telemetria) {
+        var stats = $scope.estatisticas || {};
+        var golsMandante = numeroPosJogo(partida.golsMandante, 0);
+        var golsVisitante = numeroPosJogo(partida.golsVisitante, 0);
+        var chutesMandanteTelemetria = 0;
+        var chutesVisitanteTelemetria = 0;
+
+        (telemetria || []).forEach(function(chute) {
+            if (chute.time === 'mandante') chutesMandanteTelemetria++;
+            else if (chute.time === 'visitante') chutesVisitanteTelemetria++;
+        });
+
+        var chutesMandante = numeroPosJogo(stats.chutesMandante, chutesMandanteTelemetria || Math.max(4, golsMandante * 3 + 4));
+        var chutesVisitante = numeroPosJogo(stats.chutesVisitante, chutesVisitanteTelemetria || Math.max(4, golsVisitante * 3 + 4));
+        var posseMandante = numeroPosJogo(stats.posseMandante, null);
+        var posseVisitante = numeroPosJogo(stats.posseVisitante, null);
+
+        if (posseMandante === null || posseVisitante === null) {
+            var totalPressao = Math.max(1, chutesMandante + chutesVisitante + golsMandante + golsVisitante);
+            posseMandante = Math.round(((chutesMandante + golsMandante) / totalPressao) * 100);
+            posseMandante = Math.max(35, Math.min(65, posseMandante));
+            posseVisitante = 100 - posseMandante;
+        }
+
+        return {
+            posseMandante: posseMandante,
+            posseVisitante: posseVisitante,
+            chutesMandante: chutesMandante,
+            chutesVisitante: chutesVisitante,
+            publico: numeroPosJogo(stats.publico, 0),
+            renda: numeroPosJogo(stats.renda, 0)
+        };
+    }
+
+    function montarXgEZonasPosJogo(partida, telemetria, estatisticas) {
+        var golsMandante = numeroPosJogo(partida.golsMandante, 0);
+        var golsVisitante = numeroPosJogo(partida.golsVisitante, 0);
+        var xgMandante = 0;
+        var xgVisitante = 0;
+        var zonasMap = {};
+
+        (telemetria || []).forEach(function(chute) {
+            var valorXg = parseFloat(chute.xg) || 0;
+            if (chute.time === 'mandante') xgMandante += valorXg;
+            else if (chute.time === 'visitante') xgVisitante += valorXg;
+
+            var zona = chute.zona || 'INDEFINIDO';
+            if (!zonasMap[zona]) zonasMap[zona] = { zona: zona, chutes: 0, gols: 0, xg: 0, barra: 0 };
+            zonasMap[zona].chutes++;
+            zonasMap[zona].gols += chute.result === 'GOL' ? 1 : 0;
+            zonasMap[zona].xg += valorXg;
+        });
+
+        if (!telemetria || telemetria.length === 0) {
+            xgMandante = Math.max(0.25, golsMandante * 0.75 + estatisticas.chutesMandante * 0.06);
+            xgVisitante = Math.max(0.25, golsVisitante * 0.75 + estatisticas.chutesVisitante * 0.06);
+            zonasMap['Sem telemetria'] = {
+                zona: 'Sem telemetria',
+                chutes: estatisticas.chutesMandante + estatisticas.chutesVisitante,
+                gols: golsMandante + golsVisitante,
+                xg: xgMandante + xgVisitante,
+                barra: 100
+            };
+        }
+
+        var zonas = Object.keys(zonasMap).map(function(zona) {
+            zonasMap[zona].xg = arredondarPosJogo(zonasMap[zona].xg);
+            return zonasMap[zona];
+        }).sort(function(a, b) {
+            return b.xg - a.xg;
+        });
+
+        var maiorXgZona = zonas.reduce(function(maior, zona) {
+            return Math.max(maior, zona.xg);
+        }, 0);
+        zonas.forEach(function(zona) {
+            zona.barra = maiorXgZona > 0 ? Math.max(8, Math.round((zona.xg / maiorXgZona) * 100)) : 8;
+        });
+
+        xgMandante = arredondarPosJogo(xgMandante);
+        xgVisitante = arredondarPosJogo(xgVisitante);
+        var total = arredondarPosJogo(xgMandante + xgVisitante);
+
+        return {
+            xg: {
+                mandante: xgMandante,
+                visitante: xgVisitante,
+                total: total,
+                eficienciaMandante: xgMandante > 0 ? Math.round((golsMandante / xgMandante) * 100) : 0,
+                eficienciaVisitante: xgVisitante > 0 ? Math.round((golsVisitante / xgVisitante) * 100) : 0
+            },
+            zonas: zonas
+        };
+    }
+
+    function montarDestaquesPosJogo(partida, telemetria, resumoXg) {
+        var meuLado = obterLadoMeuTimePosJogo(partida);
+        var agregados = {};
+        var destaques = [];
+
+        function adicionarDestaque(item) {
+            if (!item || item.id === undefined) return;
+            if (destaques.some(function(d) { return d.id == item.id; })) return;
+            destaques.push(item);
+        }
+
+        (telemetria || []).forEach(function(chute) {
+            if (chute.time === meuLado && chute.shooterId !== undefined && chute.shooterId !== null) {
+                if (!agregados[chute.shooterId]) {
+                    var jogador = obterJogadorResumoPosJogo(chute.shooterId);
+                    agregados[chute.shooterId] = {
+                        id: chute.shooterId,
+                        nome: chute.shooterNome || (jogador ? jogador.nome : 'Jogador'),
+                        posicao: jogador ? jogador.posicao : '-',
+                        chutes: 0,
+                        gols: 0,
+                        xg: 0
+                    };
+                }
+                agregados[chute.shooterId].chutes++;
+                agregados[chute.shooterId].gols += chute.result === 'GOL' ? 1 : 0;
+                agregados[chute.shooterId].xg += parseFloat(chute.xg) || 0;
+            }
+
+            if (chute.time !== meuLado && chute.result !== 'GOL' && chute.goalieId !== undefined && chute.goalieId !== null) {
+                if (!agregados['g_' + chute.goalieId]) {
+                    var goleiro = obterJogadorResumoPosJogo(chute.goalieId);
+                    agregados['g_' + chute.goalieId] = {
+                        id: chute.goalieId,
+                        nome: goleiro ? goleiro.nome : 'Goleiro',
+                        posicao: goleiro ? goleiro.posicao : 'GOL',
+                        defesas: 0,
+                        goleiro: true
+                    };
+                }
+                agregados['g_' + chute.goalieId].defesas++;
+            }
+        });
+
+        Object.keys(agregados).map(function(chave) {
+            return agregados[chave];
+        }).sort(function(a, b) {
+            var notaA = (a.gols || 0) * 3 + (a.xg || 0) + (a.defesas || 0) * 1.2 + (a.chutes || 0) * 0.2;
+            var notaB = (b.gols || 0) * 3 + (b.xg || 0) + (b.defesas || 0) * 1.2 + (b.chutes || 0) * 0.2;
+            return notaB - notaA;
+        }).forEach(function(item) {
+            if (item.goleiro) {
+                adicionarDestaque({
+                    id: item.id,
+                    nome: item.nome,
+                    posicao: item.posicao,
+                    motivo: 'Fez ' + item.defesas + ' defesa(s) em chances adversarias.',
+                    nota: Math.min(10, arredondarPosJogo(7 + item.defesas * 0.5))
+                });
+            } else {
+                adicionarDestaque({
+                    id: item.id,
+                    nome: item.nome,
+                    posicao: item.posicao,
+                    motivo: 'Participou das principais chances: ' + item.gols + ' gol(s), ' + item.chutes + ' finalizacao(oes).',
+                    nota: Math.min(10, arredondarPosJogo(7 + item.gols * 0.7 + item.xg * 0.4))
+                });
+            }
+        });
+
+        if (destaques.length < 3) {
+            ($scope.elencoAtual || []).slice().sort(function(a, b) {
+                return calcularOverallPosJogo(b) - calcularOverallPosJogo(a);
+            }).forEach(function(jogador) {
+                if (destaques.length >= 3) return;
+                adicionarDestaque({
+                    id: jogador.id,
+                    nome: jogador.nome,
+                    posicao: jogador.posicao,
+                    motivo: 'Boa base tecnica no elenco para sustentar o resultado.',
+                    nota: Math.min(10, arredondarPosJogo(6.5 + (calcularOverallPosJogo(jogador) - 70) / 20))
+                });
+            });
+        }
+
+        return destaques.slice(0, 3);
+    }
+
+    function montarImpactoFisicoPosJogo() {
+        var disponiveis = ($scope.elencoAtual || []).filter(function(j) {
+            return j && !j.lesionado && !j.suspenso;
+        });
+        var soma = 0;
+        disponiveis.forEach(function(j) {
+            soma += numeroPosJogo(j.condicaoFisica, 100);
+        });
+        var condicaoMedia = disponiveis.length > 0 ? Math.round(soma / disponiveis.length) : 0;
+        var atletasCansados = ($scope.elencoAtual || []).filter(function(j) {
+            return j && numeroPosJogo(j.condicaoFisica, 100) < 60;
+        }).length;
+        var mensagem = 'Elenco terminou em condicao controlada.';
+        if (condicaoMedia < 65 || atletasCansados >= 4) mensagem = 'Jogo deixou desgaste alto; considere rotacao no proximo compromisso.';
+        else if (condicaoMedia < 78 || atletasCansados > 0) mensagem = 'Ha desgaste relevante em parte do elenco; monitore titulares cansados.';
+
+        return {
+            condicaoMedia: condicaoMedia,
+            atletasCansados: atletasCansados,
+            mensagem: mensagem
+        };
+    }
+
+    function montarOcorrenciasPosJogo() {
+        var ocorrencias = [];
+        ($scope.elencoAtual || []).forEach(function(j) {
+            if (!j) return;
+            if (j.acabouDeSerLesionado) {
+                ocorrencias.push({
+                    tipo: 'lesao',
+                    texto: j.nome + ' saiu lesionado e deve ficar fora por ' + (j.diasLesao || 1) + ' dia(s).'
+                });
+            }
+            if (j.acabouDeSerSuspenso) {
+                ocorrencias.push({
+                    tipo: 'suspensao',
+                    texto: j.nome + ' recebeu suspensao e desfalca o proximo jogo.'
+                });
+            }
+        });
+        return ocorrencias;
+    }
+
+    function montarLeituraTaticaPosJogo(resumo, resumoTatico) {
+        var taticas = $scope.taticas || { mentalidade: 'Equilibrado', foco: 'Misto', marcacao: 'Recuada' };
+        var leitura = 'Plano equilibrado, com ajustes finos para o proximo compromisso.';
+        if (taticas.marcacao === 'Pressão Alta' && resumo.impactoFisico.condicaoMedia < 75) {
+            leitura = 'A pressao alta aumentou a agressividade, mas tambem elevou o desgaste fisico do elenco.';
+        } else if (resumo.xg.mandante > resumo.xg.visitante + 0.4) {
+            leitura = 'O plano gerou volume ofensivo superior e boas entradas no terco final.';
+        } else if (resumo.xg.visitante > resumo.xg.mandante + 0.4) {
+            leitura = 'O adversario encontrou espacos; vale revisar protecao defensiva e transicoes.';
+        } else if (taticas.mentalidade === 'Ofensivo') {
+            leitura = 'Postura ofensiva manteve o time ativo, mas o jogo ficou relativamente equilibrado em chances.';
+        }
+
+        return {
+            mentalidade: taticas.mentalidade || 'Equilibrado',
+            foco: taticas.foco || 'Misto',
+            marcacao: taticas.marcacao || 'Recuada',
+            leitura: leitura,
+            zonaPrincipal: resumoTatico && resumoTatico.zonaPrincipal ? resumoTatico.zonaPrincipal.nome : null,
+            tipoPrincipal: resumoTatico && resumoTatico.tipoPrincipal ? resumoTatico.tipoPrincipal.nome : null
+        };
+    }
+
+    function montarManchetePosJogo(partida, resultadoMeuTime) {
+        var meuClube = $scope.clubeAtual || {};
+        var adversario = partida.mandante && meuClube.id === partida.mandante.id ? partida.visitante : partida.mandante;
+        var nomeMeuTime = meuClube.nome || 'Seu time';
+        var nomeAdversario = adversario && adversario.nome ? adversario.nome : 'adversario';
+        if (resultadoMeuTime === 'Vitoria') {
+            return {
+                titulo: nomeMeuTime + ' vence e ganha moral',
+                texto: 'Resultado positivo contra ' + nomeAdversario + ' reforca o trabalho da comissao tecnica.'
+            };
+        }
+        if (resultadoMeuTime === 'Derrota') {
+            return {
+                titulo: nomeMeuTime + ' tropeça e liga alerta',
+                texto: 'A derrota para ' + nomeAdversario + ' aumenta a importancia dos ajustes para a proxima rodada.'
+            };
+        }
+        return {
+            titulo: nomeMeuTime + ' empata em jogo de detalhes',
+            texto: 'O empate com ' + nomeAdversario + ' deixa pontos de melhoria claros para a sequencia.'
+        };
+    }
+
+    $scope.montarResumoPosJogo = function(partida, origem) {
+        partida = partida || { mandante: {}, visitante: {}, golsMandante: 0, golsVisitante: 0 };
+        var telemetria = Array.isArray(partida.telemetriaShots) ? partida.telemetriaShots : [];
+        var estatisticas = montarEstatisticasPosJogo(partida, telemetria);
+        var xgEZonas = montarXgEZonasPosJogo(partida, telemetria, estatisticas);
+        var calendarioDia = $scope.calendarioGeral && $scope.calendarioGeral[$scope.diaAtual] ? $scope.calendarioGeral[$scope.diaAtual] : null;
+        var resultadoMeuTime = calcularResultadoMeuTimePosJogo(partida);
+        var resumoTatico = telemetria.length > 0 ? $scope.gerarResumoTaticoPartida(partida) : null;
+        var resumo = {
+            origem: origem === 'rapido' ? 'rapido' : 'completo',
+            competicao: calendarioDia && calendarioDia.titulo ? calendarioDia.titulo : 'Partida',
+            dia: (typeof $scope.diaAtual === 'number' ? $scope.diaAtual : 0) + 1,
+            mandante: resumirTimePreJogo(partida.mandante),
+            visitante: resumirTimePreJogo(partida.visitante),
+            placar: {
+                mandante: numeroPosJogo(partida.golsMandante, 0),
+                visitante: numeroPosJogo(partida.golsVisitante, 0),
+                resultadoMeuTime: resultadoMeuTime
+            },
+            estatisticas: estatisticas,
+            xg: xgEZonas.xg,
+            zonas: xgEZonas.zonas,
+            destaques: [],
+            impactoFisico: montarImpactoFisicoPosJogo(),
+            ocorrencias: montarOcorrenciasPosJogo(),
+            taticas: null,
+            manchete: null
+        };
+
+        resumo.destaques = montarDestaquesPosJogo(partida, telemetria, resumo.xg);
+        resumo.taticas = montarLeituraTaticaPosJogo(resumo, resumoTatico);
+        resumo.manchete = montarManchetePosJogo(partida, resultadoMeuTime);
+        return resumo;
+    };
+
+    function sincronizarJogadorBaseDesenvolvimento(jogadorElenco) {
+        if (!jogadorElenco || !$scope.jogadores) return;
+        var jogadorBase = $scope.jogadores.find(function(j) { return j && j.id == jogadorElenco.id; });
+        if (!jogadorBase || jogadorBase === jogadorElenco) return;
+        jogadorBase.potencial = jogadorElenco.potencial;
+        jogadorBase.xpTemporada = jogadorElenco.xpTemporada;
+        jogadorBase.jogosTemporada = jogadorElenco.jogosTemporada;
+        jogadorBase.minutosTemporada = jogadorElenco.minutosTemporada;
+        jogadorBase.evolucaoTemporada = jogadorElenco.evolucaoTemporada;
+        jogadorBase.historicoEvolucao = angular.copy(jogadorElenco.historicoEvolucao || []);
+        if (jogadorBase.atributos && jogadorElenco.atributos) {
+            Object.keys(jogadorElenco.atributos).forEach(function(attr) {
+                jogadorBase.atributos[attr] = jogadorElenco.atributos[attr];
+            });
+        }
+    }
+
+    function obterAtributosDesenvolvimento(jogador) {
+        if (!jogador || jogador.posicao === 'GOL') return ['reflexo', 'posicionamento', 'distribuicao', 'fisico'];
+        if (jogador.posicao === 'ATA') return ['finalizacao', 'velocidade', 'passe', 'fisico'];
+        if (jogador.posicao === 'MEI' || jogador.posicao === 'VOL') return ['passe', 'marcacao', 'finalizacao', 'fisico'];
+        if (jogador.posicao === 'ZAG' || jogador.posicao === 'LAT') return ['marcacao', 'fisico', 'velocidade', 'passe'];
+        return ['passe', 'fisico', 'velocidade', 'marcacao'];
+    }
+
+    function criarRelatorioEvolucao(jogador, overallAntes, overallDepois, mudancas, motivo) {
+        var sequencia = ($scope.relatorioEvolucao ? $scope.relatorioEvolucao.length : 0) + (jogador.historicoEvolucao ? jogador.historicoEvolucao.length : 0) + 1;
+        return {
+            id: 'evo_' + (jogador.id !== undefined ? jogador.id : 'sem_id') + '_' + ($scope.diaAtual || 0) + '_' + sequencia,
+            jogadorId: jogador.id,
+            nome: jogador.nome,
+            idade: jogador.idade,
+            posicao: jogador.posicao,
+            overallAntes: overallAntes,
+            overallDepois: overallDepois,
+            mudancas: mudancas,
+            motivo: motivo
+        };
+    }
+
+    $scope.atualizarRelatorioEvolucaoVisivel = function() {
+        $scope.relatorioEvolucao = Array.isArray($scope.relatorioEvolucao) ? $scope.relatorioEvolucao : [];
+        $scope.relatorioEvolucaoVisivel = $scope.relatorioEvolucao.slice(0, 5);
+        return $scope.relatorioEvolucaoVisivel;
+    };
+
+    $scope.registrarXpPartida = function(partida, origem) {
+        if (!partida || partida._xpRegistrado) return;
+        partida._xpRegistrado = true;
+
+        var meuLado = obterLadoMeuTimePosJogo(partida);
+        var resultado = calcularResultadoMeuTimePosJogo(partida);
+        var xpPorJogador = {};
+        var jogadoresEmCampo = ($scope.elencoAtual || []).filter(function(j) {
+            return j && j.emCampo;
+        });
+
+        jogadoresEmCampo.forEach(function(jogador) {
+            normalizarJogadorSalvo(jogador);
+            var xp = 2;
+            if (resultado === 'Vitoria') xp += 2;
+            else if (resultado === 'Empate') xp += 1;
+            xpPorJogador[jogador.id] = xp;
+            jogador.jogosTemporada = (jogador.jogosTemporada || 0) + 1;
+            jogador.minutosTemporada = (jogador.minutosTemporada || 0) + 90;
+        });
+
+        (partida.telemetriaShots || []).forEach(function(chute) {
+            if (chute.time !== meuLado || chute.shooterId === undefined || chute.shooterId === null) return;
+            if (xpPorJogador[chute.shooterId] === undefined) xpPorJogador[chute.shooterId] = 0;
+            xpPorJogador[chute.shooterId] += 1;
+            if (chute.result === 'GOL') xpPorJogador[chute.shooterId] += 2;
+        });
+
+        jogadoresEmCampo.forEach(function(jogador) {
+            var xpFinal = xpPorJogador[jogador.id] || 0;
+            if (jogador.idade < 23) xpFinal *= 1.25;
+            if (jogador.acabouDeSerLesionado || jogador.lesionado) xpFinal *= 0.5;
+            xpFinal = Math.min(8, Math.max(0, Math.round(xpFinal)));
+            jogador.xpTemporada = (jogador.xpTemporada || 0) + xpFinal;
+            sincronizarJogadorBaseDesenvolvimento(jogador);
+        });
+    };
+
+    $scope.aplicarEvolucaoElenco = function(motivo) {
+        $scope.relatorioEvolucao = Array.isArray($scope.relatorioEvolucao) ? $scope.relatorioEvolucao : [];
+        var novosRelatorios = [];
+        var motivoCiclo = motivo || 'Ciclo de desenvolvimento';
+
+        ($scope.elencoAtual || []).forEach(function(jogador) {
+            normalizarJogadorSalvo(jogador);
+            var overallAntes = calcularOverallBaseJogador(jogador);
+            var mudancas = [];
+            var idade = valorNumericoOuPadrao(jogador.idade, 24);
+            var ciclosXp = Math.floor((jogador.xpTemporada || 0) / 20);
+            var limiteGanho = idade <= 21 ? 2 : (idade <= 29 ? 1 : 0);
+            var ganhoPermitido = Math.min(limiteGanho, ciclosXp);
+
+            if (ganhoPermitido > 0 && overallAntes < jogador.potencial && !jogador.lesionado) {
+                var atributos = obterAtributosDesenvolvimento(jogador);
+                var inicio = obterChaveNumericaJogador(jogador) % atributos.length;
+                var aplicados = 0;
+                for (var i = 0; i < atributos.length && aplicados < ganhoPermitido; i++) {
+                    var atributo = atributos[(inicio + i) % atributos.length];
+                    if (!jogador.atributos || jogador.atributos[atributo] === undefined) continue;
+                    var antes = jogador.atributos[atributo];
+                    jogador.atributos[atributo] = Math.min(99, antes + 1);
+                    if (calcularOverallBaseJogador(jogador) > jogador.potencial) {
+                        jogador.atributos[atributo] = antes;
+                        continue;
+                    }
+                    if (jogador.atributos[atributo] !== antes) {
+                        mudancas.push({ atributo: atributo, antes: antes, depois: jogador.atributos[atributo] });
+                        aplicados++;
+                    }
+                }
+                if (aplicados > 0) jogador.xpTemporada = Math.max(0, (jogador.xpTemporada || 0) - aplicados * 20);
+            }
+
+            var deveRegredir = idade >= 34 || (idade >= 31 && ((jogador.minutosTemporada || 0) < 450 || valorNumericoOuPadrao(jogador.condicaoFisica, 100) < 65));
+            if (deveRegredir) {
+                ['fisico', 'velocidade'].forEach(function(atributo) {
+                    if (!jogador.atributos || jogador.atributos[atributo] === undefined) return;
+                    var antes = jogador.atributos[atributo];
+                    var queda = idade >= 34 ? 1 : 0;
+                    if (queda <= 0) return;
+                    jogador.atributos[atributo] = Math.max(10, antes - queda);
+                    if (jogador.atributos[atributo] !== antes) mudancas.push({ atributo: atributo, antes: antes, depois: jogador.atributos[atributo] });
+                });
+            }
+
+            if (jogador.lesionado && (jogador.diasLesao || 0) >= 15 && jogador.atributos && jogador.atributos.fisico !== undefined) {
+                var fisicoAntes = jogador.atributos.fisico;
+                jogador.atributos.fisico = Math.max(10, fisicoAntes - 1);
+                if (jogador.atributos.fisico !== fisicoAntes) mudancas.push({ atributo: 'fisico', antes: fisicoAntes, depois: jogador.atributos.fisico });
+            }
+
+            var overallDepois = calcularOverallBaseJogador(jogador);
+            var delta = overallDepois - overallAntes;
+            if (mudancas.length > 0 || delta !== 0) {
+                jogador.evolucaoTemporada = (jogador.evolucaoTemporada || 0) + delta;
+                var relatorio = criarRelatorioEvolucao(jogador, overallAntes, overallDepois, mudancas, motivoCiclo);
+                jogador.historicoEvolucao.unshift(relatorio);
+                jogador.historicoEvolucao = jogador.historicoEvolucao.slice(0, 10);
+                novosRelatorios.push(relatorio);
+                sincronizarJogadorBaseDesenvolvimento(jogador);
+            }
+        });
+
+        for (var r = novosRelatorios.length - 1; r >= 0; r--) {
+            $scope.relatorioEvolucao.unshift(novosRelatorios[r]);
+        }
+        $scope.relatorioEvolucao = $scope.relatorioEvolucao.slice(0, 50);
+        $scope.atualizarRelatorioEvolucaoVisivel();
+        $scope.ultimoDiaEvolucao = $scope.diaAtual || 0;
+        return novosRelatorios;
+    };
+
+    $scope.finalizarPartidaUsuario = function(partida, origem) {
+        $scope.registrarXpPartida(partida, origem);
+        var resumo = $scope.montarResumoPosJogo(partida, origem);
+        $scope.partidaEmAndamento = false;
+        $scope.partidaPausada = false;
+        if (partida && partida.telemetriaShots && partida.telemetriaShots.length > 0) {
+            $scope.ultimoResumoPartida = $scope.gerarResumoTaticoPartida(partida);
+        }
+        $scope.concluirPartida(partida);
+        $scope.posJogo = {
+            disponivel: true,
+            resumo: resumo
+        };
+        $scope.telaAtual = 'pos_jogo';
+    };
+
+    $scope.fecharPosJogo = function() {
+        $scope.posJogo = {
+            disponivel: false,
+            resumo: null
+        };
+        $scope.mudarTela('dashboard');
+    };
+
     $scope.concluirPartida = function(partida) {
         var hoje = $scope.calendarioGeral[$scope.diaAtual];
         
@@ -1811,6 +2749,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 });
             }
         });
+
+        var diasDesdeUltimaEvolucao = $scope.diaAtual - ($scope.ultimoDiaEvolucao || 0);
+        if ($scope.diaAtual > 0 && diasDesdeUltimaEvolucao >= 30) {
+            $scope.aplicarEvolucaoElenco('Ciclo mensal de desenvolvimento');
+        }
         
         // FASE 9: FINANÇAS
         // 1. Receita de Bilheteria (apenas quando é mandante)
@@ -2515,34 +3458,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 }
             }
         }
-        // FASE 19: Evolução de Atributos e Regressão de Idade
-        $scope.jogadores.forEach(function(j) {
-            j.idade++;
-            var isUserPlayer = (j.clubeId === $scope.clubeAtual.id);
-            var pontosOuro = isUserPlayer ? ((j.golsTemporada || 0) > 10 ? 2 : 1) : 1;
-            if (subiu && isUserPlayer) pontosOuro++;
-
-            if (j.idade <= 24) {
-                // Evolução
-                var chanceEvolucao = Math.random();
-                if (chanceEvolucao > 0.4) {
-                    var chaves = Object.keys(j.atributos);
-                    for(var k=0; k<pontosOuro; k++) {
-                        var attrAlvo = chaves[Math.floor(Math.random() * chaves.length)];
-                        j.atributos[attrAlvo] += Math.floor(Math.random() * 3) + 1; // ganha de 1 a 3 pontos no atributo
-                        if (j.atributos[attrAlvo] > 99) j.atributos[attrAlvo] = 99;
-                    }
-                }
-            } else if (j.idade >= 32) {
-                // Regressão
-                if (Math.random() > 0.3) {
-                    j.atributos.fisico -= Math.floor(Math.random() * 3) + 1;
-                    if (j.atributos.velocidade) j.atributos.velocidade -= Math.floor(Math.random() * 3) + 1;
-                    if (j.atributos.fisico < 10) j.atributos.fisico = 10;
-                    if (j.atributos.velocidade < 10) j.atributos.velocidade = 10;
-                }
-            }
-        });
+        if ($scope.ultimoDiaEvolucao !== $scope.diaAtual) {
+            $scope.aplicarEvolucaoElenco('Fechamento da temporada');
+        }
 
         $scope.relatorioFimAno = {
             campeaoSerieA: campeaoSerieA,
@@ -2616,25 +3534,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.elencoAtual.forEach(function(j) { 
                 j.idade++; 
 
-                // Progressão e Regressão
-                if (j.idade <= 23 && (j.partidasJogadas || 0) >= 10) {
-                    // Evolui um pouco se for jovem e jogou
-                    j.passe = Math.min(100, j.passe + 1);
-                    j.chute = Math.min(100, j.chute + 1);
-                    j.fisico = Math.min(100, j.fisico + 1);
-                    j.defesa = Math.min(100, j.defesa + 1);
-                } else if (j.idade >= 33) {
-                    // Regride fisicamente se for velho
-                    j.velocidade = Math.max(10, j.velocidade - 2);
-                    j.fisico = Math.max(10, j.fisico - 1);
-                }
-
                 if (j.anosContrato) j.anosContrato--;
                 if (!j.anosContrato || j.anosContrato <= 0) {
                     dispensados.push(j.nome);
                     j.clubeId = 'mercado';
                     j.emCampo = false;
                 }
+
+                j.xpTemporada = 0;
+                j.jogosTemporada = 0;
+                j.minutosTemporada = 0;
+                j.evolucaoTemporada = 0;
+                sincronizarJogadorBaseDesenvolvimento(j);
             });
             
             $scope.elencoAtual = $scope.elencoAtual.filter(function(j) { return j.anosContrato > 0; });
@@ -2649,15 +3560,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 j.idade++; 
                 j.golsTemporada = 0;
                 j.partidasJogadas = 0; // Reset
+                j.xpTemporada = 0;
+                j.jogosTemporada = 0;
+                j.minutosTemporada = 0;
+                j.evolucaoTemporada = 0;
                 if (!j.anosContrato || j.anosContrato <= 0) j.anosContrato = Math.floor(Math.random() * 3) + 1; 
-                
-                // Progressão simplificada para CPU (aleatória leve para jovens, nerf pra velhos)
-                if (j.idade <= 23 && j.clubeId !== 'mercado' && Math.random() > 0.5) {
-                    j.passe = Math.min(100, j.passe + 1);
-                    j.chute = Math.min(100, j.chute + 1);
-                } else if (j.idade >= 33) {
-                    j.velocidade = Math.max(10, j.velocidade - 2);
-                }
             });
         }
 
@@ -2851,6 +3758,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (!Array.isArray(saveInfo.transferenciasHistorico)) saveInfo.transferenciasHistorico = [];
         if (!Array.isArray(saveInfo.propostasPendentes)) saveInfo.propostasPendentes = [];
         if (saveInfo.ultimoResumoPartida === undefined) saveInfo.ultimoResumoPartida = null;
+        if (!Array.isArray(saveInfo.relatorioEvolucao)) saveInfo.relatorioEvolucao = [];
+        if (saveInfo.ultimoDiaEvolucao === undefined) saveInfo.ultimoDiaEvolucao = 0;
 
         // v3 -> v4: estado de UI derivado nao deve persistir no save.
         saveInfo.filtroCalendario = 'TODOS';
@@ -2894,7 +3803,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             telemetriaHistorico: $scope.telemetriaHistorico || [],
             ultimoResumoPartida: $scope.ultimoResumoPartida || null,
             transferenciasHistorico: $scope.transferenciasHistorico || [],
-            propostasPendentes: $scope.propostasPendentes || []
+            propostasPendentes: $scope.propostasPendentes || [],
+            relatorioEvolucao: $scope.relatorioEvolucao || [],
+            ultimoDiaEvolucao: $scope.ultimoDiaEvolucao || 0
         };
         window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveObj));
         $scope.checarSaveExistente(); 
@@ -2947,6 +3858,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     jogadorBase.clubeId = $scope.clubeAtual.id;
                     jogadorBase.salario = jogadorElenco.salario;
                     jogadorBase.anosContrato = jogadorElenco.anosContrato;
+                    jogadorBase.potencial = jogadorElenco.potencial;
+                    jogadorBase.xpTemporada = jogadorElenco.xpTemporada;
+                    jogadorBase.jogosTemporada = jogadorElenco.jogosTemporada;
+                    jogadorBase.minutosTemporada = jogadorElenco.minutosTemporada;
+                    jogadorBase.evolucaoTemporada = jogadorElenco.evolucaoTemporada;
+                    jogadorBase.historicoEvolucao = angular.copy(jogadorElenco.historicoEvolucao || []);
+                    if (jogadorElenco.atributos) jogadorBase.atributos = angular.copy(jogadorElenco.atributos);
                 }
             });
         }
@@ -3002,6 +3920,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.ultimoResumoPartida = $scope.saveInfo.ultimoResumoPartida || null;
         $scope.transferenciasHistorico = $scope.saveInfo.transferenciasHistorico || [];
         $scope.propostasPendentes = $scope.saveInfo.propostasPendentes || [];
+        $scope.relatorioEvolucao = $scope.saveInfo.relatorioEvolucao || [];
+        $scope.ultimoDiaEvolucao = $scope.saveInfo.ultimoDiaEvolucao || 0;
+        if ($scope.atualizarRelatorioEvolucaoVisivel) $scope.atualizarRelatorioEvolucaoVisivel();
         if ($scope.atualizarPropostasPendentes) $scope.atualizarPropostasPendentes();
         if ($scope.atualizarHistoricoMercadoVisivel) $scope.atualizarHistoricoMercadoVisivel();
         if ($scope.atualizarResumoJanelaMercado) $scope.atualizarResumoJanelaMercado();
@@ -3076,7 +3997,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         $scope.adicionarMensagem('Imprensa', 'Repercussão', opcao.msg, false, 'imprensa');
         $scope.coletivaRespondida = true;
-        $scope.prepararPartida($scope.modoPartidaPendente);
+        $scope.executarPartidaPreparada($scope.obterMeuJogoHoje(), $scope.modoPartidaPendente);
     };
 
     // FASE 14: SISTEMA DE OLHEIROS E WONDERKIDS

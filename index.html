@@ -423,6 +423,102 @@
                 </div>
             </div>
 
+            <!-- TELA: PRE-JOGO -->
+            <div ng-if="telaAtual === 'pre_jogo' && preJogo.analise" class="pre-match-screen">
+                <section class="pre-match-header">
+                    <div>
+                        <span class="dashboard-eyebrow">Pre-jogo</span>
+                        <h2>{{preJogo.analise.mandante.nome}} x {{preJogo.analise.visitante.nome}}</h2>
+                        <p>{{preJogo.analise.competicao}} · Dia {{preJogo.analise.dia}} · Voce como {{preJogo.analise.mando}}</p>
+                    </div>
+                    <div class="pre-match-status" ng-class="'status-' + preJogo.analise.statusClasse">
+                        {{preJogo.analise.statusConfronto}}
+                    </div>
+                </section>
+
+                <div class="pre-match-grid">
+                    <section class="pre-match-panel">
+                        <div class="pre-match-panel-title">
+                            <span class="dashboard-eyebrow">Adversario</span>
+                            <h3>{{preJogo.analise.adversario.nome}}</h3>
+                        </div>
+
+                        <div class="pre-match-team-row">
+                            <div class="pre-match-crest">{{preJogo.analise.adversario.sigla}}</div>
+                            <div>
+                                <strong>Forca estimada {{preJogo.analise.forcaAdversario}}</strong>
+                                <span>{{preJogo.analise.statusConfronto}}</span>
+                            </div>
+                        </div>
+
+                        <div class="pre-match-list-title">Jogadores-chave</div>
+                        <div class="pre-match-player-list" ng-if="preJogo.analise.jogadoresChaveAdversario.length > 0">
+                            <div class="pre-match-player" ng-repeat="j in preJogo.analise.jogadoresChaveAdversario track by j.id">
+                                <span>{{j.posicao}}</span>
+                                <strong>{{j.nome}}</strong>
+                                <em>{{j.overall}}</em>
+                            </div>
+                        </div>
+                        <div class="pre-match-empty" ng-if="preJogo.analise.jogadoresChaveAdversario.length === 0">
+                            Sem dados suficientes do elenco adversario.
+                        </div>
+                    </section>
+
+                    <section class="pre-match-panel">
+                        <div class="pre-match-panel-title">
+                            <span class="dashboard-eyebrow">Seu time</span>
+                            <h3>{{preJogo.analise.meuTime.nome}}</h3>
+                        </div>
+
+                        <div class="pre-match-kpi-grid">
+                            <div class="pre-match-kpi">
+                                <span>Forca</span>
+                                <strong>{{preJogo.analise.forcaMeuTime}}</strong>
+                            </div>
+                            <div class="pre-match-kpi">
+                                <span>Condicao media</span>
+                                <strong>{{preJogo.analise.condicaoMedia}}%</strong>
+                            </div>
+                            <div class="pre-match-kpi">
+                                <span>Indisponiveis</span>
+                                <strong>{{preJogo.analise.indisponiveis}}</strong>
+                            </div>
+                            <div class="pre-match-kpi">
+                                <span>Risco fisico</span>
+                                <strong>{{preJogo.analise.riscoFisico}}</strong>
+                            </div>
+                        </div>
+
+                        <div class="pre-match-tactics">
+                            <span>Mentalidade <strong>{{preJogo.analise.taticasAtuais.mentalidade}}</strong></span>
+                            <span>Foco <strong>{{preJogo.analise.taticasAtuais.foco}}</strong></span>
+                            <span>Marcacao <strong>{{preJogo.analise.taticasAtuais.marcacao}}</strong></span>
+                            <span>Carga <strong>{{preJogo.analise.cargaCalendario.nivel}} · {{preJogo.analise.cargaCalendario.indiceCarga}}/100</strong></span>
+                        </div>
+                    </section>
+
+                    <section class="pre-match-panel pre-match-recommendations">
+                        <div class="pre-match-panel-title">
+                            <span class="dashboard-eyebrow">Plano rapido</span>
+                            <h3>Alertas taticos</h3>
+                        </div>
+
+                        <div class="pre-match-recommendation" ng-repeat="rec in preJogo.analise.recomendacoes track by $index" ng-class="'recommendation-' + rec.tipo">
+                            <span>{{rec.tipo}}</span>
+                            <p>{{rec.texto}}</p>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="pre-match-actions">
+                    <button class="pre-match-secondary" ng-click="ajustarTaticasPreJogo()">Ajustar taticas</button>
+                    <button class="pre-match-muted" ng-click="fecharPreJogo()">Voltar ao dashboard</button>
+                    <button class="pre-match-primary" ng-click="confirmarPreJogo()">
+                        {{preJogo.analise.modo === 'rapido' ? 'Resultado Rapido' : 'Iniciar Partida 3D'}}
+                    </button>
+                </div>
+            </div>
+
             <!-- TELA: MEU ELENCO -->
             <div ng-if="telaAtual === 'elenco'">
                 <div class="card" style="padding: 20px;">
@@ -430,7 +526,25 @@
                         <h3 style="color: var(--text-dark);">Meu Elenco</h3>
                         <span style="background: var(--bg-light); padding: 8px 15px; border-radius: 6px; font-weight: bold; border: 1px solid #ddd;">Total: {{elencoAtual.length}} jogadores</span>
                     </div>
-                    
+
+                    <div class="development-panel" ng-if="relatorioEvolucaoVisivel.length > 0">
+                        <div class="development-panel-header">
+                            <div>
+                                <span class="dashboard-eyebrow">Evolucao recente</span>
+                                <h4>Desenvolvimento do elenco</h4>
+                            </div>
+                        </div>
+                        <div class="development-report-list">
+                            <div class="development-report-item" ng-repeat="item in relatorioEvolucaoVisivel track by item.id" ng-class="item.overallDepois > item.overallAntes ? 'positive' : (item.overallDepois < item.overallAntes ? 'negative' : 'neutral')">
+                                <div>
+                                    <strong>{{item.nome}}</strong>
+                                    <span>{{item.posicao}} · {{item.motivo}}</span>
+                                </div>
+                                <em>{{item.overallDepois > item.overallAntes ? '+' : ''}}{{item.overallDepois - item.overallAntes}}</em>
+                            </div>
+                        </div>
+                    </div>
+                      
                     <div style="overflow-x: auto;">
                         <table class="tabela-classificacao">
                             <thead>
@@ -467,6 +581,13 @@
                                     <td>
                                         <div style="background: var(--br-blue); color: white; padding: 2px 8px; border-radius: 4px; display: inline-block; font-weight: bold;">
                                             {{ calcularOverall(jogador) }}
+                                        </div>
+                                        <div class="player-development-badges">
+                                            <span>POT {{jogador.potencial}}</span>
+                                            <span ng-class="jogador.evolucaoTemporada > 0 ? 'dev-positive' : (jogador.evolucaoTemporada < 0 ? 'dev-negative' : 'dev-neutral')">
+                                                {{jogador.evolucaoTemporada > 0 ? '+' : ''}}{{jogador.evolucaoTemporada || 0}}
+                                            </span>
+                                            <span>{{jogador.jogosTemporada || 0}}j · {{jogador.minutosTemporada || 0}}min</span>
                                         </div>
                                     </td>
                                     <td>
@@ -539,6 +660,14 @@
                     <h3 style="color: #856404; margin-bottom: 10px;">Ajustando Tática durante o Jogo</h3>
                     <p style="color: #856404; margin-bottom: 15px;">Atenção: Ao arrastar um novo jogador pro campo, conta como substituição. (Restam {{5 - substituicoesFeitas}}).</p>
                     <button class="btn btn-success" ng-click="retomarPartida()" style="background: var(--br-green); color: white; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">▶ Pronto! Retomar Partida</button>
+                </div>
+                <div class="pre-match-return-banner" ng-if="preJogo.partida && !preJogo.visivel && !partidaPausada">
+                    <div>
+                        <span>Pre-jogo em ajuste</span>
+                        <strong>{{preJogo.analise.mandante.nome}} x {{preJogo.analise.visitante.nome}}</strong>
+                        <small>Finalize a escalação/tática e volte para confirmar a partida.</small>
+                    </div>
+                    <button ng-click="voltarAoPreJogo()">Voltar ao pré-jogo</button>
                 </div>
                 <div class="tactics-layout">
                     <div class="bench-area" droppable-area="banco">
@@ -968,6 +1097,130 @@
                     <button class="btn-play-full" ng-click="mudarTela('dashboard')">Voltar ao Painel</button>
                 </div>
 
+            </div>
+
+            <!-- TELA: POS-JOGO -->
+            <div ng-if="telaAtual === 'pos_jogo' && posJogo.resumo" class="post-match-screen">
+                <section class="post-match-header">
+                    <div>
+                        <span class="dashboard-eyebrow">Pos-jogo · {{posJogo.resumo.origem === 'rapido' ? 'Resultado rapido' : 'Partida 3D'}}</span>
+                        <h2>{{posJogo.resumo.mandante.nome}} {{posJogo.resumo.placar.mandante}} x {{posJogo.resumo.placar.visitante}} {{posJogo.resumo.visitante.nome}}</h2>
+                        <p>{{posJogo.resumo.competicao}} · Dia {{posJogo.resumo.dia}}</p>
+                    </div>
+                    <div class="post-match-result" ng-class="'result-' + posJogo.resumo.placar.resultadoMeuTime.toLowerCase()">
+                        {{posJogo.resumo.placar.resultadoMeuTime}}
+                    </div>
+                </section>
+
+                <section class="post-match-kpi-grid">
+                    <div class="post-match-kpi">
+                        <span>Posse</span>
+                        <strong>{{posJogo.resumo.estatisticas.posseMandante}}% x {{posJogo.resumo.estatisticas.posseVisitante}}%</strong>
+                    </div>
+                    <div class="post-match-kpi">
+                        <span>Chutes</span>
+                        <strong>{{posJogo.resumo.estatisticas.chutesMandante}} x {{posJogo.resumo.estatisticas.chutesVisitante}}</strong>
+                    </div>
+                    <div class="post-match-kpi">
+                        <span>xG</span>
+                        <strong>{{posJogo.resumo.xg.mandante}} x {{posJogo.resumo.xg.visitante}}</strong>
+                    </div>
+                    <div class="post-match-kpi">
+                        <span>Eficiencia</span>
+                        <strong>{{posJogo.resumo.xg.eficienciaMandante}}% x {{posJogo.resumo.xg.eficienciaVisitante}}%</strong>
+                    </div>
+                    <div class="post-match-kpi">
+                        <span>Publico</span>
+                        <strong>{{posJogo.resumo.estatisticas.publico | number}}</strong>
+                    </div>
+                    <div class="post-match-kpi">
+                        <span>Renda</span>
+                        <strong>{{formatarMoeda(posJogo.resumo.estatisticas.renda)}}</strong>
+                    </div>
+                </section>
+
+                <div class="post-match-grid">
+                    <section class="post-match-panel">
+                        <div class="post-match-panel-title">
+                            <span class="dashboard-eyebrow">Destaques</span>
+                            <h3>Melhores do jogo</h3>
+                        </div>
+                        <div class="post-match-highlight" ng-repeat="d in posJogo.resumo.destaques track by d.id">
+                            <div>
+                                <strong>{{d.nome}}</strong>
+                                <span>{{d.posicao}} · {{d.motivo}}</span>
+                            </div>
+                            <em>{{d.nota}}</em>
+                        </div>
+                    </section>
+
+                    <section class="post-match-panel">
+                        <div class="post-match-panel-title">
+                            <span class="dashboard-eyebrow">Impacto fisico</span>
+                            <h3>Estado do elenco</h3>
+                        </div>
+                        <div class="post-match-physical">
+                            <div>
+                                <span>Condicao media</span>
+                                <strong>{{posJogo.resumo.impactoFisico.condicaoMedia}}%</strong>
+                            </div>
+                            <div>
+                                <span>Abaixo de 60%</span>
+                                <strong>{{posJogo.resumo.impactoFisico.atletasCansados}}</strong>
+                            </div>
+                        </div>
+                        <p class="post-match-message">{{posJogo.resumo.impactoFisico.mensagem}}</p>
+
+                        <div class="post-match-occurrences" ng-if="posJogo.resumo.ocorrencias.length > 0">
+                            <div class="post-match-occurrence" ng-repeat="oc in posJogo.resumo.ocorrencias track by $index" ng-class="'occurrence-' + oc.tipo">
+                                <span>{{oc.tipo}}</span>
+                                <p>{{oc.texto}}</p>
+                            </div>
+                        </div>
+                        <div class="post-match-empty" ng-if="posJogo.resumo.ocorrencias.length === 0">
+                            Sem novas lesoes ou suspensoes registradas nesta partida.
+                        </div>
+                    </section>
+
+                    <section class="post-match-panel">
+                        <div class="post-match-panel-title">
+                            <span class="dashboard-eyebrow">Mapa de chances</span>
+                            <h3>xG por zona</h3>
+                        </div>
+                        <div class="post-match-zone" ng-repeat="zona in posJogo.resumo.zonas track by zona.zona">
+                            <div class="post-match-zone-top">
+                                <strong>{{zona.zona}}</strong>
+                                <span>{{zona.chutes}} chute(s) · {{zona.gols}} gol(s) · xG {{zona.xg}}</span>
+                            </div>
+                            <div class="post-match-zone-bar">
+                                <div style="width: {{zona.barra}}%;"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="post-match-panel">
+                        <div class="post-match-panel-title">
+                            <span class="dashboard-eyebrow">Leitura tatica</span>
+                            <h3>{{posJogo.resumo.taticas.mentalidade}} · {{posJogo.resumo.taticas.foco}}</h3>
+                        </div>
+                        <div class="post-match-tactic-tags">
+                            <span>{{posJogo.resumo.taticas.marcacao}}</span>
+                            <span ng-if="posJogo.resumo.taticas.zonaPrincipal">Zona: {{posJogo.resumo.taticas.zonaPrincipal}}</span>
+                            <span ng-if="posJogo.resumo.taticas.tipoPrincipal">Chance: {{posJogo.resumo.taticas.tipoPrincipal}}</span>
+                        </div>
+                        <p class="post-match-message">{{posJogo.resumo.taticas.leitura}}</p>
+                    </section>
+                </div>
+
+                <section class="post-match-headline">
+                    <span class="dashboard-eyebrow">Repercussao</span>
+                    <h3>{{posJogo.resumo.manchete.titulo}}</h3>
+                    <p>{{posJogo.resumo.manchete.texto}}</p>
+                </section>
+
+                <div class="post-match-actions">
+                    <button class="post-match-primary" ng-click="fecharPosJogo()">Voltar ao dashboard</button>
+                </div>
             </div>
 
             <!-- TELAS EM BREVE -->

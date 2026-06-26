@@ -136,7 +136,7 @@ const oldSave = {
 
 const migrated = scope.migrarSave(oldSave);
 
-assert.strictEqual(migrated.saveVersion, 4, 'legacy save should be upgraded to current save version');
+assert.strictEqual(migrated.saveVersion, 5, 'legacy save should be upgraded to current save version');
 assert.ok(typeof migrated.savedAt === 'string' && migrated.savedAt.length > 0, 'migration should stamp savedAt for old saves');
 assert.ok(Array.isArray(migrated.telemetriaHistorico), 'legacy save should receive telemetry history array');
 assert.strictEqual(migrated.telemetriaHistorico.length, 0, 'legacy telemetry history should start empty');
@@ -145,6 +145,9 @@ assert.strictEqual(migrated.transferenciasHistorico.length, 0, 'legacy transfer 
 assert.ok(Array.isArray(migrated.propostasPendentes), 'legacy save should receive pending proposals array');
 assert.strictEqual(migrated.propostasPendentes.length, 0, 'legacy pending proposals should start empty');
 assert.strictEqual(migrated.ultimoResumoPartida, null, 'missing last tactical summary should become null');
+assert.ok(Array.isArray(migrated.relatorioEvolucao), 'legacy save should receive evolution report array');
+assert.strictEqual(migrated.relatorioEvolucao.length, 0, 'legacy evolution report should start empty');
+assert.strictEqual(migrated.ultimoDiaEvolucao, 0, 'legacy save should receive last evolution day');
 assert.strictEqual(migrated.filtroCalendario, 'TODOS', 'calendar filter should reset to stable default');
 assert.strictEqual(migrated.calendarioFiltrado, undefined, 'derived filtered calendar should not be persisted by migration');
 assert.strictEqual(migrated.proximosEventosOffsets, undefined, 'derived upcoming offsets should not be persisted by migration');
@@ -158,6 +161,12 @@ assert.strictEqual(migratedGoleiro.lesionado, false);
 assert.strictEqual(migratedGoleiro.diasLesao, 0);
 assert.strictEqual(migratedGoleiro.suspenso, false);
 assert.strictEqual(migratedGoleiro.substituidoNaPartida, false);
+assert.ok(typeof migratedGoleiro.potencial === 'number', 'goalkeeper should receive potential');
+assert.strictEqual(migratedGoleiro.xpTemporada, 0);
+assert.strictEqual(migratedGoleiro.jogosTemporada, 0);
+assert.strictEqual(migratedGoleiro.minutosTemporada, 0);
+assert.strictEqual(migratedGoleiro.evolucaoTemporada, 0);
+assert.ok(Array.isArray(migratedGoleiro.historicoEvolucao), 'goalkeeper should receive evolution history');
 assert.strictEqual(migratedGoleiro.atributos.posicionamento, 88, 'goalkeeper positioning should fall back to reflexo');
 assert.strictEqual(migratedGoleiro.atributos.distribuicao, 62, 'goalkeeper distribution should fall back to passe');
 
