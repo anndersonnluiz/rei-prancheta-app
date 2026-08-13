@@ -5284,6 +5284,67 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         alert('Jogo salvo com sucesso!');
     };
 
+    // Backup manual da carreira para permitir transporte entre navegadores/dispositivos.
+    $scope.exportarSave = function() {
+        if (!$scope.clubeAtual) {
+            alert('Inicie uma carreira antes de exportar o save.');
+            return;
+        }
+        $scope.salvarJogoSilencioso();
+        var saveLocal = window.localStorage.getItem('reiDaPranchetaSave');
+        if (!saveLocal) {
+            alert('Não foi possível localizar o save atual.');
+            return;
+        }
+        var blob = new Blob([saveLocal], { type: 'application/json;charset=utf-8' });
+        var url = window.URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        var nomeSeguro = String($scope.dados.nomeTreinador || 'treinador')
+            .toLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
+        link.href = url;
+        link.download = 'rei-da-prancheta-' + (nomeSeguro || 'treinador') + '.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    };
+
+    $scope.selecionarArquivoSave = function(input) {
+        var arquivo = input && input.files && input.files[0];
+        if (!arquivo) return;
+        var leitor = new FileReader();
+        leitor.onload = function(evento) {
+            try {
+                var saveImportado = JSON.parse(evento.target.result);
+                if (!saveImportado || typeof saveImportado !== 'object' || Array.isArray(saveImportado)) {
+                    throw new Error('formato');
+                }
+                if (!saveImportado.clubeAtualId || !Array.isArray(saveImportado.elencoAtual)) {
+                    throw new Error('estrutura');
+                }
+                if (!window.confirm('Importar este save substituirá a carreira atual. Deseja continuar?')) return;
+                saveImportado = $scope.migrarSave(saveImportado);
+                window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveImportado));
+                alert('Save importado com sucesso. O jogo será recarregado.');
+                window.location.reload();
+            } catch (erro) {
+                alert('Arquivo de save inválido ou corrompido.');
+            } finally {
+                input.value = '';
+            }
+        };
+        leitor.onerror = function() {
+            input.value = '';
+            alert('Não foi possível ler o arquivo de save.');
+        };
+        leitor.readAsText(arquivo, 'UTF-8');
+    };
+
+    $scope.abrirImportadorSave = function() {
+        var input = document.getElementById('arquivo-save-input');
+        if (input) input.click();
+    };
+
     // Exportar telemetria da partida atual como CSV para download
     $scope.exportTelemetriaPartida = function() {
         if (!$scope.partidaAoVivo || !$scope.partidaAoVivo.telemetriaShots || $scope.partidaAoVivo.telemetriaShots.length === 0) {

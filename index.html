@@ -93,6 +93,9 @@
 
             <div class="sidebar-footer">
                 <button class="btn-save" ng-click="salvarJogo()" ng-disabled="partidaEmAndamento" style="margin-bottom: 10px;">💾 Salvar Jogo</button>
+                <button class="btn" ng-click="exportarSave()" ng-disabled="partidaEmAndamento" style="width: 100%; text-align: left; padding: 10px; margin-bottom: 10px; background: transparent; color: var(--text-muted); border: 1px solid #ddd; border-radius: 6px; cursor: pointer;">⬇️ Exportar Save</button>
+                <button class="btn" ng-click="abrirImportadorSave()" ng-disabled="partidaEmAndamento" style="width: 100%; text-align: left; padding: 10px; margin-bottom: 10px; background: transparent; color: var(--text-muted); border: 1px solid #ddd; border-radius: 6px; cursor: pointer;">⬆️ Importar Save</button>
+                <input id="arquivo-save-input" type="file" accept="application/json,.json" style="display: none;" onchange="angular.element(this).scope().selecionarArquivoSave(this)">
                 <button class="btn" style="width: 100%; text-align: left; padding: 10px; background: transparent; color: var(--text-muted); border: 1px solid #ddd; border-radius: 6px; cursor: pointer;" ng-click="alternarSom()">
                     {{ somAtivado ? '🔊 Som Ativado' : '🔇 Som Desativado' }}
                 </button>
