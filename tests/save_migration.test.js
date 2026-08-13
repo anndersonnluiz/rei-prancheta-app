@@ -136,7 +136,7 @@ const oldSave = {
 
 const migrated = scope.migrarSave(oldSave);
 
-assert.strictEqual(migrated.saveVersion, 5, 'legacy save should be upgraded to current save version');
+assert.strictEqual(migrated.saveVersion, 11, 'legacy save should be upgraded to current save version');
 assert.ok(typeof migrated.savedAt === 'string' && migrated.savedAt.length > 0, 'migration should stamp savedAt for old saves');
 assert.ok(Array.isArray(migrated.telemetriaHistorico), 'legacy save should receive telemetry history array');
 assert.strictEqual(migrated.telemetriaHistorico.length, 0, 'legacy telemetry history should start empty');
@@ -148,6 +148,16 @@ assert.strictEqual(migrated.ultimoResumoPartida, null, 'missing last tactical su
 assert.ok(Array.isArray(migrated.relatorioEvolucao), 'legacy save should receive evolution report array');
 assert.strictEqual(migrated.relatorioEvolucao.length, 0, 'legacy evolution report should start empty');
 assert.strictEqual(migrated.ultimoDiaEvolucao, 0, 'legacy save should receive last evolution day');
+assert.strictEqual(migrated.ambienteElenco.valor, 70, 'legacy save should receive squad environment default value');
+assert.strictEqual(migrated.ambienteElenco.tendencia, 'estavel', 'legacy save should receive stable squad environment trend');
+assert.ok(Array.isArray(migrated.ambienteElenco.eventos), 'legacy save should receive squad environment event history');
+assert.strictEqual(migrated.ambienteElenco.eventos.length, 0, 'legacy squad environment history should start empty');
+assert.strictEqual(migrated.diretoriaStatus.status, 'no_trilho', 'legacy save should receive board status default');
+assert.ok(Array.isArray(migrated.diretoriaStatus.historicoAvaliacoes), 'legacy save should receive board evaluation history');
+assert.ok(migrated.clubeAtualInfo === undefined || migrated.clubeAtualInfo.infraestrutura, 'legacy club info should receive infrastructure when present');
+assert.strictEqual(migrated.contextoExterno.torcida.humor, 65, 'legacy save should receive fan mood default');
+assert.strictEqual(migrated.contextoExterno.imprensa.pressao, 40, 'legacy save should receive media pressure default');
+assert.ok(migrated.clubeAtualInfo === undefined || migrated.clubeAtualInfo.base, 'legacy club info should receive youth academy when present');
 assert.strictEqual(migrated.filtroCalendario, 'TODOS', 'calendar filter should reset to stable default');
 assert.strictEqual(migrated.calendarioFiltrado, undefined, 'derived filtered calendar should not be persisted by migration');
 assert.strictEqual(migrated.proximosEventosOffsets, undefined, 'derived upcoming offsets should not be persisted by migration');
@@ -162,6 +172,10 @@ assert.strictEqual(migratedGoleiro.diasLesao, 0);
 assert.strictEqual(migratedGoleiro.suspenso, false);
 assert.strictEqual(migratedGoleiro.substituidoNaPartida, false);
 assert.ok(typeof migratedGoleiro.potencial === 'number', 'goalkeeper should receive potential');
+assert.ok(typeof migratedGoleiro.salarioDesejado === 'number', 'goalkeeper should receive desired salary');
+assert.ok(migratedGoleiro.statusContrato, 'goalkeeper should receive contract status');
+assert.ok(typeof migratedGoleiro.satisfacaoContrato === 'number', 'goalkeeper should receive contract satisfaction');
+assert.ok(typeof migratedGoleiro.valorMercadoDinamico === 'number', 'goalkeeper should receive dynamic market value');
 assert.strictEqual(migratedGoleiro.xpTemporada, 0);
 assert.strictEqual(migratedGoleiro.jogosTemporada, 0);
 assert.strictEqual(migratedGoleiro.minutosTemporada, 0);

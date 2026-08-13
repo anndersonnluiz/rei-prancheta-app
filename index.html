@@ -84,6 +84,7 @@
                 <li ng-class="{'active': telaAtual === 'libertadores'}" ng-click="mudarTela('libertadores')" ng-if="libertadores">🌎 Libertadores</li>
                 <li ng-class="{'active': telaAtual === 'sulamericana'}" ng-click="mudarTela('sulamericana')" ng-if="sulAmericana">🏆 Sul-Americana</li>
                 <li ng-class="{'active': telaAtual === 'elenco'}" ng-click="mudarTela('elenco')">👕 Meu Elenco</li>
+                <li ng-class="{'active': telaAtual === 'base'}" ng-click="mudarTela('base')">🌱 Categorias de Base</li>
                 <li ng-class="{'active': telaAtual === 'medico'}" ng-click="mudarTela('medico')">🚑 Dep. Médico</li>
                 <li ng-class="{'active': telaAtual === 'taticas'}" ng-click="mudarTela('taticas')">⚽ Táticas / Escalação</li>
                 <li ng-class="{'active': telaAtual === 'mercado'}" ng-click="mudarTela('mercado')">🔄 Mercado da Bola</li>
@@ -210,7 +211,7 @@
                              ng-click="abrirMensagem(msg)">
                             <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px;">
                                 <strong style="font-size: 14px; color: var(--text-dark);">{{msg.remetente}}</strong>
-                                <span style="font-size: 11px; color: var(--text-muted);">{{msg.dataStr}}</span>
+                                <span style="font-size: 11px; color: var(--text-muted);">{{msg.tipo}} · {{msg.dataStr}}</span>
                             </div>
                             <div style="font-size: 16px; font-weight: {{msg.lida ? 'normal' : 'bold'}}; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 {{msg.titulo}}
@@ -337,6 +338,7 @@
                             <article class="news-compact-item" ng-repeat="noticia in noticiasFeed | limitTo:3 track by noticia.id" ng-class="'news-' + noticia.tipo">
                                 <div class="news-compact-meta">
                                     <span>{{noticia.remetente}}</span>
+                                    <small>{{noticia.tipo}}</small>
                                     <time>{{noticia.dataStr}}</time>
                                 </div>
                                 <h4>{{noticia.titulo}}</h4>
@@ -359,6 +361,93 @@
                                 <span>Recuperacao <strong>x{{obterAlertaCargaCalendario().carga.fatorRecuperacao | number:2}}</strong></span>
                             </div>
                             <p>{{obterAlertaCargaCalendario().mensagem}}</p>
+                        </div>
+
+                        <div class="dashboard-panel external-context-card" ng-if="contextoExternoResumo">
+                            <div class="dashboard-panel-header compact-header">
+                                <div>
+                                    <span class="dashboard-eyebrow">Clima Externo</span>
+                                    <h3>Torcida e imprensa</h3>
+                                </div>
+                            </div>
+                            <div class="external-context-grid">
+                                <div class="external-context-kpi fan" ng-class="'ctx-' + contextoExternoResumo.torcida.classe">
+                                    <span>Torcida</span>
+                                    <strong>{{contextoExternoResumo.torcida.valor}}/100</strong>
+                                    <small>{{contextoExternoResumo.torcida.tendenciaLabel}}</small>
+                                </div>
+                                <div class="external-context-kpi media" ng-class="'ctx-' + contextoExternoResumo.imprensa.classe">
+                                    <span>Imprensa</span>
+                                    <strong>{{contextoExternoResumo.imprensa.valor}}/100</strong>
+                                    <small>{{contextoExternoResumo.imprensa.tendenciaLabel}}</small>
+                                </div>
+                            </div>
+                            <p>{{contextoExternoResumo.ultimaLeitura}}</p>
+                        </div>
+
+                        <div class="dashboard-panel squad-environment-card" ng-if="ambienteElencoResumo" ng-class="'env-' + ambienteElencoResumo.classe">
+                            <div class="dashboard-panel-header compact-header">
+                                <div>
+                                    <span class="dashboard-eyebrow">Ambiente do Elenco</span>
+                                    <h3>{{ambienteElencoResumo.titulo}}</h3>
+                                </div>
+                                <span class="dashboard-count-badge">{{ambienteElencoResumo.tendenciaLabel}}</span>
+                            </div>
+                            <div class="squad-environment-score">
+                                <strong>{{ambienteElencoResumo.valor}}/100</strong>
+                                <span>Fator {{ambienteElencoResumo.fatorPercentual}}%</span>
+                            </div>
+                            <p>{{ambienteElencoResumo.ultimoEventoDetalhe}}</p>
+                        </div>
+
+                        <div class="dashboard-panel infrastructure-compact-card" ng-if="infraestruturaResumo && infraestruturaResumo.cards.length > 0">
+                            <div class="dashboard-panel-header compact-header">
+                                <div>
+                                    <span class="dashboard-eyebrow">Infraestrutura do Clube</span>
+                                    <h3>Instalacoes</h3>
+                                </div>
+                                <span class="dashboard-count-badge" ng-if="infraestruturaResumo.obras.length > 0">{{infraestruturaResumo.obras.length}} obra(s)</span>
+                            </div>
+                            <div class="infrastructure-mini-grid">
+                                <div class="infrastructure-mini-card" ng-repeat="card in infraestruturaResumo.cards track by card.id">
+                                    <span>{{card.titulo}}</span>
+                                    <strong>Nv. {{card.nivel}}</strong>
+                                    <small ng-if="card.emObra">Obra: {{card.diasRestantes}}d</small>
+                                    <small ng-if="!card.emObra">{{card.beneficio}}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-panel youth-compact-card" ng-if="baseResumo">
+                            <div class="dashboard-panel-header compact-header">
+                                <div>
+                                    <span class="dashboard-eyebrow">Base do Clube</span>
+                                    <h3>Categorias de Base</h3>
+                                </div>
+                                <span class="dashboard-count-badge">{{baseResumo.total}} atletas</span>
+                            </div>
+                            <div class="youth-compact-stats">
+                                <span>Promessas <strong>{{baseResumo.promessas}}</strong></span>
+                                <span>Joias <strong>{{baseResumo.joias}}</strong></span>
+                            </div>
+                            <p ng-if="baseResumo.melhorJovem">Destaque: {{baseResumo.melhorJovem.nome}} · {{baseResumo.melhorJovem.posicao}} · POT {{baseResumo.melhorJovem.potencial}}</p>
+                            <p ng-if="!baseResumo.melhorJovem">A base ainda nao tem atletas cadastrados.</p>
+                        </div>
+
+                        <div class="dashboard-panel contracts-compact-card" ng-if="contratosResumo">
+                            <div class="dashboard-panel-header compact-header">
+                                <div>
+                                    <span class="dashboard-eyebrow">Contratos do Elenco</span>
+                                    <h3>Situação contratual</h3>
+                                </div>
+                                <span class="dashboard-count-badge">{{contratosResumo.urgentes}} urgente(s)</span>
+                            </div>
+                            <div class="contract-compact-stats">
+                                <span>Monitorar <strong>{{contratosResumo.monitorados}}</strong></span>
+                                <span>Seguros <strong>{{contratosResumo.seguros}}</strong></span>
+                            </div>
+                            <p ng-if="contratosResumo.casoCritico">Caso crítico: {{contratosResumo.casoCritico.nome}} · {{contratosResumo.casoCritico.statusContratoLabel}}</p>
+                            <p ng-if="!contratosResumo.casoCritico">Sem casos críticos de contrato no momento.</p>
                         </div>
 
                         <div class="dashboard-panel club-command-card" ng-if="clubeAtual">
@@ -414,10 +503,17 @@
                             </div>
                         </div>
 
-                        <div class="dashboard-panel board-objective-card" ng-if="clubeAtual.metaDescricao">
-                            <span class="dashboard-eyebrow">Diretoria</span>
-                            <h3>Objetivo da Temporada</h3>
-                            <p>{{clubeAtual.metaDescricao}}</p>
+                        <div class="dashboard-panel board-objective-card" ng-if="diretoriaStatus && diretoriaStatus.objetivoAtual" ng-class="diretoriaStatus.statusClasse">
+                            <div class="dashboard-panel-header compact-header">
+                                <div>
+                                    <span class="dashboard-eyebrow">Diretoria</span>
+                                    <h3>Objetivo da Temporada</h3>
+                                </div>
+                                <span class="dashboard-count-badge">{{diretoriaStatus.statusLabel}}</span>
+                            </div>
+                            <p>{{diretoriaStatus.objetivoAtual}}</p>
+                            <div class="board-progress-line">{{diretoriaStatus.progressoLabel}}</div>
+                            <small>{{diretoriaStatus.ultimaObservacao}}</small>
                         </div>
                     </aside>
                 </div>
@@ -577,6 +673,7 @@
                                         <div style="font-weight: bold;" ng-style="{'color': jogador.moral < 50 ? '#e74c3c' : (jogador.moral > 80 ? '#2ecc71' : '#f39c12')}">
                                             {{ jogador.moral || 100 }}%
                                         </div>
+                                        <span class="player-mood-badge {{jogador.statusHumorClasse}}">{{jogador.statusHumor || 'Neutro'}}</span>
                                     </td>
                                     <td>
                                         <div style="background: var(--br-blue); color: white; padding: 2px 8px; border-radius: 4px; display: inline-block; font-weight: bold;">
@@ -598,7 +695,13 @@
                                     </td>
                                     <td>{{ jogador.golsTemporada || 0 }}</td>
                                     <td>{{ formatarMoeda(jogador.salario) }}</td>
-                                    <td><span style="font-weight: bold; color: {{jogador.anosContrato <= 1 ? '#e74c3c' : 'var(--text-main)'}};">{{jogador.anosContrato || 1}} Ano(s)</span></td>
+                                    <td>
+                                        <span style="font-weight: bold; color: {{jogador.anosContrato <= 1 ? '#e74c3c' : 'var(--text-main)'}};">{{jogador.anosContrato || 1}} Ano(s)</span>
+                                        <div class="contract-badges">
+                                            <span class="contract-status status-{{jogador.statusContrato}}">{{jogador.statusContratoLabel || jogador.statusContrato}}</span>
+                                            <span>{{jogador.satisfacaoContrato || 70}}% sat.</span>
+                                        </div>
+                                    </td>
                                     <td style="display: flex; gap: 5px;">
                                         <button class="btn btn-primary" style="background: var(--br-blue); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;" ng-click="iniciarNegociacao(jogador, true)">Renovar</button>
                                         <button ng-disabled="jogador.emCampo" class="btn btn-danger" style="background: {{jogador.emCampo ? '#ccc' : '#e74c3c'}}; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: {{jogador.emCampo ? 'not-allowed' : 'pointer'}}; font-size: 11px; font-weight: bold;" ng-click="venderJogador(jogador)">Vender</button>
@@ -611,35 +714,86 @@
                 </div>
             </div>
 
+            <!-- TELA: CATEGORIAS DE BASE -->
+            <div ng-if="telaAtual === 'base'">
+                <div class="card" style="padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px;">
+                        <div>
+                            <span class="dashboard-eyebrow">Formacao interna</span>
+                            <h3 style="color: var(--text-dark);">Categorias de Base</h3>
+                            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Acompanhe jovens do clube e promova atletas ao elenco profissional.</p>
+                        </div>
+                        <div class="youth-summary-pills">
+                            <span>Total <strong>{{baseResumo.total}}</strong></span>
+                            <span>Promessas <strong>{{baseResumo.promessas}}</strong></span>
+                            <span>Joias <strong>{{baseResumo.joias}}</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="mercado-empty" ng-if="!baseResumo || baseResumo.atletasVisiveis.length === 0">
+                        A base ainda nao tem atletas. Novas geracoes surgem com o tempo e sao fortalecidas pelo CT.
+                    </div>
+
+                    <div class="youth-grid" ng-if="baseResumo.atletasVisiveis.length > 0">
+                        <div class="youth-card" ng-repeat="atleta in baseResumo.atletasVisiveis track by atleta.id" ng-class="'status-' + atleta.statusBase">
+                            <div class="youth-card-head">
+                                <div>
+                                    <strong>{{atleta.nome}}</strong>
+                                    <span>{{atleta.posicao}} · {{atleta.idade}} anos</span>
+                                </div>
+                                <em>{{atleta.statusBase}}</em>
+                            </div>
+                            <div class="youth-metrics">
+                                <span>OVR <strong>{{atleta.overallAtual}}</strong></span>
+                                <span>POT <strong>{{atleta.potencial}}</strong></span>
+                                <span>EVO <strong>{{atleta.evolucaoTemporada || 0}}</strong></span>
+                            </div>
+                            <div class="youth-actions">
+                                <button ng-click="promoverAtletaBase(atleta.id)">Promover</button>
+                                <button class="muted" ng-click="dispensarAtletaBase(atleta.id)">Dispensar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- TELA DE DEPARTAMENTO MÉDICO -->
             <div ng-if="telaAtual === 'medico'" style="padding: 20px;">
                 <div style="background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 30px;">
                     <div style="background: var(--br-green); padding: 20px; color: white;">
-                        <h2 style="margin: 0;">🚑 Departamento Médico</h2>
-                        <p style="margin: 5px 0 0 0; opacity: 0.9;">Gerencie as instalações médicas para acelerar a recuperação de atletas lesionados.</p>
+                        <h2 style="margin: 0;">🏗️ Infraestrutura do Clube</h2>
+                        <p style="margin: 5px 0 0 0; opacity: 0.9;">Evolua CT, departamento médico, comercial e conforto do estádio com efeitos controlados no modo carreira.</p>
                     </div>
                     <div style="padding: 30px;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                            <div style="border: 1px solid #eee; padding: 20px; border-radius: 8px;">
-                                <h3>Estrutura Atual: Nível {{ clubeAtual.nivelMedico || 1 }}</h3>
-                                <p style="color: var(--text-muted);">
-                                    Nível 1: Recuperação lenta (+0 bônus)<br>
-                                    Nível 2: Recuperação intermediária (Acelera 30%)<br>
-                                    Nível 3: Centro de Excelência (Acelera 60%)
-                                </p>
-                                
-                                <div ng-if="(clubeAtual.nivelMedico || 1) === 1" style="margin-top: 20px;">
-                                    <button style="background: var(--br-green); color: white; padding: 12px 20px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" ng-click="melhorarDM(2, 5000000)">🚀 Melhorar para Nível 2 (R$ 5.000.000)</button>
+                        <div class="infrastructure-management-grid" ng-if="infraestruturaResumo && infraestruturaResumo.cards.length > 0">
+                            <div class="infrastructure-management-card" ng-repeat="card in infraestruturaResumo.cards track by card.id">
+                                <div class="infrastructure-management-head">
+                                    <div>
+                                        <span class="dashboard-eyebrow">{{card.titulo}}</span>
+                                        <h3>Nível {{card.nivel}}</h3>
+                                    </div>
+                                    <span ng-if="card.emObra">{{card.diasRestantes}}d</span>
                                 </div>
-                                <div ng-if="clubeAtual.nivelMedico === 2" style="margin-top: 20px;">
-                                    <button style="background: var(--br-green); color: white; padding: 12px 20px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" ng-click="melhorarDM(3, 15000000)">🚀 Melhorar para Nível 3 (R$ 15.000.000)</button>
+                                <p>{{card.beneficio}}</p>
+                                <div class="infrastructure-upgrade-box" ng-if="card.proximoNivel && !card.emObra">
+                                    <strong>Próximo nível {{card.proximoNivel}}</strong>
+                                    <small>{{formatarMoeda(card.proximoCusto)}} · {{card.proximoDias}} dia(s) de obra</small>
+                                    <button ng-click="iniciarUpgradeInfraestrutura(card.id)" ng-disabled="clubeAtual.orcamento < card.proximoCusto">
+                                        Iniciar upgrade
+                                    </button>
                                 </div>
-                                <div ng-if="clubeAtual.nivelMedico === 3" style="margin-top: 20px; background: #e8f5e9; padding: 15px; border-radius: 8px; text-align: center;">
-                                    <p style="color: var(--br-green); font-weight: bold; margin: 0;">✨ Seu DM já está no nível máximo (Padrão FIFA)!</p>
+                                <div class="infrastructure-upgrade-box muted" ng-if="card.emObra">
+                                    <strong>Obra em andamento</strong>
+                                    <small>Conclusão em {{card.diasRestantes}} dia(s)</small>
+                                </div>
+                                <div class="infrastructure-upgrade-box muted" ng-if="!card.proximoNivel && !card.emObra">
+                                    <strong>Nível máximo</strong>
+                                    <small>Instalação no limite atual.</small>
                                 </div>
                             </div>
-                            
-                            <div>
+                        </div>
+
+                        <div style="margin-top: 26px;">
                                 <h3>Jogadores Lesionados</h3>
                                 <div ng-if="(elencoAtual | filter:{lesionado:true}).length === 0" style="color: var(--text-muted); font-style: italic;">
                                     Nenhum jogador no DM no momento.
@@ -648,7 +802,6 @@
                                     <strong style="color: #721c24;">{{j.nome}}</strong>
                                     <span style="color: #721c24;">Retorna em {{j.diasLesao}} dia(s)</span>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1309,7 +1462,11 @@
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; margin-top: 5px;">
                             <div>
                                 <h4 style="margin: 0; font-size: 18px; color: var(--text-main);">{{jogador.nome}}</h4>
-                                <div style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">{{jogador.idade}} anos &bull; Salário Atual/Base: {{formatarMoeda(jogador.salario)}}</div>
+                                <div style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">{{jogador.idade}} anos &bull; Salário: {{formatarMoeda(jogador.salario)}} &bull; Desejado: {{formatarMoeda(jogador.salarioDesejado)}}</div>
+                                <div class="contract-badges" style="margin-top: 6px;">
+                                    <span class="contract-status status-{{jogador.statusContrato}}">{{jogador.statusContratoLabel || jogador.statusContrato}}</span>
+                                    <span>{{jogador.anosContrato || 0}} ano(s)</span>
+                                </div>
                             </div>
                             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
                                 <span class="posicao-badge pos-{{jogador.posicao}}" style="margin-bottom: 8px;">{{jogador.posicao}}</span>
@@ -1407,12 +1564,33 @@
                     <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <h4 style="margin: 0 0 5px 0;">Departamento de Scouting</h4>
-                            <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Contrate olheiros para buscar jovens promessas (Wonderkids) escondidas pelo mundo.</p>
+                            <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Contrate olheiros, gere relatorios estimados e mantenha jogadores em observacao antes de decidir.</p>
                             <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">Custo de Contratação: R$ 50.000 | Salário: R$ 15.000/mês</p>
                         </div>
                         <button class="btn btn-success" style="padding: 12px 24px; font-weight: bold; border-radius: 6px;" ng-click="contratarOlheiro()" ng-disabled="clubeAtual.olheiros.length >= 3">
                             ➕ Contratar Olheiro ({{clubeAtual.olheiros.length || 0}}/3)
                         </button>
+                    </div>
+
+                    <div class="scouting-shortlist-panel" ng-if="clubeAtual.scouting && clubeAtual.scouting.shortlist.length > 0">
+                        <div class="scouting-section-title">
+                            <span class="dashboard-eyebrow">Jogadores Observados</span>
+                            <strong>{{clubeAtual.scouting.shortlist.length}} em acompanhamento</strong>
+                        </div>
+                        <div class="scouting-shortlist-grid">
+                            <div class="scouting-shortlist-card" ng-repeat="item in clubeAtual.scouting.shortlist track by item.id">
+                                <div>
+                                    <strong>{{item.nome}}</strong>
+                                    <span>{{item.posicao}} · {{item.idade}} anos · {{item.origemMissao}}</span>
+                                </div>
+                                <div class="scouting-estimates">
+                                    <small>OVR {{item.overallEstimado}}</small>
+                                    <small>POT {{item.potencialEstimado}}</small>
+                                    <small>{{item.confiancaRelatorio}}% conf.</small>
+                                </div>
+                                <button ng-click="removerShortlistScouting(item.id)">Remover</button>
+                            </div>
+                        </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
@@ -1455,19 +1633,29 @@
                                     ⚠️ OFERTA RELÂMPAGO!<br>Válida apenas por {{olheiro.validadeRelatorio}} rodada(s).
                                 </div>
                                 <div style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto;">
-                                    <div ng-repeat="j in olheiro.relatorio" style="background: white; border: 1px solid #eee; border-radius: 6px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                    <div ng-repeat="j in olheiro.relatorio track by j.id" style="background: white; border: 1px solid #eee; border-radius: 6px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                             <strong style="font-size: 14px;">{{j.nome}}</strong>
                                             <span class="posicao-badge pos-{{j.posicao}}" style="transform: scale(0.8); margin: 0;">{{j.posicao}}</span>
                                         </div>
-                                        <div style="font-size: 11px; color: #666; margin-bottom: 5px;">Idade: {{j.idade}} anos | Salário: {{formatarMoeda(j.salario)}}</div>
-                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                            <div style="font-size: 12px;">Overall Atual: <strong>{{calcularOverall(j)}}</strong></div>
-                                            <div style="font-size: 12px; color: #8e44ad; font-weight: bold;" title="Potencial Oculto">⭐ Potencial: Alto</div>
+                                        <div style="font-size: 11px; color: #666; margin-bottom: 5px;">Idade: {{j.idade}} anos | {{j.pais}} | Confiança: {{j.confiancaRelatorio}}%</div>
+                                        <div class="scouting-estimates" style="margin-bottom: 8px;">
+                                            <small>OVR Est. {{j.overallEstimado}}</small>
+                                            <small>POT Est. {{j.potencialEstimado}}</small>
+                                            <small>{{j.disponibilidade}}</small>
                                         </div>
-                                        <button style="width: 100%; padding: 6px; background: var(--br-green); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px;" ng-click="comprarJoia(olheiro, j, $index)" ng-disabled="clubeAtual.orcamento < (calcularValorPasse(j) * 0.8)">
-                                            Comprar ({{formatarMoeda(calcularValorPasse(j) * 0.8)}})
-                                        </button>
+                                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.35;">{{j.observacao}}</div>
+                                        <div style="font-size: 11px; color: #8e44ad; font-weight: bold; margin-bottom: 10px;">
+                                            Faixa: {{formatarMoeda(j.faixaValor.min)}} - {{formatarMoeda(j.faixaValor.max)}}
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button style="padding: 6px; background: {{j.observado ? '#95a5a6' : 'var(--br-blue)'}}; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: {{j.observado ? 'default' : 'pointer'}}; font-size: 12px;" ng-click="adicionarShortlistScouting(j)" ng-disabled="j.observado">
+                                                {{j.observado ? 'Observado' : 'Observar'}}
+                                            </button>
+                                            <button style="padding: 6px; background: var(--br-green); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px;" ng-click="comprarJoia(olheiro, j, $index)" ng-disabled="clubeAtual.orcamento < (calcularValorPasse(j) * 0.8)">
+                                                Contratar
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1520,6 +1708,31 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px;" ng-if="infraestruturaResumo && infraestruturaResumo.cards.length > 0">
+                    <h3 style="margin-bottom: 15px; color: var(--primary-color);">🏗️ Resumo de Infraestrutura</h3>
+                    <div class="infrastructure-finance-grid">
+                        <div class="dashboard-kpi">
+                            <span>Bônus comercial</span>
+                            <strong>+{{infraestruturaResumo.receitaComercialBonus}}%</strong>
+                        </div>
+                        <div class="dashboard-kpi">
+                            <span>Bônus recuperação</span>
+                            <strong>+{{infraestruturaResumo.recuperacaoBonus}}%</strong>
+                        </div>
+                        <div class="dashboard-kpi">
+                            <span>Obras ativas</span>
+                            <strong>{{infraestruturaResumo.obras.length}}</strong>
+                        </div>
+                    </div>
+                    <div class="infrastructure-work-list" ng-if="infraestruturaResumo.obras.length > 0">
+                        <div ng-repeat="obra in infraestruturaResumo.obras track by obra.id">
+                            <strong>{{obra.titulo}}</strong>
+                            <span>Nível {{obra.nivel}} · {{obra.diasRestantes}} dia(s) restantes</span>
+                        </div>
+                    </div>
+                    <div class="mercado-empty" ng-if="infraestruturaResumo.obras.length === 0">Nenhuma obra de infraestrutura em andamento.</div>
                 </div>
 
                 <!-- TELA PATROCÍNIO MASTER (FASE 17) -->

@@ -62,7 +62,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.elencoAtual = [];
     $scope.telaAtual = 'loading'; 
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
-    var SAVE_VERSION_ATUAL = 5;
+    var SAVE_VERSION_ATUAL = 11;
 
     // FASE 21: Efeitos Sonoros
     $scope.somAtivado = true;
@@ -151,6 +151,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.relatorioEvolucao = [];
     $scope.relatorioEvolucaoVisivel = [];
     $scope.ultimoDiaEvolucao = 0;
+    $scope.ambienteElenco = criarAmbienteElencoPadrao();
+    $scope.ambienteElencoResumo = criarResumoAmbienteElenco($scope.ambienteElenco);
+    $scope.diretoriaStatus = criarDiretoriaStatusPadrao();
+    $scope.infraestruturaResumo = criarResumoInfraestrutura(null);
+    $scope.contextoExterno = criarContextoExternoPadrao();
+    $scope.contextoExternoResumo = criarResumoContextoExterno($scope.contextoExterno);
+    $scope.baseResumo = criarResumoBase(null);
+    $scope.contratosResumo = criarResumoContratos([]);
 
     // FASE 12: ESTILO DE JOGO
     $scope.taticas = {
@@ -235,6 +243,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (attr.penalti === undefined) attr.penalti = finalizacao;
         if (attr.escanteio === undefined) attr.escanteio = passe;
         if (attr.cobrador === undefined) attr.cobrador = Math.round((finalizacao + passe) / 2);
+        atualizarStatusHumorJogador(jogador);
+        normalizarEstadoContratoJogadorInterno(jogador);
     }
 
     function normalizarListaJogadoresSalvos(jogadores) {
@@ -243,6 +253,1377 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             normalizarJogadorSalvo(jogador);
         });
     }
+
+    function calcularStatusContratoJogadorInterno(jogador) {
+        var anos = jogador && jogador.anosContrato !== undefined ? parseInt(jogador.anosContrato, 10) : 0;
+        if (!anos || anos <= 0) return 'pre-contrato';
+        if (anos <= 1) return 'urgente';
+        if (anos === 2) return 'monitorar';
+        return 'seguro';
+    }
+
+    function obterLabelStatusContrato(status) {
+        if (status === 'pre-contrato') return 'Pre-contrato';
+        if (status === 'urgente') return 'Urgente';
+        if (status === 'monitorar') return 'Monitorar';
+        return 'Seguro';
+    }
+
+    function calcularSalarioDesejadoJogadorInterno(jogador) {
+        if (!jogador) return 10000;
+        var salarioAtual = parseFloat(jogador.salario) || 10000;
+        var overall = calcularOverallBaseJogador(jogador);
+        var potencial = valorNumericoOuPadrao(jogador.potencial, overall);
+        var jogos = parseInt(jogador.jogosTemporada, 10) || 0;
+        var minutos = parseInt(jogador.minutosTemporada, 10) || 0;
+        var evolucao = parseInt(jogador.evolucaoTemporada, 10) || 0;
+        var moral = typeof jogador.moral === 'number' ? jogador.moral : 70;
+        var baseTecnica = Math.round(overall * overall * 4);
+        var fator = 1;
+        if (potencial >= 84) fator += 0.08;
+        if (jogos >= 20 || minutos >= 1800) fator += 0.06;
+        if (evolucao >= 3) fator += 0.04;
+        if (moral >= 85) fator += 0.03;
+        return Math.max(salarioAtual, Math.round(baseTecnica * fator));
+    }
+
+    function calcularSatisfacaoContratoJogadorInterno(jogador, salarioDesejado) {
+        var salarioAtual = parseFloat(jogador && jogador.salario) || 10000;
+        salarioDesejado = parseFloat(salarioDesejado) || salarioAtual;
+        var status = calcularStatusContratoJogadorInterno(jogador);
+        var satisfacao = 82;
+        var razao = salarioDesejado > 0 ? salarioAtual / salarioDesejado : 1;
+        if (razao < 0.6) satisfacao -= 28;
+        else if (razao < 0.8) satisfacao -= 18;
+        else if (razao < 0.95) satisfacao -= 8;
+        if (status === 'monitorar') satisfacao -= 6;
+        if (status === 'urgente') satisfacao -= 18;
+        if (status === 'pre-contrato') satisfacao -= 32;
+        return limitarNumero(Math.round(satisfacao), 0, 100);
+    }
+
+    function normalizarEstadoContratoJogadorInterno(jogador) {
+        if (!jogador) return null;
+        if (!jogador.salario) jogador.salario = 10000;
+        if (!jogador.anosContrato && jogador.anosContrato !== 0) jogador.anosContrato = 1;
+        var desejadoCalculado = calcularSalarioDesejadoJogadorInterno(jogador);
+        if (jogador.salarioDesejado === undefined || jogador.salarioDesejado === null) jogador.salarioDesejado = desejadoCalculado;
+        else jogador.salarioDesejado = Math.max(parseFloat(jogador.salarioDesejado) || desejadoCalculado, parseFloat(jogador.salario) || 10000);
+        jogador.statusContrato = calcularStatusContratoJogadorInterno(jogador);
+        jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
+        jogador.satisfacaoContrato = calcularSatisfacaoContratoJogadorInterno(jogador, jogador.salarioDesejado);
+        if (jogador.ultimaRevisaoContratoDia === undefined) jogador.ultimaRevisaoContratoDia = 0;
+        jogador.valorMercadoDinamico = Math.max(0, Math.round((parseFloat(jogador.salarioDesejado) || jogador.salario || 10000) * 100));
+        return jogador;
+    }
+
+    function criarResumoContratos(jogadores) {
+        jogadores = Array.isArray(jogadores) ? jogadores : [];
+        var criticos = jogadores.filter(function(j) { return j && (j.statusContrato === 'urgente' || j.statusContrato === 'pre-contrato'); });
+        var monitorados = jogadores.filter(function(j) { return j && j.statusContrato === 'monitorar'; });
+        var maisCritico = criticos.slice().sort(function(a, b) {
+            if ((a.anosContrato || 0) !== (b.anosContrato || 0)) return (a.anosContrato || 0) - (b.anosContrato || 0);
+            return (b.valorMercadoDinamico || 0) - (a.valorMercadoDinamico || 0);
+        })[0] || null;
+        return {
+            urgentes: criticos.length,
+            monitorados: monitorados.length,
+            seguros: jogadores.filter(function(j) { return j && j.statusContrato === 'seguro'; }).length,
+            casoCritico: maisCritico,
+            folhaDesejada: jogadores.reduce(function(total, j) { return total + (parseFloat(j && j.salarioDesejado) || 0); }, 0)
+        };
+    }
+
+    $scope.normalizarEstadoContratoJogador = function(jogador) {
+        return normalizarEstadoContratoJogadorInterno(jogador);
+    };
+
+    $scope.calcularStatusContratoJogador = function(jogador) {
+        return calcularStatusContratoJogadorInterno(jogador);
+    };
+
+    $scope.calcularSalarioDesejadoJogador = function(jogador) {
+        return calcularSalarioDesejadoJogadorInterno(jogador);
+    };
+
+    $scope.atualizarResumoContratos = function() {
+        ($scope.elencoAtual || []).forEach(function(jogador) { normalizarEstadoContratoJogadorInterno(jogador); });
+        $scope.contratosResumo = criarResumoContratos($scope.elencoAtual || []);
+        return $scope.contratosResumo;
+    };
+
+    $scope.aplicarRenovacaoContratoJogador = function(jogador, salario, anos) {
+        if (!jogador) return null;
+        jogador.salario = parseFloat(salario) || jogador.salario || 10000;
+        jogador.anosContrato = parseInt(anos, 10) || jogador.anosContrato || 1;
+        jogador.salarioDesejado = Math.max(jogador.salario, calcularSalarioDesejadoJogadorInterno(jogador));
+        jogador.satisfacaoContrato = 90;
+        jogador.ultimaRevisaoContratoDia = $scope.diaAtual || 0;
+        jogador.statusContrato = calcularStatusContratoJogadorInterno(jogador);
+        jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
+        jogador.valorMercadoDinamico = Math.max(0, Math.round(jogador.salarioDesejado * 100));
+        $scope.atualizarResumoContratos();
+        jogador.satisfacaoContrato = 90;
+        return jogador;
+    };
+
+    $scope.revisarContratosElencoDia = function() {
+        var dia = typeof $scope.diaAtual === 'number' ? $scope.diaAtual : 0;
+        var revisados = [];
+        ($scope.elencoAtual || []).forEach(function(jogador) {
+            normalizarEstadoContratoJogadorInterno(jogador);
+            if (jogador.ultimaRevisaoContratoDia === dia) return;
+            var desejadoAtual = parseFloat(jogador.salarioDesejado) || calcularSalarioDesejadoJogadorInterno(jogador);
+            var alvo = calcularSalarioDesejadoJogadorInterno(jogador);
+            var overall = calcularOverallBaseJogador(jogador);
+            var incremento = 0;
+            if (alvo > desejadoAtual) incremento = Math.min(0.06, Math.max(0.01, (alvo - desejadoAtual) / Math.max(desejadoAtual, 1) * 0.35));
+            if ((jogador.jogosTemporada || 0) >= 20 || (jogador.evolucaoTemporada || 0) >= 3 || overall >= 80) incremento = Math.max(incremento, 0.03);
+            if (incremento > 0) jogador.salarioDesejado = Math.ceil(desejadoAtual * (1 + incremento));
+            jogador.statusContrato = calcularStatusContratoJogadorInterno(jogador);
+            jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
+            jogador.satisfacaoContrato = calcularSatisfacaoContratoJogadorInterno(jogador, jogador.salarioDesejado);
+            jogador.valorMercadoDinamico = Math.max(0, Math.round(jogador.salarioDesejado * 100));
+            jogador.ultimaRevisaoContratoDia = dia;
+            if (jogador.satisfacaoContrato < 50 && jogador.moral !== undefined) jogador.moral = Math.max(0, jogador.moral - 1);
+            revisados.push(jogador);
+        });
+        $scope.atualizarResumoContratos();
+        if ($scope.contratosResumo.urgentes >= 3 && $scope.registrarEventoAmbiente) {
+            $scope.registrarEventoAmbiente({ id: 'amb_contratos_' + dia, chave: 'contratos|' + dia, dia: dia, tipo: 'diretoria', impacto: -1, titulo: 'Contratos pressionam elenco', detalhe: 'Muitos vinculos curtos aumentaram a tensao interna.' });
+        }
+        return revisados;
+    };
+
+    function limitarNumero(valor, minimo, maximo) {
+        valor = (typeof valor === 'number' && isFinite(valor)) ? valor : minimo;
+        return Math.max(minimo, Math.min(maximo, valor));
+    }
+
+    function normalizarValorAmbiente(valor, padrao) {
+        var numero = parseInt(valor, 10);
+        if (typeof numero !== 'number' || !isFinite(numero)) numero = padrao;
+        return limitarNumero(numero, 0, 100);
+    }
+
+    function criarAmbienteElencoPadrao() {
+        return {
+            valor: 70,
+            tendencia: 'estavel',
+            ultimaAtualizacaoDia: 0,
+            eventos: []
+        };
+    }
+
+    function calcularTendenciaAmbiente(eventos) {
+        var recentes = Array.isArray(eventos) ? eventos.slice(0, 3) : [];
+        var saldo = recentes.reduce(function(total, evento) {
+            return total + (parseInt(evento.impacto, 10) || 0);
+        }, 0);
+        if (saldo > 1) return 'subindo';
+        if (saldo < -1) return 'caindo';
+        return 'estavel';
+    }
+
+    function normalizarEventoAmbiente(evento, indice) {
+        evento = evento || {};
+        var impacto = parseInt(evento.impacto, 10) || 0;
+        var id = evento.id || evento.chave || ('amb_legacy_' + indice);
+        return {
+            id: id,
+            chave: evento.chave || id,
+            dia: (typeof evento.dia === 'number') ? evento.dia : 0,
+            tipo: evento.tipo || 'geral',
+            impacto: impacto,
+            titulo: evento.titulo || 'Ambiente atualizado',
+            detalhe: evento.detalhe || '',
+            valorAntes: (typeof evento.valorAntes === 'number') ? evento.valorAntes : null,
+            valorDepois: (typeof evento.valorDepois === 'number') ? evento.valorDepois : null
+        };
+    }
+
+    function normalizarAmbienteElencoInterno(ambiente) {
+        var base = ambiente || criarAmbienteElencoPadrao();
+        base.valor = normalizarValorAmbiente(base.valor, 70);
+        base.eventos = Array.isArray(base.eventos) ? base.eventos.map(normalizarEventoAmbiente).slice(0, 12) : [];
+        base.ultimaAtualizacaoDia = (typeof base.ultimaAtualizacaoDia === 'number') ? base.ultimaAtualizacaoDia : 0;
+        base.tendencia = calcularTendenciaAmbiente(base.eventos);
+        return base;
+    }
+
+    function criarResumoAmbienteElenco(ambiente) {
+        ambiente = normalizarAmbienteElencoInterno(ambiente);
+        var ultimoEvento = ambiente.eventos[0] || null;
+        var tendenciaLabel = ambiente.tendencia === 'subindo' ? 'Subindo' : (ambiente.tendencia === 'caindo' ? 'Caindo' : 'Estavel');
+        var classe = ambiente.valor >= 80 ? 'alta' : (ambiente.valor >= 55 ? 'estavel' : 'baixa');
+        return {
+            valor: ambiente.valor,
+            tendencia: ambiente.tendencia,
+            tendenciaLabel: tendenciaLabel,
+            classe: classe,
+            titulo: ambiente.valor >= 80 ? 'Vestiario confiante' : (ambiente.valor >= 55 ? 'Ambiente controlado' : 'Ambiente pressionado'),
+            detalhe: ultimoEvento ? ultimoEvento.detalhe : 'Sem eventos recentes no ambiente do elenco.',
+            ultimoEventoTitulo: ultimoEvento ? ultimoEvento.titulo : 'Sem eventos recentes',
+            ultimoEventoDetalhe: ultimoEvento ? ultimoEvento.detalhe : 'O grupo inicia em estado estavel.',
+            fatorPercentual: Math.round(($scope.calcularFatorAmbiente ? $scope.calcularFatorAmbiente(ambiente.valor) : 1) * 100)
+        };
+    }
+
+    function atualizarStatusHumorJogador(jogador) {
+        if (!jogador) return null;
+        var moral = (typeof jogador.moral === 'number') ? jogador.moral : 100;
+        if (moral >= 80) {
+            jogador.statusHumor = 'Confiante';
+            jogador.statusHumorClasse = 'mood-confiante';
+        } else if (moral < 50) {
+            jogador.statusHumor = 'Insatisfeito';
+            jogador.statusHumorClasse = 'mood-insatisfeito';
+        } else {
+            jogador.statusHumor = 'Neutro';
+            jogador.statusHumorClasse = 'mood-neutro';
+        }
+        return jogador.statusHumor;
+    }
+
+    function clubeEhAtual(clubeId) {
+        return $scope.clubeAtual && clubeId !== undefined && clubeId !== null && String(clubeId) === String($scope.clubeAtual.id);
+    }
+
+    function resultadoUsuarioNaPartida(partida) {
+        if (!partida || !$scope.clubeAtual || partida.golsMandante === undefined || partida.golsVisitante === undefined) return null;
+        var usuarioMandante = partida.mandante && clubeEhAtual(partida.mandante.id);
+        var usuarioVisitante = partida.visitante && clubeEhAtual(partida.visitante.id);
+        if (!usuarioMandante && !usuarioVisitante) return null;
+        var golsUsuario = usuarioMandante ? partida.golsMandante : partida.golsVisitante;
+        var golsAdversario = usuarioMandante ? partida.golsVisitante : partida.golsMandante;
+        var saldo = golsUsuario - golsAdversario;
+        if (saldo > 0) return 'vitoria';
+        if (saldo < 0) return 'derrota';
+        return 'empate';
+    }
+
+    function obterUltimosResultadosUsuario(partidaAtual) {
+        var resultados = [];
+        var diaAtual = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        for (var i = diaAtual; i >= 0 && resultados.length < 3; i--) {
+            var jogo = (i === diaAtual && partidaAtual) ? partidaAtual : ($scope.obterMeuJogoNoDia ? $scope.obterMeuJogoNoDia(i) : null);
+            var resultado = resultadoUsuarioNaPartida(jogo);
+            if (resultado && resultado !== 'empate') resultados.push(resultado);
+        }
+        return resultados;
+    }
+
+    $scope.criarAmbienteElencoPadrao = function() {
+        return criarAmbienteElencoPadrao();
+    };
+
+    $scope.normalizarAmbienteElenco = function(ambiente) {
+        return normalizarAmbienteElencoInterno(ambiente);
+    };
+
+    $scope.atualizarAmbienteElencoResumo = function() {
+        $scope.ambienteElenco = normalizarAmbienteElencoInterno($scope.ambienteElenco);
+        $scope.ambienteElencoResumo = criarResumoAmbienteElenco($scope.ambienteElenco);
+        return $scope.ambienteElencoResumo;
+    };
+
+    $scope.calcularFatorAmbiente = function(valor) {
+        valor = normalizarValorAmbiente(valor, 70);
+        if (valor >= 85) return 1.02;
+        if (valor >= 70) return 1.01;
+        if (valor >= 50) return 1;
+        if (valor >= 35) return 0.98;
+        return 0.97;
+    };
+
+    $scope.registrarEventoAmbiente = function(dados) {
+        if (!dados) return null;
+        var impacto = parseInt(dados.impacto, 10) || 0;
+        if (impacto === 0) return null;
+
+        $scope.ambienteElenco = normalizarAmbienteElencoInterno($scope.ambienteElenco);
+        var chave = dados.chave || dados.id || null;
+        if (chave) {
+            var existente = $scope.ambienteElenco.eventos.find(function(evento) {
+                return evento.chave === chave || evento.id === chave;
+            });
+            if (existente) return existente;
+        }
+
+        var valorAntes = $scope.ambienteElenco.valor;
+        var valorDepois = limitarNumero(valorAntes + impacto, 0, 100);
+        var id = dados.id || chave || ('amb_' + Date.now() + '_' + Math.floor(Math.random() * 1000000));
+        var evento = {
+            id: id,
+            chave: chave || id,
+            dia: (typeof dados.dia === 'number') ? dados.dia : ($scope.diaAtual || 0),
+            tipo: dados.tipo || 'geral',
+            impacto: impacto,
+            titulo: dados.titulo || 'Ambiente atualizado',
+            detalhe: dados.detalhe || '',
+            valorAntes: valorAntes,
+            valorDepois: valorDepois
+        };
+
+        $scope.ambienteElenco.valor = valorDepois;
+        $scope.ambienteElenco.ultimaAtualizacaoDia = evento.dia;
+        $scope.ambienteElenco.eventos.unshift(evento);
+        $scope.ambienteElenco.eventos = $scope.ambienteElenco.eventos.slice(0, 12);
+        $scope.ambienteElenco.tendencia = calcularTendenciaAmbiente($scope.ambienteElenco.eventos);
+        $scope.atualizarAmbienteElencoResumo();
+
+        if (Math.abs(impacto) >= 3 && typeof $scope.adicionarMensagem === 'function') {
+            $scope.adicionarMensagem('Comissao Tecnica', 'Ambiente do Elenco: ' + evento.titulo, evento.detalhe, false, 'ambiente');
+        }
+
+        return evento;
+    };
+
+    $scope.aplicarAmbienteResultadoPartida = function(partida, origem) {
+        var resultado = resultadoUsuarioNaPartida(partida);
+        if (!resultado || resultado === 'empate') return null;
+
+        var dia = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        var diaCalendario = $scope.calendarioGeral && $scope.calendarioGeral[dia] ? $scope.calendarioGeral[dia] : null;
+        var decisivo = !!(diaCalendario && $scope.isDiaDecisivoCalendario && $scope.isDiaDecisivoCalendario(diaCalendario));
+        if (!decisivo && partida && partida.mandante && partida.visitante) {
+            decisivo = partida.mandante.reputacao >= 80 && partida.visitante.reputacao >= 80;
+        }
+
+        var impacto = resultado === 'vitoria' ? 2 : -2;
+        if (decisivo) impacto += resultado === 'vitoria' ? 1 : -1;
+
+        var chave = ['resultado', dia, partida.mandante && partida.mandante.id, partida.visitante && partida.visitante.id, partida.golsMandante, partida.golsVisitante].join('|');
+        var evento = $scope.registrarEventoAmbiente({
+            id: 'amb_' + chave.replace(/[^a-zA-Z0-9_\-]/g, '_'),
+            chave: chave,
+            dia: dia,
+            tipo: 'resultado',
+            impacto: impacto,
+            titulo: resultado === 'vitoria' ? (decisivo ? 'Vitoria importante' : 'Vitoria fortalece o grupo') : (decisivo ? 'Derrota pesada' : 'Derrota sentida'),
+            detalhe: resultado === 'vitoria' ? 'O elenco reagiu bem ao resultado positivo.' : 'O grupo sentiu o resultado negativo e precisa de resposta.'
+        });
+
+        if (evento) $scope.aplicarAmbienteSequenciaResultados(partida);
+        return evento;
+    };
+
+    $scope.aplicarAmbienteSequenciaResultados = function(partidaAtual) {
+        var resultados = obterUltimosResultadosUsuario(partidaAtual);
+        if (resultados.length < 3) return null;
+        var dia = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        if (resultados.every(function(r) { return r === 'vitoria'; })) {
+            return $scope.registrarEventoAmbiente({
+                id: 'amb_seq_pos_' + dia,
+                chave: 'sequencia|positiva|' + dia,
+                dia: dia,
+                tipo: 'resultado',
+                impacto: 3,
+                titulo: 'Sequencia positiva',
+                detalhe: 'A boa fase recente aumentou a confianca coletiva.'
+            });
+        }
+        if (resultados.every(function(r) { return r === 'derrota'; })) {
+            return $scope.registrarEventoAmbiente({
+                id: 'amb_seq_neg_' + dia,
+                chave: 'sequencia|negativa|' + dia,
+                dia: dia,
+                tipo: 'resultado',
+                impacto: -3,
+                titulo: 'Sequencia negativa',
+                detalhe: 'A sequencia ruim comecou a pesar no vestiario.'
+            });
+        }
+        return null;
+    };
+
+    $scope.aplicarAmbienteRotacaoElenco = function() {
+        var insatisfeitos = ($scope.elencoAtual || []).filter(function(j) {
+            return j && !j.lesionado && !j.emCampo && (j.rodadasNoBanco || 0) > 3 && $scope.calcularOverall && $scope.calcularOverall(j) >= 76;
+        });
+        if (insatisfeitos.length < 3) return null;
+        var dia = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        return $scope.registrarEventoAmbiente({
+            id: 'amb_rotacao_' + dia,
+            chave: 'rotacao|' + dia + '|' + insatisfeitos.length,
+            dia: dia,
+            tipo: 'rotacao',
+            impacto: -2,
+            titulo: 'Reservas importantes insatisfeitos',
+            detalhe: insatisfeitos.length + ' jogadores relevantes demonstram desconforto com poucos minutos.'
+        });
+    };
+
+    $scope.aplicarAmbienteLesoesElenco = function() {
+        var lesionados = ($scope.elencoAtual || []).filter(function(j) { return j && j.lesionado; });
+        if (lesionados.length < 3) return null;
+        var dia = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        return $scope.registrarEventoAmbiente({
+            id: 'amb_lesoes_' + dia,
+            chave: 'lesoes|' + dia + '|' + lesionados.length,
+            dia: dia,
+            tipo: 'lesao',
+            impacto: lesionados.length >= 5 ? -3 : -2,
+            titulo: 'Departamento medico cheio',
+            detalhe: lesionados.length + ' atletas estao lesionados, o que afeta a confianca do grupo.'
+        });
+    };
+
+    $scope.aplicarAmbienteTransferencia = function(transferencia) {
+        if (!transferencia || !$scope.clubeAtual) return null;
+        var jogador = ($scope.elencoAtual || []).find(function(j) { return String(j.id) === String(transferencia.jogadorId); }) ||
+            (($scope.jogadores || []).find(function(j) { return String(j.id) === String(transferencia.jogadorId); }));
+        var overall = jogador ? calcularOverallBaseJogador(jogador) : 70;
+        var impacto = 0;
+        var titulo = '';
+        var detalhe = '';
+
+        if ((transferencia.tipo === 'compra' || transferencia.tipo === 'contratacao') && clubeEhAtual(transferencia.clubeDestinoId)) {
+            impacto = overall >= 74 ? 2 : 1;
+            titulo = 'Reforco apresentado';
+            detalhe = 'A chegada de ' + transferencia.jogadorNome + ' trouxe energia nova ao elenco.';
+        } else if (transferencia.tipo === 'venda' && clubeEhAtual(transferencia.clubeOrigemId)) {
+            impacto = overall >= 76 ? -3 : -2;
+            titulo = 'Saida sentida no elenco';
+            detalhe = 'A venda de ' + transferencia.jogadorNome + ' gerou impacto no vestiario.';
+        }
+
+        if (impacto === 0) return null;
+        if (clubeEhAtual(transferencia.clubeDestinoId) && $scope.registrarEventoTorcida) {
+            $scope.registrarEventoTorcida({ id: 'fan_mercado_' + transferencia.chave.replace(/[^a-zA-Z0-9_\-]/g, '_'), chave: 'mercado|torcida|' + transferencia.chave, dia: transferencia.dia, origem: 'mercado', impacto: 1, titulo: 'Reforco anima a torcida', detalhe: 'A chegada de ' + transferencia.jogadorNome + ' teve boa recepcao nas arquibancadas.' });
+        } else if (clubeEhAtual(transferencia.clubeOrigemId) && $scope.registrarEventoTorcida) {
+            $scope.registrarEventoTorcida({ id: 'fan_venda_' + transferencia.chave.replace(/[^a-zA-Z0-9_\-]/g, '_'), chave: 'mercado|venda|' + transferencia.chave, dia: transferencia.dia, origem: 'mercado', impacto: -1, titulo: 'Venda divide opinioes', detalhe: 'A saida de ' + transferencia.jogadorNome + ' gerou debate entre os torcedores.' });
+        }
+        return $scope.registrarEventoAmbiente({
+            id: 'amb_mercado_' + transferencia.chave.replace(/[^a-zA-Z0-9_\-]/g, '_'),
+            chave: 'mercado|' + transferencia.chave,
+            dia: transferencia.dia,
+            tipo: 'mercado',
+            impacto: impacto,
+            titulo: titulo,
+            detalhe: detalhe
+        });
+    };
+
+    $scope.atualizarStatusHumorJogador = function(jogador) {
+        return atualizarStatusHumorJogador(jogador);
+    };
+
+    $scope.atualizarStatusHumorElenco = function() {
+        ($scope.elencoAtual || []).forEach(function(jogador) {
+            atualizarStatusHumorJogador(jogador);
+        });
+    };
+
+    function criarContextoExternoPadrao() {
+        return {
+            torcida: {
+                humor: 65,
+                tendencia: 'estavel',
+                ultimaAtualizacaoDia: 0,
+                historico: []
+            },
+            imprensa: {
+                pressao: 40,
+                tendencia: 'estavel',
+                ultimaAtualizacaoDia: 0,
+                historico: []
+            }
+        };
+    }
+
+    function normalizarEventoContextoExterno(evento, indice) {
+        evento = evento || {};
+        var id = evento.id || evento.chave || ('ctx_legacy_' + indice);
+        return {
+            id: id,
+            chave: evento.chave || id,
+            dia: (typeof evento.dia === 'number') ? evento.dia : 0,
+            origem: evento.origem || 'geral',
+            impacto: parseInt(evento.impacto, 10) || 0,
+            titulo: evento.titulo || 'Contexto externo atualizado',
+            detalhe: evento.detalhe || ''
+        };
+    }
+
+    function normalizarContextoExternoInterno(contexto) {
+        var base = contexto || criarContextoExternoPadrao();
+        if (!base.torcida) base.torcida = criarContextoExternoPadrao().torcida;
+        if (!base.imprensa) base.imprensa = criarContextoExternoPadrao().imprensa;
+
+        base.torcida.humor = normalizarValorAmbiente(base.torcida.humor, 65);
+        base.torcida.historico = Array.isArray(base.torcida.historico) ? base.torcida.historico.map(normalizarEventoContextoExterno).slice(0, 12) : [];
+        base.torcida.tendencia = calcularTendenciaAmbiente(base.torcida.historico);
+        base.torcida.ultimaAtualizacaoDia = (typeof base.torcida.ultimaAtualizacaoDia === 'number') ? base.torcida.ultimaAtualizacaoDia : 0;
+
+        base.imprensa.pressao = normalizarValorAmbiente(base.imprensa.pressao, 40);
+        base.imprensa.historico = Array.isArray(base.imprensa.historico) ? base.imprensa.historico.map(normalizarEventoContextoExterno).slice(0, 12) : [];
+        base.imprensa.tendencia = calcularTendenciaAmbiente(base.imprensa.historico);
+        base.imprensa.ultimaAtualizacaoDia = (typeof base.imprensa.ultimaAtualizacaoDia === 'number') ? base.imprensa.ultimaAtualizacaoDia : 0;
+        return base;
+    }
+
+    function obterLabelTendenciaContexto(tendencia) {
+        if (tendencia === 'subindo') return 'Subindo';
+        if (tendencia === 'caindo') return 'Caindo';
+        return 'Estavel';
+    }
+
+    function criarResumoContextoExterno(contexto) {
+        contexto = normalizarContextoExternoInterno(contexto);
+        var ultimoTorcida = contexto.torcida.historico[0] || null;
+        var ultimoImprensa = contexto.imprensa.historico[0] || null;
+        return {
+            torcida: {
+                valor: contexto.torcida.humor,
+                tendencia: contexto.torcida.tendencia,
+                tendenciaLabel: obterLabelTendenciaContexto(contexto.torcida.tendencia),
+                classe: contexto.torcida.humor >= 75 ? 'alta' : (contexto.torcida.humor >= 45 ? 'estavel' : 'baixa'),
+                ultimaLeitura: ultimoTorcida ? ultimoTorcida.detalhe : 'A torcida ainda observa o inicio do trabalho.'
+            },
+            imprensa: {
+                valor: contexto.imprensa.pressao,
+                tendencia: contexto.imprensa.tendencia,
+                tendenciaLabel: obterLabelTendenciaContexto(contexto.imprensa.tendencia),
+                classe: contexto.imprensa.pressao >= 70 ? 'alta' : (contexto.imprensa.pressao >= 35 ? 'estavel' : 'baixa'),
+                ultimaLeitura: ultimoImprensa ? ultimoImprensa.detalhe : 'A imprensa ainda nao criou uma narrativa dominante.'
+            },
+            ultimaLeitura: ultimoImprensa ? ultimoImprensa.detalhe : (ultimoTorcida ? ultimoTorcida.detalhe : 'Clima externo estavel no entorno do clube.')
+        };
+    }
+
+    function adicionarNoticiaContexto(tipo, titulo, detalhe, id) {
+        if (!$scope.noticiasFeed) $scope.noticiasFeed = [];
+        if (id && $scope.noticiasFeed.some(function(n) { return n.id === id; })) return;
+        var dataAtual = $scope.calendarioGeral && $scope.calendarioGeral[$scope.diaAtual] ? $scope.calendarioGeral[$scope.diaAtual].titulo : new Date().toLocaleDateString('pt-BR');
+        $scope.noticiasFeed.unshift({
+            id: id || ('ctx_news_' + Date.now() + '_' + Math.floor(Math.random() * 1000000)),
+            remetente: tipo === 'torcida' ? 'Torcida' : 'Imprensa',
+            titulo: titulo,
+            conteudo: detalhe,
+            dataStr: dataAtual,
+            lida: true,
+            tipo: tipo
+        });
+        $scope.noticiasFeed = $scope.noticiasFeed.slice(0, 30);
+    }
+
+    $scope.criarContextoExternoPadrao = function() {
+        return criarContextoExternoPadrao();
+    };
+
+    $scope.normalizarContextoExterno = function(contexto) {
+        return normalizarContextoExternoInterno(contexto);
+    };
+
+    $scope.atualizarResumoContextoExterno = function() {
+        $scope.contextoExterno = normalizarContextoExternoInterno($scope.contextoExterno);
+        $scope.contextoExternoResumo = criarResumoContextoExterno($scope.contextoExterno);
+        return $scope.contextoExternoResumo;
+    };
+
+    $scope.registrarEventoTorcida = function(dados) {
+        if (!dados) return null;
+        var impacto = parseInt(dados.impacto, 10) || 0;
+        if (impacto === 0) return null;
+        $scope.contextoExterno = normalizarContextoExternoInterno($scope.contextoExterno);
+        var chave = dados.chave || dados.id || null;
+        if (chave && $scope.contextoExterno.torcida.historico.some(function(e) { return e.chave === chave || e.id === chave; })) return null;
+
+        var evento = normalizarEventoContextoExterno({
+            id: dados.id,
+            chave: chave,
+            dia: (typeof dados.dia === 'number') ? dados.dia : ($scope.diaAtual || 0),
+            origem: dados.origem || 'geral',
+            impacto: impacto,
+            titulo: dados.titulo || 'Torcida reage',
+            detalhe: dados.detalhe || ''
+        }, 0);
+        $scope.contextoExterno.torcida.humor = limitarNumero($scope.contextoExterno.torcida.humor + impacto, 0, 100);
+        $scope.contextoExterno.torcida.ultimaAtualizacaoDia = evento.dia;
+        $scope.contextoExterno.torcida.historico.unshift(evento);
+        $scope.contextoExterno.torcida.historico = $scope.contextoExterno.torcida.historico.slice(0, 12);
+        $scope.contextoExterno.torcida.tendencia = calcularTendenciaAmbiente($scope.contextoExterno.torcida.historico);
+        $scope.atualizarResumoContextoExterno();
+        if (Math.abs(impacto) >= 2) adicionarNoticiaContexto('torcida', evento.titulo, evento.detalhe, 'news_' + evento.chave);
+        if (($scope.contextoExterno.torcida.humor >= 85 || $scope.contextoExterno.torcida.humor <= 30) && $scope.registrarEventoAmbiente) {
+            $scope.registrarEventoAmbiente({ id: 'amb_torcida_' + evento.id, chave: 'torcida|' + evento.chave, dia: evento.dia, tipo: 'diretoria', impacto: $scope.contextoExterno.torcida.humor >= 85 ? 1 : -1, titulo: 'Pressao da torcida', detalhe: evento.detalhe });
+        }
+        return evento;
+    };
+
+    $scope.registrarEventoImprensa = function(dados) {
+        if (!dados) return null;
+        var impacto = parseInt(dados.impacto, 10) || 0;
+        if (impacto === 0) return null;
+        $scope.contextoExterno = normalizarContextoExternoInterno($scope.contextoExterno);
+        var chave = dados.chave || dados.id || null;
+        if (chave && $scope.contextoExterno.imprensa.historico.some(function(e) { return e.chave === chave || e.id === chave; })) return null;
+
+        var evento = normalizarEventoContextoExterno({
+            id: dados.id,
+            chave: chave,
+            dia: (typeof dados.dia === 'number') ? dados.dia : ($scope.diaAtual || 0),
+            origem: dados.origem || 'geral',
+            impacto: impacto,
+            titulo: dados.titulo || 'Imprensa repercute',
+            detalhe: dados.detalhe || ''
+        }, 0);
+        $scope.contextoExterno.imprensa.pressao = limitarNumero($scope.contextoExterno.imprensa.pressao + impacto, 0, 100);
+        $scope.contextoExterno.imprensa.ultimaAtualizacaoDia = evento.dia;
+        $scope.contextoExterno.imprensa.historico.unshift(evento);
+        $scope.contextoExterno.imprensa.historico = $scope.contextoExterno.imprensa.historico.slice(0, 12);
+        $scope.contextoExterno.imprensa.tendencia = calcularTendenciaAmbiente($scope.contextoExterno.imprensa.historico);
+        $scope.atualizarResumoContextoExterno();
+        if (Math.abs(impacto) >= 2) adicionarNoticiaContexto('imprensa', evento.titulo, evento.detalhe, 'news_' + evento.chave);
+        if ($scope.contextoExterno.imprensa.pressao >= 80 && $scope.registrarEventoAmbiente) {
+            $scope.registrarEventoAmbiente({ id: 'amb_imprensa_' + evento.id, chave: 'imprensa|' + evento.chave, dia: evento.dia, tipo: 'diretoria', impacto: -1, titulo: 'Pressao da imprensa', detalhe: evento.detalhe });
+        }
+        return evento;
+    };
+
+    $scope.aplicarContextoExternoColetiva = function(opcao) {
+        if (!opcao) return;
+        var dia = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        var tag = opcao.tagNarrativa || opcao.efeito || 'coletiva';
+        var impactoTorcida = opcao.impactoTorcida;
+        var impactoImprensa = opcao.impactoImprensa;
+        if (impactoTorcida === undefined) impactoTorcida = opcao.efeito === 'motivacao' ? 2 : (opcao.efeito === 'arrogante' ? 1 : -1);
+        if (impactoImprensa === undefined) impactoImprensa = opcao.efeito === 'motivacao' ? -1 : (opcao.efeito === 'arrogante' ? 3 : 2);
+        $scope.registrarEventoTorcida({ id: 'fan_coletiva_' + dia + '_' + tag, chave: 'coletiva|torcida|' + dia + '|' + tag, dia: dia, origem: 'coletiva', impacto: impactoTorcida, titulo: 'Torcida reage a coletiva', detalhe: opcao.msg || 'A coletiva mexeu com a arquibancada.' });
+        $scope.registrarEventoImprensa({ id: 'media_coletiva_' + dia + '_' + tag, chave: 'coletiva|imprensa|' + dia + '|' + tag, dia: dia, origem: 'coletiva', impacto: impactoImprensa, titulo: 'Coletiva repercute na imprensa', detalhe: opcao.msg || 'A entrevista pautou o noticiario esportivo.' });
+    };
+
+    $scope.aplicarContextoExternoResultadoPartida = function(partida, origem) {
+        var resultado = resultadoUsuarioNaPartida(partida);
+        if (!resultado || resultado === 'empate') return null;
+        var dia = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        var diaCalendario = $scope.calendarioGeral && $scope.calendarioGeral[dia] ? $scope.calendarioGeral[dia] : null;
+        var jogoGrande = !!(diaCalendario && $scope.isDiaDecisivoCalendario && $scope.isDiaDecisivoCalendario(diaCalendario));
+        if (!jogoGrande && partida && partida.mandante && partida.visitante) jogoGrande = partida.mandante.reputacao >= 80 && partida.visitante.reputacao >= 80;
+        var statusDiretoria = $scope.diretoriaStatus && $scope.diretoriaStatus.status;
+        var impactoTorcida = resultado === 'vitoria' ? 3 : -3;
+        var impactoImprensa = resultado === 'vitoria' ? -2 : 3;
+        if (jogoGrande) {
+            impactoTorcida += resultado === 'vitoria' ? 1 : -2;
+            impactoImprensa += resultado === 'vitoria' ? -1 : 2;
+        }
+        if (statusDiretoria === 'acima_do_esperado') impactoTorcida += 1;
+        if (statusDiretoria === 'critico') impactoImprensa += 1;
+        var chave = ['resultado_ctx', dia, partida.mandante && partida.mandante.id, partida.visitante && partida.visitante.id, partida.golsMandante, partida.golsVisitante].join('|');
+        $scope.registrarEventoTorcida({ id: 'fan_' + chave.replace(/[^a-zA-Z0-9_\-]/g, '_'), chave: 'torcida|' + chave, dia: dia, origem: 'resultado', impacto: impactoTorcida, titulo: resultado === 'vitoria' ? 'Torcida empolgada' : 'Derrota sentida', detalhe: resultado === 'vitoria' ? 'A arquibancada comprou a boa resposta em campo.' : 'A derrota gerou impaciencia entre os torcedores.' });
+        $scope.registrarEventoImprensa({ id: 'media_' + chave.replace(/[^a-zA-Z0-9_\-]/g, '_'), chave: 'imprensa|' + chave, dia: dia, origem: 'resultado', impacto: impactoImprensa, titulo: resultado === 'vitoria' ? 'Pressao externa alivia' : 'Imprensa aumenta cobranca', detalhe: resultado === 'vitoria' ? 'O resultado positivo reduziu o ruido no entorno.' : 'A imprensa passou a cobrar respostas mais contundentes.' });
+        return true;
+    };
+
+    function criarScoutingPadrao() {
+        return {
+            shortlist: [],
+            historicoRelatorios: [],
+            ultimoRelatorioDia: 0
+        };
+    }
+
+    function normalizarFaixaValorScouting(faixaValor, valorBase) {
+        valorBase = parseFloat(valorBase) || 0;
+        var min = faixaValor && faixaValor.min !== undefined ? parseFloat(faixaValor.min) : Math.max(0, Math.floor(valorBase * 0.85));
+        var max = faixaValor && faixaValor.max !== undefined ? parseFloat(faixaValor.max) : Math.max(min, Math.ceil(valorBase * 1.15));
+        if (max < min) max = min;
+        return { min: min, max: max };
+    }
+
+    function normalizarItemScouting(item) {
+        if (!item) return null;
+        var jogadorId = item.jogadorId !== undefined ? item.jogadorId : item.id;
+        var valorBase = item.valorBase || item.valor || item.valorEstimado || item.salario || 0;
+        var id = item.id !== undefined ? String(item.id) : ('scout_player_' + jogadorId);
+        return {
+            id: id,
+            jogadorId: jogadorId,
+            nome: item.nome || 'Jogador observado',
+            idade: parseInt(item.idade, 10) || 18,
+            posicao: item.posicao || '-',
+            pais: item.pais || 'BRA',
+            potencialEstimado: normalizarValorAmbiente(item.potencialEstimado !== undefined ? item.potencialEstimado : item.potencial, 70),
+            overallEstimado: normalizarValorAmbiente(item.overallEstimado !== undefined ? item.overallEstimado : calcularOverallBaseJogador(item), 70),
+            confiancaRelatorio: limitarNumero(parseInt(item.confiancaRelatorio, 10) || 50, 50, 95),
+            faixaValor: normalizarFaixaValorScouting(item.faixaValor, valorBase),
+            origemMissao: item.origemMissao || item.tipoMissao || 'BASE',
+            observacao: item.observacao || 'Relatorio em acompanhamento.',
+            disponibilidade: item.disponibilidade || 'curto-prazo',
+            salario: parseFloat(item.salario) || 0,
+            anosContrato: parseInt(item.anosContrato, 10) || null
+        };
+    }
+
+    function normalizarRelatorioScouting(relatorio, indice) {
+        relatorio = relatorio || {};
+        var id = relatorio.id || ('scout_report_legacy_' + indice);
+        return {
+            id: id,
+            dia: (typeof relatorio.dia === 'number') ? relatorio.dia : 0,
+            origemMissao: relatorio.origemMissao || 'BASE',
+            olheiroNome: relatorio.olheiroNome || 'Olheiro',
+            jogadores: Array.isArray(relatorio.jogadores) ? relatorio.jogadores.map(normalizarItemScouting).filter(Boolean) : []
+        };
+    }
+
+    function normalizarScoutingClube(clube) {
+        if (!clube) return criarScoutingPadrao();
+        var scouting = clube.scouting || criarScoutingPadrao();
+        scouting.shortlist = Array.isArray(scouting.shortlist) ? scouting.shortlist.map(normalizarItemScouting).filter(Boolean).slice(0, 30) : [];
+        scouting.historicoRelatorios = Array.isArray(scouting.historicoRelatorios) ? scouting.historicoRelatorios.map(normalizarRelatorioScouting).slice(0, 10) : [];
+        scouting.ultimoRelatorioDia = (typeof scouting.ultimoRelatorioDia === 'number') ? scouting.ultimoRelatorioDia : 0;
+        clube.scouting = scouting;
+        return clube;
+    }
+
+    function isJogadorNaShortlistInterno(item) {
+        if (!$scope.clubeAtual || !item) return false;
+        normalizarScoutingClube($scope.clubeAtual);
+        var jogadorId = item.jogadorId !== undefined ? item.jogadorId : item.id;
+        return $scope.clubeAtual.scouting.shortlist.some(function(observado) {
+            return String(observado.jogadorId) === String(jogadorId) || String(observado.id) === String(item.id);
+        });
+    }
+
+    function atualizarFlagsShortlistRelatorios() {
+        if (!$scope.clubeAtual || !$scope.clubeAtual.olheiros) return;
+        normalizarScoutingClube($scope.clubeAtual);
+        $scope.clubeAtual.olheiros.forEach(function(olheiro) {
+            (olheiro.relatorio || []).forEach(function(jogador, index) {
+                if (!jogador) return;
+                if (jogador && jogador.confiancaRelatorio === undefined) {
+                    $scope.criarItemRelatorioScouting(jogador, olheiro.tipoMissao, index);
+                }
+                jogador.observado = isJogadorNaShortlistInterno(jogador);
+            });
+        });
+    }
+
+    $scope.criarScoutingPadrao = function() {
+        return criarScoutingPadrao();
+    };
+
+    $scope.criarItemRelatorioScouting = function(jogador, origemMissao, indice) {
+        if (!jogador) return null;
+        normalizarJogadorSalvo(jogador);
+        var chave = obterChaveNumericaJogador(jogador) + ((indice || 0) * 17) + (($scope.diaAtual || 0) * 3);
+        var confianca = 50 + (chave % 46);
+        var erroMax = Math.max(1, Math.round((100 - confianca) / 9));
+        var erroOverall = (chave % (erroMax * 2 + 1)) - erroMax;
+        var erroPotencial = ((chave * 3) % (erroMax * 2 + 1)) - erroMax;
+        var overallReal = calcularOverallBaseJogador(jogador);
+        var potencialReal = valorNumericoOuPadrao(jogador.potencial, calcularPotencialDeterministico(jogador));
+        var valorReal = $scope.calcularValorPasse ? $scope.calcularValorPasse(jogador) : overallReal * 10000;
+        var margem = 0.08 + ((95 - confianca) / 100);
+        var paisesSul = ['ARG', 'URU', 'COL', 'CHI', 'PAR'];
+
+        jogador.origemMissao = origemMissao || 'BASE';
+        jogador.confiancaRelatorio = confianca;
+        jogador.overallEstimado = limitarNumero(overallReal + erroOverall, 1, 99);
+        jogador.potencialEstimado = limitarNumero(potencialReal + erroPotencial, 1, 99);
+        jogador.faixaValor = {
+            min: Math.max(0, Math.floor(valorReal * (1 - margem))),
+            max: Math.max(0, Math.ceil(valorReal * (1 + margem)))
+        };
+        jogador.pais = origemMissao === 'SUL-AMERICANO' ? paisesSul[chave % paisesSul.length] : 'BRA';
+        jogador.observacao = jogador.posicao === 'ATA' ? 'Atacante com margem para evoluir.' : (jogador.posicao === 'GOL' ? 'Goleiro monitorado pela equipe de analise.' : 'Perfil interessante para acompanhamento.');
+        jogador.disponibilidade = origemMissao === 'INTERIOR' ? 'curto-prazo' : 'observacao';
+        jogador.observado = isJogadorNaShortlistInterno(jogador);
+        return jogador;
+    };
+
+    $scope.registrarHistoricoRelatorioScouting = function(relatorio) {
+        if (!$scope.clubeAtual || !relatorio) return null;
+        normalizarScoutingClube($scope.clubeAtual);
+        var item = normalizarRelatorioScouting(relatorio, 0);
+        var existente = $scope.clubeAtual.scouting.historicoRelatorios.find(function(r) { return r.id === item.id; });
+        if (existente) return existente;
+        $scope.clubeAtual.scouting.historicoRelatorios.unshift(item);
+        $scope.clubeAtual.scouting.historicoRelatorios = $scope.clubeAtual.scouting.historicoRelatorios.slice(0, 10);
+        $scope.clubeAtual.scouting.ultimoRelatorioDia = item.dia;
+        return item;
+    };
+
+    $scope.adicionarShortlistScouting = function(item) {
+        if (!$scope.clubeAtual || !item) return null;
+        normalizarScoutingClube($scope.clubeAtual);
+        var observado = normalizarItemScouting(item);
+        var existente = $scope.clubeAtual.scouting.shortlist.find(function(s) {
+            return String(s.jogadorId) === String(observado.jogadorId) || String(s.id) === String(observado.id);
+        });
+        if (existente) return existente;
+        $scope.clubeAtual.scouting.shortlist.unshift(observado);
+        $scope.clubeAtual.scouting.shortlist = $scope.clubeAtual.scouting.shortlist.slice(0, 30);
+        atualizarFlagsShortlistRelatorios();
+        return observado;
+    };
+
+    $scope.removerShortlistScouting = function(id) {
+        if (!$scope.clubeAtual) return;
+        normalizarScoutingClube($scope.clubeAtual);
+        $scope.clubeAtual.scouting.shortlist = $scope.clubeAtual.scouting.shortlist.filter(function(item) {
+            return String(item.id) !== String(id) && String(item.jogadorId) !== String(id);
+        });
+        atualizarFlagsShortlistRelatorios();
+    };
+
+    $scope.isJogadorNaShortlist = function(item) {
+        return isJogadorNaShortlistInterno(item);
+    };
+
+    function criarDiretoriaStatusPadrao() {
+        return {
+            objetivoAtual: '',
+            tipoObjetivo: '',
+            progressoLabel: 'Aguardando inicio da temporada',
+            status: 'no_trilho',
+            statusLabel: 'No trilho',
+            statusClasse: 'board-ok',
+            ultimaAvaliacaoDia: 0,
+            ultimaObservacao: 'A diretoria aguarda os primeiros resultados da temporada.',
+            historicoAvaliacoes: []
+        };
+    }
+
+    function normalizarDiretoriaStatusInterno(status) {
+        var base = status || criarDiretoriaStatusPadrao();
+        base.objetivoAtual = base.objetivoAtual || '';
+        base.tipoObjetivo = base.tipoObjetivo || '';
+        base.progressoLabel = base.progressoLabel || 'Aguardando inicio da temporada';
+        base.status = base.status || 'no_trilho';
+        base.statusLabel = base.statusLabel || obterLabelStatusDiretoria(base.status);
+        base.statusClasse = base.statusClasse || obterClasseStatusDiretoria(base.status);
+        base.ultimaAvaliacaoDia = (typeof base.ultimaAvaliacaoDia === 'number') ? base.ultimaAvaliacaoDia : 0;
+        base.ultimaObservacao = base.ultimaObservacao || 'A diretoria aguarda os primeiros resultados da temporada.';
+        base.historicoAvaliacoes = Array.isArray(base.historicoAvaliacoes) ? base.historicoAvaliacoes.slice(0, 10) : [];
+        return base;
+    }
+
+    function obterAlvoMetaDiretoria(tipo) {
+        if (tipo === 'titulo') return 1;
+        if (tipo === 'continental') return 6;
+        if (tipo === 'acesso') return 4;
+        if (tipo === 'top10') return 10;
+        if (tipo === 'sobreviver') return 16;
+        return 10;
+    }
+
+    function obterLabelStatusDiretoria(status) {
+        if (status === 'acima_do_esperado') return 'Acima do esperado';
+        if (status === 'em_risco') return 'Em risco';
+        if (status === 'critico') return 'Critico';
+        return 'No trilho';
+    }
+
+    function obterClasseStatusDiretoria(status) {
+        if (status === 'acima_do_esperado') return 'board-great';
+        if (status === 'em_risco') return 'board-risk';
+        if (status === 'critico') return 'board-critical';
+        return 'board-ok';
+    }
+
+    function obterObservacaoDiretoria(status) {
+        if (status === 'acima_do_esperado') return 'O trabalho supera as expectativas iniciais.';
+        if (status === 'em_risco') return 'A diretoria ve risco e espera reacao nas proximas rodadas.';
+        if (status === 'critico') return 'A pressao interna aumentou; a meta esta distante.';
+        return 'A campanha segue dentro do plano tracado.';
+    }
+
+    $scope.atualizarDiretoriaStatus = function() {
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        if (!$scope.clubeAtual) return $scope.diretoriaStatus;
+
+        var tipo = $scope.clubeAtual.metaTipo || $scope.diretoriaStatus.tipoObjetivo || '';
+        var objetivo = $scope.clubeAtual.metaDescricao || $scope.diretoriaStatus.objetivoAtual || '';
+        $scope.diretoriaStatus.tipoObjetivo = tipo;
+        $scope.diretoriaStatus.objetivoAtual = objetivo;
+
+        var tabela = $scope.ordenarTabela ? $scope.ordenarTabela($scope.clubeAtual.divisao) : [];
+        var indice = tabela.findIndex(function(item) { return item.clube && item.clube.id === $scope.clubeAtual.id; });
+        if (indice < 0) {
+            $scope.diretoriaStatus.progressoLabel = 'Aguardando inicio da temporada';
+            $scope.diretoriaStatus.status = 'no_trilho';
+        } else {
+            var posicao = indice + 1;
+            var alvo = obterAlvoMetaDiretoria(tipo);
+            var distancia = posicao - alvo;
+            if (distancia <= -2) $scope.diretoriaStatus.status = 'acima_do_esperado';
+            else if (distancia <= 0) $scope.diretoriaStatus.status = 'no_trilho';
+            else if (distancia <= 3) $scope.diretoriaStatus.status = 'em_risco';
+            else $scope.diretoriaStatus.status = 'critico';
+
+            if (posicao === 1) $scope.diretoriaStatus.progressoLabel = 'Lider do campeonato';
+            else if (distancia <= 0) $scope.diretoriaStatus.progressoLabel = posicao + 'º lugar, dentro da meta';
+            else $scope.diretoriaStatus.progressoLabel = posicao + 'º lugar, ' + distancia + ' posicao(oes) abaixo da meta';
+        }
+
+        $scope.diretoriaStatus.statusLabel = obterLabelStatusDiretoria($scope.diretoriaStatus.status);
+        $scope.diretoriaStatus.statusClasse = obterClasseStatusDiretoria($scope.diretoriaStatus.status);
+        $scope.diretoriaStatus.ultimaObservacao = obterObservacaoDiretoria($scope.diretoriaStatus.status);
+        return $scope.diretoriaStatus;
+    };
+
+    $scope.avaliarDiretoriaPeriodica = function() {
+        if (!$scope.clubeAtual) return null;
+        var dia = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        if (dia < 8 || $scope.diretoriaStatus.ultimaAvaliacaoDia === dia || (dia - ($scope.diretoriaStatus.ultimaAvaliacaoDia || 0)) < 8) return null;
+
+        var status = $scope.atualizarDiretoriaStatus();
+        var avaliacao = {
+            id: 'dir_' + dia,
+            dia: dia,
+            status: status.status,
+            statusLabel: status.statusLabel,
+            progressoLabel: status.progressoLabel,
+            observacao: status.ultimaObservacao
+        };
+
+        $scope.diretoriaStatus.ultimaAvaliacaoDia = dia;
+        $scope.diretoriaStatus.historicoAvaliacoes.unshift(avaliacao);
+        $scope.diretoriaStatus.historicoAvaliacoes = $scope.diretoriaStatus.historicoAvaliacoes.slice(0, 10);
+
+        if (typeof $scope.adicionarMensagem === 'function') {
+            $scope.adicionarMensagem('Diretoria', 'Avaliacao parcial da temporada', avaliacao.observacao + ' ' + avaliacao.progressoLabel + '.', false, 'diretoria');
+        }
+        if (status.status === 'acima_do_esperado') {
+            $scope.dados.reputacaoTreinador = Math.min(5, (($scope.dados.reputacaoTreinador || 3) + 0.1));
+            if ($scope.registrarEventoAmbiente) $scope.registrarEventoAmbiente({ id: 'amb_dir_pos_' + dia, chave: 'diretoria|positiva|' + dia, dia: dia, tipo: 'diretoria', impacto: 1, titulo: 'Diretoria satisfeita', detalhe: 'A avaliacao positiva reforcou a confianca no trabalho.' });
+            if ($scope.registrarEventoTorcida) $scope.registrarEventoTorcida({ id: 'fan_dir_pos_' + dia, chave: 'diretoria|torcida|positiva|' + dia, dia: dia, origem: 'diretoria', impacto: 1, titulo: 'Torcida compra a campanha', detalhe: 'A boa avaliacao da diretoria fortaleceu a confianca externa.' });
+            if ($scope.registrarEventoImprensa) $scope.registrarEventoImprensa({ id: 'media_dir_pos_' + dia, chave: 'diretoria|imprensa|positiva|' + dia, dia: dia, origem: 'diretoria', impacto: -1, titulo: 'Pressao alivia', detalhe: 'Com a meta sob controle, o noticiario ficou menos pesado.' });
+        } else if (status.status === 'critico') {
+            if ($scope.registrarEventoAmbiente) $scope.registrarEventoAmbiente({ id: 'amb_dir_neg_' + dia, chave: 'diretoria|critica|' + dia, dia: dia, tipo: 'diretoria', impacto: -1, titulo: 'Pressao da diretoria', detalhe: 'A cobranca interna aumentou pela distancia da meta.' });
+            if ($scope.registrarEventoTorcida) $scope.registrarEventoTorcida({ id: 'fan_dir_neg_' + dia, chave: 'diretoria|torcida|critica|' + dia, dia: dia, origem: 'diretoria', impacto: -1, titulo: 'Torcida impaciente', detalhe: 'A distancia da meta aumentou a impaciencia no entorno.' });
+            if ($scope.registrarEventoImprensa) $scope.registrarEventoImprensa({ id: 'media_dir_neg_' + dia, chave: 'diretoria|imprensa|critica|' + dia, dia: dia, origem: 'diretoria', impacto: 2, titulo: 'Imprensa pressiona', detalhe: 'A campanha abaixo da meta virou pauta recorrente.' });
+        }
+        return avaliacao;
+    };
+
+    function criarInfraestruturaPadrao() {
+        return {
+            centroTreinamento: { nivel: 1, obraEmAndamento: false, diasRestantes: 0 },
+            departamentoMedico: { nivel: 1, obraEmAndamento: false, diasRestantes: 0 },
+            comercial: { nivel: 1, obraEmAndamento: false, diasRestantes: 0 },
+            estadio: { nivelConforto: 1, obraEmAndamento: false, diasRestantes: 0 },
+            ultimoResumoDia: 0
+        };
+    }
+
+    function copiarAreaInfraestrutura(area, padrao, campoNivel) {
+        area = area || {};
+        var nivelCampo = campoNivel || 'nivel';
+        area[nivelCampo] = limitarNumero(parseInt(area[nivelCampo], 10) || padrao[nivelCampo] || 1, 1, 3);
+        area.obraEmAndamento = !!area.obraEmAndamento;
+        area.diasRestantes = Math.max(0, parseInt(area.diasRestantes, 10) || 0);
+        if (area.obraEmAndamento && area.diasRestantes <= 0) area.diasRestantes = 1;
+        return area;
+    }
+
+    function normalizarInfraestruturaClubeInterno(clube) {
+        if (!clube) return null;
+        var padrao = criarInfraestruturaPadrao();
+        var infra = clube.infraestrutura || {};
+        var nivelMedicoLegado = parseInt(clube.nivelMedico, 10) || (infra.departamentoMedico && infra.departamentoMedico.nivel) || 1;
+
+        infra.centroTreinamento = copiarAreaInfraestrutura(infra.centroTreinamento, padrao.centroTreinamento, 'nivel');
+        infra.departamentoMedico = copiarAreaInfraestrutura(infra.departamentoMedico || { nivel: nivelMedicoLegado }, padrao.departamentoMedico, 'nivel');
+        if (!infra.departamentoMedico.nivel || infra.departamentoMedico.nivel === 1) {
+            infra.departamentoMedico.nivel = limitarNumero(nivelMedicoLegado, 1, 3);
+        }
+        infra.comercial = copiarAreaInfraestrutura(infra.comercial, padrao.comercial, 'nivel');
+        infra.estadio = copiarAreaInfraestrutura(infra.estadio, padrao.estadio, 'nivelConforto');
+        infra.ultimoResumoDia = (typeof infra.ultimoResumoDia === 'number') ? infra.ultimoResumoDia : 0;
+        clube.infraestrutura = infra;
+        clube.nivelMedico = infra.departamentoMedico.nivel;
+
+        if (!clube.estadio) clube.estadio = { nome: 'Estadio', capacidade: 20000 };
+        if (clube.estadio.obraEmAndamento === undefined) clube.estadio.obraEmAndamento = false;
+        if (clube.estadio.rodadasRestantesObra === undefined) clube.estadio.rodadasRestantesObra = 0;
+        return clube;
+    }
+
+    function obterConfigUpgradeInfraestrutura(area) {
+        var configs = {
+            centroTreinamento: { nome: 'Centro de Treinamento', campoNivel: 'nivel', custos: [0, 5000000, 12000000], duracoes: [0, 3, 5] },
+            departamentoMedico: { nome: 'Departamento Medico', campoNivel: 'nivel', custos: [0, 5000000, 15000000], duracoes: [0, 3, 5] },
+            comercial: { nome: 'Comercial', campoNivel: 'nivel', custos: [0, 3000000, 8000000], duracoes: [0, 3, 4] },
+            estadio: { nome: 'Conforto do Estadio', campoNivel: 'nivelConforto', custos: [0, 4000000, 10000000], duracoes: [0, 4, 6] }
+        };
+        return configs[area] || null;
+    }
+
+    function criarResumoInfraestrutura(clube) {
+        if (!clube || !clube.infraestrutura) {
+            return { cards: [], obras: [], receitaComercialBonus: 0, recuperacaoBonus: 0 };
+        }
+        normalizarInfraestruturaClubeInterno(clube);
+        var infra = clube.infraestrutura;
+        function montarCard(area, titulo, nivel, beneficio, emObra, diasRestantes) {
+            var config = obterConfigUpgradeInfraestrutura(area);
+            var proximoNivel = nivel < 3 ? nivel + 1 : null;
+            return {
+                id: area,
+                titulo: titulo,
+                nivel: nivel,
+                beneficio: beneficio,
+                emObra: emObra,
+                diasRestantes: diasRestantes,
+                proximoNivel: proximoNivel,
+                proximoCusto: proximoNivel && config ? config.custos[proximoNivel] : 0,
+                proximoDias: proximoNivel && config ? config.duracoes[proximoNivel] : 0
+            };
+        }
+
+        var cards = [
+            montarCard('centroTreinamento', 'Centro de Treinamento', infra.centroTreinamento.nivel, 'Recuperacao +' + Math.round(($scope.calcularFatorRecuperacaoInfraestrutura ? ($scope.calcularFatorRecuperacaoInfraestrutura() - 1) : 0) * 100) + '%', infra.centroTreinamento.obraEmAndamento, infra.centroTreinamento.diasRestantes),
+            montarCard('departamentoMedico', 'Departamento Medico', infra.departamentoMedico.nivel, 'Lesoes e recuperacao medica', infra.departamentoMedico.obraEmAndamento, infra.departamentoMedico.diasRestantes),
+            montarCard('comercial', 'Comercial', infra.comercial.nivel, 'Receitas +' + Math.round(($scope.calcularMultiplicadorComercialInfraestrutura ? ($scope.calcularMultiplicadorComercialInfraestrutura() - 1) : 0) * 100) + '%', infra.comercial.obraEmAndamento, infra.comercial.diasRestantes),
+            montarCard('estadio', 'Conforto do Estadio', infra.estadio.nivelConforto, 'Ocupacao e experiencia', infra.estadio.obraEmAndamento, infra.estadio.diasRestantes)
+        ];
+        return {
+            cards: cards,
+            obras: cards.filter(function(card) { return card.emObra; }),
+            receitaComercialBonus: Math.round(($scope.calcularMultiplicadorComercialInfraestrutura ? ($scope.calcularMultiplicadorComercialInfraestrutura() - 1) : 0) * 100),
+            recuperacaoBonus: Math.round(($scope.calcularFatorRecuperacaoInfraestrutura ? ($scope.calcularFatorRecuperacaoInfraestrutura() - 1) : 0) * 100),
+            ultimoResumoDia: infra.ultimoResumoDia || 0
+        };
+    }
+
+    $scope.criarInfraestruturaPadrao = function() {
+        return criarInfraestruturaPadrao();
+    };
+
+    $scope.normalizarInfraestruturaClube = function(clube) {
+        return normalizarInfraestruturaClubeInterno(clube || $scope.clubeAtual);
+    };
+
+    $scope.atualizarResumoInfraestrutura = function() {
+        if ($scope.clubeAtual) normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        $scope.infraestruturaResumo = criarResumoInfraestrutura($scope.clubeAtual);
+        return $scope.infraestruturaResumo;
+    };
+
+    $scope.calcularFatorRecuperacaoInfraestrutura = function() {
+        if (!$scope.clubeAtual) return 1;
+        normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        var nivel = $scope.clubeAtual.infraestrutura.centroTreinamento.nivel;
+        if (nivel >= 3) return 1.1;
+        if (nivel >= 2) return 1.05;
+        return 1;
+    };
+
+    $scope.calcularMultiplicadorComercialInfraestrutura = function() {
+        if (!$scope.clubeAtual) return 1;
+        normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        var nivel = $scope.clubeAtual.infraestrutura.comercial.nivel;
+        if (nivel >= 3) return 1.15;
+        if (nivel >= 2) return 1.08;
+        return 1;
+    };
+
+    $scope.calcularMultiplicadorOcupacaoInfraestrutura = function() {
+        if (!$scope.clubeAtual) return 1;
+        normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        var nivel = $scope.clubeAtual.infraestrutura.estadio.nivelConforto;
+        if (nivel >= 3) return 1.08;
+        if (nivel >= 2) return 1.04;
+        return 1;
+    };
+
+    $scope.calcularBonusDesenvolvimentoInfraestrutura = function() {
+        if (!$scope.clubeAtual) return 0;
+        normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        var nivel = $scope.clubeAtual.infraestrutura.centroTreinamento.nivel;
+        if (nivel >= 3) return 4;
+        if (nivel >= 2) return 2;
+        return 0;
+    };
+
+    $scope.iniciarUpgradeInfraestrutura = function(area) {
+        if (!$scope.clubeAtual) return null;
+        normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        var config = obterConfigUpgradeInfraestrutura(area);
+        if (!config) return null;
+        var dadosArea = $scope.clubeAtual.infraestrutura[area];
+        var campoNivel = config.campoNivel;
+        var nivelAtual = dadosArea[campoNivel] || 1;
+        if (dadosArea.obraEmAndamento || nivelAtual >= 3) return null;
+        var proximoNivel = nivelAtual + 1;
+        var custo = config.custos[proximoNivel] || 0;
+        if (($scope.clubeAtual.orcamento || 0) < custo) return null;
+
+        $scope.clubeAtual.orcamento -= custo;
+        dadosArea.obraEmAndamento = true;
+        dadosArea.diasRestantes = config.duracoes[proximoNivel] || 3;
+        dadosArea.nivelAlvo = proximoNivel;
+        $scope.financasHistorico = Array.isArray($scope.financasHistorico) ? $scope.financasHistorico : [];
+        $scope.financasHistorico.unshift({
+            tipo: 'despesa',
+            descricao: 'Obra de Infraestrutura: ' + config.nome + ' Nivel ' + proximoNivel,
+            valor: custo,
+            data: new Date().toLocaleDateString('pt-BR')
+        });
+        $scope.atualizarResumoInfraestrutura();
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return { area: area, proximoNivel: proximoNivel, custo: custo, diasRestantes: dadosArea.diasRestantes };
+    };
+
+    $scope.processarInfraestruturaDia = function() {
+        if (!$scope.clubeAtual) return [];
+        normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        var concluidas = [];
+        ['centroTreinamento', 'departamentoMedico', 'comercial', 'estadio'].forEach(function(area) {
+            var config = obterConfigUpgradeInfraestrutura(area);
+            var dadosArea = $scope.clubeAtual.infraestrutura[area];
+            if (!config || !dadosArea || !dadosArea.obraEmAndamento) return;
+            dadosArea.diasRestantes = Math.max(0, (dadosArea.diasRestantes || 0) - 1);
+            if (dadosArea.diasRestantes <= 0) {
+                var campoNivel = config.campoNivel;
+                dadosArea[campoNivel] = limitarNumero(dadosArea.nivelAlvo || ((dadosArea[campoNivel] || 1) + 1), 1, 3);
+                dadosArea.obraEmAndamento = false;
+                dadosArea.diasRestantes = 0;
+                delete dadosArea.nivelAlvo;
+                if (area === 'departamentoMedico') $scope.clubeAtual.nivelMedico = dadosArea.nivel;
+                concluidas.push({ area: area, nome: config.nome, nivel: dadosArea[campoNivel] });
+                if (typeof $scope.adicionarMensagem === 'function') {
+                    $scope.adicionarMensagem('Infraestrutura', config.nome + ' concluido', 'A obra foi concluida e chegou ao nivel ' + dadosArea[campoNivel] + '.', false, 'infraestrutura');
+                }
+                if ($scope.registrarEventoAmbiente) {
+                    $scope.registrarEventoAmbiente({ id: 'amb_infra_' + area + '_' + ($scope.diaAtual || 0), chave: 'infra|' + area + '|' + ($scope.diaAtual || 0), dia: $scope.diaAtual || 0, tipo: 'diretoria', impacto: 1, titulo: 'Infraestrutura evoluiu', detalhe: config.nome + ' foi melhorado e animou o ambiente interno.' });
+                }
+                if ($scope.registrarEventoTorcida) {
+                    $scope.registrarEventoTorcida({ id: 'fan_infra_' + area + '_' + ($scope.diaAtual || 0), chave: 'infra|torcida|' + area + '|' + ($scope.diaAtual || 0), dia: $scope.diaAtual || 0, origem: 'infraestrutura', impacto: 1, titulo: 'Obra agrada a torcida', detalhe: 'A conclusao de ' + config.nome + ' reforcou a percepcao de crescimento do clube.' });
+                }
+            }
+        });
+        $scope.atualizarResumoInfraestrutura();
+        return concluidas;
+    };
+
+    function criarBasePadrao() {
+        return {
+            atletas: [],
+            ultimoCicloDia: 0,
+            ultimoGeracaoDia: 0,
+            resumo: {
+                total: 0,
+                promessas: 0,
+                melhorJovem: null
+            }
+        };
+    }
+
+    function classificarStatusBaseInterno(potencial) {
+        potencial = parseInt(potencial, 10) || 60;
+        if (potencial >= 84) return 'joia';
+        if (potencial >= 74) return 'promissor';
+        return 'comum';
+    }
+
+    function obterNomeAtletaBase(chave) {
+        var nomes = ['Joao', 'Pedro', 'Lucas', 'Matheus', 'Gabriel', 'Rafael', 'Caio', 'Bruno', 'Felipe', 'Marcos'];
+        var sobrenomes = ['Silva', 'Santos', 'Oliveira', 'Souza', 'Pereira', 'Costa', 'Lima', 'Almeida', 'Rocha', 'Barbosa'];
+        return nomes[chave % nomes.length] + ' ' + sobrenomes[(chave * 3) % sobrenomes.length];
+    }
+
+    function normalizarAtletaBase(atleta, clubeId) {
+        if (!atleta) return null;
+        if (!atleta.id) atleta.id = 'base_' + (clubeId || 'clube') + '_' + obterChaveNumericaJogador(atleta);
+        atleta.clubeId = clubeId;
+        atleta.idade = limitarNumero(parseInt(atleta.idade, 10) || 17, 16, 20);
+        atleta.moral = normalizarValorAmbiente(atleta.moral, 70);
+        if (!atleta.atributos) atleta.atributos = {};
+        normalizarJogadorSalvo(atleta);
+        atleta.potencial = limitarNumero(parseInt(atleta.potencial, 10) || calcularPotencialDeterministico(atleta), 50, 95);
+        atleta.xpTemporada = parseInt(atleta.xpTemporada, 10) || 0;
+        atleta.evolucaoTemporada = parseInt(atleta.evolucaoTemporada, 10) || 0;
+        atleta.statusBase = classificarStatusBaseInterno(atleta.potencial);
+        atleta.overallAtual = calcularOverallBaseJogador(atleta);
+        atleta.emCampo = false;
+        atleta.lesionado = !!atleta.lesionado;
+        atleta.suspenso = !!atleta.suspenso;
+        return atleta;
+    }
+
+    function criarResumoBase(clube) {
+        if (!clube || !clube.base) {
+            return { total: 0, promessas: 0, joias: 0, melhorJovem: null, atletasVisiveis: [] };
+        }
+        var atletas = Array.isArray(clube.base.atletas) ? clube.base.atletas : [];
+        var visiveis = atletas.slice().sort(function(a, b) {
+            if ((b.potencial || 0) !== (a.potencial || 0)) return (b.potencial || 0) - (a.potencial || 0);
+            return (b.overallAtual || 0) - (a.overallAtual || 0);
+        });
+        var promessas = atletas.filter(function(a) { return a.statusBase === 'promissor' || a.statusBase === 'joia'; }).length;
+        var joias = atletas.filter(function(a) { return a.statusBase === 'joia'; }).length;
+        return {
+            total: atletas.length,
+            promessas: promessas,
+            joias: joias,
+            melhorJovem: visiveis[0] || null,
+            atletasVisiveis: visiveis
+        };
+    }
+
+    function normalizarBaseClubeInterno(clube) {
+        if (!clube) return null;
+        var base = clube.base || criarBasePadrao();
+        base.atletas = Array.isArray(base.atletas) ? base.atletas.map(function(atleta) { return normalizarAtletaBase(atleta, clube.id); }).filter(Boolean).slice(0, 30) : [];
+        base.ultimoCicloDia = (typeof base.ultimoCicloDia === 'number') ? base.ultimoCicloDia : 0;
+        base.ultimoGeracaoDia = (typeof base.ultimoGeracaoDia === 'number') ? base.ultimoGeracaoDia : 0;
+        clube.base = base;
+        $scope.atualizarResumoBase(clube);
+        return clube;
+    }
+
+    $scope.criarBasePadrao = function() {
+        return criarBasePadrao();
+    };
+
+    $scope.classificarStatusBase = function(potencial) {
+        return classificarStatusBaseInterno(potencial);
+    };
+
+    $scope.normalizarBaseClube = function(clube) {
+        return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
+    };
+
+    $scope.atualizarResumoBase = function(clube) {
+        var alvo = clube || $scope.clubeAtual;
+        if (!alvo) {
+            $scope.baseResumo = criarResumoBase(null);
+            return $scope.baseResumo;
+        }
+        if (!alvo.base) alvo.base = criarBasePadrao();
+        alvo.base.resumo = criarResumoBase(alvo);
+        if (alvo === $scope.clubeAtual) $scope.baseResumo = alvo.base.resumo;
+        return alvo.base.resumo;
+    };
+
+    $scope.gerarAtletaBase = function(origem, indice) {
+        var clubeId = $scope.clubeAtual && $scope.clubeAtual.id !== undefined ? $scope.clubeAtual.id : 'clube';
+        var dia = typeof $scope.diaAtual === 'number' ? $scope.diaAtual : 0;
+        var seq = indice || 0;
+        var chave = (dia + 1) * 37 + seq * 19 + String(clubeId).length * 11;
+        var posicoes = ['GOL', 'LAT', 'ZAG', 'VOL', 'MEI', 'ATA'];
+        var posicao = posicoes[chave % posicoes.length];
+        var idade = 16 + (chave % 4);
+        var overallBase = 45 + (chave % 18);
+        var potencial = 60 + ((chave * 7) % 31);
+        if ((chave % 11) === 0) potencial = Math.min(90, potencial + 6);
+        var atleta = {
+            id: 'base_' + clubeId + '_' + dia + '_' + seq + '_' + (origem || 'geracao'),
+            nome: obterNomeAtletaBase(chave),
+            idade: idade,
+            posicao: posicao,
+            clubeId: clubeId,
+            moral: 70,
+            potencial: potencial,
+            xpTemporada: 0,
+            evolucaoTemporada: 0,
+            atributos: {
+                finalizacao: overallBase,
+                passe: Math.max(30, overallBase - 2 + (chave % 5)),
+                marcacao: Math.max(25, overallBase - 8 + (chave % 7)),
+                velocidade: Math.min(75, overallBase + 4 + (chave % 6)),
+                fisico: Math.max(35, overallBase - 3 + (chave % 5)),
+                reflexo: posicao === 'GOL' ? overallBase + 5 : 30,
+                posicionamento: posicao === 'GOL' ? overallBase : 35,
+                distribuicao: posicao === 'GOL' ? overallBase - 2 : 40,
+                penalti: overallBase,
+                escanteio: overallBase - 2,
+                cobrador: overallBase - 1
+            }
+        };
+        return normalizarAtletaBase(atleta, clubeId);
+    };
+
+    $scope.gerarAtletasBase = function(quantidade, origem) {
+        if (!$scope.clubeAtual) return [];
+        normalizarBaseClubeInterno($scope.clubeAtual);
+        var novos = [];
+        for (var i = 0; i < quantidade; i++) {
+            var atleta = $scope.gerarAtletaBase(origem || 'ciclo', ($scope.clubeAtual.base.atletas.length + i));
+            if (!$scope.clubeAtual.base.atletas.some(function(a) { return a.id === atleta.id; })) {
+                $scope.clubeAtual.base.atletas.push(atleta);
+                novos.push(atleta);
+            }
+        }
+        $scope.clubeAtual.base.atletas = $scope.clubeAtual.base.atletas.slice(0, 30);
+        $scope.clubeAtual.base.ultimoGeracaoDia = $scope.diaAtual || 0;
+        $scope.atualizarResumoBase();
+        return novos;
+    };
+
+    $scope.processarBaseDia = function() {
+        if (!$scope.clubeAtual) return [];
+        normalizarBaseClubeInterno($scope.clubeAtual);
+        var dia = $scope.diaAtual || 0;
+        var novos = [];
+        if (dia > 0 && dia - ($scope.clubeAtual.base.ultimoGeracaoDia || 0) >= 45 && $scope.clubeAtual.base.atletas.length < 24) {
+            novos = $scope.gerarAtletasBase(1 + (dia % 3), 'ciclo');
+        }
+        if (dia > 0 && dia - ($scope.clubeAtual.base.ultimoCicloDia || 0) >= 30) {
+            var bonusCT = $scope.calcularBonusDesenvolvimentoInfraestrutura ? $scope.calcularBonusDesenvolvimentoInfraestrutura() : 0;
+            $scope.clubeAtual.base.atletas.forEach(function(atleta) {
+                var overallAntes = calcularOverallBaseJogador(atleta);
+                var ganho = atleta.idade <= 18 ? 1 : (atleta.idade <= 20 ? (dia % 2) : 0);
+                if (bonusCT >= 4 && atleta.potencial - overallAntes > 5) ganho += 1;
+                if (ganho > 0 && overallAntes < atleta.potencial) {
+                    var atributos = obterAtributosDesenvolvimento(atleta);
+                    var atributo = atributos[obterChaveNumericaJogador(atleta) % atributos.length];
+                    atleta.atributos[atributo] = Math.min(99, atleta.atributos[atributo] + ganho);
+                    if (calcularOverallBaseJogador(atleta) > atleta.potencial) atleta.atributos[atributo] -= ganho;
+                    else atleta.evolucaoTemporada = (atleta.evolucaoTemporada || 0) + (calcularOverallBaseJogador(atleta) - overallAntes);
+                }
+                normalizarAtletaBase(atleta, $scope.clubeAtual.id);
+            });
+            $scope.clubeAtual.base.ultimoCicloDia = dia;
+        }
+        $scope.atualizarResumoBase();
+        return novos;
+    };
+
+    $scope.promoverAtletaBase = function(atletaId) {
+        if (!$scope.clubeAtual) return null;
+        normalizarBaseClubeInterno($scope.clubeAtual);
+        var idx = $scope.clubeAtual.base.atletas.findIndex(function(a) { return String(a.id) === String(atletaId); });
+        if (idx < 0) return null;
+        var atleta = normalizarAtletaBase($scope.clubeAtual.base.atletas[idx], $scope.clubeAtual.id);
+        var promovido = angular.copy(atleta);
+        promovido.emCampo = false;
+        promovido.condicaoFisica = 100;
+        promovido.cartoesAmarelos = 0;
+        promovido.lesionado = false;
+        promovido.diasLesao = 0;
+        promovido.suspenso = false;
+        promovido.substituidoNaPartida = false;
+        promovido.salario = promovido.salario || 5000;
+        promovido.anosContrato = Math.max(3, parseInt(promovido.anosContrato, 10) || 3);
+        normalizarJogadorSalvo(promovido);
+        $scope.clubeAtual.base.atletas.splice(idx, 1);
+        if (!$scope.elencoAtual.some(function(j) { return String(j.id) === String(promovido.id); })) $scope.elencoAtual.push(promovido);
+        if (!$scope.jogadores.some(function(j) { return String(j.id) === String(promovido.id); })) $scope.jogadores.push(angular.copy(promovido));
+        $scope.atualizarResumoBase();
+        if (promovido.statusBase === 'joia' && $scope.registrarEventoTorcida) {
+            $scope.registrarEventoTorcida({ id: 'fan_base_' + promovido.id, chave: 'base|promocao|' + promovido.id, dia: $scope.diaAtual || 0, origem: 'base', impacto: 2, titulo: 'Joia promovida', detalhe: promovido.nome + ' subiu da base e animou a torcida.' });
+        }
+        if (typeof $scope.adicionarMensagem === 'function') {
+            $scope.adicionarMensagem('Categorias de Base', 'Promocao ao profissional', promovido.nome + ' foi promovido ao elenco principal.', false, 'base');
+        }
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return promovido;
+    };
+
+    $scope.dispensarAtletaBase = function(atletaId) {
+        if (!$scope.clubeAtual) return;
+        normalizarBaseClubeInterno($scope.clubeAtual);
+        $scope.clubeAtual.base.atletas = $scope.clubeAtual.base.atletas.filter(function(a) { return String(a.id) !== String(atletaId); });
+        $scope.atualizarResumoBase();
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+    };
 
     // FASE 11 / 13: INICIALIZAR VARIÁVEIS EXTRAS (Retrocompatibilidade)
     $scope.verificarVariaveisExtras = function() {
@@ -261,6 +1642,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if ($scope.clubeAtual.olheiros === undefined) {
                 $scope.clubeAtual.olheiros = []; // FASE 14
             }
+            normalizarScoutingClube($scope.clubeAtual);
+            normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+            normalizarBaseClubeInterno($scope.clubeAtual);
         }
         if ($scope.caixaEntrada === undefined) {
             $scope.caixaEntrada = [];
@@ -289,9 +1673,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.atualizarRelatorioEvolucaoVisivel) {
             $scope.atualizarRelatorioEvolucaoVisivel();
         }
+        $scope.atualizarAmbienteElencoResumo();
+        $scope.atualizarStatusHumorElenco();
         if (!$scope.mercadoUI) {
             $scope.mercadoUI = { aba: 'busca' };
         }
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        if ($scope.atualizarDiretoriaStatus) $scope.atualizarDiretoriaStatus();
+        if ($scope.atualizarResumoInfraestrutura) $scope.atualizarResumoInfraestrutura();
+        if ($scope.atualizarResumoContextoExterno) $scope.atualizarResumoContextoExterno();
+        if ($scope.atualizarResumoBase) $scope.atualizarResumoBase();
+        if ($scope.atualizarResumoContratos) $scope.atualizarResumoContratos();
+        atualizarFlagsShortlistRelatorios();
     };
 
     $scope.iniciarCampanhaMarketing = function() {
@@ -345,9 +1738,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             tipo: tipo || 'geral'
         };
         
-        if (tipo === 'imprensa' || tipo === 'transferencia' || tipo === 'trofeu') {
+        if (tipo === 'imprensa' || tipo === 'torcida' || tipo === 'transferencia' || tipo === 'trofeu') {
             msgObj.lida = true; // Notícias não apitam notificação
             $scope.noticiasFeed.unshift(msgObj);
+            $scope.noticiasFeed = $scope.noticiasFeed.slice(0, 30);
         } else {
             $scope.caixaEntrada.unshift(msgObj);
         }
@@ -470,6 +1864,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.relatorioEvolucao = [];
         $scope.relatorioEvolucaoVisivel = [];
         $scope.ultimoDiaEvolucao = 0;
+        $scope.ambienteElenco = criarAmbienteElencoPadrao();
+        $scope.atualizarAmbienteElencoResumo();
+        $scope.clubeAtual.scouting = criarScoutingPadrao();
+        $scope.clubeAtual.infraestrutura = criarInfraestruturaPadrao();
+        $scope.clubeAtual.nivelMedico = 1;
+        $scope.atualizarResumoInfraestrutura();
+        $scope.clubeAtual.base = criarBasePadrao();
+        $scope.gerarAtletasBase(8, 'inicial');
+        $scope.diretoriaStatus = criarDiretoriaStatusPadrao();
+        $scope.contextoExterno = criarContextoExternoPadrao();
+        $scope.atualizarResumoContextoExterno();
         $scope.mercadoUI = { aba: 'busca' };
         $scope.propostaNegociacaoAtualId = null;
         
@@ -483,6 +1888,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 j.evolucaoTemporada = 0;
                 j.historicoEvolucao = [];
                 if (!j.anosContrato) j.anosContrato = Math.floor(Math.random() * 3) + 1;
+                normalizarEstadoContratoJogadorInterno(j);
             });
         }
         normalizarListaJogadoresSalvos($scope.elencoAtual);
@@ -993,7 +2399,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var base = partida ? 28 : 32;
         var minimo = partida ? 20 : 24;
         var carga = $scope.calcularCargaCalendario(diaIndice);
-        return Math.max(minimo, Math.round(base * (carga.fatorRecuperacao || 1)));
+        return Math.max(minimo, Math.round(base * (carga.fatorRecuperacao || 1) * $scope.calcularFatorRecuperacaoInfraestrutura()));
     };
 
     $scope.calcularQuedaFisicaPorTick = function(jogador, multiplicadorCansaco) {
@@ -1008,12 +2414,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (condicaoFisica >= 60) return 0;
 
         var multiplicador = cargaCalendario && cargaCalendario.multiplicadorLesao ? cargaCalendario.multiplicadorLesao : 1;
-        return Math.min(0.02, (60 - condicaoFisica) * 0.00015 * multiplicador);
+        var fatorMedico = 1;
+        if ($scope.clubeAtual) {
+            normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+            fatorMedico = Math.max(0.85, 1 - (($scope.clubeAtual.infraestrutura.departamentoMedico.nivel - 1) * 0.06));
+        }
+        return Math.min(0.02, (60 - condicaoFisica) * 0.00015 * multiplicador * fatorMedico);
     };
 
     $scope.calcularChanceLesaoTreino = function(cargaCalendario) {
         var multiplicador = cargaCalendario && cargaCalendario.multiplicadorLesao ? cargaCalendario.multiplicadorLesao : 1;
-        return Math.min(0.05, 0.015 * multiplicador);
+        var fatorTreino = $scope.clubeAtual ? Math.max(0.9, 1 - (($scope.clubeAtual.infraestrutura && $scope.clubeAtual.infraestrutura.centroTreinamento ? $scope.clubeAtual.infraestrutura.centroTreinamento.nivel : 1) - 1) * 0.04) : 1;
+        return Math.min(0.05, 0.015 * multiplicador * fatorTreino);
     };
 
     $scope.obterAlertaCargaCalendario = function() {
@@ -1369,6 +2781,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         if (jogadoresBase.length === 0) {
             var reputacao = clube && typeof clube.reputacao === 'number' ? clube.reputacao : 70;
+            if (clube && clubeEhAtual(clube.id)) reputacao *= $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor);
             return Math.round(reputacao);
         }
 
@@ -1379,7 +2792,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var fatorMoral = (typeof j.moral === 'number' && j.moral < 50) ? (0.8 + ((j.moral / 50) * 0.2)) : 1;
             soma += overall * fatorFadiga * fatorMoral;
         });
-        return Math.round(soma / jogadoresBase.length);
+        var media = soma / jogadoresBase.length;
+        if (clube && clubeEhAtual(clube.id)) media *= $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor);
+        return Math.round(media);
     };
 
     $scope.obterJogadoresChavePreJogo = function(clube) {
@@ -1592,7 +3007,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var fatorFadiga = $scope.calcularFatorFadiga(j.condicaoFisica);
             forcaTime += ($scope.calcularOverall(j) * penalty * fatorFadiga);
         });
-        return forcaTime / 11;
+        return (forcaTime / 11) * $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor);
     };
 
     $scope.calcularFatorFadiga = function(condicaoFisica) {
@@ -1679,6 +3094,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var ocupacao = 0.5 + Math.random() * 0.5;
         if (preco == 40) ocupacao = 0.85 + Math.random() * 0.15;
         else if (preco == 150) ocupacao = 0.4 + Math.random() * 0.3;
+        if (partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id) {
+            ocupacao = Math.min(1, ocupacao * $scope.calcularMultiplicadorOcupacaoInfraestrutura());
+        }
         
         var publico = partida.mandante.estadio ? Math.floor(partida.mandante.estadio.capacidade * ocupacao) : 20000;
         $scope.estatisticas = {
@@ -1726,6 +3144,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var ocupacao = 0.5 + Math.random() * 0.5;
         if (preco == 40) ocupacao = 0.85 + Math.random() * 0.15;
         else if (preco == 150) ocupacao = 0.4 + Math.random() * 0.3;
+        if (partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id) {
+            ocupacao = Math.min(1, ocupacao * $scope.calcularMultiplicadorOcupacaoInfraestrutura());
+        }
 
         $scope.estatisticas = {
             posseMandante: 50,
@@ -2534,6 +3955,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         jogadoresEmCampo.forEach(function(jogador) {
             var xpFinal = xpPorJogador[jogador.id] || 0;
             if (jogador.idade < 23) xpFinal *= 1.25;
+            xpFinal *= (1 + ($scope.calcularBonusDesenvolvimentoInfraestrutura() / 100));
             if (jogador.acabouDeSerLesionado || jogador.lesionado) xpFinal *= 0.5;
             xpFinal = Math.min(8, Math.max(0, Math.round(xpFinal)));
             jogador.xpTemporada = (jogador.xpTemporada || 0) + xpFinal;
@@ -2612,6 +4034,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.relatorioEvolucao = $scope.relatorioEvolucao.slice(0, 50);
         $scope.atualizarRelatorioEvolucaoVisivel();
         $scope.ultimoDiaEvolucao = $scope.diaAtual || 0;
+        var evolucoesPositivas = novosRelatorios.filter(function(relatorio) { return relatorio.overallDepois > relatorio.overallAntes; }).length;
+        var evolucoesNegativas = novosRelatorios.filter(function(relatorio) { return relatorio.overallDepois < relatorio.overallAntes; }).length;
+        if (evolucoesPositivas > evolucoesNegativas && evolucoesPositivas >= 2) {
+            $scope.registrarEventoAmbiente({
+                id: 'amb_dev_' + ($scope.diaAtual || 0),
+                chave: 'desenvolvimento|' + ($scope.diaAtual || 0),
+                dia: $scope.diaAtual || 0,
+                tipo: 'desenvolvimento',
+                impacto: 2,
+                titulo: 'Elenco em evolucao',
+                detalhe: 'O ciclo de desenvolvimento trouxe sinais positivos para o grupo.'
+            });
+        }
         return novosRelatorios;
     };
 
@@ -2623,7 +4058,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (partida && partida.telemetriaShots && partida.telemetriaShots.length > 0) {
             $scope.ultimoResumoPartida = $scope.gerarResumoTaticoPartida(partida);
         }
-        $scope.concluirPartida(partida);
+        $scope.concluirPartida(partida, origem);
         $scope.posJogo = {
             disponivel: true,
             resumo: resumo
@@ -2639,7 +4074,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.mudarTela('dashboard');
     };
 
-    $scope.concluirPartida = function(partida) {
+    $scope.concluirPartida = function(partida, origem) {
         var hoje = $scope.calendarioGeral[$scope.diaAtual];
         
         if (partida) {
@@ -2669,6 +4104,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     // Falha silenciosa para não quebrar a conclusão da partida
                 }
             }
+            $scope.aplicarAmbienteResultadoPartida(partida, origem);
+            $scope.aplicarContextoExternoResultadoPartida(partida, origem);
         }
         
         // FASE 15: Simular CPU
@@ -2707,6 +4144,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     j.moral = Math.max(0, j.moral - 5);
                 }
             }
+            atualizarStatusHumorJogador(j);
 
             // FASE 11: Recuperação e Punições
             j.condicaoFisica += recuperacaoFisicaDia;
@@ -2723,7 +4161,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if (j.acabouDeSerLesionado) {
                     j.acabouDeSerLesionado = false;
                 } else {
-                    var nivelDM = $scope.clubeAtual.nivelMedico || 1;
+                    normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+                    var nivelDM = ($scope.clubeAtual.infraestrutura && $scope.clubeAtual.infraestrutura.departamentoMedico.nivel) || $scope.clubeAtual.nivelMedico || 1;
                     var recuperacaoExtra = 0;
                     if (nivelDM === 2 && Math.random() < 0.3) recuperacaoExtra = 1;
                     if (nivelDM === 3 && Math.random() < 0.6) recuperacaoExtra = 1;
@@ -2749,6 +4188,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 });
             }
         });
+        if (partida) $scope.aplicarAmbienteRotacaoElenco();
+        $scope.aplicarAmbienteLesoesElenco();
+        $scope.atualizarStatusHumorElenco();
 
         var diasDesdeUltimaEvolucao = $scope.diaAtual - ($scope.ultimoDiaEvolucao || 0);
         if ($scope.diaAtual > 0 && diasDesdeUltimaEvolucao >= 30) {
@@ -2792,7 +4234,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 data: new Date().toLocaleDateString('pt-BR')
             });
 
-            var baseVendaCamisas = $scope.clubeAtual.reputacao * 25000; // Representa as vendas mensais
+            var baseVendaCamisas = $scope.clubeAtual.reputacao * 25000 * $scope.calcularMultiplicadorComercialInfraestrutura(); // Representa as vendas mensais
             if ($scope.configFinanceira && $scope.configFinanceira.marketingAtivo > 0) {
                 baseVendaCamisas *= 1.5; // +50% de bônus
                 $scope.configFinanceira.marketingAtivo -= 5;
@@ -2826,6 +4268,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 $scope.adicionarMensagem('Engenharia', 'Estádio Ampliado', 'As obras de expansão terminaram! Capacidade ampliada em 5.000 lugares.', false, 'estadio');
             }
         }
+        $scope.processarInfraestruturaDia();
+        $scope.processarBaseDia();
+        $scope.revisarContratosElencoDia();
 
         // FASE 14: Progressão dos Olheiros e Validade de Relatórios
         if ($scope.clubeAtual.olheiros) {
@@ -2846,6 +4291,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 }
             });
         }
+        $scope.avaliarDiretoriaPeriodica();
 
         $scope.simularMercadoCPU();
 
@@ -3622,6 +5068,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             else if (r === 3) { $scope.clubeAtual.metaDescricao = "Terminar na metade de cima da tabela (Top 10)"; $scope.clubeAtual.metaTipo = "top10"; }
             else { $scope.clubeAtual.metaDescricao = "Evitar o Rebaixamento"; $scope.clubeAtual.metaTipo = "sobreviver"; }
         }
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        $scope.diretoriaStatus.objetivoAtual = $scope.clubeAtual.metaDescricao;
+        $scope.diretoriaStatus.tipoObjetivo = $scope.clubeAtual.metaTipo;
+        $scope.atualizarDiretoriaStatus();
     };
 
     $scope.avaliarMetaDiretoria = function(classificados) {
@@ -3689,7 +5139,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     // FASE 17: GERAÇÃO DE PATROCINADORES MASTER
     $scope.gerarPatrocinadores = function() {
         if (!$scope.clubeAtual) return;
-        var base = $scope.clubeAtual.reputacao * 500000;
+        normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        var base = $scope.clubeAtual.reputacao * 500000 * $scope.calcularMultiplicadorComercialInfraestrutura();
         $scope.patrocinadoresDisponiveis = [
             { 
                 id: 1, 
@@ -3760,6 +5211,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (saveInfo.ultimoResumoPartida === undefined) saveInfo.ultimoResumoPartida = null;
         if (!Array.isArray(saveInfo.relatorioEvolucao)) saveInfo.relatorioEvolucao = [];
         if (saveInfo.ultimoDiaEvolucao === undefined) saveInfo.ultimoDiaEvolucao = 0;
+        saveInfo.ambienteElenco = normalizarAmbienteElencoInterno(saveInfo.ambienteElenco || criarAmbienteElencoPadrao());
+        if (saveInfo.clubeAtualInfo) normalizarScoutingClube(saveInfo.clubeAtualInfo);
+        if (saveInfo.clubeAtualInfo) normalizarInfraestruturaClubeInterno(saveInfo.clubeAtualInfo);
+        if (saveInfo.clubeAtualInfo) normalizarBaseClubeInterno(saveInfo.clubeAtualInfo);
+        saveInfo.diretoriaStatus = normalizarDiretoriaStatusInterno(saveInfo.diretoriaStatus || criarDiretoriaStatusPadrao());
+        saveInfo.contextoExterno = normalizarContextoExternoInterno(saveInfo.contextoExterno || criarContextoExternoPadrao());
 
         // v3 -> v4: estado de UI derivado nao deve persistir no save.
         saveInfo.filtroCalendario = 'TODOS';
@@ -3775,6 +5232,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.salvarJogoSilencioso = function() {
         if (!$scope.clubeAtual) return;
+        normalizarScoutingClube($scope.clubeAtual);
+        normalizarInfraestruturaClubeInterno($scope.clubeAtual);
+        normalizarBaseClubeInterno($scope.clubeAtual);
+        $scope.atualizarResumoInfraestrutura();
+        $scope.atualizarResumoBase();
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        $scope.contextoExterno = normalizarContextoExternoInterno($scope.contextoExterno || criarContextoExternoPadrao());
+        $scope.atualizarResumoContextoExterno();
         var saveObj = {
             saveVersion: SAVE_VERSION_ATUAL,
             savedAt: new Date().toISOString(),
@@ -3805,7 +5270,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             transferenciasHistorico: $scope.transferenciasHistorico || [],
             propostasPendentes: $scope.propostasPendentes || [],
             relatorioEvolucao: $scope.relatorioEvolucao || [],
-            ultimoDiaEvolucao: $scope.ultimoDiaEvolucao || 0
+            ultimoDiaEvolucao: $scope.ultimoDiaEvolucao || 0,
+            ambienteElenco: normalizarAmbienteElencoInterno($scope.ambienteElenco || criarAmbienteElencoPadrao()),
+            diretoriaStatus: normalizarDiretoriaStatusInterno($scope.diretoriaStatus || criarDiretoriaStatusPadrao()),
+            contextoExterno: normalizarContextoExternoInterno($scope.contextoExterno || criarContextoExternoPadrao())
         };
         window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveObj));
         $scope.checarSaveExistente(); 
@@ -3864,7 +5332,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     jogadorBase.minutosTemporada = jogadorElenco.minutosTemporada;
                     jogadorBase.evolucaoTemporada = jogadorElenco.evolucaoTemporada;
                     jogadorBase.historicoEvolucao = angular.copy(jogadorElenco.historicoEvolucao || []);
+                    jogadorBase.salarioDesejado = jogadorElenco.salarioDesejado;
+                    jogadorBase.statusContrato = jogadorElenco.statusContrato;
+                    jogadorBase.satisfacaoContrato = jogadorElenco.satisfacaoContrato;
+                    jogadorBase.ultimaRevisaoContratoDia = jogadorElenco.ultimaRevisaoContratoDia;
+                    jogadorBase.valorMercadoDinamico = jogadorElenco.valorMercadoDinamico;
                     if (jogadorElenco.atributos) jogadorBase.atributos = angular.copy(jogadorElenco.atributos);
+                    normalizarEstadoContratoJogadorInterno(jogadorBase);
                 }
             });
         }
@@ -3922,6 +5396,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.propostasPendentes = $scope.saveInfo.propostasPendentes || [];
         $scope.relatorioEvolucao = $scope.saveInfo.relatorioEvolucao || [];
         $scope.ultimoDiaEvolucao = $scope.saveInfo.ultimoDiaEvolucao || 0;
+        $scope.ambienteElenco = normalizarAmbienteElencoInterno($scope.saveInfo.ambienteElenco || criarAmbienteElencoPadrao());
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.saveInfo.diretoriaStatus || criarDiretoriaStatusPadrao());
+        $scope.contextoExterno = normalizarContextoExternoInterno($scope.saveInfo.contextoExterno || criarContextoExternoPadrao());
+        $scope.atualizarAmbienteElencoResumo();
+        $scope.atualizarResumoContextoExterno();
         if ($scope.atualizarRelatorioEvolucaoVisivel) $scope.atualizarRelatorioEvolucaoVisivel();
         if ($scope.atualizarPropostasPendentes) $scope.atualizarPropostasPendentes();
         if ($scope.atualizarHistoricoMercadoVisivel) $scope.atualizarHistoricoMercadoVisivel();
@@ -3930,6 +5409,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.saveInfo.clubeAtualInfo) {
             $scope.clubeAtual.estadio = $scope.saveInfo.clubeAtualInfo.estadio;
             $scope.clubeAtual.orcamento = $scope.saveInfo.clubeAtualInfo.orcamento;
+            if ($scope.saveInfo.clubeAtualInfo.scouting) {
+                $scope.clubeAtual.scouting = normalizarScoutingClube($scope.saveInfo.clubeAtualInfo).scouting;
+            }
+            if ($scope.saveInfo.clubeAtualInfo.infraestrutura) {
+                $scope.clubeAtual.infraestrutura = normalizarInfraestruturaClubeInterno($scope.saveInfo.clubeAtualInfo).infraestrutura;
+                $scope.clubeAtual.nivelMedico = $scope.clubeAtual.infraestrutura.departamentoMedico.nivel;
+            }
+            if ($scope.saveInfo.clubeAtualInfo.base) {
+                $scope.clubeAtual.base = normalizarBaseClubeInterno($scope.saveInfo.clubeAtualInfo).base;
+            }
         }
         
         $scope.verificarVariaveisExtras(); 
@@ -3955,25 +5444,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             {
                 pergunta: "O jogo de hoje contra o " + adversario + " atrai muitos holofotes. Qual a postura que podemos esperar do seu time?",
                 opcoes: [
-                    { texto: "Vamos entrar com muita raça e impor nosso jogo.", efeito: 'motivacao', msg: 'O treinador passou confiança e a equipe vai mais motivada para o grande jogo.' },
-                    { texto: "O adversário é forte, viemos para jogar por uma bola.", efeito: 'defensivo', msg: 'A torcida e parte da mídia criticaram a postura excessivamente cautelosa nas palavras do treinador.' },
-                    { texto: "Somos amplamente favoritos e vamos provar isso em campo.", efeito: 'arrogante', msg: 'Treinador exala confiança e assume todo o favoritismo. Promessa de um time totalmente ofensivo hoje!' }
+                    { texto: "Vamos entrar com muita raça e impor nosso jogo.", efeito: 'motivacao', msg: 'O treinador passou confiança e a equipe vai mais motivada para o grande jogo.', impactoTorcida: 3, impactoImprensa: -1, tagNarrativa: 'confianca' },
+                    { texto: "O adversário é forte, viemos para jogar por uma bola.", efeito: 'defensivo', msg: 'A torcida e parte da mídia criticaram a postura excessivamente cautelosa nas palavras do treinador.', impactoTorcida: -1, impactoImprensa: 2, tagNarrativa: 'cautela' },
+                    { texto: "Somos amplamente favoritos e vamos provar isso em campo.", efeito: 'arrogante', msg: 'Treinador exala confiança e assume todo o favoritismo. Promessa de um time totalmente ofensivo hoje!', impactoTorcida: 1, impactoImprensa: 3, tagNarrativa: 'arrogancia' }
                 ]
             },
             {
                 pergunta: "Mister, como está a preparação tática para enfrentar o " + adversario + " nesta partida decisiva?",
                 opcoes: [
-                    { texto: "Nossa estratégia é clara: atacar desde o primeiro minuto.", efeito: 'arrogante', msg: 'Treinador promete um time super agressivo. A torcida adora, mas a defesa pode ficar exposta.' },
-                    { texto: "Fizemos ajustes finos, os jogadores sabem o que fazer.", efeito: 'motivacao', msg: 'Discurso equilibrado e focado. O elenco se sente preparado e blindado contra a pressão.' },
-                    { texto: "Vamos montar um ferrolho atrás e buscar o contra-ataque.", efeito: 'defensivo', msg: 'A imprensa esportiva detonou o estilo retranqueiro prometido pelo professor.' }
+                    { texto: "Nossa estratégia é clara: atacar desde o primeiro minuto.", efeito: 'arrogante', msg: 'Treinador promete um time super agressivo. A torcida adora, mas a defesa pode ficar exposta.', impactoTorcida: 2, impactoImprensa: 2, tagNarrativa: 'agressividade' },
+                    { texto: "Fizemos ajustes finos, os jogadores sabem o que fazer.", efeito: 'motivacao', msg: 'Discurso equilibrado e focado. O elenco se sente preparado e blindado contra a pressão.', impactoTorcida: 2, impactoImprensa: -2, tagNarrativa: 'equilibrio' },
+                    { texto: "Vamos montar um ferrolho atrás e buscar o contra-ataque.", efeito: 'defensivo', msg: 'A imprensa esportiva detonou o estilo retranqueiro prometido pelo professor.', impactoTorcida: -2, impactoImprensa: 3, tagNarrativa: 'retranca' }
                 ]
             },
             {
                 pergunta: "A torcida do " + adversario + " está muito confiante. O que você tem a dizer para os seus torcedores?",
                 opcoes: [
-                    { texto: "Eles têm razão em temer o nosso elenco.", efeito: 'arrogante', msg: 'Resposta polêmica! Treinador incendeia o clima do jogo chamando a responsabilidade.' },
-                    { texto: "Respeitamos o adversário, será um jogo de xadrez.", efeito: 'defensivo', msg: 'Treinador esfria os ânimos com uma declaração conservadora e respeitosa.' },
-                    { texto: "Vamos lutar por cada palmo do gramado por nossa torcida!", efeito: 'motivacao', msg: 'As palavras inflamaram a torcida e os jogadores, que prometem deixar sangue em campo!' }
+                    { texto: "Eles têm razão em temer o nosso elenco.", efeito: 'arrogante', msg: 'Resposta polêmica! Treinador incendeia o clima do jogo chamando a responsabilidade.', impactoTorcida: 1, impactoImprensa: 3, tagNarrativa: 'provocacao' },
+                    { texto: "Respeitamos o adversário, será um jogo de xadrez.", efeito: 'defensivo', msg: 'Treinador esfria os ânimos com uma declaração conservadora e respeitosa.', impactoTorcida: 0, impactoImprensa: -1, tagNarrativa: 'respeito' },
+                    { texto: "Vamos lutar por cada palmo do gramado por nossa torcida!", efeito: 'motivacao', msg: 'As palavras inflamaram a torcida e os jogadores, que prometem deixar sangue em campo!', impactoTorcida: 3, impactoImprensa: -1, tagNarrativa: 'mobilizacao' }
                 ]
             }
         ];
@@ -3995,6 +5484,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         } else if (opcao.efeito === 'arrogante') {
             $scope.taticas.mentalidade = 'Ofensivo';
         }
+        $scope.aplicarContextoExternoColetiva(opcao);
         $scope.adicionarMensagem('Imprensa', 'Repercussão', opcao.msg, false, 'imprensa');
         $scope.coletivaRespondida = true;
         $scope.executarPartidaPreparada($scope.obterMeuJogoHoje(), $scope.modoPartidaPendente);
@@ -4002,6 +5492,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     // FASE 14: SISTEMA DE OLHEIROS E WONDERKIDS
     $scope.contratarOlheiro = function() {
+        normalizarScoutingClube($scope.clubeAtual);
+        if (!$scope.clubeAtual.olheiros) $scope.clubeAtual.olheiros = [];
         if ($scope.clubeAtual.orcamento < 50000) {
             alert("Orçamento insuficiente para contratar um olheiro (R$ 50.000).");
             return;
@@ -4031,6 +5523,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.enviarOlheiro = function(olheiro, tipo) {
+        normalizarScoutingClube($scope.clubeAtual);
         olheiro.emMissao = true;
         olheiro.tipoMissao = tipo;
         olheiro.rodadasRestantes = 3;
@@ -4083,9 +5576,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             // FASE 11 compatibility
             j.condicaoFisica = 100; j.cartoesAmarelos = 0; j.lesionado = false; j.diasLesao = 0; j.suspenso = false; j.emCampo = false;
             
-            novosJogadores.push(j);
+            novosJogadores.push($scope.criarItemRelatorioScouting(j, olheiro.tipoMissao, i));
         }
         olheiro.relatorio = novosJogadores;
+        olheiro.emMissao = false;
+        $scope.registrarHistoricoRelatorioScouting({
+            id: 'scout_report_' + olheiro.id + '_' + ($scope.diaAtual || 0),
+            dia: $scope.diaAtual || 0,
+            origemMissao: olheiro.tipoMissao,
+            olheiroNome: olheiro.nome,
+            jogadores: novosJogadores
+        });
+        atualizarFlagsShortlistRelatorios();
     };
 
     $scope.comprarJoia = function(olheiro, jogador, index) {
@@ -4127,6 +5629,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         
         $scope.adicionarMensagem('Departamento de Futebol', 'Reforço Confirmado: ' + jogador.nome, 'O jogador ' + jogador.nome + ' assinou contrato conosco e já se apresentou ao elenco!', false, 'transferencia');
+        $scope.removerShortlistScouting(jogador.id);
         $scope.salvarJogoSilencioso();
     };
 
@@ -4141,10 +5644,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.atualizarResumoJanelaMercado();
             $scope.atualizarPropostasPendentes();
             $scope.atualizarHistoricoMercadoVisivel();
+            normalizarScoutingClube($scope.clubeAtual);
+            atualizarFlagsShortlistRelatorios();
             $scope.atualizarMercado();
         }
         if (novaTela === 'calendario') {
             $scope.atualizarCalendarioFiltrado();
+        }
+        if (novaTela === 'dashboard') {
+            $scope.atualizarDiretoriaStatus();
+            $scope.atualizarResumoBase();
+        }
+        if (novaTela === 'base') {
+            $scope.atualizarResumoBase();
         }
     };
 
@@ -4156,6 +5668,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
         $scope.formacaoEscolhida = '4-3-3'; // Default para o seletor
         $scope.verificarVariaveisExtras(); // FASE 13: Garante que o estádio foi inicializado
+        normalizarScoutingClube($scope.clubeAtual);
     };
 
     // FASE 7: FORMAÇÕES AUTOMÁTICAS
@@ -4539,6 +6052,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         $scope.transferenciasHistorico.unshift(item);
         $scope.atualizarHistoricoMercadoVisivel();
+        if ($scope.aplicarAmbienteTransferencia) $scope.aplicarAmbienteTransferencia(item);
         return item;
     };
 
@@ -4701,6 +6215,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var buscaNome = $scope.filtroBusca.nome.toLowerCase();
 
         var disponiveis = $scope.jogadores.filter(function(j) {
+            normalizarEstadoContratoJogadorInterno(j);
             if (idsNoElenco.indexOf(j.id) !== -1) return false;
             
             if (buscaNome && !j.nome.toLowerCase().includes(buscaNome)) return false;
@@ -4729,7 +6244,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.calcularValorPasse = function(jogador) {
-        return (jogador.salario || 0) * 100;
+        normalizarEstadoContratoJogadorInterno(jogador);
+        return jogador && jogador.valorMercadoDinamico !== undefined ? jogador.valorMercadoDinamico : ((jogador.salario || 0) * 100);
     };
 
     $scope.iniciarNegociacao = function(jogador, ehRenovacao) {
@@ -4746,7 +6262,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         
         $scope.ofertaValores = {
             clube: propostaAberta && propostaAberta.valorOferta ? propostaAberta.valorOferta : $scope.calcularValorPasse(jogador),
-            salario: propostaAberta && propostaAberta.salarioOferta ? propostaAberta.salarioOferta : jogador.salario || 10000,
+            salario: propostaAberta && propostaAberta.salarioOferta ? propostaAberta.salarioOferta : jogador.salarioDesejado || jogador.salario || 10000,
             anos: String((propostaAberta && propostaAberta.anosContrato) || 1),
             clubeAceita: propostaAberta && propostaAberta.status === 'clube_aceitou' ? propostaAberta.valorOferta : 0
         };
@@ -4813,7 +6329,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.enviarPropostaJogador = function(salario, anos) {
-        var salarioBase = $scope.jogadorNegociacao.salario || 10000;
+        normalizarEstadoContratoJogadorInterno($scope.jogadorNegociacao);
+        var salarioBase = $scope.jogadorNegociacao.salarioDesejado || $scope.jogadorNegociacao.salario || 10000;
         var margemAceitacao = salarioBase * 0.9;
         var origemId = $scope.tipoNegociacao === 'renovacao' ? $scope.clubeAtual.id : $scope.jogadorNegociacao.clubeId;
         var proposta = $scope.registrarOuAtualizarProposta({
@@ -4903,6 +6420,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 jogadorBase.suspenso = false;
                 jogadorBase.substituidoNaPartida = false;
                 jogadorBase.emNegociacao = false;
+                $scope.aplicarRenovacaoContratoJogador(jogadorBase, salario, anos);
             }
 
             var novoJogador = angular.copy(jogadorBase || jogador);
@@ -4917,6 +6435,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             novoJogador.salario = salario;
             novoJogador.anosContrato = anos;
             novoJogador.emNegociacao = false;
+            $scope.aplicarRenovacaoContratoJogador(novoJogador, salario, anos);
             
             var idxElenco = $scope.elencoAtual.findIndex(function(j) { return j.id === novoJogador.id; });
             if (idxElenco >= 0) $scope.elencoAtual[idxElenco] = novoJogador;
@@ -4943,11 +6462,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogador.salario = parseFloat(salario) || jogador.salario;
             jogador.anosContrato = parseInt(anos, 10) || jogador.anosContrato || 1;
             jogador.emNegociacao = false;
+            $scope.aplicarRenovacaoContratoJogador(jogador, jogador.salario, jogador.anosContrato);
             var jogadorRenovadoBase = ($scope.jogadores || []).find(function(j) { return j.id === jogador.id; });
             if (jogadorRenovadoBase) {
                 jogadorRenovadoBase.salario = jogador.salario;
                 jogadorRenovadoBase.anosContrato = jogador.anosContrato;
                 jogadorRenovadoBase.emNegociacao = false;
+                $scope.aplicarRenovacaoContratoJogador(jogadorRenovadoBase, jogador.salario, jogador.anosContrato);
             }
             $scope.registrarTransferenciaHistorico({
                 tipo: 'renovacao',
@@ -5105,7 +6626,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.clubeAtual.orcamento >= custo) {
             if (confirm("Deseja gastar " + $scope.formatarMoeda(custo) + " para melhorar o Departamento Médico para o Nível " + nivel + "?")) {
                 $scope.clubeAtual.orcamento -= custo;
+                normalizarInfraestruturaClubeInterno($scope.clubeAtual);
                 $scope.clubeAtual.nivelMedico = nivel;
+                $scope.clubeAtual.infraestrutura.departamentoMedico.nivel = nivel;
+                $scope.clubeAtual.infraestrutura.departamentoMedico.obraEmAndamento = false;
+                $scope.clubeAtual.infraestrutura.departamentoMedico.diasRestantes = 0;
+                $scope.atualizarResumoInfraestrutura();
                 $scope.financasHistorico.unshift({
                     tipo: 'despesa',
                     descricao: 'Melhoria: DM Nível ' + nivel,

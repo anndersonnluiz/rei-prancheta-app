@@ -145,7 +145,7 @@ const migratedSave = scope.migrarSave({
   jogadores: [jogador(32, 2, 'Legado CPU', 'GOL', 34, 74)],
   calendarioGeral: []
 });
-assert.strictEqual(migratedSave.saveVersion, 5, 'legacy saves should migrate to development save version');
+assert.strictEqual(migratedSave.saveVersion, 11, 'legacy saves should migrate to contracts save version');
 assert.ok(migratedSave.elencoAtual[0].potencial >= overall(migratedSave.elencoAtual[0]), 'migration should add deterministic potential');
 assert.strictEqual(migratedSave.elencoAtual[0].xpTemporada, 0);
 assert.strictEqual(migratedSave.elencoAtual[0].jogosTemporada, 0);
@@ -153,6 +153,8 @@ assert.strictEqual(migratedSave.elencoAtual[0].minutosTemporada, 0);
 assert.strictEqual(migratedSave.elencoAtual[0].evolucaoTemporada, 0);
 assert.ok(Array.isArray(migratedSave.elencoAtual[0].historicoEvolucao), 'migration should add evolution history');
 assert.ok(Array.isArray(migratedSave.relatorioEvolucao), 'migration should add global evolution report');
+assert.strictEqual(migratedSave.ambienteElenco.valor, 70, 'migration should add squad environment default');
+assert.strictEqual(migratedSave.diretoriaStatus.status, 'no_trilho', 'migration should add board status default');
 
 const potentialSnapshot = migratedSave.elencoAtual[0].potencial;
 scope.migrarSave(migratedSave);
@@ -203,10 +205,15 @@ scope.relatorioEvolucao = [{ id: 'rel_1', jogadorId: jovem.id, nome: jovem.nome,
 scope.atualizarRelatorioEvolucaoVisivel();
 scope.salvarJogoSilencioso();
 const saved = JSON.parse(storage.value);
-assert.strictEqual(saved.saveVersion, 5, 'save should persist new development version');
+assert.strictEqual(saved.saveVersion, 11, 'save should persist contracts version');
 assert.ok(saved.elencoAtual[0].potencial !== undefined, 'save should persist player potential');
 assert.ok(saved.elencoAtual[0].xpTemporada !== undefined, 'save should persist player XP');
 assert.ok(saved.elencoAtual[0].minutosTemporada !== undefined, 'save should persist player minutes');
 assert.deepStrictEqual(saved.relatorioEvolucao, scope.relatorioEvolucao, 'save should persist evolution report');
+assert.strictEqual(saved.ambienteElenco.valor, scope.ambienteElenco.valor, 'save should persist squad environment');
+assert.strictEqual(saved.diretoriaStatus.status, scope.diretoriaStatus.status, 'save should persist board status');
+assert.ok(saved.clubeAtualInfo.infraestrutura, 'save should persist infrastructure state');
+assert.strictEqual(saved.contextoExterno.torcida.humor, scope.contextoExterno.torcida.humor, 'save should persist external context');
+assert.ok(saved.clubeAtualInfo.base, 'save should persist youth academy state');
 
 console.log('player_development.test.js passed');
