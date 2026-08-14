@@ -5266,6 +5266,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         };
     };
 
+    $scope.obterAlertasFinanceiros = function() {
+        var resumo = $scope.calcularResumoFinanceiro();
+        var alertas = [];
+        var receitaMensalBase = resumo.cotaTransmissaoMensal + ((parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 0) * 25000);
+        if (resumo.folhaMensal > receitaMensalBase * 0.7) {
+            alertas.push({ nivel: 'atencao', titulo: 'Folha pressionada', texto: 'A folha salarial supera 70% da receita mensal recorrente.' });
+        }
+        if (resumo.resultadoMensalEstimado < 0) {
+            alertas.push({ nivel: 'critico', titulo: 'Projeção negativa', texto: 'As despesas mensais projetadas estão acima das receitas recorrentes.' });
+        }
+        if (($scope.clubeAtual && $scope.clubeAtual.orcamento || 0) < resumo.folhaMensal * 2) {
+            alertas.push({ nivel: 'critico', titulo: 'Caixa curto', texto: 'O caixa cobre menos de dois ciclos de folha salarial.' });
+        }
+        return alertas;
+    };
+
     // FASE 17: GERAÇÃO DE PATROCINADORES MASTER
     $scope.gerarPatrocinadores = function() {
         if (!$scope.clubeAtual) return;

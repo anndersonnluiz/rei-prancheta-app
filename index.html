@@ -1888,6 +1888,13 @@
                         <p style="margin: 12px 0 0; color: var(--text-muted); font-size: 12px;">A projeção considera transmissão, merchandising, folha salarial e manutenção.</p>
                     </div>
 
+                    <div ng-if="obterAlertasFinanceiros().length > 0" style="margin-bottom: 25px;">
+                        <div ng-repeat="alerta in obterAlertasFinanceiros()" style="padding: 12px 15px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid;" ng-style="{'border-color': alerta.nivel === 'critico' ? '#e74c3c' : '#f39c12', 'background': alerta.nivel === 'critico' ? '#fdecea' : '#fff4df'}">
+                            <strong>{{alerta.titulo}}</strong>
+                            <span style="display:block; font-size: 12px; margin-top: 3px;">{{alerta.texto}}</span>
+                        </div>
+                    </div>
+
                     <h3 style="margin-bottom: 15px;">Histórico de Transações</h3>
                     <div ng-if="financasHistorico.length === 0" style="text-align: center; color: var(--text-muted); padding: 30px;">
                         Nenhuma movimentação financeira ainda. Jogue partidas para gerar receitas!
