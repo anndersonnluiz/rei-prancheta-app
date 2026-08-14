@@ -5225,6 +5225,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.clubeAtual && $scope.clubeAtual.olheiros) {
             folha += ($scope.clubeAtual.olheiros.length * 15000);
         }
+        ($scope.staffClube || []).forEach(function(item) {
+            if (item.contratado) folha += (parseFloat(item.salario) || 0);
+        });
         return folha;
     };
 
@@ -5455,7 +5458,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 emprestimo.jogos++;
                 emprestimo.minutos += 65 + (emprestimo.jogadorId % 26);
                 if (emprestimo.jogadorId % 5 === 0) emprestimo.gols++;
-                emprestimo.evolucao += emprestimo.jogos % 4 === 0 ? 1 : 0;
+                if (emprestimo.jogos % 4 === 0) {
+                    emprestimo.evolucao++;
+                    var jogadorEvolucao = ($scope.jogadores || []).find(function(item) { return item.id === emprestimo.jogadorId; });
+                    if (jogadorEvolucao && jogadorEvolucao.atributos) {
+                        var atributo = jogadorEvolucao.posicao === 'ATA' ? 'finalizacao' : (jogadorEvolucao.posicao === 'GOL' ? 'reflexo' : 'passe');
+                        jogadorEvolucao.atributos[atributo] = Math.min(99, (jogadorEvolucao.atributos[atributo] || 75) + 1);
+                    }
+                }
             }
             emprestimo.diasRestantes = Math.max(0, (emprestimo.diasRestantes || 0) - 1);
             if (emprestimo.diasRestantes > 0) return;
