@@ -52,6 +52,36 @@ assert.ok(scope.clubeAtual.base && scope.clubeAtual.base.atletas.length === 8, '
 assert.ok(scope.clubeAtual.infraestrutura, 'career should initialize infrastructure');
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'career should initialize board objective');
 
+// Simula as 38 rodadas de liga para todas as divisões e aplica os resultados à tabela.
+let jogosDeLiga = 0;
+scope.jogosCPU.forEach((rodada) => {
+  rodada.forEach((jogo) => {
+    const golsMandante = (Number(jogo.mandante.id) + Number(jogo.visitante.id)) % 3;
+    const golsVisitante = Number(jogo.visitante.id) % 2;
+    jogo.golsMandante = golsMandante;
+    jogo.golsVisitante = golsVisitante;
+    jogo.jogado = true;
+    scope.atualizarTabela(jogo, jogo.divisao);
+    jogosDeLiga++;
+  });
+});
+scope.calendario.forEach((jogo) => {
+  if (!jogo) return;
+  jogo.golsMandante = 1;
+  jogo.golsVisitante = 0;
+  jogo.jogado = true;
+  scope.atualizarTabela(jogo, scope.clubeAtual.divisao);
+  jogosDeLiga++;
+});
+assert.strictEqual(jogosDeLiga, 1520, 'four divisions should complete 38 rounds with 20 clubs each');
+['A', 'B', 'C', 'D'].forEach((divisao) => {
+  const tabela = scope.ordenarTabela(divisao);
+  assert.strictEqual(tabela.length, 20, 'division should contain 20 clubs');
+  tabela.forEach((linha) => {
+    assert.strictEqual(linha.vitorias + linha.empates + linha.derrotas, 38, 'each club should play 38 league matches');
+  });
+});
+
 const freeDay = scope.calendarioGeral.findIndex((dia, index) => {
   scope.diaAtual = index;
   return !scope.obterMeuJogoHoje();
