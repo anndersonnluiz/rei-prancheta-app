@@ -97,6 +97,10 @@ assert.ok(Array.isArray(scope.patrocinadoresDisponiveis) && scope.patrocinadores
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'new season should generate a board objective');
 assert.ok(Array.isArray(scope.elencoAtual), 'season rollover should preserve a valid squad');
 assert.ok(scope.historicoTreinador.some((item) => item.tipo === 'temporada'), 'season rollover should record coach history');
+const primeiraTemporada = scope.historicoTreinador.find((item) => item.tipo === 'temporada');
+assert.ok(Number.isInteger(primeiraTemporada.posicao) && primeiraTemporada.posicao >= 1 && primeiraTemporada.posicao <= 20);
+assert.strictEqual(primeiraTemporada.vitorias + primeiraTemporada.empates + primeiraTemporada.derrotas, 38);
+assert.ok(typeof primeiraTemporada.pontos === 'number' && typeof primeiraTemporada.saldo === 'number');
 
 // Garante que a carreira consegue atravessar mais de uma temporada consecutiva.
 for (let temporada = 0; temporada < 2; temporada++) {

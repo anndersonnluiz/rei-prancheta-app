@@ -4969,6 +4969,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var divs = ["A", "B", "C", "D"];
         var classificados = {};
         divs.forEach(function(d) { classificados[d] = $scope.ordenarTabela(d); });
+        var tabelaClubeAntesDaVirada = clubeAntesDaVirada && classificados[clubeAntesDaVirada.divisao] ?
+            classificados[clubeAntesDaVirada.divisao].find(function(t) { return t.clube.id === clubeAntesDaVirada.id; }) : null;
         
         // Salva os classificados para as competições continentais
         $scope.classificadosAnoAnterior = classificados["A"].map(function(t) { return t.clube; });
@@ -5047,8 +5049,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             clubeNome: clubeAntesDaVirada && clubeAntesDaVirada.nome,
             divisao: clubeAntesDaVirada && clubeAntesDaVirada.divisao,
             temporada: temporadaEncerrada,
-            posicao: $scope.clubeAtual && $scope.tabelas[$scope.clubeAtual.divisao] ?
-                $scope.ordenarTabela($scope.clubeAtual.divisao).findIndex(function(t) { return t.clube.id === $scope.clubeAtual.id; }) + 1 : null,
+            posicao: tabelaClubeAntesDaVirada ? classificados[clubeAntesDaVirada.divisao].findIndex(function(t) { return t.clube.id === clubeAntesDaVirada.id; }) + 1 : null,
+            pontos: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.pontos : 0,
+            vitorias: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.vitorias : 0,
+            empates: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.empates : 0,
+            derrotas: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.derrotas : 0,
+            saldo: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.saldo : 0,
             descricao: trocouDeClube ? 'Mudança de clube após a temporada ' + temporadaEncerrada : 'Temporada ' + temporadaEncerrada + ' concluída'
         });
         $scope.historicoTreinador = $scope.historicoTreinador.slice(0, 30);
