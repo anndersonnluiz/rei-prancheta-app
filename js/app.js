@@ -4976,6 +4976,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (posicaoTemporada === 1) conquistasTemporada.push('Campeão da Série ' + clubeAntesDaVirada.divisao);
         if (clubeAntesDaVirada.divisao !== 'A' && posicaoTemporada && posicaoTemporada <= 4) conquistasTemporada.push('Acesso para a Série ' + String.fromCharCode(clubeAntesDaVirada.divisao.charCodeAt(0) - 1));
         if (clubeAntesDaVirada.divisao !== 'D' && posicaoTemporada && posicaoTemporada >= 17) conquistasTemporada.push('Rebaixamento para a Série ' + String.fromCharCode(clubeAntesDaVirada.divisao.charCodeAt(0) + 1));
+        if ($scope.relatorioFimAno && $scope.relatorioFimAno.campeaoCopa && $scope.relatorioFimAno.campeaoCopa.id === clubeAntesDaVirada.id) conquistasTemporada.push('Campeão da Copa do Brasil');
+        if ($scope.relatorioFimAno && $scope.relatorioFimAno.demitido) conquistasTemporada.push('Demitido ao fim da temporada');
         
         // Salva os classificados para as competições continentais
         $scope.classificadosAnoAnterior = classificados["A"].map(function(t) { return t.clube; });
