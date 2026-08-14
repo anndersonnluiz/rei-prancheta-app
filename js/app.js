@@ -5245,6 +5245,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return folha;
     };
 
+    $scope.calcularResumoFinanceiro = function() {
+        var receitas = 0;
+        var despesas = 0;
+        ($scope.financasHistorico || []).forEach(function(item) {
+            var valor = parseFloat(item.valor) || 0;
+            if (item.tipo === 'receita') receitas += valor;
+            if (item.tipo === 'despesa') despesas += valor;
+        });
+        var folha = $scope.calcularFolhaSalarial();
+        var cotaPorDivisao = { A: 8000000, B: 2500000, C: 1200000, D: 600000 };
+        var cota = cotaPorDivisao[$scope.clubeAtual && $scope.clubeAtual.divisao] || 600000;
+        return {
+            receitas: receitas,
+            despesas: despesas,
+            saldo: receitas - despesas,
+            folhaMensal: folha,
+            cotaTransmissaoMensal: cota,
+            resultadoMensalEstimado: cota + (parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 0) * 25000 - folha - (($scope.clubeAtual && $scope.clubeAtual.estadio && $scope.clubeAtual.estadio.capacidade) || 0) * 20
+        };
+    };
+
     // FASE 17: GERAÇÃO DE PATROCINADORES MASTER
     $scope.gerarPatrocinadores = function() {
         if (!$scope.clubeAtual) return;

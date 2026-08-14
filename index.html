@@ -1877,6 +1877,17 @@
                         </div>
                     </div>
 
+                    <div style="background: var(--bg-light); border: 1px solid #ddd; border-left: 4px solid var(--br-green); border-radius: 8px; padding: 18px; margin-bottom: 25px;">
+                        <h3 style="margin: 0 0 14px;">Indicadores acumulados</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px;">
+                            <div><small>Receitas</small><strong style="display:block; color:var(--br-green);">{{formatarMoeda(calcularResumoFinanceiro().receitas)}}</strong></div>
+                            <div><small>Despesas</small><strong style="display:block; color:#e74c3c;">{{formatarMoeda(calcularResumoFinanceiro().despesas)}}</strong></div>
+                            <div><small>Saldo operacional</small><strong style="display:block;" ng-style="{'color': calcularResumoFinanceiro().saldo >= 0 ? 'var(--br-green)' : '#e74c3c'}">{{formatarMoeda(calcularResumoFinanceiro().saldo)}}</strong></div>
+                            <div><small>Projeção mensal</small><strong style="display:block;" ng-style="{'color': calcularResumoFinanceiro().resultadoMensalEstimado >= 0 ? 'var(--br-green)' : '#e74c3c'}">{{formatarMoeda(calcularResumoFinanceiro().resultadoMensalEstimado)}}</strong></div>
+                        </div>
+                        <p style="margin: 12px 0 0; color: var(--text-muted); font-size: 12px;">A projeção considera transmissão, merchandising, folha salarial e manutenção.</p>
+                    </div>
+
                     <h3 style="margin-bottom: 15px;">Histórico de Transações</h3>
                     <div ng-if="financasHistorico.length === 0" style="text-align: center; color: var(--text-muted); padding: 30px;">
                         Nenhuma movimentação financeira ainda. Jogue partidas para gerar receitas!
