@@ -57,4 +57,41 @@ assert.ok(scope.financasHistorico.filter((item) => item.tipo === 'despesa').leng
 assert.ok(scope.financasHistorico.filter((item) => item.tipo === 'receita').length >= 10, 'full season should record recurring revenues');
 scope.financasHistorico.forEach((item) => assert.ok(Number.isFinite(item.valor), 'financial value must be numeric'));
 
+function simularTemporada(clubeIndex) {
+  const simulacao = createScope();
+  simulacao.clubes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'clubes.json'), 'utf8'));
+  simulacao.jogadores = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'jogadores.json'), 'utf8'));
+  simulacao.dados.nomeTreinador = 'Comparativo Financeiro';
+  simulacao.iniciarNovoJogo(simulacao.clubes[clubeIndex]);
+  simulacao.elencoAtual.slice(0, 11).forEach((jogador) => { jogador.emCampo = true; });
+  const inicial = simulacao.clubeAtual.orcamento;
+  let partidas = 0;
+  for (let dia = 0; dia < simulacao.calendarioGeral.length + 5 && simulacao.telaAtual !== 'cerimonia'; dia += 1) {
+    const jogo = simulacao.obterMeuJogoHoje();
+    if (jogo) {
+      simulacao.calcularResultadoRapido(jogo);
+      simulacao.concluirPartida(jogo, 'rapido');
+      partidas += 1;
+    } else {
+      simulacao.avancarDiaLivre();
+    }
+  }
+  return {
+    divisao: simulacao.clubeAtual.divisao,
+    partidas,
+    saldo: simulacao.clubeAtual.orcamento - inicial,
+    receitas: simulacao.financasHistorico.filter((item) => item.tipo === 'receita').reduce((total, item) => total + item.valor, 0),
+    despesas: simulacao.financasHistorico.filter((item) => item.tipo === 'despesa').reduce((total, item) => total + item.valor, 0)
+  };
+}
+
+const clubesComparados = [0, 20, 40, 60].map(simularTemporada);
+assert.strictEqual(clubesComparados.length, 4, 'comparative simulation should cover four divisions');
+clubesComparados.forEach((resultado) => {
+  assert.ok(resultado.partidas > 0, 'each division should play matches');
+  assert.ok(Number.isFinite(resultado.saldo), 'comparative annual balance must be finite');
+  assert.ok(resultado.receitas > 0 && resultado.despesas > 0, 'comparative simulation must record both sides of cash flow');
+});
+console.log('financial_engine_smoke.test.js: comparative divisions ok', clubesComparados.map((r) => `${r.divisao}:${Math.round(r.saldo)}`).join(', '));
+
 console.log('financial_engine_smoke.test.js: ok');
