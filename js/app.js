@@ -5396,7 +5396,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
     };
 
-    $scope.emprestarJogador = function(jogador, clubeDestinoId, duracaoDias) {
+    $scope.emprestarJogador = function(jogador, clubeDestinoId, duracaoDias, valorOpcaoCompra) {
         if (!jogador || !$scope.clubeAtual || jogador.clubeId !== $scope.clubeAtual.id) return null;
         if (!clubeDestinoId || clubeDestinoId === $scope.clubeAtual.id) return null;
         if (($scope.emprestimosAtivos || []).some(function(item) { return item.jogadorId === jogador.id; })) return null;
@@ -5406,7 +5406,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             id: 'emprestimo_' + jogador.id + '_' + Date.now(), jogadorId: jogador.id,
             jogadorNome: jogador.nome, clubeOrigemId: $scope.clubeAtual.id,
             clubeDestinoId: destino.id, clubeDestinoNome: destino.nome,
-            diasRestantes: Math.max(1, parseInt(duracaoDias, 10) || 30), status: 'ativo'
+            diasRestantes: Math.max(1, parseInt(duracaoDias, 10) || 30), status: 'ativo',
+            opcaoCompra: Math.max(0, parseInt(valorOpcaoCompra, 10) || 0)
         };
         jogador.clubeId = destino.id;
         var base = ($scope.jogadores || []).find(function(item) { return item.id === jogador.id; });
@@ -5417,10 +5418,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return emprestimo;
     };
 
+    $scope.comprarJogadorEmprestado = function(emprestimo) {
+        if (!emprestimo || emprestimo.status !== 'ativo' || !emprestimo.opcaoCompra || !$scope.clubeAtual) return false;
+        if (($scope.clubeAtual.orcamento || 0) < emprestimo.opcaoCompra) {
+            alert('Orçamento insuficiente para exercer a opção de compra.');
+            return false;
+        }
+        var jogador = ($scope.jogadores || []).find(function(item) { return item.id === emprestimo.jogadorId; });
+        if (!jogador) return false;
+        $scope.clubeAtual.orcamento -= emprestimo.opcaoCompra;
+        jogador.clubeId = $scope.clubeAtual.id;
+        emprestimo.status = 'comprado';
+        emprestimo.diasRestantes = 0;
+        if (!$scope.elencoAtual.some(function(item) { return item.id === jogador.id; })) $scope.elencoAtual.push(angular.copy(jogador));
+        $scope.emprestimosAtivos = ($scope.emprestimosAtivos || []).filter(function(item) { return item.id !== emprestimo.id; });
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return true;
+    };
+
     $scope.solicitarEmprestimo = function() {
         var form = $scope.emprestimoForm || {};
         var jogador = ($scope.elencoAtual || []).find(function(item) { return String(item.id) === String(form.jogadorId); });
-        var resultado = $scope.emprestarJogador(jogador, form.clubeDestinoId, form.duracaoDias);
+        var resultado = $scope.emprestarJogador(jogador, form.clubeDestinoId, form.duracaoDias, form.opcaoCompra);
         if (!resultado) {
             alert('Não foi possível criar o empréstimo. Verifique o jogador, o destino e a duração.');
             return;
