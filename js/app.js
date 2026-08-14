@@ -5073,7 +5073,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 j.jogosTemporada = 0;
                 j.minutosTemporada = 0;
                 j.evolucaoTemporada = 0;
-                if (!j.anosContrato || j.anosContrato <= 0) j.anosContrato = Math.floor(Math.random() * 3) + 1; 
+                var temPreContrato = ($scope.propostasPendentes || []).some(function(proposta) { return proposta.tipo === 'pre_contrato' && proposta.jogadorId === j.id && proposta.status === 'em_jogador'; });
+                if ((!j.anosContrato || j.anosContrato <= 0) && !temPreContrato) j.anosContrato = Math.floor(Math.random() * 3) + 1; 
             });
         }
         $scope.processarPreContratos();

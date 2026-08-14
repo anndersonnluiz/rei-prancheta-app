@@ -54,7 +54,7 @@ assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'career 
 const jogadorParaEmprestimo = scope.elencoAtual[0];
 const destinoEmprestimo = scope.clubes.find((item) => item.id !== clube.id);
 const alvoPreContrato = scope.jogadores.find((item) => item.clubeId !== clube.id && item.clubeId !== 'mercado');
-alvoPreContrato.anosContrato = 1;
+alvoPreContrato.anosContrato = 0;
 const preContrato = scope.proporPreContrato(alvoPreContrato, alvoPreContrato.salario || 10000, 2);
 assert.ok(preContrato && preContrato.tipo === 'pre_contrato', 'career should create a pre-contract proposal');
 const emprestimo = scope.emprestarJogador(jogadorParaEmprestimo, destinoEmprestimo.id, 2);
