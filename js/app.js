@@ -5407,7 +5407,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogadorNome: jogador.nome, clubeOrigemId: $scope.clubeAtual.id,
             clubeDestinoId: destino.id, clubeDestinoNome: destino.nome,
             diasRestantes: Math.max(1, parseInt(duracaoDias, 10) || 30), status: 'ativo',
-            opcaoCompra: Math.max(0, parseInt(valorOpcaoCompra, 10) || 0)
+            opcaoCompra: Math.max(0, parseInt(valorOpcaoCompra, 10) || 0), jogos: 0, minutos: 0, gols: 0, evolucao: 0
         };
         jogador.clubeId = destino.id;
         var base = ($scope.jogadores || []).find(function(item) { return item.id === jogador.id; });
@@ -5451,6 +5451,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var devolvidos = [];
         ($scope.emprestimosAtivos || []).forEach(function(emprestimo) {
             if (emprestimo.status !== 'ativo') return;
+            if (emprestimo.diasRestantes % 7 === 0) {
+                emprestimo.jogos++;
+                emprestimo.minutos += 65 + (emprestimo.jogadorId % 26);
+                if (emprestimo.jogadorId % 5 === 0) emprestimo.gols++;
+                emprestimo.evolucao += emprestimo.jogos % 4 === 0 ? 1 : 0;
+            }
             emprestimo.diasRestantes = Math.max(0, (emprestimo.diasRestantes || 0) - 1);
             if (emprestimo.diasRestantes > 0) return;
             var jogador = ($scope.jogadores || []).find(function(item) { return item.id === emprestimo.jogadorId; });
