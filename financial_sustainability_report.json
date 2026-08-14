@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T17:55:53.037Z",
+  "generatedAt": "2026-08-14T17:57:32.515Z",
   "assumptions": {
     "occupancy": 0.65,
     "ticketPrice": 80,
@@ -10,26 +10,26 @@
     "A": {
       "clubes": 20,
       "folhaMensalMedia": 5600004,
-      "resultadoAnualMedio": 519009950,
-      "caixaMedioAposUmAno": 619009950,
+      "resultadoAnualMedio": 33359950,
+      "caixaMedioAposUmAno": 133359950,
       "clubesInsolventesAposUmAno": 0,
       "piorCenario": {
-        "id": 4,
-        "nome": "Corinthians",
+        "id": 1,
+        "nome": "Flamengo",
         "divisao": "A",
         "orcamentoInicial": 100000000,
-        "folhaMensal": 13191511.257987041,
-        "receitasEstimadas": 619120000,
-        "custosEstimados": 167898135,
-        "resultadoAnualEstimado": 451221865,
-        "caixaAposUmAno": 551221865
+        "folhaMensal": 14279013.219514597,
+        "receitasEstimadas": 115520000,
+        "custosEstimados": 180948159,
+        "resultadoAnualEstimado": -65428159,
+        "caixaAposUmAno": 34571841
       }
     },
     "B": {
       "clubes": 20,
       "folhaMensalMedia": 1080000,
-      "resultadoAnualMedio": 473870000,
-      "caixaMedioAposUmAno": 503870000,
+      "resultadoAnualMedio": 61920000,
+      "caixaMedioAposUmAno": 91920000,
       "clubesInsolventesAposUmAno": 0,
       "piorCenario": {
         "id": 23,
@@ -37,17 +37,17 @@
         "divisao": "B",
         "orcamentoInicial": 30000000,
         "folhaMensal": 1080000,
-        "receitasEstimadas": 460760000,
+        "receitasEstimadas": 75760000,
         "custosEstimados": 17760000,
-        "resultadoAnualEstimado": 443000000,
-        "caixaAposUmAno": 473000000
+        "resultadoAnualEstimado": 58000000,
+        "caixaAposUmAno": 88000000
       }
     },
     "C": {
       "clubes": 20,
       "folhaMensalMedia": 180000,
-      "resultadoAnualMedio": 380485000,
-      "caixaMedioAposUmAno": 385485000,
+      "resultadoAnualMedio": 52960000,
+      "caixaMedioAposUmAno": 57960000,
       "clubesInsolventesAposUmAno": 0,
       "piorCenario": {
         "id": 42,
@@ -55,17 +55,17 @@
         "divisao": "C",
         "orcamentoInicial": 5000000,
         "folhaMensal": 180000,
-        "receitasEstimadas": 356380000,
+        "receitasEstimadas": 53880000,
         "custosEstimados": 4560000,
-        "resultadoAnualEstimado": 351820000,
-        "caixaAposUmAno": 356820000
+        "resultadoAnualEstimado": 49320000,
+        "caixaAposUmAno": 54320000
       }
     },
     "D": {
       "clubes": 20,
       "folhaMensalMedia": 36000,
-      "resultadoAnualMedio": 285863000,
-      "caixaMedioAposUmAno": 286863000,
+      "resultadoAnualMedio": 39188000,
+      "caixaMedioAposUmAno": 40188000,
       "clubesInsolventesAposUmAno": 0,
       "piorCenario": {
         "id": 62,
@@ -73,10 +73,10 @@
         "divisao": "D",
         "orcamentoInicial": 1000000,
         "folhaMensal": 36000,
-        "receitasEstimadas": 256940000,
+        "receitasEstimadas": 36940000,
         "custosEstimados": 1632000,
-        "resultadoAnualEstimado": 255308000,
-        "caixaAposUmAno": 256308000
+        "resultadoAnualEstimado": 35308000,
+        "caixaAposUmAno": 36308000
       }
     }
   }

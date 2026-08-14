@@ -12,7 +12,8 @@ for (const club of clubs) {
   const reputation = Number(club.reputacao) || 50;
   const ticketRevenue = capacity * 0.65 * 80 * 19;
   const commercialRevenue = reputation * 25000 * 12;
-  const sponsorshipRevenue = reputation * 500000 * 12;
+  // O pagamento fixo do patrocínio ocorre uma vez na assinatura; bônus por vitória não é estimado aqui.
+  const sponsorshipRevenue = reputation * 500000;
   const maintenance = capacity * 20 * 12;
   const annualPayroll = payroll * 12;
   const annualResult = ticketRevenue + commercialRevenue + sponsorshipRevenue - maintenance - annualPayroll;
