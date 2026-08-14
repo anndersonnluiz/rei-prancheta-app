@@ -27,6 +27,7 @@ scope.clubes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'cl
 scope.jogadores = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'jogadores.json'), 'utf8'));
 scope.dados.nomeTreinador = 'Teste Financeiro';
 scope.iniciarNovoJogo(scope.clubes[0]);
+scope.assinarPatrocinio(scope.patrocinadoresDisponiveis[1]);
 scope.elencoAtual.slice(0, 11).forEach((jogador) => { jogador.emCampo = true; });
 
 const orcamentoInicial = scope.clubeAtual.orcamento;
@@ -63,6 +64,7 @@ function simularTemporada(clubeIndex) {
   simulacao.jogadores = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'jogadores.json'), 'utf8'));
   simulacao.dados.nomeTreinador = 'Comparativo Financeiro';
   simulacao.iniciarNovoJogo(simulacao.clubes[clubeIndex]);
+  simulacao.assinarPatrocinio(simulacao.patrocinadoresDisponiveis[1]);
   simulacao.elencoAtual.slice(0, 11).forEach((jogador) => { jogador.emCampo = true; });
   const inicial = simulacao.clubeAtual.orcamento;
   let partidas = 0;
@@ -81,7 +83,12 @@ function simularTemporada(clubeIndex) {
     partidas,
     saldo: simulacao.clubeAtual.orcamento - inicial,
     receitas: simulacao.financasHistorico.filter((item) => item.tipo === 'receita').reduce((total, item) => total + item.valor, 0),
-    despesas: simulacao.financasHistorico.filter((item) => item.tipo === 'despesa').reduce((total, item) => total + item.valor, 0)
+    despesas: simulacao.financasHistorico.filter((item) => item.tipo === 'despesa').reduce((total, item) => total + item.valor, 0),
+    categorias: simulacao.financasHistorico.reduce((totais, item) => {
+      const grupo = item.tipo + ':' + (item.descricao || '').split(' (')[0];
+      totais[grupo] = (totais[grupo] || 0) + item.valor;
+      return totais;
+    }, {})
   };
 }
 
@@ -93,5 +100,6 @@ clubesComparados.forEach((resultado) => {
   assert.ok(resultado.receitas > 0 && resultado.despesas > 0, 'comparative simulation must record both sides of cash flow');
 });
 console.log('financial_engine_smoke.test.js: comparative divisions ok', clubesComparados.map((r) => `${r.divisao}:${Math.round(r.saldo)}`).join(', '));
+console.log('financial_engine_smoke.test.js: serie A breakdown', clubesComparados[0].categorias);
 
 console.log('financial_engine_smoke.test.js: ok');
