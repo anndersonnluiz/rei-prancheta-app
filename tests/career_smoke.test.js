@@ -82,6 +82,18 @@ assert.strictEqual(jogosDeLiga, 1520, 'four divisions should complete 38 rounds 
   });
 });
 
+const anoAntesDaVirada = scope.dados.anoAtual;
+scope.relatorioFimAno = null;
+scope.atualizarTaticas = function() {};
+scope.executarViradaDeAno(false);
+assert.strictEqual(scope.dados.anoAtual, anoAntesDaVirada + 1, 'season rollover should advance the year');
+assert.ok(Array.isArray(scope.calendarioGeral) && scope.calendarioGeral.length > 0, 'season rollover should generate a new calendar');
+assert.strictEqual(scope.diaAtual, 0, 'new season should start on day zero');
+assert.strictEqual(scope.clubeAtual.id, clube.id, 'season rollover should preserve the managed club');
+assert.ok(Array.isArray(scope.patrocinadoresDisponiveis) && scope.patrocinadoresDisponiveis.length === 3, 'season rollover should generate new sponsorship options');
+assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'new season should generate a board objective');
+assert.ok(Array.isArray(scope.elencoAtual), 'season rollover should preserve a valid squad');
+
 const freeDay = scope.calendarioGeral.findIndex((dia, index) => {
   scope.diaAtual = index;
   return !scope.obterMeuJogoHoje();
