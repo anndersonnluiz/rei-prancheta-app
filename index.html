@@ -538,6 +538,7 @@
                             <strong style="color: var(--text-dark);">{{evento.descricao}}</strong>
                             <div style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">{{evento.clubeNome}} · Série {{evento.divisao}} · Temporada {{evento.temporada}}</div>
                             <div ng-if="evento.tipo !== 'inicio'" style="font-size: 12px; color: var(--text-main); margin-top: 7px;">{{evento.posicao}}º lugar · {{evento.pontos}} pts · {{evento.vitorias}}V {{evento.empates}}E {{evento.derrotas}}D · saldo {{evento.saldo >= 0 ? '+' : ''}}{{evento.saldo}}</div>
+                            <div ng-if="evento.conquistas && evento.conquistas.length > 0" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;"><span ng-repeat="conquista in evento.conquistas" style="font-size: 11px; font-weight: bold; color: #8a5a00; background: #fff3cd; padding: 4px 7px; border-radius: 999px;">🏆 {{conquista}}</span></div>
                         </div>
                         <span style="font-size: 11px; font-weight: bold; color: var(--br-blue); background: #eef3ff; padding: 6px 9px; border-radius: 999px; white-space: nowrap;">{{evento.tipo === 'inicio' ? 'Início' : (evento.tipo === 'mudanca_clube' ? 'Mudança' : 'Temporada')}}</span>
                     </div>

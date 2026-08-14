@@ -101,6 +101,7 @@ const primeiraTemporada = scope.historicoTreinador.find((item) => item.tipo === 
 assert.ok(Number.isInteger(primeiraTemporada.posicao) && primeiraTemporada.posicao >= 1 && primeiraTemporada.posicao <= 20);
 assert.strictEqual(primeiraTemporada.vitorias + primeiraTemporada.empates + primeiraTemporada.derrotas, 38);
 assert.ok(typeof primeiraTemporada.pontos === 'number' && typeof primeiraTemporada.saldo === 'number');
+assert.ok(Array.isArray(primeiraTemporada.conquistas), 'season history should include achievements');
 
 // Garante que a carreira consegue atravessar mais de uma temporada consecutiva.
 for (let temporada = 0; temporada < 2; temporada++) {

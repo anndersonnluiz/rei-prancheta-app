@@ -4971,6 +4971,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         divs.forEach(function(d) { classificados[d] = $scope.ordenarTabela(d); });
         var tabelaClubeAntesDaVirada = clubeAntesDaVirada && classificados[clubeAntesDaVirada.divisao] ?
             classificados[clubeAntesDaVirada.divisao].find(function(t) { return t.clube.id === clubeAntesDaVirada.id; }) : null;
+        var posicaoTemporada = tabelaClubeAntesDaVirada ? classificados[clubeAntesDaVirada.divisao].findIndex(function(t) { return t.clube.id === clubeAntesDaVirada.id; }) + 1 : null;
+        var conquistasTemporada = [];
+        if (posicaoTemporada === 1) conquistasTemporada.push('Campeão da Série ' + clubeAntesDaVirada.divisao);
+        if (clubeAntesDaVirada.divisao !== 'A' && posicaoTemporada && posicaoTemporada <= 4) conquistasTemporada.push('Acesso para a Série ' + String.fromCharCode(clubeAntesDaVirada.divisao.charCodeAt(0) - 1));
+        if (clubeAntesDaVirada.divisao !== 'D' && posicaoTemporada && posicaoTemporada >= 17) conquistasTemporada.push('Rebaixamento para a Série ' + String.fromCharCode(clubeAntesDaVirada.divisao.charCodeAt(0) + 1));
         
         // Salva os classificados para as competições continentais
         $scope.classificadosAnoAnterior = classificados["A"].map(function(t) { return t.clube; });
@@ -5049,12 +5054,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             clubeNome: clubeAntesDaVirada && clubeAntesDaVirada.nome,
             divisao: clubeAntesDaVirada && clubeAntesDaVirada.divisao,
             temporada: temporadaEncerrada,
-            posicao: tabelaClubeAntesDaVirada ? classificados[clubeAntesDaVirada.divisao].findIndex(function(t) { return t.clube.id === clubeAntesDaVirada.id; }) + 1 : null,
+            posicao: posicaoTemporada,
             pontos: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.pontos : 0,
             vitorias: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.vitorias : 0,
             empates: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.empates : 0,
             derrotas: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.derrotas : 0,
             saldo: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.saldo : 0,
+            conquistas: conquistasTemporada,
             descricao: trocouDeClube ? 'Mudança de clube após a temporada ' + temporadaEncerrada : 'Temporada ' + temporadaEncerrada + ' concluída'
         });
         $scope.historicoTreinador = $scope.historicoTreinador.slice(0, 30);
