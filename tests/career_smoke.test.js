@@ -59,6 +59,13 @@ preparador.contratado = true;
 preparador.nivel = 2;
 const recuperacaoComStaff = scope.calcularRecuperacaoFisicaDiaria(false, 0);
 assert.ok(recuperacaoComStaff >= recuperacaoSemStaff, 'fitness coach should not reduce recovery');
+const analiseInicial = scope.montarAnalisePreJogo({ mandante: clube, visitante: scope.clubes[1] }, 'rapido');
+assert.strictEqual(analiseInicial.analistaAtivo, false);
+const analista = scope.staffClube.find((item) => item.id === 'analista');
+analista.contratado = true;
+const analiseComStaff = scope.montarAnalisePreJogo({ mandante: clube, visitante: scope.clubes[1] }, 'rapido');
+assert.strictEqual(analiseComStaff.analistaAtivo, true);
+assert.ok(analiseComStaff.confiancaAnalise > analiseInicial.confiancaAnalise);
 
 // Simula as 38 rodadas de liga para todas as divisões e aplica os resultados à tabela.
 let jogosDeLiga = 0;

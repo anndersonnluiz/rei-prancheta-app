@@ -2883,6 +2883,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             recomendacoes: [],
             jogadoresChaveAdversario: $scope.obterJogadoresChavePreJogo(adversario)
         };
+        var analista = ($scope.staffClube || []).find(function(item) { return item.id === 'analista' && item.contratado; });
+        analise.analistaAtivo = !!analista;
+        analise.confiancaAnalise = analista ? Math.min(95, 70 + (analista.nivel || 1) * 8) : 60;
+        if (analista) analise.recomendacoes.push({ tipo: 'analise', texto: 'Relatório do analista disponível com ' + analise.confiancaAnalise + '% de confiança.' });
 
         if (diferencaForca <= -5) {
             analise.statusConfronto = 'Adversario mais forte';
@@ -5906,7 +5910,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         // Ordena o banco do melhor pro pior para escalar os melhores
         var banco = $scope.elencoAtual.slice().sort(function(a, b) {
-            return $scope.calcularOverall(b) - $scope.calcularOverall(a);
+            var auxiliar = ($scope.staffClube || []).find(function(item) { return item.id === 'auxiliar' && item.contratado; });
+            var valorA = $scope.calcularOverall(a) + (auxiliar ? (a.moral || 100) * 0.015 : 0);
+            var valorB = $scope.calcularOverall(b) + (auxiliar ? (b.moral || 100) * 0.015 : 0);
+            return valorB - valorA;
         });
         
         posicoes.forEach(function(slot) {
