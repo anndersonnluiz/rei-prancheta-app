@@ -66,6 +66,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.mudancaClubePendente = null;
     $scope.staffClube = [];
     $scope.emprestimosAtivos = [];
+    $scope.historicoFinanceiroMensal = {};
 
     function criarStaffPadrao() {
         return [
@@ -1880,6 +1881,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.dados.anoAtual = 2024;
         $scope.staffClube = criarStaffPadrao();
         $scope.emprestimosAtivos = [];
+        $scope.historicoFinanceiroMensal = {};
         $scope.historicoTreinador = [{
             tipo: 'inicio', clubeId: clube.id, clubeNome: clube.nome,
             divisao: clube.divisao, temporada: $scope.dados.anoAtual,
@@ -4113,6 +4115,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.concluirPartida = function(partida, origem) {
         var hoje = $scope.calendarioGeral[$scope.diaAtual];
+        var orcamentoAntesDoDia = $scope.clubeAtual ? ($scope.clubeAtual.orcamento || 0) : 0;
         
         if (partida) {
             partida.jogado = true;
@@ -4311,6 +4314,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
 
         $scope.verificarAlertasFinanceiros();
+        $scope.historicoFinanceiroMensal = $scope.historicoFinanceiroMensal || {};
+        var mesHistorico = $scope.obterMesFinanceiro($scope.diaAtual);
+        if (!$scope.historicoFinanceiroMensal[mesHistorico]) {
+            $scope.historicoFinanceiroMensal[mesHistorico] = { mes: mesHistorico, saldo: 0, entradas: 0, saidas: 0 };
+        }
+        var variacaoFinanceira = ($scope.clubeAtual.orcamento || 0) - orcamentoAntesDoDia;
+        $scope.historicoFinanceiroMensal[mesHistorico].saldo += variacaoFinanceira;
+        if (variacaoFinanceira >= 0) $scope.historicoFinanceiroMensal[mesHistorico].entradas += variacaoFinanceira;
+        else $scope.historicoFinanceiroMensal[mesHistorico].saidas += Math.abs(variacaoFinanceira);
 
         // FASE 13: Andamento de Obras no Estádio
         if ($scope.clubeAtual.estadio.obraEmAndamento) {
@@ -5368,6 +5380,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         if (!saveInfo.savedAt) saveInfo.savedAt = new Date().toISOString();
         if (!Array.isArray(saveInfo.historicoTreinador)) saveInfo.historicoTreinador = [];
+        if (!saveInfo.historicoFinanceiroMensal || typeof saveInfo.historicoFinanceiroMensal !== 'object') saveInfo.historicoFinanceiroMensal = {};
         saveInfo.staffClube = normalizarStaff(saveInfo.staffClube);
         if (!Array.isArray(saveInfo.emprestimosAtivos)) saveInfo.emprestimosAtivos = [];
 
@@ -5418,6 +5431,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             savedAt: new Date().toISOString(),
             nomeTreinador: $scope.dados.nomeTreinador,
             historicoTreinador: $scope.historicoTreinador || [],
+            historicoFinanceiroMensal: $scope.historicoFinanceiroMensal || {},
             staffClube: normalizarStaff($scope.staffClube),
             emprestimosAtivos: $scope.emprestimosAtivos || [],
             anoAtual: $scope.dados.anoAtual || 2024,
@@ -5699,6 +5713,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.saveInfo = $scope.migrarSave($scope.saveInfo);
         $scope.dados.nomeTreinador = $scope.saveInfo.nomeTreinador;
         $scope.historicoTreinador = Array.isArray($scope.saveInfo.historicoTreinador) ? $scope.saveInfo.historicoTreinador : [];
+        $scope.historicoFinanceiroMensal = $scope.saveInfo.historicoFinanceiroMensal || {};
         $scope.staffClube = normalizarStaff($scope.saveInfo.staffClube);
         $scope.emprestimosAtivos = Array.isArray($scope.saveInfo.emprestimosAtivos) ? $scope.saveInfo.emprestimosAtivos : [];
         $scope.dados.anoAtual = $scope.saveInfo.anoAtual || 2024;
