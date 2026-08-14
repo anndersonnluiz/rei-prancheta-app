@@ -63,6 +63,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.telaAtual = 'loading'; 
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
     $scope.historicoTreinador = [];
+    $scope.mudancaClubePendente = null;
     var SAVE_VERSION_ATUAL = 11;
 
     // FASE 21: Efeitos Sonoros
@@ -4959,6 +4960,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.aceitarProposta = function(clubeId) {
+        var clubeAnterior = $scope.clubeAtual;
+        var novoClube = $scope.clubes.find(function(clube) { return clube.id === clubeId; });
+        $scope.mudancaClubePendente = {
+            clubeAnteriorId: clubeAnterior && clubeAnterior.id,
+            clubeAnteriorNome: clubeAnterior && clubeAnterior.nome,
+            clubeAnteriorDivisao: clubeAnterior && clubeAnterior.divisao,
+            clubeNovoId: novoClube && novoClube.id,
+            clubeNovoNome: novoClube && novoClube.nome,
+            clubeNovoDivisao: novoClube && novoClube.divisao,
+            reputacao: $scope.dados.reputacaoTreinador || 3
+        };
         $scope.selecionarClube(clubeId);
         $scope.executarViradaDeAno(true);
     };
@@ -4966,6 +4978,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.executarViradaDeAno = function(trocouDeClube) {
         var clubeAntesDaVirada = $scope.clubeAtual;
         var temporadaEncerrada = $scope.dados.anoAtual;
+        var mudancaClube = $scope.mudancaClubePendente;
         var divs = ["A", "B", "C", "D"];
         var classificados = {};
         divs.forEach(function(d) { classificados[d] = $scope.ordenarTabela(d); });
@@ -5050,7 +5063,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         $scope.dados.anoAtual++;
         if (!Array.isArray($scope.historicoTreinador)) $scope.historicoTreinador = [];
-        $scope.historicoTreinador.unshift({
+        var eventoHistorico = {
             tipo: trocouDeClube ? 'mudanca_clube' : 'temporada',
             clubeId: clubeAntesDaVirada && clubeAntesDaVirada.id,
             clubeNome: clubeAntesDaVirada && clubeAntesDaVirada.nome,
@@ -5064,8 +5077,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             saldo: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.saldo : 0,
             conquistas: conquistasTemporada,
             descricao: trocouDeClube ? 'Mudança de clube após a temporada ' + temporadaEncerrada : 'Temporada ' + temporadaEncerrada + ' concluída'
-        });
+        };
+        if (trocouDeClube && mudancaClube) {
+            eventoHistorico.clubeAnteriorId = mudancaClube.clubeAnteriorId;
+            eventoHistorico.clubeAnteriorNome = mudancaClube.clubeAnteriorNome;
+            eventoHistorico.clubeAnteriorDivisao = mudancaClube.clubeAnteriorDivisao;
+            eventoHistorico.clubeNovoId = mudancaClube.clubeNovoId;
+            eventoHistorico.clubeNovoNome = mudancaClube.clubeNovoNome;
+            eventoHistorico.clubeNovoDivisao = mudancaClube.clubeNovoDivisao;
+            eventoHistorico.reputacaoTreinador = mudancaClube.reputacao;
+            eventoHistorico.descricao = mudancaClube.clubeAnteriorNome + ' → ' + mudancaClube.clubeNovoNome;
+        }
+        $scope.historicoTreinador.unshift(eventoHistorico);
         $scope.historicoTreinador = $scope.historicoTreinador.slice(0, 30);
+        $scope.mudancaClubePendente = null;
         $scope.patrocinioAtual = null; // Renovar patrocínios todo ano
         $scope.gerarPatrocinadores();
         
