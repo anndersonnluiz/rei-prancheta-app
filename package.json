@@ -5,7 +5,8 @@
   "description": "Simulador de futebol e gestão de clube executado no navegador",
   "scripts": {
     "check": "node --check js/app.js",
-    "test": "node scripts/run-tests.js"
+    "test": "node scripts/run-tests.js",
+    "analyze:market": "node scripts/analyze_market_balance.js"
   },
   "dependencies": {
     "acorn": "^8.17.0"

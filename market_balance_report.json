@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-08-14T17:53:27.291Z",
+  "players": 1440,
+  "salaryMedian": 60000,
+  "marketValueMedian": 6000000,
+  "byDivision": {
+    "A": {
+      "players": 360,
+      "averageSalary": 311111,
+      "minSalary": 200000,
+      "maxSalary": 995769.6501612758,
+      "averageMarketValue": 31111134,
+      "shortContracts": 0
+    },
+    "B": {
+      "players": 360,
+      "averageSalary": 60000,
+      "minSalary": 60000,
+      "maxSalary": 60000,
+      "averageMarketValue": 6000000,
+      "shortContracts": 0
+    },
+    "C": {
+      "players": 360,
+      "averageSalary": 10000,
+      "minSalary": 10000,
+      "maxSalary": 10000,
+      "averageMarketValue": 1000000,
+      "shortContracts": 0
+    },
+    "D": {
+      "players": 360,
+      "averageSalary": 2000,
+      "minSalary": 2000,
+      "maxSalary": 2000,
+      "averageMarketValue": 200000,
+      "shortContracts": 0
+    }
+  }
+}
