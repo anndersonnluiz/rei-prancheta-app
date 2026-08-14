@@ -59,7 +59,7 @@ assert.strictEqual(jogadorParaEmprestimo.clubeId, destinoEmprestimo.id);
 scope.processarEmprestimosDia();
 scope.processarEmprestimosDia();
 assert.strictEqual(scope.emprestimosAtivos.length, 0, 'loan should close after its duration');
-assert.strictEqual(jogadorParaEmprestimo.clubeId, clube.id, 'loaned player should return to origin club');
+assert.strictEqual(scope.jogadores.find((item) => item.id === jogadorParaEmprestimo.id).clubeId, clube.id, 'loaned player should return to origin club');
 assert.ok(Array.isArray(scope.historicoTreinador) && scope.historicoTreinador.length === 1, 'career should initialize coach history');
 assert.strictEqual(scope.historicoTreinador[0].tipo, 'inicio');
 const preparador = scope.staffClube.find((item) => item.id === 'preparador');
