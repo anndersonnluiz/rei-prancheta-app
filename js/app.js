@@ -4310,6 +4310,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             });
         }
 
+        $scope.verificarAlertasFinanceiros();
+
         // FASE 13: Andamento de Obras no Estádio
         if ($scope.clubeAtual.estadio.obraEmAndamento) {
             $scope.clubeAtual.estadio.rodadasRestantesObra--;
@@ -5280,6 +5282,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             alertas.push({ nivel: 'critico', titulo: 'Caixa curto', texto: 'O caixa cobre menos de dois ciclos de folha salarial.' });
         }
         return alertas;
+    };
+
+    $scope.verificarAlertasFinanceiros = function() {
+        $scope.alertasFinanceirosAtivos = $scope.alertasFinanceirosAtivos || {};
+        var atuais = {};
+        $scope.obterAlertasFinanceiros().forEach(function(alerta) {
+            atuais[alerta.titulo] = true;
+            if (!$scope.alertasFinanceirosAtivos[alerta.titulo]) {
+                $scope.caixaEntrada = $scope.caixaEntrada || [];
+                $scope.caixaEntrada.unshift({
+                    id: 'msg_financeiro_' + Date.now() + '_' + alerta.titulo,
+                    remetente: 'Departamento Financeiro',
+                    assunto: alerta.titulo,
+                    mensagem: alerta.texto,
+                    lida: false,
+                    tipo: alerta.nivel === 'critico' ? 'alerta' : 'info',
+                    data: new Date().toLocaleDateString('pt-BR')
+                });
+                $scope.mensagensNaoLidas = ($scope.mensagensNaoLidas || 0) + 1;
+            }
+        });
+        $scope.alertasFinanceirosAtivos = atuais;
     };
 
     // FASE 17: GERAÇÃO DE PATROCINADORES MASTER
