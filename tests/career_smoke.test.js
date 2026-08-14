@@ -95,6 +95,15 @@ assert.ok(Array.isArray(scope.patrocinadoresDisponiveis) && scope.patrocinadores
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'new season should generate a board objective');
 assert.ok(Array.isArray(scope.elencoAtual), 'season rollover should preserve a valid squad');
 
+// Garante que a carreira consegue atravessar mais de uma temporada consecutiva.
+for (let temporada = 0; temporada < 2; temporada++) {
+  scope.elencoAtual.forEach((jogador) => { jogador.anosContrato = 3; });
+  const anoAnterior = scope.dados.anoAtual;
+  scope.executarViradaDeAno(false);
+  assert.strictEqual(scope.dados.anoAtual, anoAnterior + 1, 'consecutive season rollover should advance the year');
+  assert.ok(scope.calendarioGeral.length > 0, 'consecutive season rollover should create a calendar');
+}
+
 const freeDay = scope.calendarioGeral.findIndex((dia, index) => {
   scope.diaAtual = index;
   return !scope.obterMeuJogoHoje();

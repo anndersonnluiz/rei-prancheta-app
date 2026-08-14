@@ -5309,6 +5309,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         window.URL.revokeObjectURL(url);
     };
 
+    $scope.validarSaveImportado = function(saveImportado) {
+        if (!saveImportado || typeof saveImportado !== 'object' || Array.isArray(saveImportado)) return false;
+        return !!saveImportado.clubeAtualId && Array.isArray(saveImportado.elencoAtual);
+    };
+
     $scope.selecionarArquivoSave = function(input) {
         var arquivo = input && input.files && input.files[0];
         if (!arquivo) return;
@@ -5316,12 +5321,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         leitor.onload = function(evento) {
             try {
                 var saveImportado = JSON.parse(evento.target.result);
-                if (!saveImportado || typeof saveImportado !== 'object' || Array.isArray(saveImportado)) {
-                    throw new Error('formato');
-                }
-                if (!saveImportado.clubeAtualId || !Array.isArray(saveImportado.elencoAtual)) {
-                    throw new Error('estrutura');
-                }
+                if (!$scope.validarSaveImportado(saveImportado)) throw new Error('estrutura');
                 if (!window.confirm('Importar este save substituirá a carreira atual. Deseja continuar?')) return;
                 saveImportado = $scope.migrarSave(saveImportado);
                 window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveImportado));
