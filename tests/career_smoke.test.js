@@ -85,6 +85,7 @@ assert.strictEqual(jogosDeLiga, 1520, 'four divisions should complete 38 rounds 
 const anoAntesDaVirada = scope.dados.anoAtual;
 scope.relatorioFimAno = null;
 scope.atualizarTaticas = function() {};
+scope.elencoAtual.forEach((jogador) => { jogador.anosContrato = 3; });
 scope.executarViradaDeAno(false);
 assert.strictEqual(scope.dados.anoAtual, anoAntesDaVirada + 1, 'season rollover should advance the year');
 assert.ok(Array.isArray(scope.calendarioGeral) && scope.calendarioGeral.length > 0, 'season rollover should generate a new calendar');
