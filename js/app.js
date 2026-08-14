@@ -64,6 +64,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
     $scope.historicoTreinador = [];
     $scope.mudancaClubePendente = null;
+    $scope.staffClube = [];
+
+    function criarStaffPadrao() {
+        return [
+            { id: 'auxiliar', cargo: 'Auxiliar Técnico', nome: 'Vaga disponível', nivel: 1, salario: 0, contratado: false, efeito: 'Escalação e análise' },
+            { id: 'preparador', cargo: 'Preparador Físico', nome: 'Vaga disponível', nivel: 1, salario: 0, contratado: false, efeito: 'Recuperação e desgaste' },
+            { id: 'medico', cargo: 'Médico do Clube', nome: 'Vaga disponível', nivel: 1, salario: 0, contratado: false, efeito: 'Tratamento de lesões' },
+            { id: 'analista', cargo: 'Analista de Desempenho', nome: 'Vaga disponível', nivel: 1, salario: 0, contratado: false, efeito: 'Relatório pré-jogo' }
+        ];
+    }
+
+    function normalizarStaff(staff) {
+        var base = criarStaffPadrao();
+        if (!Array.isArray(staff)) return base;
+        return base.map(function(vaga) {
+            var salvo = staff.find(function(item) { return item && item.id === vaga.id; });
+            return salvo ? Object.assign(vaga, salvo) : vaga;
+        });
+    }
     var SAVE_VERSION_ATUAL = 11;
 
     // FASE 21: Efeitos Sonoros
@@ -1858,6 +1877,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.dados.nomeTreinador = 'Treinador(a)';
         }
         $scope.dados.anoAtual = 2024;
+        $scope.staffClube = criarStaffPadrao();
         $scope.historicoTreinador = [{
             tipo: 'inicio', clubeId: clube.id, clubeNome: clube.nome,
             divisao: clube.divisao, temporada: $scope.dados.anoAtual,
@@ -5257,6 +5277,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         if (!saveInfo.savedAt) saveInfo.savedAt = new Date().toISOString();
         if (!Array.isArray(saveInfo.historicoTreinador)) saveInfo.historicoTreinador = [];
+        saveInfo.staffClube = normalizarStaff(saveInfo.staffClube);
 
         // v1 -> v2: calendario/continentais sao reconciliados apos aplicar no $scope.
         if (!Array.isArray(saveInfo.calendarioGeral)) saveInfo.calendarioGeral = [];
@@ -5305,6 +5326,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             savedAt: new Date().toISOString(),
             nomeTreinador: $scope.dados.nomeTreinador,
             historicoTreinador: $scope.historicoTreinador || [],
+            staffClube: normalizarStaff($scope.staffClube),
             anoAtual: $scope.dados.anoAtual || 2024,
             caixaEntrada: $scope.caixaEntrada || [],
             noticiasFeed: $scope.noticiasFeed || [],
@@ -5343,6 +5365,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.salvarJogo = function() {
         $scope.salvarJogoSilencioso();
         alert('Jogo salvo com sucesso!');
+    };
+
+    $scope.contratarStaff = function(vaga) {
+        if (!vaga || vaga.contratado || !$scope.clubeAtual) return;
+        var custo = 25000 * vaga.nivel;
+        if (($scope.clubeAtual.orcamento || 0) < custo) {
+            alert('Orçamento insuficiente para contratar este profissional.');
+            return;
+        }
+        vaga.nome = 'Profissional ' + vaga.cargo;
+        vaga.salario = custo;
+        vaga.contratado = true;
+        $scope.clubeAtual.orcamento -= custo;
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+    };
+
+    $scope.demitirStaff = function(vaga) {
+        if (!vaga || !vaga.contratado) return;
+        vaga.nome = 'Vaga disponível';
+        vaga.salario = 0;
+        vaga.contratado = false;
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
     };
 
     // Backup manual da carreira para permitir transporte entre navegadores/dispositivos.
@@ -5435,6 +5479,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.saveInfo = $scope.migrarSave($scope.saveInfo);
         $scope.dados.nomeTreinador = $scope.saveInfo.nomeTreinador;
         $scope.historicoTreinador = Array.isArray($scope.saveInfo.historicoTreinador) ? $scope.saveInfo.historicoTreinador : [];
+        $scope.staffClube = normalizarStaff($scope.saveInfo.staffClube);
         $scope.dados.anoAtual = $scope.saveInfo.anoAtual || 2024;
         $scope.caixaEntrada = $scope.saveInfo.caixaEntrada || [];
         $scope.noticiasFeed = $scope.saveInfo.noticiasFeed || [];

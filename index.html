@@ -75,6 +75,7 @@
             
             <ul class="nav-links">
                 <li ng-class="{'active': telaAtual === 'historico_treinador'}" ng-click="mudarTela('historico_treinador')">📚 Minha Carreira</li>
+                <li ng-class="{'active': telaAtual === 'staff'}" ng-click="mudarTela('staff')">🧑‍💼 Comissão Técnica</li>
                 <li ng-class="{'active': telaAtual === 'dashboard'}" ng-click="mudarTela('dashboard')">📊 Visão Geral</li>
                 <li ng-class="{'active': telaAtual === 'mensagens'}" ng-click="mudarTela('mensagens')">
                     ✉️ Mensagens 
@@ -520,6 +521,24 @@
                             <small>{{diretoriaStatus.ultimaObservacao}}</small>
                         </div>
                     </aside>
+                </div>
+            </div>
+
+            <!-- TELA: COMISSÃO TÉCNICA -->
+            <div ng-if="telaAtual === 'staff'">
+                <div class="card" style="margin-bottom: 20px; padding: 24px; background: linear-gradient(135deg, #1f4e79, #17324d); color: white;">
+                    <h2>🧑‍💼 Comissão Técnica</h2>
+                    <p style="opacity: 0.85; margin-top: 8px;">Monte uma equipe de apoio para cuidar dos detalhes do clube.</p>
+                </div>
+                <div class="club-grid">
+                    <div class="card" ng-repeat="vaga in staffClube" style="padding: 20px;">
+                        <span class="dashboard-eyebrow">{{vaga.cargo}}</span>
+                        <h3 style="margin: 8px 0;">{{vaga.nome}}</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 14px;">Efeito: {{vaga.efeito}}</p>
+                        <p ng-if="vaga.contratado" style="color: var(--br-green-dark); font-weight: bold; margin-bottom: 12px;">Contratado · R$ {{vaga.salario | number:0}} / mês</p>
+                        <button class="btn-play-quick" ng-if="!vaga.contratado" ng-click="contratarStaff(vaga)">Contratar</button>
+                        <button class="btn" ng-if="vaga.contratado" ng-click="demitirStaff(vaga)" style="padding: 9px 12px; border: 1px solid #e74c3c; color: #c0392b; background: white; border-radius: 6px; cursor: pointer;">Demitir</button>
+                    </div>
                 </div>
             </div>
 
