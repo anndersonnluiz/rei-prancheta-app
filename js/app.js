@@ -5417,6 +5417,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return emprestimo;
     };
 
+    $scope.solicitarEmprestimo = function() {
+        var form = $scope.emprestimoForm || {};
+        var jogador = ($scope.elencoAtual || []).find(function(item) { return String(item.id) === String(form.jogadorId); });
+        var resultado = $scope.emprestarJogador(jogador, form.clubeDestinoId, form.duracaoDias);
+        if (!resultado) {
+            alert('Não foi possível criar o empréstimo. Verifique o jogador, o destino e a duração.');
+            return;
+        }
+        $scope.emprestimoForm = {};
+    };
+
     $scope.processarEmprestimosDia = function() {
         var devolvidos = [];
         ($scope.emprestimosAtivos || []).forEach(function(emprestimo) {

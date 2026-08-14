@@ -1435,6 +1435,16 @@
                 </div>
 
                 <!-- Sub-Navegação do Mercado -->
+                <div class="card" style="margin-bottom: 20px; padding: 16px; border-left: 4px solid var(--br-blue);">
+                    <h4 style="margin-bottom: 8px;">Empréstimos do elenco</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; align-items: end;">
+                        <label>Jogador<select ng-model="emprestimoForm.jogadorId" style="width: 100%; padding: 8px; margin-top: 4px;"><option value="">Selecione</option><option ng-repeat="jogador in elencoAtual" value="{{jogador.id}}">{{jogador.nome}}</option></select></label>
+                        <label>Clube destino<select ng-model="emprestimoForm.clubeDestinoId" style="width: 100%; padding: 8px; margin-top: 4px;"><option value="">Selecione</option><option ng-repeat="clube in clubes" ng-if="clube.id !== clubeAtual.id" value="{{clube.id}}">{{clube.nome}}</option></select></label>
+                        <label>Duração<select ng-model="emprestimoForm.duracaoDias" style="width: 100%; padding: 8px; margin-top: 4px;"><option value="30">30 dias</option><option value="60">60 dias</option><option value="90">90 dias</option></select></label>
+                        <button class="btn-play-quick" ng-click="solicitarEmprestimo()">Enviar por empréstimo</button>
+                    </div>
+                    <div ng-if="emprestimosAtivos.length > 0" style="margin-top: 12px; color: var(--text-muted); font-size: 13px;">Ativos: <span ng-repeat="emprestimo in emprestimosAtivos">{{emprestimo.jogadorNome}} em {{emprestimo.clubeDestinoNome}} ({{emprestimo.diasRestantes}}d)<span ng-if="!$last"> · </span></span></div>
+                </div>
                 <div class="mercado-tabs">
                     <button class="mercado-tab" ng-class="{'active': isAbaMercado('busca')}" ng-click="definirAbaMercado('busca')">Buscar jogadores</button>
                     <button class="mercado-tab" ng-class="{'active': isAbaMercado('propostas')}" ng-click="definirAbaMercado('propostas')">Propostas <span class="mercado-tab-count">{{propostasPendentes.length || 0}}</span></button>
