@@ -91,4 +91,16 @@ assert.ok(Number.isFinite(maiorFolha) && Number.isFinite(menorOrcamento), 'finan
 assert.ok(cartoes >= 0 && lesoes >= 0, 'disciplinary and injury metrics should remain valid');
 assert.ok(scope.historicoTreinador.filter((item) => item.tipo === 'temporada').length >= 3, 'career history should retain all seasons');
 scope.elencoAtual.forEach((jogador) => assert.ok(jogador.clubeId === scope.clubeAtual.id, 'squad player should remain linked to managed club'));
-console.log('long_term_continuity.test.js passed:', partidas, 'partidas,', gols, 'gols, posse mandante media', (posseAcumulada / partidas).toFixed(1) + '%');
+console.log('long_term_continuity.test.js balance report:', JSON.stringify({
+  temporadas: 3,
+  partidas: partidas,
+  gols: gols,
+  golsPorPartida: Number((gols / partidas).toFixed(2)),
+  posseMandanteModoCompleto: estatisticasCompletas ? estatisticasCompletas.posseMandante : null,
+  chutesModoCompleto: estatisticasCompletas ? (estatisticasCompletas.chutesMandante + estatisticasCompletas.chutesVisitante) : null,
+  xgModoCompleto: telemetriaCompleta ? Number(telemetriaCompleta.reduce((total, shot) => total + (Number(shot.xg) || 0), 0).toFixed(2)) : null,
+  cartoesAcumulados: cartoes,
+  lesoesObservadas: lesoes,
+  maiorFolha: maiorFolha,
+  menorOrcamento: menorOrcamento
+}));
