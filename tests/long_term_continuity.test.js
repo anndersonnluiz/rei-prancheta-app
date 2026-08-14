@@ -13,7 +13,9 @@ function createScope() {
   const appPath = path.join(__dirname, '..', 'js', 'app.js');
   vm.runInNewContext(fs.readFileSync(appPath, 'utf8'), context, { filename: appPath });
   const scope = {};
-  appStub.controllerFn(scope, { get() { throw new Error('Unexpected HTTP request'); } }, function() {});
+  let timerReady = false;
+  appStub.controllerFn(scope, { get() { throw new Error('Unexpected HTTP request'); } }, function(callback) { if (timerReady && typeof callback === 'function') callback(); });
+  timerReady = true;
   return scope;
 }
 
