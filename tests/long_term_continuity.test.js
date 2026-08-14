@@ -27,6 +27,16 @@ scope.iniciarNovoJogo(scope.clubes[0]);
 scope.assinarPatrocinio(scope.patrocinadoresDisponiveis[1]);
 scope.atualizarTaticas = function() {};
 
+const partidaCompleta = scope.obterMeuJogoHoje();
+let telemetriaCompleta = null;
+let estatisticasCompletas = null;
+if (partidaCompleta) {
+  scope.elencoAtual.slice(0, 11).forEach((jogador) => { jogador.emCampo = true; });
+  scope.iniciarPartidaCompleta(partidaCompleta);
+  telemetriaCompleta = partidaCompleta.telemetriaShots || [];
+  estatisticasCompletas = scope.estatisticas ? JSON.parse(JSON.stringify(scope.estatisticas)) : null;
+}
+
 const anosIniciais = scope.dados.anoAtual;
 let partidas = 0;
 let gols = 0;
@@ -69,6 +79,12 @@ for (let temporada = 0; temporada < 3; temporada += 1) {
 assert.strictEqual(scope.dados.anoAtual, anosIniciais + 3, 'three seasons should advance the year');
 assert.ok(partidas > 30, 'long-term stress should conclude matches');
 assert.ok(gols >= partidas, 'long-term stress should produce goals');
+if (partidaCompleta) {
+  assert.ok(telemetriaCompleta.length > 0, 'complete match should generate shot telemetry');
+  assert.ok(telemetriaCompleta.every((shot) => Number.isFinite(shot.xg)), 'complete match xG should be numeric');
+  assert.ok(estatisticasCompletas && Number.isFinite(estatisticasCompletas.posseMandante), 'complete match should generate possession');
+  assert.ok(estatisticasCompletas.chutesMandante + estatisticasCompletas.chutesVisitante > 0, 'complete match should generate shots');
+}
 assert.ok(partidasComPosse >= 0 && partidasComPosse <= partidas, 'possession metric count should remain bounded');
 if (partidasComPosse > 0) assert.ok(posseAcumulada / partidasComPosse > 35 && posseAcumulada / partidasComPosse < 65, 'average home possession should remain plausible');
 assert.ok(Number.isFinite(maiorFolha) && Number.isFinite(menorOrcamento), 'financial metrics should remain finite');
