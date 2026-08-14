@@ -1895,6 +1895,21 @@
                         </div>
                     </div>
 
+                    <div ng-if="historicoFinanceiroMensal && (historicoFinanceiroMensal | json) !== '{}'" style="margin-bottom: 25px;">
+                        <h3 style="margin-bottom: 12px;">Evolução mensal</h3>
+                        <div style="overflow-x: auto; border: 1px solid #ddd; border-radius: 8px; background: white;">
+                            <table style="width: 100%; border-collapse: collapse; min-width: 520px;">
+                                <thead><tr style="background: var(--bg-light); text-align: left;"><th style="padding: 10px;">Mês</th><th style="padding: 10px;">Entradas</th><th style="padding: 10px;">Saídas</th><th style="padding: 10px;">Saldo</th></tr></thead>
+                                <tbody><tr ng-repeat="(mes, financeiro) in historicoFinanceiroMensal" style="border-top: 1px solid #eee;">
+                                    <td style="padding: 10px;">{{mes}}</td>
+                                    <td style="padding: 10px; color: var(--br-green);">+ {{formatarMoeda(financeiro.entradas)}}</td>
+                                    <td style="padding: 10px; color: #e74c3c;">- {{formatarMoeda(financeiro.saidas)}}</td>
+                                    <td style="padding: 10px; font-weight: bold;" ng-style="{'color': financeiro.saldo >= 0 ? 'var(--br-green)' : '#e74c3c'}">{{formatarMoeda(financeiro.saldo)}}</td>
+                                </tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <h3 style="margin-bottom: 15px;">Histórico de Transações</h3>
                     <div ng-if="financasHistorico.length === 0" style="text-align: center; color: var(--text-muted); padding: 30px;">
                         Nenhuma movimentação financeira ainda. Jogue partidas para gerar receitas!
