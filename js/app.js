@@ -4288,6 +4288,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 data: new Date().toLocaleDateString('pt-BR')
             });
 
+            // Direitos de transmissao: receita recorrente proporcional ao nivel da competicao.
+            // O valor e mensal e intencionalmente menor nas divisoes inferiores para preservar a progressao.
+            var cotasTransmissaoPorDivisao = { A: 8000000, B: 2500000, C: 1200000, D: 600000 };
+            var cotaTransmissao = cotasTransmissaoPorDivisao[$scope.clubeAtual.divisao] || 600000;
+            $scope.clubeAtual.orcamento += cotaTransmissao;
+            $scope.financasHistorico.unshift({
+                tipo: 'receita',
+                descricao: 'Cota de Transmissao (Mensal)',
+                valor: cotaTransmissao,
+                data: new Date().toLocaleDateString('pt-BR')
+            });
+
             var valorManutencao = $scope.clubeAtual.estadio.capacidade * 20;
             $scope.clubeAtual.orcamento -= valorManutencao;
             $scope.financasHistorico.unshift({

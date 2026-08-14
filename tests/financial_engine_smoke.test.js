@@ -50,6 +50,7 @@ assert.ok(scope.diaAtual > 0, 'financial smoke should advance the calendar');
 assert.ok(Array.isArray(scope.financasHistorico) && scope.financasHistorico.length > 0, 'real engine should record financial entries');
 assert.ok(scope.financasHistorico.some((item) => item.descricao && item.descricao.indexOf('Pagamento de Sal') === 0), 'real engine should charge payroll');
 assert.ok(scope.financasHistorico.some((item) => item.descricao && item.descricao.indexOf('Merchandising') === 0), 'real engine should record monthly commercial revenue');
+assert.ok(scope.financasHistorico.some((item) => item.descricao && item.descricao.indexOf('Cota de Transmissao') === 0), 'real engine should record broadcast rights revenue');
 assert.ok(scope.financasHistorico.some((item) => item.descricao && item.descricao.indexOf('Manuten') === 0), 'real engine should charge stadium maintenance');
 assert.ok(Number.isFinite(scope.clubeAtual.orcamento), 'real engine should keep club budget finite');
 assert.notStrictEqual(scope.clubeAtual.orcamento, orcamentoInicial, 'real engine should change budget through matches and daily finance');
