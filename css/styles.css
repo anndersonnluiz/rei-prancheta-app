@@ -2618,3 +2618,36 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
     .main-content { margin-left: 220px; max-width: calc(100% - 220px); padding: 18px; }
     .nav-links li { padding-left: 14px; padding-right: 14px; font-size: 13px; gap: 8px; }
 }
+
+/* Revisão responsiva geral: evita cortes em cabeçalhos, cards e grades estreitas. */
+*, *::before, *::after { box-sizing: border-box; }
+.main-content, .card, .dashboard-panel, .dashboard-grid, .dashboard-side { min-width: 0; }
+.main-content header { flex-wrap: wrap; gap: 14px; }
+.main-content header > * { min-width: 0; }
+button, input, select, textarea { max-width: 100%; }
+table { max-width: 100%; }
+
+@media (max-width: 900px) {
+    .main-content { padding: 20px; }
+    .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+    .dashboard-side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .summary-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .post-match-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+    .main-content { margin-left: 0; max-width: 100%; padding: 12px; }
+    .sidebar { position: relative; width: 100%; height: auto; max-height: none; min-height: auto; }
+    .app-layout { display: block; }
+    .sidebar-header { padding: 14px; }
+    .game-logo-small { max-width: 90px; margin-bottom: 8px; }
+    .nav-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 8px; gap: 4px; }
+    .nav-links li { padding: 10px 8px; font-size: 12px; min-width: 0; }
+    .sidebar-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
+    .sidebar-footer button, .sidebar-footer input + button { margin-bottom: 0 !important; }
+    .main-content header { padding: 16px; }
+    .main-content header h1, .main-content header h2 { font-size: 20px; }
+    .dashboard-side, .summary-kpis, .post-match-kpi-grid, .club-kpis { grid-template-columns: 1fr; }
+    .card { padding: 14px !important; }
+    .pre-match-grid, .post-match-grid { grid-template-columns: 1fr; }
+}
