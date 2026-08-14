@@ -65,6 +65,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.historicoTreinador = [];
     $scope.mudancaClubePendente = null;
     $scope.staffClube = [];
+    $scope.emprestimosAtivos = [];
 
     function criarStaffPadrao() {
         return [
@@ -1878,6 +1879,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         $scope.dados.anoAtual = 2024;
         $scope.staffClube = criarStaffPadrao();
+        $scope.emprestimosAtivos = [];
         $scope.historicoTreinador = [{
             tipo: 'inicio', clubeId: clube.id, clubeNome: clube.nome,
             divisao: clube.divisao, temporada: $scope.dados.anoAtual,
@@ -4158,6 +4160,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
 
         $scope.diaAtual++;
+        $scope.processarEmprestimosDia();
         $scope.atualizarPropostasPendentes();
         $scope.atualizarResumoJanelaMercado();
         $scope.elencoAtual.forEach(function(j) { 
@@ -5288,6 +5291,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (!saveInfo.savedAt) saveInfo.savedAt = new Date().toISOString();
         if (!Array.isArray(saveInfo.historicoTreinador)) saveInfo.historicoTreinador = [];
         saveInfo.staffClube = normalizarStaff(saveInfo.staffClube);
+        if (!Array.isArray(saveInfo.emprestimosAtivos)) saveInfo.emprestimosAtivos = [];
 
         // v1 -> v2: calendario/continentais sao reconciliados apos aplicar no $scope.
         if (!Array.isArray(saveInfo.calendarioGeral)) saveInfo.calendarioGeral = [];
@@ -5337,6 +5341,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             nomeTreinador: $scope.dados.nomeTreinador,
             historicoTreinador: $scope.historicoTreinador || [],
             staffClube: normalizarStaff($scope.staffClube),
+            emprestimosAtivos: $scope.emprestimosAtivos || [],
             anoAtual: $scope.dados.anoAtual || 2024,
             caixaEntrada: $scope.caixaEntrada || [],
             noticiasFeed: $scope.noticiasFeed || [],
@@ -5389,6 +5394,48 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         vaga.contratado = true;
         $scope.clubeAtual.orcamento -= custo;
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+    };
+
+    $scope.emprestarJogador = function(jogador, clubeDestinoId, duracaoDias) {
+        if (!jogador || !$scope.clubeAtual || jogador.clubeId !== $scope.clubeAtual.id) return null;
+        if (!clubeDestinoId || clubeDestinoId === $scope.clubeAtual.id) return null;
+        if (($scope.emprestimosAtivos || []).some(function(item) { return item.jogadorId === jogador.id; })) return null;
+        var destino = ($scope.clubes || []).find(function(clube) { return clube.id === clubeDestinoId; });
+        if (!destino) return null;
+        var emprestimo = {
+            id: 'emprestimo_' + jogador.id + '_' + Date.now(), jogadorId: jogador.id,
+            jogadorNome: jogador.nome, clubeOrigemId: $scope.clubeAtual.id,
+            clubeDestinoId: destino.id, clubeDestinoNome: destino.nome,
+            diasRestantes: Math.max(1, parseInt(duracaoDias, 10) || 30), status: 'ativo'
+        };
+        jogador.clubeId = destino.id;
+        var base = ($scope.jogadores || []).find(function(item) { return item.id === jogador.id; });
+        if (base) base.clubeId = destino.id;
+        $scope.emprestimosAtivos.push(emprestimo);
+        $scope.elencoAtual = $scope.elencoAtual.filter(function(item) { return item.id !== jogador.id; });
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return emprestimo;
+    };
+
+    $scope.processarEmprestimosDia = function() {
+        var devolvidos = [];
+        ($scope.emprestimosAtivos || []).forEach(function(emprestimo) {
+            if (emprestimo.status !== 'ativo') return;
+            emprestimo.diasRestantes = Math.max(0, (emprestimo.diasRestantes || 0) - 1);
+            if (emprestimo.diasRestantes > 0) return;
+            var jogador = ($scope.jogadores || []).find(function(item) { return item.id === emprestimo.jogadorId; });
+            if (jogador) jogador.clubeId = emprestimo.clubeOrigemId;
+            emprestimo.status = 'encerrado';
+            devolvidos.push(emprestimo);
+        });
+        $scope.emprestimosAtivos = ($scope.emprestimosAtivos || []).filter(function(item) { return item.status === 'ativo'; });
+        if (devolvidos.length && $scope.clubeAtual) {
+            devolvidos.forEach(function(item) {
+                var jogador = ($scope.jogadores || []).find(function(j) { return j.id === item.jogadorId; });
+                if (jogador && jogador.clubeId === $scope.clubeAtual.id && !$scope.elencoAtual.some(function(j) { return j.id === jogador.id; })) $scope.elencoAtual.push(angular.copy(jogador));
+            });
+        }
+        return devolvidos;
     };
 
     $scope.demitirStaff = function(vaga) {
@@ -5490,6 +5537,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.dados.nomeTreinador = $scope.saveInfo.nomeTreinador;
         $scope.historicoTreinador = Array.isArray($scope.saveInfo.historicoTreinador) ? $scope.saveInfo.historicoTreinador : [];
         $scope.staffClube = normalizarStaff($scope.saveInfo.staffClube);
+        $scope.emprestimosAtivos = Array.isArray($scope.saveInfo.emprestimosAtivos) ? $scope.saveInfo.emprestimosAtivos : [];
         $scope.dados.anoAtual = $scope.saveInfo.anoAtual || 2024;
         $scope.caixaEntrada = $scope.saveInfo.caixaEntrada || [];
         $scope.noticiasFeed = $scope.saveInfo.noticiasFeed || [];

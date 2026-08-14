@@ -51,6 +51,15 @@ assert.ok(Array.isArray(scope.elencoAtual) && scope.elencoAtual.length > 0, 'car
 assert.ok(scope.clubeAtual.base && scope.clubeAtual.base.atletas.length === 8, 'career should initialize youth academy');
 assert.ok(scope.clubeAtual.infraestrutura, 'career should initialize infrastructure');
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'career should initialize board objective');
+const jogadorParaEmprestimo = scope.elencoAtual[0];
+const destinoEmprestimo = scope.clubes.find((item) => item.id !== clube.id);
+const emprestimo = scope.emprestarJogador(jogadorParaEmprestimo, destinoEmprestimo.id, 2);
+assert.ok(emprestimo && emprestimo.status === 'ativo', 'career should create an active loan');
+assert.strictEqual(jogadorParaEmprestimo.clubeId, destinoEmprestimo.id);
+scope.processarEmprestimosDia();
+scope.processarEmprestimosDia();
+assert.strictEqual(scope.emprestimosAtivos.length, 0, 'loan should close after its duration');
+assert.strictEqual(jogadorParaEmprestimo.clubeId, clube.id, 'loaned player should return to origin club');
 assert.ok(Array.isArray(scope.historicoTreinador) && scope.historicoTreinador.length === 1, 'career should initialize coach history');
 assert.strictEqual(scope.historicoTreinador[0].tipo, 'inicio');
 const preparador = scope.staffClube.find((item) => item.id === 'preparador');
