@@ -6,7 +6,8 @@
   "scripts": {
     "check": "node --check js/app.js",
     "test": "node scripts/run-tests.js",
-    "analyze:market": "node scripts/analyze_market_balance.js"
+    "analyze:market": "node scripts/analyze_market_balance.js",
+    "analyze:finance": "node scripts/analyze_financial_sustainability.js"
   },
   "dependencies": {
     "acorn": "^8.17.0"
