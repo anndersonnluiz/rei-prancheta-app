@@ -5425,6 +5425,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (emprestimo.diasRestantes > 0) return;
             var jogador = ($scope.jogadores || []).find(function(item) { return item.id === emprestimo.jogadorId; });
             if (jogador) jogador.clubeId = emprestimo.clubeOrigemId;
+            ($scope.elencoAtual || []).forEach(function(item) {
+                if (item.id === emprestimo.jogadorId) item.clubeId = emprestimo.clubeOrigemId;
+            });
             emprestimo.status = 'encerrado';
             devolvidos.push(emprestimo);
         });
