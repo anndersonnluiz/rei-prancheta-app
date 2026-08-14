@@ -51,6 +51,8 @@ assert.ok(Array.isArray(scope.elencoAtual) && scope.elencoAtual.length > 0, 'car
 assert.ok(scope.clubeAtual.base && scope.clubeAtual.base.atletas.length === 8, 'career should initialize youth academy');
 assert.ok(scope.clubeAtual.infraestrutura, 'career should initialize infrastructure');
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'career should initialize board objective');
+assert.ok(Array.isArray(scope.historicoTreinador) && scope.historicoTreinador.length === 1, 'career should initialize coach history');
+assert.strictEqual(scope.historicoTreinador[0].tipo, 'inicio');
 
 // Simula as 38 rodadas de liga para todas as divisões e aplica os resultados à tabela.
 let jogosDeLiga = 0;
@@ -94,6 +96,7 @@ assert.strictEqual(scope.clubeAtual.id, clube.id, 'season rollover should preser
 assert.ok(Array.isArray(scope.patrocinadoresDisponiveis) && scope.patrocinadoresDisponiveis.length === 3, 'season rollover should generate new sponsorship options');
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'new season should generate a board objective');
 assert.ok(Array.isArray(scope.elencoAtual), 'season rollover should preserve a valid squad');
+assert.ok(scope.historicoTreinador.some((item) => item.tipo === 'temporada'), 'season rollover should record coach history');
 
 // Garante que a carreira consegue atravessar mais de uma temporada consecutiva.
 for (let temporada = 0; temporada < 2; temporada++) {
@@ -103,6 +106,7 @@ for (let temporada = 0; temporada < 2; temporada++) {
   assert.strictEqual(scope.dados.anoAtual, anoAnterior + 1, 'consecutive season rollover should advance the year');
   assert.ok(scope.calendarioGeral.length > 0, 'consecutive season rollover should create a calendar');
 }
+assert.ok(scope.historicoTreinador.length >= 3, 'history should retain consecutive seasons');
 
 const freeDay = scope.calendarioGeral.findIndex((dia, index) => {
   scope.diaAtual = index;

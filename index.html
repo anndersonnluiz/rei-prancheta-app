@@ -74,6 +74,7 @@
             </div>
             
             <ul class="nav-links">
+                <li ng-class="{'active': telaAtual === 'historico_treinador'}" ng-click="mudarTela('historico_treinador')">📚 Minha Carreira</li>
                 <li ng-class="{'active': telaAtual === 'dashboard'}" ng-click="mudarTela('dashboard')">📊 Visão Geral</li>
                 <li ng-class="{'active': telaAtual === 'mensagens'}" ng-click="mudarTela('mensagens')">
                     ✉️ Mensagens 
@@ -519,6 +520,26 @@
                             <small>{{diretoriaStatus.ultimaObservacao}}</small>
                         </div>
                     </aside>
+                </div>
+            </div>
+
+            <!-- TELA: HISTÓRICO DO TREINADOR -->
+            <div ng-if="telaAtual === 'historico_treinador'">
+                <div class="card" style="margin-bottom: 20px; padding: 24px; background: linear-gradient(135deg, #2c3e50, #34495e); color: white;">
+                    <h2>📚 Minha Carreira</h2>
+                    <p style="opacity: 0.85; margin-top: 8px;">Acompanhe a trajetória do treinador e as temporadas já concluídas.</p>
+                </div>
+                <div class="card" ng-if="!historicoTreinador || historicoTreinador.length === 0" style="padding: 30px; text-align: center;">
+                    <p style="color: var(--text-muted);">O histórico será preenchido conforme sua carreira avançar.</p>
+                </div>
+                <div class="card" ng-if="historicoTreinador.length > 0" style="padding: 0; overflow: hidden;">
+                    <div ng-repeat="evento in historicoTreinador track by $index" style="padding: 16px 20px; border-bottom: 1px solid #edf0f2; display: flex; justify-content: space-between; gap: 16px; align-items: center;">
+                        <div>
+                            <strong style="color: var(--text-dark);">{{evento.descricao}}</strong>
+                            <div style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">{{evento.clubeNome}} · Série {{evento.divisao}} · Temporada {{evento.temporada}}</div>
+                        </div>
+                        <span style="font-size: 11px; font-weight: bold; color: var(--br-blue); background: #eef3ff; padding: 6px 9px; border-radius: 999px; white-space: nowrap;">{{evento.tipo === 'inicio' ? 'Início' : (evento.tipo === 'mudanca_clube' ? 'Mudança' : 'Temporada')}}</span>
+                    </div>
                 </div>
             </div>
 

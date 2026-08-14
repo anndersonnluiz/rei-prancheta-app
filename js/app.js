@@ -62,6 +62,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.elencoAtual = [];
     $scope.telaAtual = 'loading'; 
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
+    $scope.historicoTreinador = [];
     var SAVE_VERSION_ATUAL = 11;
 
     // FASE 21: Efeitos Sonoros
@@ -1856,6 +1857,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.dados.nomeTreinador = 'Treinador(a)';
         }
         $scope.dados.anoAtual = 2024;
+        $scope.historicoTreinador = [{
+            tipo: 'inicio', clubeId: clube.id, clubeNome: clube.nome,
+            divisao: clube.divisao, temporada: $scope.dados.anoAtual,
+            descricao: 'Início da carreira no ' + clube.nome
+        }];
         $scope.selecionarClube(clube.id);
         $scope.financasHistorico = []; // FASE 9: Inicializa o histórico zerado
         $scope.transferenciasHistorico = [];
@@ -4958,6 +4964,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.executarViradaDeAno = function(trocouDeClube) {
+        var clubeAntesDaVirada = $scope.clubeAtual;
+        var temporadaEncerrada = $scope.dados.anoAtual;
         var divs = ["A", "B", "C", "D"];
         var classificados = {};
         divs.forEach(function(d) { classificados[d] = $scope.ordenarTabela(d); });
@@ -5032,6 +5040,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
 
         $scope.dados.anoAtual++;
+        if (!Array.isArray($scope.historicoTreinador)) $scope.historicoTreinador = [];
+        $scope.historicoTreinador.unshift({
+            tipo: trocouDeClube ? 'mudanca_clube' : 'temporada',
+            clubeId: clubeAntesDaVirada && clubeAntesDaVirada.id,
+            clubeNome: clubeAntesDaVirada && clubeAntesDaVirada.nome,
+            divisao: clubeAntesDaVirada && clubeAntesDaVirada.divisao,
+            temporada: temporadaEncerrada,
+            posicao: $scope.clubeAtual && $scope.tabelas[$scope.clubeAtual.divisao] ?
+                $scope.ordenarTabela($scope.clubeAtual.divisao).findIndex(function(t) { return t.clube.id === $scope.clubeAtual.id; }) + 1 : null,
+            descricao: trocouDeClube ? 'Mudança de clube após a temporada ' + temporadaEncerrada : 'Temporada ' + temporadaEncerrada + ' concluída'
+        });
+        $scope.historicoTreinador = $scope.historicoTreinador.slice(0, 30);
         $scope.patrocinioAtual = null; // Renovar patrocínios todo ano
         $scope.gerarPatrocinadores();
         
@@ -5197,6 +5217,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var version = saveInfo.saveVersion || 1;
 
         if (!saveInfo.savedAt) saveInfo.savedAt = new Date().toISOString();
+        if (!Array.isArray(saveInfo.historicoTreinador)) saveInfo.historicoTreinador = [];
 
         // v1 -> v2: calendario/continentais sao reconciliados apos aplicar no $scope.
         if (!Array.isArray(saveInfo.calendarioGeral)) saveInfo.calendarioGeral = [];
@@ -5244,6 +5265,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             saveVersion: SAVE_VERSION_ATUAL,
             savedAt: new Date().toISOString(),
             nomeTreinador: $scope.dados.nomeTreinador,
+            historicoTreinador: $scope.historicoTreinador || [],
             anoAtual: $scope.dados.anoAtual || 2024,
             caixaEntrada: $scope.caixaEntrada || [],
             noticiasFeed: $scope.noticiasFeed || [],
@@ -5373,6 +5395,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (!$scope.saveInfo) return;
         $scope.saveInfo = $scope.migrarSave($scope.saveInfo);
         $scope.dados.nomeTreinador = $scope.saveInfo.nomeTreinador;
+        $scope.historicoTreinador = Array.isArray($scope.saveInfo.historicoTreinador) ? $scope.saveInfo.historicoTreinador : [];
         $scope.dados.anoAtual = $scope.saveInfo.anoAtual || 2024;
         $scope.caixaEntrada = $scope.saveInfo.caixaEntrada || [];
         $scope.noticiasFeed = $scope.saveInfo.noticiasFeed || [];
