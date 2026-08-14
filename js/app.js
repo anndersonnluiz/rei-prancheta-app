@@ -2426,7 +2426,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var base = partida ? 28 : 32;
         var minimo = partida ? 20 : 24;
         var carga = $scope.calcularCargaCalendario(diaIndice);
-        return Math.max(minimo, Math.round(base * (carga.fatorRecuperacao || 1) * $scope.calcularFatorRecuperacaoInfraestrutura()));
+        var bonusPreparador = 1;
+        var preparador = ($scope.staffClube || []).find(function(item) { return item.id === 'preparador' && item.contratado; });
+        if (preparador) bonusPreparador += Math.min(0.08, (preparador.nivel || 1) * 0.02);
+        return Math.max(minimo, Math.round(base * (carga.fatorRecuperacao || 1) * $scope.calcularFatorRecuperacaoInfraestrutura() * bonusPreparador));
     };
 
     $scope.calcularQuedaFisicaPorTick = function(jogador, multiplicadorCansaco) {
@@ -2452,7 +2455,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.calcularChanceLesaoTreino = function(cargaCalendario) {
         var multiplicador = cargaCalendario && cargaCalendario.multiplicadorLesao ? cargaCalendario.multiplicadorLesao : 1;
         var fatorTreino = $scope.clubeAtual ? Math.max(0.9, 1 - (($scope.clubeAtual.infraestrutura && $scope.clubeAtual.infraestrutura.centroTreinamento ? $scope.clubeAtual.infraestrutura.centroTreinamento.nivel : 1) - 1) * 0.04) : 1;
-        return Math.min(0.05, 0.015 * multiplicador * fatorTreino);
+        var bonusMedico = ($scope.staffClube || []).some(function(item) { return item.id === 'medico' && item.contratado; }) ? 0.94 : 1;
+        return Math.min(0.05, 0.015 * multiplicador * fatorTreino * bonusMedico);
     };
 
     $scope.obterAlertaCargaCalendario = function() {
@@ -4193,6 +4197,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var recuperacaoExtra = 0;
                     if (nivelDM === 2 && Math.random() < 0.3) recuperacaoExtra = 1;
                     if (nivelDM === 3 && Math.random() < 0.6) recuperacaoExtra = 1;
+                    var medicoStaff = ($scope.staffClube || []).find(function(item) { return item.id === 'medico' && item.contratado; });
+                    if (medicoStaff && Math.random() < Math.min(0.35, 0.15 + (medicoStaff.nivel || 1) * 0.05)) recuperacaoExtra = 1;
 
                     j.diasLesao -= (1 + recuperacaoExtra);
                     if (j.diasLesao <= 0) {

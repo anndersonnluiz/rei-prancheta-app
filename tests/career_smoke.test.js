@@ -53,6 +53,12 @@ assert.ok(scope.clubeAtual.infraestrutura, 'career should initialize infrastruct
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'career should initialize board objective');
 assert.ok(Array.isArray(scope.historicoTreinador) && scope.historicoTreinador.length === 1, 'career should initialize coach history');
 assert.strictEqual(scope.historicoTreinador[0].tipo, 'inicio');
+const preparador = scope.staffClube.find((item) => item.id === 'preparador');
+const recuperacaoSemStaff = scope.calcularRecuperacaoFisicaDiaria(false, 0);
+preparador.contratado = true;
+preparador.nivel = 2;
+const recuperacaoComStaff = scope.calcularRecuperacaoFisicaDiaria(false, 0);
+assert.ok(recuperacaoComStaff >= recuperacaoSemStaff, 'fitness coach should not reduce recovery');
 
 // Simula as 38 rodadas de liga para todas as divisões e aplica os resultados à tabela.
 let jogosDeLiga = 0;
