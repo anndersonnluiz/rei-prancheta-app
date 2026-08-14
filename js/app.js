@@ -5076,6 +5076,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if (!j.anosContrato || j.anosContrato <= 0) j.anosContrato = Math.floor(Math.random() * 3) + 1; 
             });
         }
+        $scope.processarPreContratos();
 
         if (!trocouDeClube) {
             if (!$scope.dados.reputacaoTreinador) $scope.dados.reputacaoTreinador = 3;
@@ -5493,6 +5494,45 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         vaga.salario = 0;
         vaga.contratado = false;
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+    };
+
+    $scope.proporPreContrato = function(jogador, salarioOferta, anos) {
+        if (!jogador || !$scope.clubeAtual || jogador.clubeId === $scope.clubeAtual.id || (jogador.anosContrato || 0) > 1) return null;
+        var existente = ($scope.propostasPendentes || []).find(function(item) { return item.tipo === 'pre_contrato' && item.jogadorId === jogador.id && !statusPropostaFinal(item.status); });
+        if (existente) return existente;
+        var proposta = {
+            id: 'precontrato_' + jogador.id + '_' + Date.now(), tipo: 'pre_contrato', status: 'em_jogador',
+            jogadorId: jogador.id, jogadorNome: jogador.nome, clubeOrigemId: jogador.clubeId,
+            clubeOrigemNome: $scope.obterNomeClube(jogador.clubeId), clubeDestinoId: $scope.clubeAtual.id,
+            clubeDestinoNome: $scope.clubeAtual.nome, salarioOferta: parseFloat(salarioOferta) || jogador.salarioDesejado || jogador.salario || 10000,
+            anosContrato: parseInt(anos, 10) || 2, temporadaAssinatura: ($scope.dados.anoAtual || 2024) + 1,
+            diaCriacao: $scope.diaAtual || 0, diasRestantes: 999, validadeDias: 999
+        };
+        $scope.propostasPendentes = $scope.propostasPendentes || [];
+        $scope.propostasPendentes.unshift(proposta);
+        jogador.emNegociacao = true;
+        $scope.salvarJogoSilencioso();
+        return proposta;
+    };
+
+    $scope.processarPreContratos = function() {
+        var concluidos = [];
+        ($scope.propostasPendentes || []).forEach(function(proposta) {
+            if (proposta.tipo !== 'pre_contrato' || proposta.status !== 'em_jogador') return;
+            var jogador = ($scope.jogadores || []).find(function(item) { return item.id === proposta.jogadorId; });
+            if (!jogador || (jogador.anosContrato || 0) > 0) return;
+            jogador.clubeId = proposta.clubeDestinoId;
+            jogador.salario = proposta.salarioOferta;
+            jogador.anosContrato = proposta.anosContrato;
+            jogador.emNegociacao = false;
+            proposta.status = 'aceita';
+            proposta.diasRestantes = 0;
+            concluidos.push(proposta);
+        });
+        if (concluidos.length) {
+            $scope.propostasPendentes = ($scope.propostasPendentes || []).filter(function(item) { return item.status !== 'aceita' || item.tipo !== 'pre_contrato'; });
+        }
+        return concluidos;
     };
 
     // Backup manual da carreira para permitir transporte entre navegadores/dispositivos.

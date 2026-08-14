@@ -1542,6 +1542,7 @@
                             <button style="padding: 10px 24px; background: var(--br-blue); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" ng-click="iniciarNegociacao(jogador)">
                                 🤝 Negociar
                             </button>
+                            <button ng-if="jogador.clubeId !== 'mercado' && jogador.anosContrato <= 1" style="padding: 8px 12px; background: white; color: var(--br-green-dark); border: 1px solid var(--br-green); border-radius: 8px; font-weight: bold; cursor: pointer; margin-left: 6px;" ng-click="proporPreContrato(jogador, jogador.salarioDesejado, 2)">Pré-contrato</button>
                         </div>
                     </div>
                     

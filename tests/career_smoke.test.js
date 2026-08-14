@@ -53,6 +53,10 @@ assert.ok(scope.clubeAtual.infraestrutura, 'career should initialize infrastruct
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'career should initialize board objective');
 const jogadorParaEmprestimo = scope.elencoAtual[0];
 const destinoEmprestimo = scope.clubes.find((item) => item.id !== clube.id);
+const alvoPreContrato = scope.jogadores.find((item) => item.clubeId !== clube.id && item.clubeId !== 'mercado');
+alvoPreContrato.anosContrato = 1;
+const preContrato = scope.proporPreContrato(alvoPreContrato, alvoPreContrato.salario || 10000, 2);
+assert.ok(preContrato && preContrato.tipo === 'pre_contrato', 'career should create a pre-contract proposal');
 const emprestimo = scope.emprestarJogador(jogadorParaEmprestimo, destinoEmprestimo.id, 2);
 assert.ok(emprestimo && emprestimo.status === 'ativo', 'career should create an active loan');
 assert.strictEqual(jogadorParaEmprestimo.clubeId, destinoEmprestimo.id);
@@ -132,6 +136,7 @@ assert.strictEqual(scope.clubeAtual.id, clube.id, 'season rollover should preser
 assert.ok(Array.isArray(scope.patrocinadoresDisponiveis) && scope.patrocinadoresDisponiveis.length === 3, 'season rollover should generate new sponsorship options');
 assert.ok(scope.diretoriaStatus && scope.diretoriaStatus.objetivoAtual, 'new season should generate a board objective');
 assert.ok(Array.isArray(scope.elencoAtual), 'season rollover should preserve a valid squad');
+assert.strictEqual(scope.jogadores.find((item) => item.id === alvoPreContrato.id).clubeId, clube.id, 'pre-contract should move player at season rollover');
 assert.ok(scope.historicoTreinador.some((item) => item.tipo === 'temporada'), 'season rollover should record coach history');
 const primeiraTemporada = scope.historicoTreinador.find((item) => item.tipo === 'temporada');
 assert.ok(Number.isInteger(primeiraTemporada.posicao) && primeiraTemporada.posicao >= 1 && primeiraTemporada.posicao <= 20);
