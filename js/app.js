@@ -1523,6 +1523,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return { elegivel: true, texto: categoria === 'Sub-17' ? 'Promoção acelerada' : 'Pronto para o profissional' };
     };
 
+    $scope.obterResumoNecessidadesBase = function() {
+        var posicoes = ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'];
+        var labels = { GOL: 'goleiro', ZAG: 'zaga', LAT: 'lateral', VOL: 'volante', MEI: 'meia', ATA: 'ataque' };
+        var resumo = posicoes.map(function(posicao) {
+            var quantidade = ($scope.elencoAtual || []).filter(function(jogador) { return jogador.posicao === posicao; }).length;
+            return { posicao: posicao, label: labels[posicao], quantidade: quantidade, estado: quantidade < 2 ? 'carência' : (quantidade >= 5 ? 'saturada' : 'equilibrada') };
+        });
+        return { carencias: resumo.filter(function(item) { return item.estado === 'carência'; }), saturadas: resumo.filter(function(item) { return item.estado === 'saturada'; }), todas: resumo };
+    };
+
     $scope.normalizarBaseClube = function(clube) {
         return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
     };

@@ -785,6 +785,13 @@
                         A base ainda nao tem atletas. Novas geracoes surgem com o tempo e sao fortalecidas pelo CT.
                     </div>
 
+                    <div style="background: var(--bg-light); border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 15px;" ng-init="necessidadesBase = obterResumoNecessidadesBase()">
+                        <strong>Planejamento do elenco</strong>
+                        <span ng-if="necessidadesBase.carencias.length > 0" style="display:block; color:#d35400; font-size:13px; margin-top:4px;">Carências: <span ng-repeat="item in necessidadesBase.carencias">{{item.label}} ({{item.quantidade}}){{$last ? '' : ', '}}</span></span>
+                        <span ng-if="necessidadesBase.carencias.length === 0" style="display:block; color:var(--br-green-dark); font-size:13px; margin-top:4px;">Nenhuma carência crítica de posição.</span>
+                        <span ng-if="necessidadesBase.saturadas.length > 0" style="display:block; color:var(--text-muted); font-size:12px; margin-top:3px;">Saturadas: <span ng-repeat="item in necessidadesBase.saturadas">{{item.label}}{{$last ? '' : ', '}}</span></span>
+                    </div>
+
                     <div class="youth-grid" ng-if="baseResumo.atletasVisiveis.length > 0">
                         <div class="youth-card" ng-repeat="atleta in baseResumo.atletasVisiveis track by atleta.id" ng-class="'status-' + atleta.statusBase">
                             <div class="youth-card-head">
