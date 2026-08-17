@@ -790,6 +790,10 @@
                         <span ng-if="necessidadesBase.carencias.length > 0" style="display:block; color:#d35400; font-size:13px; margin-top:4px;">Carências: <span ng-repeat="item in necessidadesBase.carencias">{{item.label}} ({{item.quantidade}}){{$last ? '' : ', '}}</span></span>
                         <span ng-if="necessidadesBase.carencias.length === 0" style="display:block; color:var(--br-green-dark); font-size:13px; margin-top:4px;">Nenhuma carência crítica de posição.</span>
                         <span ng-if="necessidadesBase.saturadas.length > 0" style="display:block; color:var(--text-muted); font-size:12px; margin-top:3px;">Saturadas: <span ng-repeat="item in necessidadesBase.saturadas">{{item.label}}{{$last ? '' : ', '}}</span></span>
+                        <div ng-if="obterSugestoesPromocaoBase().length > 0" style="margin-top:8px; font-size:13px; color:var(--br-blue);">
+                            <strong>Sugestões de promoção:</strong>
+                            <span ng-repeat="sugestao in obterSugestoesPromocaoBase()">{{sugestao.atleta.nome}} para {{sugestao.label}} (OVR {{sugestao.atleta.overallAtual}}){{$last ? '' : ' · '}}</span>
+                        </div>
                     </div>
 
                     <div class="youth-grid" ng-if="baseResumo.atletasVisiveis.length > 0">

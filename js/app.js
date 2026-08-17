@@ -1533,6 +1533,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return { carencias: resumo.filter(function(item) { return item.estado === 'carência'; }), saturadas: resumo.filter(function(item) { return item.estado === 'saturada'; }), todas: resumo };
     };
 
+    $scope.obterSugestoesPromocaoBase = function() {
+        var necessidades = $scope.obterResumoNecessidadesBase().carencias;
+        var atletas = ($scope.baseResumo && $scope.baseResumo.atletasVisiveis) || [];
+        return necessidades.map(function(necessidade) {
+            var candidatos = atletas.filter(function(atleta) {
+                return atleta.posicao === necessidade.posicao && $scope.obterStatusPromocaoBase(atleta).elegivel;
+            }).sort(function(a, b) {
+                return ((b.overallAtual || 0) + (b.potencial || 0) * 0.2) - ((a.overallAtual || 0) + (a.potencial || 0) * 0.2);
+            });
+            return { posicao: necessidade.posicao, label: necessidade.label, atleta: candidatos[0] || null };
+        }).filter(function(item) { return !!item.atleta; });
+    };
+
     $scope.normalizarBaseClube = function(clube) {
         return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
     };
