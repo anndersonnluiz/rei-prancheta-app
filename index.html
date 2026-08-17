@@ -792,7 +792,7 @@
                         <span ng-if="necessidadesBase.saturadas.length > 0" style="display:block; color:var(--text-muted); font-size:12px; margin-top:3px;">Saturadas: <span ng-repeat="item in necessidadesBase.saturadas">{{item.label}}{{$last ? '' : ', '}}</span></span>
                         <div ng-if="obterSugestoesPromocaoBase().length > 0" style="margin-top:8px; font-size:13px; color:var(--br-blue);">
                             <strong>Sugestões de promoção:</strong>
-                            <span ng-repeat="sugestao in obterSugestoesPromocaoBase()">{{sugestao.atleta.nome}} para {{sugestao.label}} (OVR {{sugestao.atleta.overallAtual}}){{$last ? '' : ' · '}}</span>
+                            <span ng-repeat="sugestao in obterSugestoesPromocaoBase()" style="display:inline-flex; align-items:center; gap:5px; margin:3px 8px 3px 0;">{{sugestao.atleta.nome}} para {{sugestao.label}} (OVR {{sugestao.atleta.overallAtual}})<button ng-click="promoverSugestaoBase(sugestao)" style="border:0; border-radius:4px; padding:3px 6px; background:var(--br-green); color:white; cursor:pointer; font-size:11px;">Promover</button></span>
                         </div>
                     </div>
 

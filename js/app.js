@@ -1546,6 +1546,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }).filter(function(item) { return !!item.atleta; });
     };
 
+    $scope.promoverSugestaoBase = function(sugestao) {
+        if (!sugestao || !sugestao.atleta) return null;
+        var status = $scope.obterStatusPromocaoBase(sugestao.atleta);
+        if (!status.elegivel) return null;
+        return $scope.promoverAtletaBase(sugestao.atleta.id);
+    };
+
     $scope.normalizarBaseClube = function(clube) {
         return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
     };
