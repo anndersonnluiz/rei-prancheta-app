@@ -1456,6 +1456,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (!atleta.id) atleta.id = 'base_' + (clubeId || 'clube') + '_' + obterChaveNumericaJogador(atleta);
         atleta.clubeId = clubeId;
         atleta.idade = limitarNumero(parseInt(atleta.idade, 10) || 17, 16, 20);
+        atleta.categoriaBase = atleta.idade <= 17 ? 'Sub-17' : 'Sub-20';
         atleta.moral = normalizarValorAmbiente(atleta.moral, 70);
         if (!atleta.atributos) atleta.atributos = {};
         normalizarJogadorSalvo(atleta);
@@ -1472,7 +1473,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     function criarResumoBase(clube) {
         if (!clube || !clube.base) {
-            return { total: 0, promessas: 0, joias: 0, melhorJovem: null, atletasVisiveis: [] };
+            return { total: 0, promessas: 0, joias: 0, sub17: 0, sub20: 0, melhorJovem: null, atletasVisiveis: [] };
         }
         var atletas = Array.isArray(clube.base.atletas) ? clube.base.atletas : [];
         var visiveis = atletas.slice().sort(function(a, b) {
@@ -1485,6 +1486,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             total: atletas.length,
             promessas: promessas,
             joias: joias,
+            sub17: atletas.filter(function(a) { return a.categoriaBase === 'Sub-17'; }).length,
+            sub20: atletas.filter(function(a) { return a.categoriaBase === 'Sub-20'; }).length,
             melhorJovem: visiveis[0] || null,
             atletasVisiveis: visiveis
         };

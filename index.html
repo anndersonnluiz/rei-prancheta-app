@@ -432,6 +432,8 @@
                                 <span class="dashboard-count-badge">{{baseResumo.total}} atletas</span>
                             </div>
                             <div class="youth-compact-stats">
+                                <span>Sub-17 <strong>{{baseResumo.sub17}}</strong></span>
+                                <span>Sub-20 <strong>{{baseResumo.sub20}}</strong></span>
                                 <span>Promessas <strong>{{baseResumo.promessas}}</strong></span>
                                 <span>Joias <strong>{{baseResumo.joias}}</strong></span>
                             </div>
@@ -772,6 +774,8 @@
                         </div>
                         <div class="youth-summary-pills">
                             <span>Total <strong>{{baseResumo.total}}</strong></span>
+                            <span>Sub-17 <strong>{{baseResumo.sub17}}</strong></span>
+                            <span>Sub-20 <strong>{{baseResumo.sub20}}</strong></span>
                             <span>Promessas <strong>{{baseResumo.promessas}}</strong></span>
                             <span>Joias <strong>{{baseResumo.joias}}</strong></span>
                         </div>
@@ -786,7 +790,7 @@
                             <div class="youth-card-head">
                                 <div>
                                     <strong>{{atleta.nome}}</strong>
-                                    <span>{{atleta.posicao}} · {{atleta.idade}} anos</span>
+                                    <span>{{atleta.categoriaBase}} · {{atleta.posicao}} · {{atleta.idade}} anos</span>
                                 </div>
                                 <em>{{atleta.statusBase}}</em>
                             </div>
