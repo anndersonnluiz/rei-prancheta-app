@@ -6994,6 +6994,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.simularMercadoCPU = function() {
         if (!$scope.isJanelaTransferenciaAberta()) return;
 
+        // Limite operacional: a CPU precisa liberar excesso antes de continuar comprando.
+        ($scope.clubes || []).filter(function(clube) { return clube.id !== $scope.clubeAtual.id; }).forEach(function(clube) {
+            var elencoCPU = ($scope.jogadores || []).filter(function(j) { return j.clubeId === clube.id; });
+            if (elencoCPU.length > 30) {
+                elencoCPU.sort(function(a, b) { return $scope.calcularOverall(a) - $scope.calcularOverall(b); });
+                var dispensadoCPU = elencoCPU[0];
+                dispensadoCPU.clubeId = 'mercado';
+                dispensadoCPU.anosContrato = 0;
+                $scope.registrarTransferenciaHistorico({ tipo: 'cpu_liberacao', jogadorId: dispensadoCPU.id, jogadorNome: dispensadoCPU.nome, clubeOrigemId: clube.id, clubeOrigemNome: clube.nome, clubeDestinoId: 'mercado', clubeDestinoNome: 'Mercado Livre', valor: 0, salario: dispensadoCPU.salario, anosContrato: 0 });
+            }
+        });
+
         // 1. Propostas pelo seu jogador (Apenas 5% de chance agora por dia de janela)
         if (Math.random() < 0.05 && $scope.elencoAtual.length > 15) { 
             var jAlvo = $scope.elencoAtual[Math.floor(Math.random() * $scope.elencoAtual.length)];
@@ -7042,6 +7054,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var livresBons = $scope.jogadores.filter(function(j) { return j.clubeId === 'mercado' && $scope.calcularOverall(j) > 70; });
             if (livresBons.length > 0) {
                 var contratacao = livresBons[Math.floor(Math.random() * livresBons.length)];
+                var tamanhoElencoComprador = $scope.jogadores.filter(function(j) { return j.clubeId === cComprador.id; }).length;
+                if (tamanhoElencoComprador >= 30) return;
                 var clubeOrigemCPU = contratacao.clubeId;
                 contratacao.clubeId = cComprador.id;
                 contratacao.anosContrato = 2;
@@ -7091,6 +7105,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var vendedorCPU = $scope.clubes.find(function(c) { return c.id === atletaCPU.clubeId; });
                 }
                 if (vendedorCPU && compradorCPU) {
+                    if ($scope.jogadores.filter(function(j) { return j.clubeId === compradorCPU.id; }).length >= 30) return;
                     var valorCPU = Math.floor($scope.calcularValorPasse(atletaCPU) * (0.9 + Math.random() * 0.35));
                     if ((compradorCPU.orcamento || 0) >= valorCPU) {
                         compradorCPU.orcamento -= valorCPU;
