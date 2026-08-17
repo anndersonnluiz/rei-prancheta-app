@@ -6751,7 +6751,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.enviarPropostaJogador = function(salario, anos) {
         normalizarEstadoContratoJogadorInterno($scope.jogadorNegociacao);
         var salarioBase = $scope.jogadorNegociacao.salarioDesejado || $scope.jogadorNegociacao.salario || 10000;
-        var margemAceitacao = salarioBase * 0.9;
+        var reputacaoClube = parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 70;
+        var bonusDivisao = { A: 0.96, B: 1, C: 1.04, D: 1.08 };
+        var fatorExigencia = bonusDivisao[$scope.clubeAtual && $scope.clubeAtual.divisao] || 1;
+        if (reputacaoClube >= 85) fatorExigencia -= 0.04;
+        else if (reputacaoClube < 65) fatorExigencia += 0.04;
+        var margemAceitacao = salarioBase * fatorExigencia;
         var origemId = $scope.tipoNegociacao === 'renovacao' ? $scope.clubeAtual.id : $scope.jogadorNegociacao.clubeId;
         var proposta = $scope.registrarOuAtualizarProposta({
             id: $scope.propostaNegociacaoAtualId,
@@ -6763,7 +6768,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             clubeDestinoId: $scope.clubeAtual.id,
             valorOferta: $scope.ofertaValores.clubeAceita || 0,
             salarioOferta: salario,
-            anosContrato: anos
+            anosContrato: anos,
+            exigenciasJogador: {
+                salarioMinimo: Math.round(margemAceitacao),
+                anosMinimos: 1,
+                fatorDivisao: fatorExigencia
+            }
         });
         $scope.propostaNegociacaoAtualId = proposta ? proposta.id : null;
 
@@ -6772,7 +6782,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (propostaAtual && propostaAtual.concorrencia) {
             salarioMinimoComConcorrencia = Math.max(salarioMinimoComConcorrencia, propostaAtual.concorrencia.salarioOferta);
         }
-        if (salario >= salarioMinimoComConcorrencia) {
+        var anosOferecidos = parseInt(anos, 10) || 0;
+        var contratoAdequado = anosOferecidos >= 1;
+        if (salario >= salarioMinimoComConcorrencia && contratoAdequado) {
             $scope.estadoNegociacao = 'sucesso';
             $scope.motivoRejeicao = $scope.tipoNegociacao === 'compra' ? "O jogador aceitou sua oferta de salário e assinou o contrato!" : "Renovação concluída com sucesso!";
             $scope.registrarOuAtualizarProposta({
@@ -6790,7 +6802,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.concluirTransferencia($scope.jogadorNegociacao, salario, anos, $scope.ofertaValores.clubeAceita);
         } else {
             $scope.estadoNegociacao = 'rejeitado';
-            $scope.motivoRejeicao = "O jogador e seu agente recusaram a oferta salarial. Eles esperavam algo na casa de " + $scope.formatarMoeda(salarioBase) + ".";
+            $scope.motivoRejeicao = !contratoAdequado ? "O jogador exige pelo menos 1 ano de contrato." : "O jogador e seu agente recusaram a oferta. Para este clube, eles esperavam algo na casa de " + $scope.formatarMoeda(salarioMinimoComConcorrencia) + ".";
             $scope.registrarOuAtualizarProposta({
                 id: $scope.propostaNegociacaoAtualId,
                 tipo: $scope.tipoNegociacao,
