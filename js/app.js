@@ -1683,7 +1683,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.registrarEventoTorcida({ id: 'fan_base_' + promovido.id, chave: 'base|promocao|' + promovido.id, dia: $scope.diaAtual || 0, origem: 'base', impacto: 2, titulo: 'Joia promovida', detalhe: promovido.nome + ' subiu da base e animou a torcida.' });
         }
         if (typeof $scope.adicionarMensagem === 'function') {
-            $scope.adicionarMensagem('Categorias de Base', 'Promocao ao profissional', promovido.nome + ' foi promovido ao elenco principal.', false, 'base');
+            var promocaoAcelerada = promovido.categoriaOrigem === 'Sub-17';
+            var assuntoPromocao = promocaoAcelerada ? 'Promoção acelerada ao profissional' : 'Integração planejada ao profissional';
+            var textoPromocao = promocaoAcelerada ? promovido.nome + ' foi promovido antes do ciclo ideal do Sub-17. A comissão deve controlar seus minutos e adaptação.' : promovido.nome + ' concluiu o ciclo Sub-20 e foi integrado ao elenco principal.';
+            $scope.adicionarMensagem('Categorias de Base', assuntoPromocao, textoPromocao, false, 'base');
         }
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
         return promovido;
