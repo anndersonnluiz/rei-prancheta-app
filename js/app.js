@@ -1512,6 +1512,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return classificarStatusBaseInterno(potencial);
     };
 
+    $scope.obterStatusPromocaoBase = function(atleta) {
+        if (!atleta) return { elegivel: false, texto: 'Atleta indisponível' };
+        var categoria = atleta.categoriaBase || (atleta.idade <= 17 ? 'Sub-17' : 'Sub-20');
+        var overall = atleta.overallAtual || calcularOverallBaseJogador(atleta);
+        if (categoria === 'Sub-17' && atleta.idade < 17 && (atleta.potencial || 0) < 84) return { elegivel: false, texto: 'Desenvolver no Sub-17' };
+        if (overall < 50 && (atleta.potencial || 0) < 78) return { elegivel: false, texto: 'Aguardando evolução' };
+        return { elegivel: true, texto: categoria === 'Sub-17' ? 'Promoção acelerada' : 'Pronto para o profissional' };
+    };
+
     $scope.normalizarBaseClube = function(clube) {
         return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
     };
@@ -1622,6 +1631,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (idx < 0) return null;
         var atleta = normalizarAtletaBase($scope.clubeAtual.base.atletas[idx], $scope.clubeAtual.id);
         var promovido = angular.copy(atleta);
+        promovido.categoriaOrigem = atleta.categoriaBase || (atleta.idade <= 17 ? 'Sub-17' : 'Sub-20');
+        promovido.promovidoEm = $scope.dados.anoAtual || 2024;
         promovido.emCampo = false;
         promovido.condicaoFisica = 100;
         promovido.cartoesAmarelos = 0;

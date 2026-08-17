@@ -799,8 +799,9 @@
                                 <span>POT <strong>{{atleta.potencial}}</strong></span>
                                 <span>EVO <strong>{{atleta.evolucaoTemporada || 0}}</strong></span>
                             </div>
+                            <small style="display:block; margin-bottom:8px; color:var(--text-muted);">{{obterStatusPromocaoBase(atleta).texto}}</small>
                             <div class="youth-actions">
-                                <button ng-click="promoverAtletaBase(atleta.id)">Promover</button>
+                                <button ng-click="promoverAtletaBase(atleta.id)" ng-disabled="!obterStatusPromocaoBase(atleta).elegivel">Promover</button>
                                 <button class="muted" ng-click="dispensarAtletaBase(atleta.id)">Dispensar</button>
                             </div>
                         </div>
