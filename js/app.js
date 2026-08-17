@@ -6819,6 +6819,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    $scope.obterResumoExigenciasJogador = function() {
+        var jogador = $scope.jogadorNegociacao;
+        if (!jogador) return null;
+        var salarioBase = parseFloat(jogador.salarioDesejado || jogador.salario || 10000);
+        var reputacaoClube = parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 70;
+        var bonusDivisao = { A: 0.96, B: 1, C: 1.04, D: 1.08 };
+        var fator = bonusDivisao[$scope.clubeAtual && $scope.clubeAtual.divisao] || 1;
+        if (reputacaoClube >= 85) fator -= 0.04;
+        else if (reputacaoClube < 65) fator += 0.04;
+        var proposta = ($scope.propostasPendentes || []).find(function(item) { return item.id === $scope.propostaNegociacaoAtualId; });
+        return { salarioMinimo: salarioBase * fator, anosMinimos: 1, concorrencia: proposta && proposta.concorrencia ? proposta.concorrencia : null };
+    };
+
     $scope.concluirTransferencia = function(jogador, salario, anos, valorPagoClube) {
         if ($scope.tipoNegociacao === 'compra') {
             var clubeOrigemId = jogador.clubeId;

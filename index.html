@@ -2056,6 +2056,11 @@
             <div ng-if="estadoNegociacao === 'proposta_jogador'">
                 <p style="font-size: 14px; margin-bottom: 15px;" ng-if="jogadorNegociacao.clubeId === 'mercado' || tipoNegociacao === 'renovacao'">Você está negociando diretamente com o jogador e seus empresários.</p>
                 <p style="font-size: 14px; margin-bottom: 15px; color: var(--br-green-dark); font-weight: bold;" ng-if="jogadorNegociacao.clubeId !== 'mercado' && tipoNegociacao === 'compra'">O clube aceitou sua oferta de {{formatarMoeda(ofertaValores.clubeAceita)}}! Agora negocie com o jogador.</p>
+                <div ng-if="obterResumoExigenciasJogador()" style="background: #f8f9fa; border-left: 4px solid var(--br-blue); padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 13px;">
+                    <strong>Exigências do jogador</strong>
+                    <span style="display:block; margin-top: 4px;">Salário mínimo estimado: <strong>{{formatarMoeda(obterResumoExigenciasJogador().salarioMinimo)}}</strong> · Contrato mínimo: <strong>{{obterResumoExigenciasJogador().anosMinimos}} ano</strong></span>
+                    <span ng-if="obterResumoExigenciasJogador().concorrencia" style="display:block; margin-top: 5px; color:#d35400;">⚔️ Concorrência: {{obterResumoExigenciasJogador().concorrencia.clubeNome}} oferece {{formatarMoeda(obterResumoExigenciasJogador().concorrencia.salarioOferta)}} por mês.</span>
+                </div>
                 
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; font-weight: bold; margin-bottom: 5px;">Duração do Contrato:</label>
