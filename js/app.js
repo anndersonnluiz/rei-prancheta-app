@@ -7051,7 +7051,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var cComprador = clubesComGrana[Math.floor(Math.random() * clubesComGrana.length)];
 
             // Escolher um jogador Livre no Mercado e bom (> 70)
-            var livresBons = $scope.jogadores.filter(function(j) { return j.clubeId === 'mercado' && $scope.calcularOverall(j) > 70; });
+            var livresBons = $scope.jogadores.filter(function(j) {
+                if (j.clubeId !== 'mercado' || $scope.calcularOverall(j) <= 70) return false;
+                var mediaPosicao = $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id && item.posicao === j.posicao; }).reduce(function(total, item, _, lista) { return total + ($scope.calcularOverall(item) / lista.length); }, 0);
+                return $scope.calcularOverall(j) >= Math.max(70, mediaPosicao + 1);
+            });
             if (livresBons.length > 0) {
                 var contratacao = livresBons[Math.floor(Math.random() * livresBons.length)];
                 var tamanhoElencoComprador = $scope.jogadores.filter(function(j) { return j.clubeId === cComprador.id; }).length;
@@ -7096,8 +7100,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 });
                 var maiorNecessidade = Math.max.apply(null, necessidadesCPU.map(function(item) { return item.necessidade; }));
                 var posicoesPrioritarias = necessidadesCPU.filter(function(item) { return item.necessidade === maiorNecessidade; }).map(function(item) { return item.posicao; });
+                var mediaPorPosicaoCPU = {};
+                posicoesPrioritarias.forEach(function(posicao) {
+                    var jogadoresPosicao = $scope.jogadores.filter(function(j) { return j.clubeId === compradorCPU.id && j.posicao === posicao; });
+                    mediaPorPosicaoCPU[posicao] = jogadoresPosicao.length > 0 ? jogadoresPosicao.reduce(function(total, item) { return total + $scope.calcularOverall(item); }, 0) / jogadoresPosicao.length : 70;
+                });
                 var alvosCPU = $scope.jogadores.filter(function(j) {
-                    return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= 72 && !j.lesionado && !j.emNegociacao && posicoesPrioritarias.indexOf(j.posicao) >= 0;
+                    return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= Math.max(72, (mediaPorPosicaoCPU[j.posicao] || 70) + 1) && !j.lesionado && !j.emNegociacao && posicoesPrioritarias.indexOf(j.posicao) >= 0;
                 });
                 if (alvosCPU.length === 0) alvosCPU = $scope.jogadores.filter(function(j) { return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= 72 && !j.lesionado && !j.emNegociacao; });
                 if (alvosCPU.length > 0) {
