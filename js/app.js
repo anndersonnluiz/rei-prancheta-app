@@ -7004,6 +7004,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 dispensadoCPU.anosContrato = 0;
                 $scope.registrarTransferenciaHistorico({ tipo: 'cpu_liberacao', jogadorId: dispensadoCPU.id, jogadorNome: dispensadoCPU.nome, clubeOrigemId: clube.id, clubeOrigemNome: clube.nome, clubeDestinoId: 'mercado', clubeDestinoNome: 'Mercado Livre', valor: 0, salario: dispensadoCPU.salario, anosContrato: 0 });
             }
+            if (elencoCPU.length > 18 && Math.random() < 0.04) {
+                var candidatosVendaCPU = elencoCPU.filter(function(jogador) {
+                    var repeticaoPosicao = elencoCPU.filter(function(item) { return item.posicao === jogador.posicao; }).length;
+                    return repeticaoPosicao > 2 && !jogador.emCampo;
+                }).sort(function(a, b) { return (b.salario || 0) - (a.salario || 0); });
+                var vendaCPU = candidatosVendaCPU[0];
+                if (vendaCPU) {
+                    var receitaVendaCPU = Math.floor($scope.calcularValorPasse(vendaCPU) * 0.75);
+                    clube.orcamento = (clube.orcamento || 0) + receitaVendaCPU;
+                    vendaCPU.clubeId = 'mercado';
+                    vendaCPU.anosContrato = 0;
+                    $scope.registrarTransferenciaHistorico({ tipo: 'cpu_venda_estrategica', jogadorId: vendaCPU.id, jogadorNome: vendaCPU.nome, clubeOrigemId: clube.id, clubeOrigemNome: clube.nome, clubeDestinoId: 'mercado', clubeDestinoNome: 'Mercado Livre', valor: receitaVendaCPU, salario: vendaCPU.salario, anosContrato: 0 });
+                }
+            }
         });
 
         // 1. Propostas pelo seu jogador (Apenas 5% de chance agora por dia de janela)
