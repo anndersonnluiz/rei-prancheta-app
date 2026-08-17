@@ -734,6 +734,7 @@
                                                 {{jogador.evolucaoTemporada > 0 ? '+' : ''}}{{jogador.evolucaoTemporada || 0}}
                                             </span>
                                             <span>{{jogador.jogosTemporada || 0}}j · {{jogador.minutosTemporada || 0}}min</span>
+                                            <span ng-if="jogador.categoriaOrigem" style="color:var(--br-blue);">Base {{jogador.categoriaOrigem}}</span>
                                         </div>
                                     </td>
                                     <td>

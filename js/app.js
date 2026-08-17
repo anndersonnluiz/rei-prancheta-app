@@ -4046,6 +4046,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         jogadoresEmCampo.forEach(function(jogador) {
             var xpFinal = xpPorJogador[jogador.id] || 0;
             if (jogador.idade < 23) xpFinal *= 1.25;
+            if (jogador.categoriaOrigem === 'Sub-17') xpFinal *= 1.05;
+            if (jogador.categoriaOrigem === 'Sub-20') xpFinal *= 1.12;
             xpFinal *= (1 + ($scope.calcularBonusDesenvolvimentoInfraestrutura() / 100));
             if (jogador.acabouDeSerLesionado || jogador.lesionado) xpFinal *= 0.5;
             xpFinal = Math.min(8, Math.max(0, Math.round(xpFinal)));
