@@ -1595,12 +1595,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var bonusCT = $scope.calcularBonusDesenvolvimentoInfraestrutura ? $scope.calcularBonusDesenvolvimentoInfraestrutura() : 0;
             $scope.clubeAtual.base.atletas.forEach(function(atleta) {
                 var overallAntes = calcularOverallBaseJogador(atleta);
-                var ganho = atleta.idade <= 18 ? 1 : (atleta.idade <= 20 ? (dia % 2) : 0);
+                var categoria = atleta.categoriaBase || (atleta.idade <= 17 ? 'Sub-17' : 'Sub-20');
+                var ganho = categoria === 'Sub-17' ? 1 : (dia % 2);
+                if (categoria === 'Sub-20' && atleta.moral >= 75) ganho += 1;
                 if (bonusCT >= 4 && atleta.potencial - overallAntes > 5) ganho += 1;
                 if (ganho > 0 && overallAntes < atleta.potencial) {
                     var atributos = obterAtributosDesenvolvimento(atleta);
                     var atributo = atributos[obterChaveNumericaJogador(atleta) % atributos.length];
                     atleta.atributos[atributo] = Math.min(99, atleta.atributos[atributo] + ganho);
+                    atleta.xpTemporada = (atleta.xpTemporada || 0) + (categoria === 'Sub-20' ? ganho * 2 : ganho);
                     if (calcularOverallBaseJogador(atleta) > atleta.potencial) atleta.atributos[atributo] -= ganho;
                     else atleta.evolucaoTemporada = (atleta.evolucaoTemporada || 0) + (calcularOverallBaseJogador(atleta) - overallAntes);
                 }
