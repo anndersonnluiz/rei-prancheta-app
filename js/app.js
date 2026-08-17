@@ -7074,15 +7074,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         // 3. Disputa entre clubes da CPU por jogadores de elenco.
         if (Math.random() < 0.08 && $scope.jogadores) {
             var clubesAtivos = $scope.clubes.filter(function(c) { return c.id !== $scope.clubeAtual.id && c.orcamento > 0; });
-            var alvosCPU = $scope.jogadores.filter(function(j) {
-                return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && $scope.calcularOverall(j) >= 72 && !j.lesionado && !j.emNegociacao;
-            });
-            if (clubesAtivos.length > 0 && alvosCPU.length > 0) {
-                var atletaCPU = alvosCPU[Math.floor(Math.random() * alvosCPU.length)];
-                var vendedorCPU = $scope.clubes.find(function(c) { return c.id === atletaCPU.clubeId; });
-                var compradoresCPU = clubesAtivos.filter(function(c) { return c.id !== atletaCPU.clubeId; });
-                if (vendedorCPU && compradoresCPU.length > 0) {
-                    var compradorCPU = compradoresCPU[Math.floor(Math.random() * compradoresCPU.length)];
+            if (clubesAtivos.length > 0) {
+                var compradorCPU = clubesAtivos[Math.floor(Math.random() * clubesAtivos.length)];
+                var necessidadesCPU = ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'].map(function(posicao) {
+                    var quantidade = $scope.jogadores.filter(function(j) { return j.clubeId === compradorCPU.id && j.posicao === posicao; }).length;
+                    return { posicao: posicao, necessidade: Math.max(0, 2 - quantidade) };
+                });
+                var maiorNecessidade = Math.max.apply(null, necessidadesCPU.map(function(item) { return item.necessidade; }));
+                var posicoesPrioritarias = necessidadesCPU.filter(function(item) { return item.necessidade === maiorNecessidade; }).map(function(item) { return item.posicao; });
+                var alvosCPU = $scope.jogadores.filter(function(j) {
+                    return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= 72 && !j.lesionado && !j.emNegociacao && posicoesPrioritarias.indexOf(j.posicao) >= 0;
+                });
+                if (alvosCPU.length === 0) alvosCPU = $scope.jogadores.filter(function(j) { return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= 72 && !j.lesionado && !j.emNegociacao; });
+                if (alvosCPU.length > 0) {
+                    var atletaCPU = alvosCPU[Math.floor(Math.random() * alvosCPU.length)];
+                    var vendedorCPU = $scope.clubes.find(function(c) { return c.id === atletaCPU.clubeId; });
+                }
+                if (vendedorCPU && compradorCPU) {
                     var valorCPU = Math.floor($scope.calcularValorPasse(atletaCPU) * (0.9 + Math.random() * 0.35));
                     if ((compradorCPU.orcamento || 0) >= valorCPU) {
                         compradorCPU.orcamento -= valorCPU;
