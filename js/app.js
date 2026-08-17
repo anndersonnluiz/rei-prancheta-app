@@ -6708,7 +6708,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.ofertaValores.clubeAceita = oferta;
             $scope.estadoNegociacao = 'proposta_jogador';
             $scope.jogadorNegociacao.emNegociacao = true;
-            $scope.registrarOuAtualizarProposta({
+            var propostaAceitaClube = $scope.registrarOuAtualizarProposta({
                 id: $scope.propostaNegociacaoAtualId,
                 tipo: 'compra',
                 status: 'clube_aceitou',
@@ -6718,6 +6718,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 clubeDestinoId: $scope.clubeAtual.id,
                 valorOferta: oferta
             });
+            var concorrentes = ($scope.clubes || []).filter(function(clube) {
+                return clube.id !== $scope.clubeAtual.id && clube.id !== $scope.jogadorNegociacao.clubeId;
+            });
+            if (concorrentes.length > 0 && Math.random() < 0.35) {
+                var concorrente = concorrentes[Math.floor(Math.random() * concorrentes.length)];
+                propostaAceitaClube.concorrencia = {
+                    clubeId: concorrente.id,
+                    clubeNome: concorrente.nome,
+                    salarioOferta: Math.round((parseFloat($scope.jogadorNegociacao.salario || 10000) * (1.05 + Math.random() * 0.2)) / 100) * 100,
+                    criadaNoDia: $scope.diaAtual || 0
+                };
+                $scope.motivoRejeicao = 'Outro clube entrou na disputa: ' + concorrente.nome + '. O jogador vai comparar as propostas.';
+            }
         } else {
             $scope.estadoNegociacao = 'rejeitado';
             $scope.motivoRejeicao = "A diretoria do clube rejeitou sua oferta. Eles não aceitariam menos de " + $scope.formatarMoeda(margemAceitacao) + ".";
@@ -6754,7 +6767,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
         $scope.propostaNegociacaoAtualId = proposta ? proposta.id : null;
 
-        if (salario >= margemAceitacao) {
+        var salarioMinimoComConcorrencia = margemAceitacao;
+        var propostaAtual = ($scope.propostasPendentes || []).find(function(item) { return item.id === $scope.propostaNegociacaoAtualId; });
+        if (propostaAtual && propostaAtual.concorrencia) {
+            salarioMinimoComConcorrencia = Math.max(salarioMinimoComConcorrencia, propostaAtual.concorrencia.salarioOferta);
+        }
+        if (salario >= salarioMinimoComConcorrencia) {
             $scope.estadoNegociacao = 'sucesso';
             $scope.motivoRejeicao = $scope.tipoNegociacao === 'compra' ? "O jogador aceitou sua oferta de salário e assinou o contrato!" : "Renovação concluída com sucesso!";
             $scope.registrarOuAtualizarProposta({
