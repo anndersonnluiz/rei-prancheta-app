@@ -7070,6 +7070,30 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 $scope.mensagensNaoLidas++;
             }
         }
+
+        // 3. Disputa entre clubes da CPU por jogadores de elenco.
+        if (Math.random() < 0.08 && $scope.jogadores) {
+            var clubesAtivos = $scope.clubes.filter(function(c) { return c.id !== $scope.clubeAtual.id && c.orcamento > 0; });
+            var alvosCPU = $scope.jogadores.filter(function(j) {
+                return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && $scope.calcularOverall(j) >= 72 && !j.lesionado && !j.emNegociacao;
+            });
+            if (clubesAtivos.length > 0 && alvosCPU.length > 0) {
+                var atletaCPU = alvosCPU[Math.floor(Math.random() * alvosCPU.length)];
+                var vendedorCPU = $scope.clubes.find(function(c) { return c.id === atletaCPU.clubeId; });
+                var compradoresCPU = clubesAtivos.filter(function(c) { return c.id !== atletaCPU.clubeId; });
+                if (vendedorCPU && compradoresCPU.length > 0) {
+                    var compradorCPU = compradoresCPU[Math.floor(Math.random() * compradoresCPU.length)];
+                    var valorCPU = Math.floor($scope.calcularValorPasse(atletaCPU) * (0.9 + Math.random() * 0.35));
+                    if ((compradorCPU.orcamento || 0) >= valorCPU) {
+                        compradorCPU.orcamento -= valorCPU;
+                        vendedorCPU.orcamento = (vendedorCPU.orcamento || 0) + valorCPU;
+                        atletaCPU.clubeId = compradorCPU.id;
+                        atletaCPU.anosContrato = 2;
+                        $scope.registrarTransferenciaHistorico({ tipo: 'cpu', jogadorId: atletaCPU.id, jogadorNome: atletaCPU.nome, clubeOrigemId: vendedorCPU.id, clubeOrigemNome: vendedorCPU.nome, clubeDestinoId: compradorCPU.id, clubeDestinoNome: compradorCPU.nome, valor: valorCPU, salario: atletaCPU.salario, anosContrato: 2 });
+                    }
+                }
+            }
+        }
     };
 
     $scope.melhorarDM = function(nivel, custo) {
