@@ -9,6 +9,7 @@
     <script src="js/app.js"></script>
 </head>
 <body ng-controller="DashboardController">
+    <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo principal</a>
 
     <!-- Tela Loading -->
     <div class="loading-screen" ng-if="telaAtual === 'loading'" ng-cloak>
@@ -105,7 +106,7 @@
         </nav>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main id="conteudo-principal" class="main-content" tabindex="-1">
             <header>
                 <h1 style="text-transform: capitalize;">{{ telaAtual.replace('_', ' ') }}</h1>
                 <div class="date-info">Temporada {{dados.anoAtual}}</div>

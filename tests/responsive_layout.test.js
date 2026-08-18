@@ -14,5 +14,7 @@ assert.ok(css.includes('focus-visible'), 'interactive controls should expose vis
 assert.ok(css.includes('prefers-reduced-motion'), 'interface should respect reduced-motion preference');
 assert.ok(html.includes('overflow-x: auto'), 'wide tables should have local horizontal scrolling');
 assert.ok(html.includes('historicoFinanceiroMensal'), 'monthly finance table should be present');
+assert.ok(html.includes('skip-link'), 'page should provide a skip link');
+assert.ok(html.includes('id="conteudo-principal"'), 'main content should have a keyboard target');
 
 console.log('responsive_layout.test.js passed');
