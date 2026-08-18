@@ -104,6 +104,9 @@
             </ul>
 
             <div class="sidebar-footer">
+                <label style="display:block; font-size:11px; color:var(--text-muted); margin-bottom:4px;">Slot ativo
+                    <select ng-model="slotSaveAtual" ng-change="selecionarSlotSave(slotSaveAtual)" ng-options="slot.id as ('Slot ' + (slot.id + 1)) for slot in listarSlotsSave()" style="width:100%; padding:7px; margin-top:3px; border-radius:5px;"></select>
+                </label>
                 <button class="btn-save" ng-click="salvarJogo()" ng-disabled="partidaEmAndamento" style="margin-bottom: 10px;">💾 Salvar Jogo</button>
                 <button class="btn" ng-click="exportarSave()" ng-disabled="partidaEmAndamento" style="width: 100%; text-align: left; padding: 10px; margin-bottom: 10px; background: transparent; color: var(--text-muted); border: 1px solid #ddd; border-radius: 6px; cursor: pointer;">⬇️ Exportar Save</button>
                 <button class="btn" ng-click="abrirImportadorSave()" ng-disabled="partidaEmAndamento" style="width: 100%; text-align: left; padding: 10px; margin-bottom: 10px; background: transparent; color: var(--text-muted); border: 1px solid #ddd; border-radius: 6px; cursor: pointer;">⬆️ Importar Save</button>

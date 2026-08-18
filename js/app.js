@@ -5549,9 +5549,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return [0, 1, 2, 3].map(function(indice) { return { id: indice, save: slots[String(indice)] || null }; });
     };
     $scope.salvarNoSlot = function(indice) {
-        $scope.slotSaveAtual = parseInt(indice, 10) || 0;
+        var slot = parseInt(indice, 10) || 0;
+        var existente = $scope.listarSlotsSave().find(function(item) { return item.id === slot && item.save; });
+        if (existente && !confirm('Sobrescrever a carreira do Slot ' + (slot + 1) + '?')) return false;
+        $scope.slotSaveAtual = slot;
         $scope.salvarJogoSilencioso();
+        return true;
     };
+    $scope.selecionarSlotSave = function(indice) { $scope.slotSaveAtual = parseInt(indice, 10) || 0; };
     $scope.carregarSlot = function(indice) {
         var slots = {};
         try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
@@ -5564,8 +5569,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.salvarJogo = function() {
+        var slot = $scope.slotSaveAtual || 0;
+        var existente = $scope.listarSlotsSave().find(function(item) { return item.id === slot && item.save; });
+        if (existente && !confirm('Sobrescrever a carreira do Slot ' + (slot + 1) + '?')) return false;
         $scope.salvarJogoSilencioso();
         alert('Jogo salvo com sucesso!');
+        return true;
     };
 
     $scope.contratarStaff = function(vaga) {
