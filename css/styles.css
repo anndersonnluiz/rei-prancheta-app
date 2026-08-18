@@ -2022,6 +2022,7 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .bench-item { display: flex; align-items: center; background-color: var(--bg-color); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; cursor: grab; transition: transform 0.2s; border: 1px solid #e1e8ed; }
 .bench-item:active { cursor: grabbing; }
 .bench-item:hover { background-color: #e8f0fe; transform: translateX(5px); }
+.bench-item.tactile-selected { background-color: #e8f0fe; border: 2px solid var(--br-blue); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.18); }
 .bench-item .jogador-nome { flex-grow: 1; margin-left: 10px; font-weight: 600; font-size: 14px; }
 .dragging { opacity: 0.5; }
 

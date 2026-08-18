@@ -932,9 +932,9 @@
                         </div>
                     </div>
 
-                    <p class="hint">Arraste para o campo 👉</p>
+                    <p class="hint">Arraste para o campo 👉 ou toque no jogador e depois no campo.</p>
                     <div class="bench-list">
-                        <div class="bench-item" ng-repeat="jogador in elencoAtual | filter:{emCampo: false}" draggable-player style="display: flex; align-items: center; opacity: {{jogadorBloqueadoParaEntrar(jogador) ? '0.5' : '1'}}; cursor: {{jogadorBloqueadoParaEntrar(jogador) ? 'not-allowed' : 'grab'}};">
+                        <div class="bench-item" ng-repeat="jogador in elencoAtual | filter:{emCampo: false}" draggable-player ng-click="selecionarJogadorParaTatica(jogador)" ng-class="{'tactile-selected': jogadorTaticaSelecionado && jogadorTaticaSelecionado.id === jogador.id}" style="display: flex; align-items: center; opacity: {{jogadorBloqueadoParaEntrar(jogador) ? '0.5' : '1'}}; cursor: {{jogadorBloqueadoParaEntrar(jogador) ? 'not-allowed' : 'grab'}};">
                             <span class="posicao-badge pos-{{ jogador.posicao }}">{{ jogador.posicao }}</span>
                             <div style="flex-grow: 1; display: flex; flex-direction: column; margin-left: 10px;">
                                 <span class="jogador-nome" style="margin-left: 0;">
@@ -990,7 +990,7 @@
                         </div>
                     </div>
 
-                    <div class="pitch-container" droppable-area="campo">
+                    <div class="pitch-container" droppable-area="campo" ng-click="colocarJogadorSelecionadoNoCampo()">
                         
                         <!-- FASE 7: Direção do Ataque -->
                         <div class="pitch-direction">DEFESA ◀ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ATAQUE ▶</div>
@@ -1003,6 +1003,7 @@
                         <div class="player-token pos-{{ jogador.posicao }}" 
                              ng-repeat="jogador in elencoAtual | filter:{emCampo: true}"
                              draggable-player
+                             ng-click="retirarJogadorSelecionadoDoCampo(jogador)"
                              ng-style="{'left': jogador.posX + '%', 'top': jogador.posY + '%', 'border': estaImprovisado(jogador) ? '2px solid #e74c3c' : '2px solid white'}">
                              <div class="token-overall">{{ calcularOverall(jogador) }}</div>
                              <div class="token-name" style="display: flex; flex-direction: column; align-items: center; position: relative;">

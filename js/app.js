@@ -6291,6 +6291,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return !!(jogador && (jogador.expulso || jogador.lesionado || jogador.suspenso || ($scope.partidaEmAndamento && jogador.substituidoNaPartida)));
     };
 
+    // Alternativa ao drag-and-drop para telas sensíveis ao toque.
+    $scope.jogadorTaticaSelecionado = null;
+    $scope.selecionarJogadorParaTatica = function(jogador) {
+        if (!jogador || $scope.jogadorBloqueadoParaEntrar(jogador)) return false;
+        $scope.jogadorTaticaSelecionado = jogador;
+        return true;
+    };
+    $scope.colocarJogadorSelecionadoNoCampo = function() {
+        var jogador = $scope.jogadorTaticaSelecionado;
+        if (!jogador) return false;
+        $scope.moverJogador(jogador.id, 'campo', 50, 50);
+        $scope.jogadorTaticaSelecionado = null;
+        return true;
+    };
+    $scope.retirarJogadorSelecionadoDoCampo = function(jogador) {
+        if (!jogador) return false;
+        $scope.moverJogador(jogador.id, 'banco', 0, 0);
+        $scope.jogadorTaticaSelecionado = null;
+        return true;
+    };
+
     $scope.marcarSubstituidoNaPartida = function(jogador) {
         if (jogador && $scope.partidaEmAndamento && $scope.partidaPausada && !jogador.expulso && !jogador.lesionado) {
             jogador.substituidoNaPartida = true;

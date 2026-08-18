@@ -26,5 +26,8 @@ assert.ok(html.includes('skip-link'), 'page should provide a skip link');
 assert.ok(html.includes('id="conteudo-principal"'), 'main content should have a keyboard target');
 assert.ok(html.includes('aria-label="Navegação principal do clube"'), 'main navigation should be labelled');
 assert.ok(html.includes('aria-live="polite"'), 'messages should announce updates to assistive technology');
+assert.ok(html.includes('selecionarJogadorParaTatica(jogador)'), 'tactics should offer tap selection for players');
+assert.ok(html.includes('colocarJogadorSelecionadoNoCampo()'), 'tactics should offer tap placement on the pitch');
+assert.ok(html.includes('retirarJogadorSelecionadoDoCampo(jogador)'), 'tactics should offer tap removal from the pitch');
 
 console.log('responsive_layout.test.js passed');
