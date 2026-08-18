@@ -3287,6 +3287,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.narracao.unshift($scope.minutoAtual + "' - Jogo pausado pelo treinador para ajustes táticos.");
         return true;
     };
+    $scope.obterResumoPausaTatica = function() {
+        var elenco = Array.isArray($scope.elencoAtual) ? $scope.elencoAtual : [];
+        var impedidos = elenco.filter(function(jogador) {
+            return jogador && (jogador.expulso || jogador.lesionado || jogador.suspenso || jogador.substituidoNaPartida);
+        });
+        return {
+            feitas: $scope.substituicoesFeitas || 0,
+            restantes: Math.max(0, 5 - ($scope.substituicoesFeitas || 0)),
+            impedidos: impedidos
+        };
+    };
 
     $scope.rodarMinuto = function() {
         if ($scope.partidaPausada) return;

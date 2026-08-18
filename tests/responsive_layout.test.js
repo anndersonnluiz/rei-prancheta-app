@@ -32,5 +32,7 @@ assert.ok(html.includes('selecionarJogadorParaTatica(jogador)'), 'tactics should
 assert.ok(html.includes('colocarJogadorSelecionadoNoCampo()'), 'tactics should offer tap placement on the pitch');
 assert.ok(html.includes('retirarJogadorSelecionadoDoCampo(jogador)'), 'tactics should offer tap removal from the pitch');
 assert.ok(html.includes('pausarPartidaManualmente()'), 'live match should expose a manual tactical pause');
+assert.ok(html.includes('obterResumoPausaTatica().restantes'), 'tactical pause should show remaining substitutions');
+assert.ok(html.includes('obterResumoPausaTatica().impedidos'), 'tactical pause should show unavailable players');
 
 console.log('responsive_layout.test.js passed');
