@@ -5602,6 +5602,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.emprestimoForm = {};
     };
 
+    $scope.abrirEmprestimoJovem = function(jogador) {
+        if (!jogador) return;
+        var destino = ($scope.clubes || []).find(function(clube) { return clube.id !== $scope.clubeAtual.id; });
+        $scope.emprestimoForm = { jogadorId: jogador.id, clubeDestinoId: destino ? destino.id : '', duracaoDias: 60, opcaoCompra: 0 };
+        $scope.mudarTela('mercado');
+    };
+
     $scope.processarEmprestimosDia = function() {
         var devolvidos = [];
         ($scope.emprestimosAtivos || []).forEach(function(emprestimo) {

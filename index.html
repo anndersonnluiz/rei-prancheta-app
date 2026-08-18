@@ -695,7 +695,7 @@
                         <div class="development-report-list">
                             <div class="development-report-item neutral" ng-repeat="item in obterRelatorioAdaptacaoJovens() track by item.jogador.id">
                                 <div><strong>{{item.jogador.nome}}</strong><span>{{item.jogador.categoriaOrigem}} · {{item.jogos}}j · {{item.minutos}}min · XP {{item.xp}} · Moral {{item.moral}}</span></div>
-                                <em style="font-size:11px;">{{item.recomendacao}}</em>
+                                <div style="display:flex; align-items:center; gap:6px;"><em style="font-size:11px;">{{item.recomendacao}}</em><button ng-if="item.recomendacao === 'Considerar empréstimo'" ng-click="abrirEmprestimoJovem(item.jogador)" style="border:0; border-radius:4px; padding:4px 7px; background:var(--br-blue); color:white; cursor:pointer; font-size:11px;">Emprestar</button></div>
                             </div>
                         </div>
                     </div>
