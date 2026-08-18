@@ -29,6 +29,16 @@ html { min-height: 100%; }
 body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
 .skip-link { position: fixed; top: -48px; left: 12px; z-index: 1000; padding: 10px 14px; background: var(--br-yellow); color: #111; border-radius: 0 0 6px 6px; font-weight: 700; text-decoration: none; transition: top 0.15s ease; }
 .skip-link:focus { top: 0; }
+.dashboard-alert, .development-panel, [role="alert"] { border-width: 2px; }
+.finance-kpi strong, .dashboard-kpi strong { overflow-wrap: anywhere; }
+
+@media (prefers-contrast: more) {
+    body { color: #111; }
+    .card, .dashboard-panel, .development-panel { border: 2px solid #333; }
+    button, select, input { border: 2px solid #222 !important; }
+    .nav-links li.active { outline: 2px solid var(--br-yellow); outline-offset: -2px; }
+    .text-muted, small { color: #333 !important; }
+}
 
 /* 1. LOADING */
 .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100%; }

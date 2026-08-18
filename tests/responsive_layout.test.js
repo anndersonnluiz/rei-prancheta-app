@@ -12,6 +12,8 @@ assert.ok(css.includes('.main-content { margin-left: 0; max-width: 100%'), 'mobi
 assert.ok(css.includes('overflow-x: hidden'), 'page should prevent accidental horizontal overflow');
 assert.ok(css.includes('focus-visible'), 'interactive controls should expose visible keyboard focus');
 assert.ok(css.includes('prefers-reduced-motion'), 'interface should respect reduced-motion preference');
+assert.ok(css.includes('prefers-contrast: more'), 'interface should support increased contrast preference');
+assert.ok(css.includes('border-width: 2px'), 'alerts should have a non-color visual distinction');
 assert.ok(html.includes('overflow-x: auto'), 'wide tables should have local horizontal scrolling');
 assert.ok(html.includes('historicoFinanceiroMensal'), 'monthly finance table should be present');
 assert.ok(html.includes('skip-link'), 'page should provide a skip link');
