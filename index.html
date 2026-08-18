@@ -40,9 +40,15 @@
             <div ng-if="listarSlotsSave().length > 0" style="margin-bottom: 20px;">
                 <h4 style="margin-bottom: 8px;">Slots de carreira</h4>
                 <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;">
-                    <button ng-repeat="slot in listarSlotsSave()" ng-click="slot.save ? carregarSlot(slot.id) : null" ng-disabled="!slot.save" style="padding:10px; text-align:left; border:1px solid #ddd; border-radius:6px; background:white; cursor:pointer;">
-                        <strong>Slot {{slot.id + 1}}</strong><span style="display:block; font-size:11px; color:var(--text-muted);">{{slot.save ? slot.save.nomeTreinador + ' · Ano ' + slot.save.anoAtual : 'Vazio'}}</span>
-                    </button>
+                    <div ng-repeat="slot in listarSlotsSave()" style="padding:10px; text-align:left; border:1px solid #ddd; border-radius:6px; background:white;">
+                        <button ng-click="slot.save ? carregarSlot(slot.id) : null" ng-disabled="!slot.save" style="display:block; width:100%; padding:0; text-align:left; border:0; background:transparent; cursor:pointer;">
+                            <strong>Slot {{slot.id + 1}}</strong>
+                            <span style="display:block; font-size:11px; color:var(--text-muted);">{{slot.save ? slot.save.nomeTreinador : 'Vazio'}}</span>
+                            <span ng-if="slot.save" style="display:block; font-size:11px; color:var(--text-muted);">{{slot.clubeNome}} · Temporada {{slot.save.anoAtual || '—'}}</span>
+                            <span ng-if="slot.save" style="display:block; font-size:10px; color:var(--text-muted);">Salvo em {{slot.save.dataSave || slot.save.savedAt}}</span>
+                        </button>
+                        <button ng-if="slot.save" ng-click="excluirSlot(slot.id); $event.stopPropagation()" style="margin-top:7px; padding:3px 7px; border:1px solid #e74c3c; border-radius:4px; background:white; color:#c0392b; cursor:pointer; font-size:11px;">🗑️ Excluir</button>
+                    </div>
                 </div>
             </div>
 

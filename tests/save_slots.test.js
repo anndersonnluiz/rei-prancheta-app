@@ -47,6 +47,19 @@ scope.salvarJogoSilencioso = function() { saves++; };
 assert.strictEqual(scope.salvarNoSlot(1), true);
 assert.strictEqual(scope.slotSaveAtual, 1);
 assert.strictEqual(saves, 1);
+assert.strictEqual(scope.excluirSlot(1), false);
+
+const removable = createHarness({
+  reiDaPranchetaSave: JSON.stringify(primeiro),
+  reiDaPranchetaSaveSlots: JSON.stringify({ 0: primeiro, 2: segundo })
+}, true);
+removable.scope.checarSaveExistente();
+assert.strictEqual(removable.scope.excluirSlot(2), true);
+assert.strictEqual(removable.scope.listarSlotsSave()[2].save, null);
+assert.strictEqual(removable.storage.reiDaPranchetaSave, JSON.stringify(primeiro));
+assert.strictEqual(removable.scope.excluirSlot(0), true);
+assert.strictEqual(removable.storage.reiDaPranchetaSave, undefined);
+assert.strictEqual(removable.scope.existeSave, false);
 
 const bloqueado = createHarness({
   reiDaPranchetaSaveSlots: JSON.stringify({ 0: primeiro })

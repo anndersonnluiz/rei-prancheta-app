@@ -5546,7 +5546,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.listarSlotsSave = function() {
         var slots = {};
         try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
-        return [0, 1, 2, 3].map(function(indice) { return { id: indice, save: slots[String(indice)] || null }; });
+        return [0, 1, 2, 3].map(function(indice) {
+            var save = slots[String(indice)] || null;
+            var clube = save && (save.clubeAtualInfo || {}).nome;
+            return { id: indice, save: save, clubeNome: clube || (save ? 'Clube não identificado' : '') };
+        });
     };
     $scope.salvarNoSlot = function(indice) {
         var slot = parseInt(indice, 10) || 0;
@@ -5565,6 +5569,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.slotSaveAtual = parseInt(indice, 10) || 0;
         $scope.saveInfo = salvo;
         $scope.carregarJogo();
+        return true;
+    };
+    $scope.excluirSlot = function(indice) {
+        var slot = parseInt(indice, 10) || 0;
+        var existente = $scope.listarSlotsSave().find(function(item) { return item.id === slot && item.save; });
+        if (!existente || !confirm('Excluir a carreira do Slot ' + (slot + 1) + '?')) return false;
+        var slots = {};
+        try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
+        delete slots[String(slot)];
+        window.localStorage.setItem('reiDaPranchetaSaveSlots', JSON.stringify(slots));
+        if (slot === 0) {
+            window.localStorage.removeItem('reiDaPranchetaSave');
+            $scope.existeSave = false;
+            $scope.saveInfo = null;
+        }
+        if ($scope.slotSaveAtual === slot) $scope.slotSaveAtual = 0;
         return true;
     };
 
