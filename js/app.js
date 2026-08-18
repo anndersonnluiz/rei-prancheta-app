@@ -5430,6 +5430,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (saveLocal) {
             $scope.existeSave = true;
             $scope.saveInfo = JSON.parse(saveLocal);
+            var slotsExistentes = {};
+            try { slotsExistentes = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slotsExistentes = {}; }
+            if (!slotsExistentes['0']) {
+                slotsExistentes['0'] = $scope.saveInfo;
+                window.localStorage.setItem('reiDaPranchetaSaveSlots', JSON.stringify(slotsExistentes));
+            }
         } else {
             $scope.existeSave = false;
             $scope.saveInfo = null;
@@ -5529,7 +5535,32 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             contextoExterno: normalizarContextoExternoInterno($scope.contextoExterno || criarContextoExternoPadrao())
         };
         window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveObj));
+        var slots = {};
+        try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
+        slots[String($scope.slotSaveAtual || 0)] = saveObj;
+        window.localStorage.setItem('reiDaPranchetaSaveSlots', JSON.stringify(slots));
         $scope.checarSaveExistente(); 
+    };
+
+    $scope.slotSaveAtual = 0;
+    $scope.listarSlotsSave = function() {
+        var slots = {};
+        try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
+        return [0, 1, 2, 3].map(function(indice) { return { id: indice, save: slots[String(indice)] || null }; });
+    };
+    $scope.salvarNoSlot = function(indice) {
+        $scope.slotSaveAtual = parseInt(indice, 10) || 0;
+        $scope.salvarJogoSilencioso();
+    };
+    $scope.carregarSlot = function(indice) {
+        var slots = {};
+        try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
+        var salvo = slots[String(parseInt(indice, 10) || 0)];
+        if (!salvo) return false;
+        $scope.slotSaveAtual = parseInt(indice, 10) || 0;
+        $scope.saveInfo = salvo;
+        $scope.carregarJogo();
+        return true;
     };
 
     $scope.salvarJogo = function() {
