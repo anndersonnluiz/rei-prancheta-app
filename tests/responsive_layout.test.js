@@ -16,6 +16,9 @@ assert.ok(css.includes('prefers-contrast: more'), 'interface should support incr
 assert.ok(css.includes('.scoreboard .team-color'), 'live match scoreboard should have responsive team sizing');
 assert.ok(css.includes('.commentary-box {\n        height: min(42vh, 300px)'), 'live commentary should adapt to short screens');
 assert.ok(css.includes('@media (max-width: 420px)'), 'live match should have a compact phone breakpoint');
+assert.ok(css.includes('.tactics-layout {\n        height: auto;\n        flex-direction: column;'), 'tactics should stack on narrower screens');
+assert.ok(css.includes('.bench-list {\n        max-height: 280px;'), 'bench list should remain scrollable on tablets');
+assert.ok(css.includes('.pitch-container {\n        min-height: 390px;'), 'pitch should preserve a usable mobile touch area');
 assert.ok(css.includes('border-width: 2px'), 'alerts should have a non-color visual distinction');
 assert.ok(html.includes('overflow-x: auto'), 'wide tables should have local horizontal scrolling');
 assert.ok(html.includes('historicoFinanceiroMensal'), 'monthly finance table should be present');

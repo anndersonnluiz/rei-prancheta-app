@@ -2750,3 +2750,70 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
         gap: 6px;
     }
 }
+
+/* Táticas: empilha banco e campo quando não há largura para mantê-los lado a lado. */
+@media (max-width: 900px) {
+    .tactics-layout {
+        height: auto;
+        flex-direction: column;
+    }
+
+    .bench-area,
+    .pitch-area {
+        height: auto;
+        width: 100%;
+    }
+
+    .bench-area {
+        min-height: 300px;
+    }
+
+    .bench-list {
+        max-height: 280px;
+    }
+
+    .pitch-area {
+        min-height: 520px;
+    }
+
+    .pitch-container {
+        min-height: 480px;
+    }
+}
+
+@media (max-width: 560px) {
+    .bench-area,
+    .pitch-area {
+        padding: 14px;
+    }
+
+    .formation-selector > div {
+        flex-wrap: wrap;
+    }
+
+    .formation-selector select,
+    .formation-selector button {
+        min-height: 40px;
+    }
+
+    .bench-item {
+        padding: 10px;
+    }
+
+    .pitch-area {
+        min-height: 430px;
+    }
+
+    .pitch-container {
+        min-height: 390px;
+    }
+
+    .player-token {
+        height: 34px;
+        width: 34px;
+    }
+
+    .token-name {
+        font-size: 9px;
+    }
+}
