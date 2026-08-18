@@ -6324,10 +6324,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.jogadorTaticaSelecionado = jogador;
         return true;
     };
-    $scope.colocarJogadorSelecionadoNoCampo = function() {
+    $scope.colocarJogadorSelecionadoNoCampo = function(evento) {
         var jogador = $scope.jogadorTaticaSelecionado;
         if (!jogador) return false;
-        $scope.moverJogador(jogador.id, 'campo', 50, 50);
+        var posX = 50;
+        var posY = 50;
+        if (evento && evento.currentTarget && evento.clientX !== undefined) {
+            var rect = evento.currentTarget.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+                posX = Math.max(3, Math.min(97, ((evento.clientX - rect.left) / rect.width) * 100));
+                posY = Math.max(5, Math.min(95, ((evento.clientY - rect.top) / rect.height) * 100));
+            }
+        }
+        $scope.moverJogador(jogador.id, 'campo', posX, posY);
         $scope.jogadorTaticaSelecionado = null;
         return true;
     };
