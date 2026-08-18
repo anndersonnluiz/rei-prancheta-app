@@ -3258,6 +3258,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.estatisticas.renda = $scope.estatisticas.publico * preco;
 
         $scope.substituicoesFeitas = 0;
+        $scope.pausasTaticasFeitas = 0;
         $scope.elencoAtual.forEach(function(j) { j.substituidoNaPartida = false; });
         $scope.partidaPausada = false;
         $scope.intervaloJaAconteceu = false;
@@ -3284,6 +3285,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.pausarPartidaManualmente = function() {
         if (!$scope.partidaEmAndamento || $scope.partidaPausada) return false;
         $scope.partidaPausada = true;
+        $scope.pausasTaticasFeitas = ($scope.pausasTaticasFeitas || 0) + 1;
         $scope.narracao.unshift($scope.minutoAtual + "' - Jogo pausado pelo treinador para ajustes táticos.");
         return true;
     };
@@ -3995,6 +3997,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             impactoFisico: montarImpactoFisicoPosJogo(),
             ocorrencias: montarOcorrenciasPosJogo(),
             taticas: null,
+            gestao: {
+                substituicoes: origem === 'rapido' ? 0 : ($scope.substituicoesFeitas || 0),
+                pausasTaticas: origem === 'rapido' ? 0 : ($scope.pausasTaticasFeitas || 0),
+                resumo: origem === 'rapido' ? 'Partida resolvida pelo resultado rápido.' : (($scope.substituicoesFeitas || 0) > 0 ? 'As substituições foram registradas na gestão da partida.' : 'Nenhuma substituição foi registrada.')
+            },
             manchete: null
         };
 
