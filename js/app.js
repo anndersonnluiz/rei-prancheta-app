@@ -6219,6 +6219,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.atualizarResumoBase();
         }
     };
+    $scope.voltarParaPartidaAoVivo = function() {
+        if (!$scope.partidaEmAndamento) return false;
+        $scope.telaAtual = 'partida';
+        return true;
+    };
 
     $scope.selecionarClube = function(clubeId) {
         $scope.clubeAtual = $scope.clubes.find(function(c) { return c.id === clubeId; });

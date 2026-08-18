@@ -129,6 +129,14 @@
                 <h1 style="text-transform: capitalize;">{{ telaAtual.replace('_', ' ') }}</h1>
                 <div class="date-info">Temporada {{dados.anoAtual}}</div>
             </header>
+            <div class="live-match-context" ng-if="partidaEmAndamento && telaAtual !== 'partida'" role="status">
+                <div>
+                    <strong>Partida em andamento · {{minutoAtual}}'</strong>
+                    <span>{{partidaAoVivo.mandante.nome}} {{partidaAoVivo.golsMandante}} x {{partidaAoVivo.golsVisitante}} {{partidaAoVivo.visitante.nome}}</span>
+                    <small ng-if="partidaPausada">Jogo pausado para ajustes táticos.</small>
+                </div>
+                <button ng-click="voltarParaPartidaAoVivo()">Voltar à partida</button>
+            </div>
 
             <!-- TELA: COLETIVA DE IMPRENSA (FASE 17) -->
             <div ng-if="telaAtual === 'coletiva'">

@@ -37,5 +37,8 @@ assert.ok(html.includes('obterResumoPausaTatica().impedidos'), 'tactical pause s
 assert.ok(html.includes('obterStatusTaticaJogador(jogador)'), 'bench should show each player tactical status');
 assert.ok(css.includes('.bench-status-disponivel'), 'bench should style available players distinctly');
 assert.ok(css.includes('.bench-status-utilizado'), 'bench should style already used players distinctly');
+assert.ok(html.includes('voltarParaPartidaAoVivo()'), 'paused match should offer a direct return action');
+assert.ok(html.includes('class="live-match-context"'), 'other screens should show live match context');
+assert.ok(css.includes('.live-match-context'), 'live match context should have a visible banner');
 
 console.log('responsive_layout.test.js passed');
