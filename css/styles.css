@@ -2817,4 +2817,36 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .token-name {
         font-size: 9px;
     }
+
+    /* Alvos de toque com pelo menos 44px, sem aumentar cards de leitura. */
+    .nav-links li,
+    .sidebar-footer button,
+    .sidebar-footer select,
+    .pre-match-actions button,
+    .post-match-actions button,
+    .btn,
+    .btn-save,
+    button {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+
+    .sidebar-footer label {
+        align-self: center;
+        width: 100%;
+    }
+
+    .sidebar-footer select {
+        font-size: 14px;
+    }
+
+    .continue-game-card {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-delete-save {
+        align-self: flex-start;
+    }
 }

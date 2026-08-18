@@ -19,6 +19,8 @@ assert.ok(css.includes('@media (max-width: 420px)'), 'live match should have a c
 assert.ok(css.includes('.tactics-layout {\n        height: auto;\n        flex-direction: column;'), 'tactics should stack on narrower screens');
 assert.ok(css.includes('.bench-list {\n        max-height: 280px;'), 'bench list should remain scrollable on tablets');
 assert.ok(css.includes('.pitch-container {\n        min-height: 390px;'), 'pitch should preserve a usable mobile touch area');
+assert.ok(css.includes('min-height: 44px;'), 'mobile controls should meet a comfortable touch target');
+assert.ok(css.includes('touch-action: manipulation;'), 'mobile controls should avoid delayed touch activation');
 assert.ok(css.includes('border-width: 2px'), 'alerts should have a non-color visual distinction');
 assert.ok(html.includes('overflow-x: auto'), 'wide tables should have local horizontal scrolling');
 assert.ok(html.includes('historicoFinanceiroMensal'), 'monthly finance table should be present');
