@@ -3298,6 +3298,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             impedidos: impedidos
         };
     };
+    $scope.obterStatusTaticaJogador = function(jogador) {
+        if (!jogador) return { classe: 'disponivel', label: 'Disponível' };
+        if (jogador.expulso) return { classe: 'expulso', label: 'Expulso' };
+        if (jogador.lesionado) return { classe: 'lesionado', label: 'Lesionado' };
+        if (jogador.suspenso) return { classe: 'suspenso', label: 'Suspenso' };
+        if (jogador.substituidoNaPartida) return { classe: 'utilizado', label: 'Já utilizado' };
+        return { classe: 'disponivel', label: 'Disponível' };
+    };
 
     $scope.rodarMinuto = function() {
         if ($scope.partidaPausada) return;

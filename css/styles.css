@@ -2023,6 +2023,12 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .bench-item:active { cursor: grabbing; }
 .bench-item:hover { background-color: #e8f0fe; transform: translateX(5px); }
 .bench-item.tactile-selected { background-color: #e8f0fe; border: 2px solid var(--br-blue); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.18); }
+.bench-item.bench-blocked { background-color: #f4f5f6; }
+.bench-status { align-self: flex-start; border-radius: 999px; font-size: 9px; font-weight: 800; margin-top: 4px; padding: 3px 6px; text-transform: uppercase; }
+.bench-status-disponivel { background: var(--br-green-light); color: var(--br-green-dark); }
+.bench-status-lesionado, .bench-status-suspenso { background: #fff3cd; color: #856404; }
+.bench-status-expulso { background: #f8d7da; color: #721c24; }
+.bench-status-utilizado { background: #e1e8ed; color: #566573; }
 .bench-item .jogador-nome { flex-grow: 1; margin-left: 10px; font-weight: 600; font-size: 14px; }
 .dragging { opacity: 0.5; }
 

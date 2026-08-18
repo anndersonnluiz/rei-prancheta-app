@@ -34,5 +34,8 @@ assert.ok(html.includes('retirarJogadorSelecionadoDoCampo(jogador)'), 'tactics s
 assert.ok(html.includes('pausarPartidaManualmente()'), 'live match should expose a manual tactical pause');
 assert.ok(html.includes('obterResumoPausaTatica().restantes'), 'tactical pause should show remaining substitutions');
 assert.ok(html.includes('obterResumoPausaTatica().impedidos'), 'tactical pause should show unavailable players');
+assert.ok(html.includes('obterStatusTaticaJogador(jogador)'), 'bench should show each player tactical status');
+assert.ok(css.includes('.bench-status-disponivel'), 'bench should style available players distinctly');
+assert.ok(css.includes('.bench-status-utilizado'), 'bench should style already used players distinctly');
 
 console.log('responsive_layout.test.js passed');

@@ -934,7 +934,7 @@
 
                     <p class="hint">Arraste para o campo 👉 ou toque no jogador e depois no campo.</p>
                     <div class="bench-list">
-                        <div class="bench-item" ng-repeat="jogador in elencoAtual | filter:{emCampo: false}" draggable-player ng-click="selecionarJogadorParaTatica(jogador)" ng-class="{'tactile-selected': jogadorTaticaSelecionado && jogadorTaticaSelecionado.id === jogador.id}" style="display: flex; align-items: center; opacity: {{jogadorBloqueadoParaEntrar(jogador) ? '0.5' : '1'}}; cursor: {{jogadorBloqueadoParaEntrar(jogador) ? 'not-allowed' : 'grab'}};">
+                        <div class="bench-item" ng-repeat="jogador in elencoAtual | filter:{emCampo: false}" draggable-player ng-click="selecionarJogadorParaTatica(jogador)" ng-class="{'tactile-selected': jogadorTaticaSelecionado && jogadorTaticaSelecionado.id === jogador.id, 'bench-blocked': jogadorBloqueadoParaEntrar(jogador)}" style="display: flex; align-items: center; opacity: {{jogadorBloqueadoParaEntrar(jogador) ? '0.5' : '1'}}; cursor: {{jogadorBloqueadoParaEntrar(jogador) ? 'not-allowed' : 'grab'}};">
                             <span class="posicao-badge pos-{{ jogador.posicao }}">{{ jogador.posicao }}</span>
                             <div style="flex-grow: 1; display: flex; flex-direction: column; margin-left: 10px;">
                                 <span class="jogador-nome" style="margin-left: 0;">
@@ -943,6 +943,7 @@
                                     <span ng-if="jogador.suspenso" title="Suspenso" style="font-size: 10px;">🟥</span>
                                     <span ng-if="partidaEmAndamento && jogador.substituidoNaPartida" title="Já foi substituído nesta partida" style="font-size: 10px;">SUB</span>
                                 </span>
+                                <span class="bench-status bench-status-{{obterStatusTaticaJogador(jogador).classe}}">{{obterStatusTaticaJogador(jogador).label}}</span>
                                 <div style="width: 80%; background: #e1e8ed; height: 4px; border-radius: 2px; margin-top: 3px;">
                                     <div style="height: 100%; background: {{jogador.condicaoFisica > 60 ? 'var(--br-green)' : (jogador.condicaoFisica > 30 ? '#f39c12' : '#e74c3c')}}; width: {{jogador.condicaoFisica}}%; border-radius: 2px;"></div>
                                 </div>
