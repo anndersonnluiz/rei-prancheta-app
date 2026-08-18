@@ -3281,6 +3281,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    $scope.pausarPartidaManualmente = function() {
+        if (!$scope.partidaEmAndamento || $scope.partidaPausada) return false;
+        $scope.partidaPausada = true;
+        $scope.narracao.unshift($scope.minutoAtual + "' - Jogo pausado pelo treinador para ajustes táticos.");
+        return true;
+    };
+
     $scope.rodarMinuto = function() {
         if ($scope.partidaPausada) return;
 

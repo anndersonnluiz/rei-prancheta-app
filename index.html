@@ -1302,6 +1302,9 @@
                         <button class="btn btn-success" ng-click="retomarPartida()" style="background: var(--br-green); color: white; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">▶ Retomar Partida</button>
                     </div>
                 </div>
+                <div ng-if="partidaEmAndamento && !partidaPausada" style="display:flex; justify-content:flex-end; margin-bottom:15px;">
+                    <button class="btn btn-primary" ng-click="pausarPartidaManualmente()" style="background:var(--br-blue); color:white; padding:10px 18px; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">⏸ Pausar para ajustes</button>
+                </div>
 
                 <div class="scoreboard">
                     <div class="team">
