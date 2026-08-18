@@ -689,6 +689,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="development-panel" ng-if="obterRelatorioAdaptacaoJovens().length > 0" style="margin-bottom: 18px;">
+                        <div class="development-panel-header"><div><span class="dashboard-eyebrow">Jovens promovidos</span><h4>Relatório de adaptação</h4></div></div>
+                        <div class="development-report-list">
+                            <div class="development-report-item neutral" ng-repeat="item in obterRelatorioAdaptacaoJovens() track by item.jogador.id">
+                                <div><strong>{{item.jogador.nome}}</strong><span>{{item.jogador.categoriaOrigem}} · {{item.jogos}}j · {{item.minutos}}min · XP {{item.xp}} · Moral {{item.moral}}</span></div>
+                                <em style="font-size:11px;">{{item.recomendacao}}</em>
+                            </div>
+                        </div>
+                    </div>
                       
                     <div style="overflow-x: auto;">
                         <table class="tabela-classificacao">

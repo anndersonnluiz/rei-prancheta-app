@@ -1553,6 +1553,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return $scope.promoverAtletaBase(sugestao.atleta.id);
     };
 
+    $scope.obterRelatorioAdaptacaoJovens = function() {
+        return ($scope.elencoAtual || []).filter(function(jogador) { return !!jogador.categoriaOrigem; }).map(function(jogador) {
+            var minutos = jogador.minutosTemporada || 0;
+            var recomendacao = minutos < 450 ? 'Receber mais minutos' : (minutos >= 1200 ? 'Permanecer no elenco' : 'Monitorar adaptação');
+            if (minutos < 180 && (jogador.moral || 0) < 60) recomendacao = 'Considerar empréstimo';
+            return { jogador: jogador, minutos: minutos, jogos: jogador.jogosTemporada || 0, xp: jogador.xpTemporada || 0, evolucao: jogador.evolucaoTemporada || 0, moral: jogador.moral || 0, recomendacao: recomendacao };
+        });
+    };
+
     $scope.normalizarBaseClube = function(clube) {
         return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
     };
