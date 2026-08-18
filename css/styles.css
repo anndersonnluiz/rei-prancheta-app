@@ -2672,3 +2672,81 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .card { padding: 14px !important; }
     .pre-match-grid, .post-match-grid { grid-template-columns: 1fr; }
 }
+
+/* Partida ao vivo: o placar e o painel de eventos precisam continuar legíveis
+   quando a janela fica estreita ou o jogo é aberto em um dispositivo móvel. */
+@media (max-width: 720px) {
+    .scoreboard {
+        gap: 12px;
+        padding: 20px 10px;
+    }
+
+    .scoreboard .team {
+        gap: 8px;
+        width: min(30vw, 150px);
+    }
+
+    .scoreboard .team h3 {
+        font-size: 16px;
+        overflow-wrap: anywhere;
+    }
+
+    .scoreboard .team-color {
+        height: 54px;
+        width: 54px;
+    }
+
+    .score-display {
+        gap: 10px;
+        padding: 12px 14px;
+    }
+
+    .score {
+        font-size: 34px;
+    }
+
+    .match-stats-panel {
+        overflow: hidden;
+    }
+
+    .commentary-box {
+        height: min(42vh, 300px);
+        padding: 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    .scoreboard {
+        align-items: stretch;
+        gap: 6px;
+        padding: 14px 6px;
+    }
+
+    .scoreboard .team {
+        width: min(29vw, 110px);
+    }
+
+    .scoreboard .team h3 {
+        font-size: 13px;
+    }
+
+    .scoreboard .team-color {
+        height: 44px;
+        width: 44px;
+    }
+
+    .score-display {
+        align-self: center;
+        padding: 9px 8px;
+    }
+
+    .score {
+        font-size: 28px;
+    }
+
+    .match-stats-panel > div:first-child {
+        align-items: flex-start !important;
+        flex-direction: column;
+        gap: 6px;
+    }
+}

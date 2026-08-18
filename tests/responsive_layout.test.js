@@ -13,6 +13,9 @@ assert.ok(css.includes('overflow-x: hidden'), 'page should prevent accidental ho
 assert.ok(css.includes('focus-visible'), 'interactive controls should expose visible keyboard focus');
 assert.ok(css.includes('prefers-reduced-motion'), 'interface should respect reduced-motion preference');
 assert.ok(css.includes('prefers-contrast: more'), 'interface should support increased contrast preference');
+assert.ok(css.includes('.scoreboard .team-color'), 'live match scoreboard should have responsive team sizing');
+assert.ok(css.includes('.commentary-box {\n        height: min(42vh, 300px)'), 'live commentary should adapt to short screens');
+assert.ok(css.includes('@media (max-width: 420px)'), 'live match should have a compact phone breakpoint');
 assert.ok(css.includes('border-width: 2px'), 'alerts should have a non-color visual distinction');
 assert.ok(html.includes('overflow-x: auto'), 'wide tables should have local horizontal scrolling');
 assert.ok(html.includes('historicoFinanceiroMensal'), 'monthly finance table should be present');
