@@ -16,5 +16,7 @@ assert.ok(html.includes('overflow-x: auto'), 'wide tables should have local hori
 assert.ok(html.includes('historicoFinanceiroMensal'), 'monthly finance table should be present');
 assert.ok(html.includes('skip-link'), 'page should provide a skip link');
 assert.ok(html.includes('id="conteudo-principal"'), 'main content should have a keyboard target');
+assert.ok(html.includes('aria-label="Navegação principal do clube"'), 'main navigation should be labelled');
+assert.ok(html.includes('aria-live="polite"'), 'messages should announce updates to assistive technology');
 
 console.log('responsive_layout.test.js passed');

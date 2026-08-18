@@ -68,13 +68,13 @@
     <div class="app-layout" ng-if="telaAtual !== 'loading' && telaAtual !== 'menu_inicial'" ng-cloak>
         
         <!-- Sidebar -->
-        <nav class="sidebar">
+        <nav class="sidebar" aria-label="Navegação principal do clube">
             <div class="sidebar-header">
                 <img src="assets/logo.png" alt="Rei da Prancheta" class="game-logo-small">
                 <div class="manager-name">👤 Prof. {{ dados.nomeTreinador }}</div>
             </div>
             
-            <ul class="nav-links">
+            <ul class="nav-links" role="list">
                 <li ng-class="{'active': telaAtual === 'historico_treinador'}" ng-click="mudarTela('historico_treinador')">📚 Minha Carreira</li>
                 <li ng-class="{'active': telaAtual === 'staff'}" ng-click="mudarTela('staff')">🧑‍💼 Comissão Técnica</li>
                 <li ng-class="{'active': telaAtual === 'dashboard'}" ng-click="mudarTela('dashboard')">📊 Visão Geral</li>
@@ -197,7 +197,7 @@
             </div>
 
             <!-- TELA: MENSAGENS (FASE 17) -->
-            <div ng-if="telaAtual === 'mensagens'">
+            <div ng-if="telaAtual === 'mensagens'" aria-live="polite">
                 <div class="card" style="margin-bottom: 20px; padding: 20px; background: linear-gradient(to right, #2c3e50, #34495e); color: white;">
                     <h2 style="display: flex; align-items: center; gap: 10px;">✉️ Comunicações Internas</h2>
                     <p style="opacity: 0.8; margin-top: 5px;">Caixa de entrada exclusiva para assuntos do clube (Diretoria, Médicos, Finanças, etc).</p>
