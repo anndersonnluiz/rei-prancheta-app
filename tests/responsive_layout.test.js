@@ -10,6 +10,8 @@ assert.ok(css.includes('@media (max-width: 560px)'), 'responsive layout should d
 assert.ok(css.includes('.sidebar { position: relative; width: 100%'), 'mobile sidebar should return to document flow');
 assert.ok(css.includes('.main-content { margin-left: 0; max-width: 100%'), 'mobile content should use full width');
 assert.ok(css.includes('overflow-x: hidden'), 'page should prevent accidental horizontal overflow');
+assert.ok(css.includes('focus-visible'), 'interactive controls should expose visible keyboard focus');
+assert.ok(css.includes('prefers-reduced-motion'), 'interface should respect reduced-motion preference');
 assert.ok(html.includes('overflow-x: auto'), 'wide tables should have local horizontal scrolling');
 assert.ok(html.includes('historicoFinanceiroMensal'), 'monthly finance table should be present');
 
