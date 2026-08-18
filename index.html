@@ -592,6 +592,19 @@
                         <span style="font-size: 11px; font-weight: bold; color: var(--br-blue); background: #eef3ff; padding: 6px 9px; border-radius: 999px; white-space: nowrap;">{{evento.tipo === 'inicio' ? 'Início' : (evento.tipo === 'mudanca_clube' ? 'Mudança' : 'Temporada')}}</span>
                     </div>
                 </div>
+                <div class="card" style="margin-top:20px; padding:20px;" ng-if="historicoPartidas && historicoPartidas.length > 0">
+                    <h3 style="margin-bottom:14px;">📊 Histórico de partidas</h3>
+                    <div class="career-match-history" ng-repeat="partida in historicoPartidas track by $index">
+                        <div>
+                            <strong>{{partida.mandante.nome}} {{partida.placar.mandante}} x {{partida.placar.visitante}} {{partida.visitante.nome}}</strong>
+                            <span>{{partida.competicao}} · Dia {{partida.dia}} · {{partida.origem === 'rapido' ? 'Resultado rápido' : 'Partida 3D'}}</span>
+                        </div>
+                        <div class="career-match-history-meta">
+                            <span>{{partida.placar.resultadoMeuTime}}</span>
+                            <small>{{partida.gestao.substituicoes}} substituição(ões) · {{partida.gestao.pausasTaticas}} pausa(s)</small>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- TELA: PRE-JOGO -->

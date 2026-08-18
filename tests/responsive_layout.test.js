@@ -42,5 +42,7 @@ assert.ok(html.includes('class="live-match-context"'), 'other screens should sho
 assert.ok(css.includes('.live-match-context'), 'live match context should have a visible banner');
 assert.ok(html.includes('posJogo.resumo.gestao.substituicoes'), 'post-match should report substitutions');
 assert.ok(html.includes('posJogo.resumo.gestao.pausasTaticas'), 'post-match should report tactical pauses');
+assert.ok(html.includes('historicoPartidas'), 'career screen should include match history');
+assert.ok(css.includes('.career-match-history'), 'match history should have a responsive-friendly layout');
 
 console.log('responsive_layout.test.js passed');

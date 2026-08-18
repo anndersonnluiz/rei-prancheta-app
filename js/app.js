@@ -63,6 +63,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.telaAtual = 'loading'; 
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
     $scope.historicoTreinador = [];
+    $scope.historicoPartidas = [];
     $scope.mudancaClubePendente = null;
     $scope.staffClube = [];
     $scope.emprestimosAtivos = [];
@@ -4188,6 +4189,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.finalizarPartidaUsuario = function(partida, origem) {
         $scope.registrarXpPartida(partida, origem);
         var resumo = $scope.montarResumoPosJogo(partida, origem);
+        $scope.historicoPartidas = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
+        $scope.historicoPartidas.unshift(angular.copy(resumo));
+        $scope.historicoPartidas = $scope.historicoPartidas.slice(0, 30);
         $scope.partidaEmAndamento = false;
         $scope.partidaPausada = false;
         if (partida && partida.telemetriaShots && partida.telemetriaShots.length > 0) {
@@ -5482,6 +5486,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         if (!saveInfo.savedAt) saveInfo.savedAt = new Date().toISOString();
         if (!Array.isArray(saveInfo.historicoTreinador)) saveInfo.historicoTreinador = [];
+        if (!Array.isArray(saveInfo.historicoPartidas)) saveInfo.historicoPartidas = [];
         if (!saveInfo.historicoFinanceiroMensal || typeof saveInfo.historicoFinanceiroMensal !== 'object') saveInfo.historicoFinanceiroMensal = {};
         saveInfo.staffClube = normalizarStaff(saveInfo.staffClube);
         if (!Array.isArray(saveInfo.emprestimosAtivos)) saveInfo.emprestimosAtivos = [];
@@ -5533,6 +5538,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             savedAt: new Date().toISOString(),
             nomeTreinador: $scope.dados.nomeTreinador,
             historicoTreinador: $scope.historicoTreinador || [],
+            historicoPartidas: $scope.historicoPartidas || [],
             historicoFinanceiroMensal: $scope.historicoFinanceiroMensal || {},
             staffClube: normalizarStaff($scope.staffClube),
             emprestimosAtivos: $scope.emprestimosAtivos || [],
@@ -5876,6 +5882,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.saveInfo = $scope.migrarSave($scope.saveInfo);
         $scope.dados.nomeTreinador = $scope.saveInfo.nomeTreinador;
         $scope.historicoTreinador = Array.isArray($scope.saveInfo.historicoTreinador) ? $scope.saveInfo.historicoTreinador : [];
+        $scope.historicoPartidas = Array.isArray($scope.saveInfo.historicoPartidas) ? $scope.saveInfo.historicoPartidas : [];
         $scope.historicoFinanceiroMensal = $scope.saveInfo.historicoFinanceiroMensal || {};
         $scope.staffClube = normalizarStaff($scope.saveInfo.staffClube);
         $scope.emprestimosAtivos = Array.isArray($scope.saveInfo.emprestimosAtivos) ? $scope.saveInfo.emprestimosAtivos : [];

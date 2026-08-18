@@ -88,6 +88,11 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .live-match-context strong, .live-match-context span, .live-match-context small { display: block; }
 .live-match-context span, .live-match-context small { color: rgba(255,255,255,0.75); font-size: 12px; margin-top: 3px; }
 .live-match-context button { background: var(--br-yellow); border: none; border-radius: 7px; color: #17212b; cursor: pointer; font-weight: 900; padding: 9px 12px; white-space: nowrap; }
+.career-match-history { align-items: center; border-top: 1px solid #edf0f2; display: flex; gap: 14px; justify-content: space-between; padding: 12px 0; }
+.career-match-history strong, .career-match-history span, .career-match-history small { display: block; }
+.career-match-history span, .career-match-history small { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
+.career-match-history-meta { text-align: right; }
+.career-match-history-meta > span { background: var(--br-green-light); border-radius: 999px; color: var(--br-green-dark); font-weight: 900; padding: 5px 8px; }
 .btn-save { width: 100%; background-color: var(--br-blue); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(0,39,118,0.3); }
 .btn-save:hover { background-color: #001f5c; transform: translateY(-2px); }
 .btn-save:disabled { background-color: #7f8c8d; cursor: not-allowed; box-shadow: none; transform: none; }
@@ -2864,6 +2869,15 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 
     .live-match-context button {
         width: 100%;
+    }
+
+    .career-match-history {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .career-match-history-meta {
+        text-align: left;
     }
 
     .btn-delete-save {
