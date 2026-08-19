@@ -955,6 +955,10 @@
                         <h2 style="margin: 0;">🏗️ Infraestrutura do Clube</h2>
                         <p style="margin: 5px 0 0 0; opacity: 0.9;">Evolua CT, departamento médico, comercial e conforto do estádio com efeitos controlados no modo carreira.</p>
                     </div>
+                    <div class="structural-investment-guidance" ng-class="'structural-investment-' + obterOrientacaoInvestimentoEstrutural().classe">
+                        <strong>{{obterOrientacaoInvestimentoEstrutural().titulo}}</strong>
+                        <span>{{obterOrientacaoInvestimentoEstrutural().detalhe}}</span>
+                    </div>
                     <div style="padding: 30px;">
                         <div class="infrastructure-management-grid" ng-if="infraestruturaResumo && infraestruturaResumo.cards.length > 0">
                             <div class="infrastructure-management-card" ng-repeat="card in infraestruturaResumo.cards track by card.id">

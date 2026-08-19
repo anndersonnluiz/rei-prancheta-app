@@ -70,5 +70,7 @@ assert.ok(html.includes('obterConfiancaDiretoria()'), 'career should expose boar
 assert.ok(css.includes('.career-confidence'), 'board confidence should have a visible indicator');
 assert.ok(html.includes('obterMargemPlanejamentoDiretoria()'), 'career should expose planning margin');
 assert.ok(css.includes('.career-planning-margin-curta'), 'planning margin should distinguish immediate pressure');
+assert.ok(html.includes('obterOrientacaoInvestimentoEstrutural()'), 'infrastructure should show investment guidance');
+assert.ok(css.includes('.structural-investment-prioridade'), 'investment guidance should distinguish priority mode');
 
 console.log('responsive_layout.test.js passed');

@@ -221,6 +221,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (confianca >= 50) return { classe: 'moderada', titulo: 'Planejamento com acompanhamento', detalhe: 'Projetos estruturais são possíveis, mas precisam mostrar progresso.' };
         return { classe: 'curta', titulo: 'Foco em resultado imediato', detalhe: 'A diretoria exige reação antes de ampliar projetos de longo prazo.' };
     };
+    $scope.obterOrientacaoInvestimentoEstrutural = function() {
+        var margem = $scope.obterMargemPlanejamentoDiretoria();
+        if (margem.classe === 'longa') return { classe: 'favoravel', titulo: 'Momento favorável para investir', detalhe: 'A confiança atual dá espaço para evoluir instalações e categorias de base.' };
+        if (margem.classe === 'moderada') return { classe: 'cautela', titulo: 'Invista com cautela', detalhe: 'Escolha melhorias com retorno claro e preserve uma reserva de orçamento.' };
+        return { classe: 'prioridade', titulo: 'Priorize o resultado antes do investimento', detalhe: 'Projetos estruturais continuam disponíveis, mas a diretoria espera reação esportiva primeiro.' };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
