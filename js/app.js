@@ -2007,6 +2007,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.mensagemAberta = msg;
         $scope.marcarMensagemLida(msg);
     };
+    $scope.responderEventoDiretoria = function(msg, postura) {
+        if (!msg || msg.tipo !== 'diretoria' || msg.respondida) return false;
+        var textos = {
+            apoio: 'O treinador respondeu reforçando confiança no elenco.',
+            cobranca: 'O treinador respondeu cobrando reação imediata do grupo.',
+            paciencia: 'O treinador pediu paciência e tempo para consolidar o trabalho.'
+        };
+        msg.respondida = true;
+        msg.respostaTreinador = textos[postura] || textos.paciencia;
+        if ($scope.registrarEventoAmbiente) {
+            var impacto = postura === 'apoio' ? 1 : (postura === 'cobranca' ? -1 : 0);
+            if (impacto !== 0) $scope.registrarEventoAmbiente({ id: 'amb_resposta_' + msg.id, chave: 'resposta_diretoria|' + msg.id, dia: $scope.diaAtual || 0, tipo: 'diretoria', impacto: impacto, titulo: postura === 'apoio' ? 'Treinador protege o elenco' : 'Treinador aumenta a cobrança', detalhe: msg.respostaTreinador });
+        }
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return true;
+    };
 
     // FASE 20: Responder Propostas da IA
     $scope.responderProposta = function(msg, aceitar) {
