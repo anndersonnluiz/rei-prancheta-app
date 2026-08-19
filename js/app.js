@@ -256,6 +256,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             financas: $scope.obterOrientacaoFinanceiraDiretoria()
         };
     };
+    $scope.definirPrioridadeEstrategica = function(prioridade) {
+        var permitidas = ['planejamento', 'base', 'mercado', 'financas'];
+        if (permitidas.indexOf(prioridade) === -1) return false;
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        $scope.diretoriaStatus.prioridadeEstrategica = prioridade;
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return true;
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
@@ -1316,6 +1324,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             ultimaAvaliacaoDia: 0,
             ultimaObservacao: 'A diretoria aguarda os primeiros resultados da temporada.',
             bonusConfianca: 0,
+            prioridadeEstrategica: '',
             historicoAvaliacoes: []
         };
     }
@@ -1331,6 +1340,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         base.ultimaAvaliacaoDia = (typeof base.ultimaAvaliacaoDia === 'number') ? base.ultimaAvaliacaoDia : 0;
         base.ultimaObservacao = base.ultimaObservacao || 'A diretoria aguarda os primeiros resultados da temporada.';
         base.bonusConfianca = Math.max(-10, Math.min(10, Number(base.bonusConfianca) || 0));
+        base.prioridadeEstrategica = base.prioridadeEstrategica || '';
         base.historicoAvaliacoes = Array.isArray(base.historicoAvaliacoes) ? base.historicoAvaliacoes.slice(0, 10) : [];
         return base;
     }

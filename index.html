@@ -292,10 +292,10 @@
                         <span class="dashboard-count-badge">{{obterEstrategiaClube().confianca.percentual}}% confiança</span>
                     </div>
                     <div class="club-strategy-grid">
-                        <div><span>Planejamento</span><strong>{{obterEstrategiaClube().planejamento.titulo}}</strong></div>
-                        <div><span>Base</span><strong>{{obterEstrategiaClube().base.titulo}}</strong></div>
-                        <div><span>Mercado</span><strong>{{obterEstrategiaClube().mercado.titulo}}</strong></div>
-                        <div><span>Finanças</span><strong>{{obterEstrategiaClube().financas.titulo}}</strong></div>
+                        <button ng-click="definirPrioridadeEstrategica('planejamento')" ng-class="{'strategy-selected': diretoriaStatus.prioridadeEstrategica === 'planejamento'}"><span>Planejamento</span><strong>{{obterEstrategiaClube().planejamento.titulo}}</strong></button>
+                        <button ng-click="definirPrioridadeEstrategica('base')" ng-class="{'strategy-selected': diretoriaStatus.prioridadeEstrategica === 'base'}"><span>Base</span><strong>{{obterEstrategiaClube().base.titulo}}</strong></button>
+                        <button ng-click="definirPrioridadeEstrategica('mercado')" ng-class="{'strategy-selected': diretoriaStatus.prioridadeEstrategica === 'mercado'}"><span>Mercado</span><strong>{{obterEstrategiaClube().mercado.titulo}}</strong></button>
+                        <button ng-click="definirPrioridadeEstrategica('financas')" ng-class="{'strategy-selected': diretoriaStatus.prioridadeEstrategica === 'financas'}"><span>Finanças</span><strong>{{obterEstrategiaClube().financas.titulo}}</strong></button>
                     </div>
                 </section>
                 <div class="dashboard-grid">

@@ -81,5 +81,7 @@ assert.ok(html.includes('obterOrientacaoFinanceiraDiretoria()'), 'finance should
 assert.ok(css.includes('.finance-director-economizar'), 'finance guidance should distinguish liquidity priority');
 assert.ok(html.includes('obterEstrategiaClube()'), 'dashboard should expose club strategy');
 assert.ok(css.includes('.club-strategy-grid'), 'club strategy should have a compact summary grid');
+assert.ok(html.includes('definirPrioridadeEstrategica'), 'dashboard should allow selecting a strategic priority');
+assert.ok(css.includes('.strategy-selected'), 'selected strategic priority should be highlighted');
 
 console.log('responsive_layout.test.js passed');
