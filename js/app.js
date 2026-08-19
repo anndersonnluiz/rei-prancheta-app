@@ -247,6 +247,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (confianca >= 50 && orcamento >= 30000000) return { classe: 'equilibrar', titulo: 'Equilibre crescimento e reserva', detalhe: 'Mantenha uma reserva e escolha investimentos com retorno previsível.' };
         return { classe: 'economizar', titulo: 'Priorize liquidez', detalhe: 'Evite gastos não essenciais e preserve caixa para salários e compromissos.' };
     };
+    $scope.obterEstrategiaClube = function() {
+        return {
+            confianca: $scope.obterConfiancaDiretoria(),
+            planejamento: $scope.obterMargemPlanejamentoDiretoria(),
+            base: $scope.obterOrientacaoCategoriasBase(),
+            mercado: $scope.obterOrientacaoMercadoDiretoria(),
+            financas: $scope.obterOrientacaoFinanceiraDiretoria()
+        };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

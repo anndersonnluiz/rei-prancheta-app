@@ -166,6 +166,12 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .finance-director-investir { background: var(--br-green-light); border-left-color: var(--br-green); }
 .finance-director-equilibrar { background: #fffbea; border-left-color: #f1c40f; }
 .finance-director-economizar { background: #fff3f2; border-left-color: #c0392b; }
+.club-strategy-panel { background: var(--card-bg); border: 1px solid var(--dash-line); border-radius: 16px; box-shadow: 0 10px 24px rgba(23, 33, 43, 0.07); margin-bottom: 18px; padding: 18px; }
+.club-strategy-grid { display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.club-strategy-grid div { background: var(--bg-color); border: 1px solid #dfe7ee; border-radius: 8px; padding: 10px; }
+.club-strategy-grid span, .club-strategy-grid strong { display: block; }
+.club-strategy-grid span { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
+.club-strategy-grid strong { color: var(--text-main); font-size: 12px; margin-top: 4px; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }
@@ -2988,6 +2994,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .career-trend {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .club-strategy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .career-match-history-details p,

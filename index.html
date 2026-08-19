@@ -286,6 +286,18 @@
 
             <!-- TELA: DASHBOARD -->
             <div ng-if="telaAtual === 'dashboard'" class="dashboard-v2">
+                <section class="club-strategy-panel">
+                    <div class="dashboard-panel-header compact-header">
+                        <div><span class="dashboard-eyebrow">Comando do clube</span><h3>Estratégia atual</h3></div>
+                        <span class="dashboard-count-badge">{{obterEstrategiaClube().confianca.percentual}}% confiança</span>
+                    </div>
+                    <div class="club-strategy-grid">
+                        <div><span>Planejamento</span><strong>{{obterEstrategiaClube().planejamento.titulo}}</strong></div>
+                        <div><span>Base</span><strong>{{obterEstrategiaClube().base.titulo}}</strong></div>
+                        <div><span>Mercado</span><strong>{{obterEstrategiaClube().mercado.titulo}}</strong></div>
+                        <div><span>Finanças</span><strong>{{obterEstrategiaClube().financas.titulo}}</strong></div>
+                    </div>
+                </section>
                 <div class="dashboard-grid">
                     <section class="dashboard-main">
                         <div class="dashboard-panel next-match-compact" ng-if="calendarioGeral[diaAtual]">

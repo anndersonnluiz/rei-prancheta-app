@@ -79,5 +79,7 @@ assert.ok(html.includes('obterOrientacaoMercadoDiretoria()'), 'market should sho
 assert.ok(css.includes('.market-director-preservar'), 'market guidance should distinguish cash preservation');
 assert.ok(html.includes('obterOrientacaoFinanceiraDiretoria()'), 'finance should show board guidance');
 assert.ok(css.includes('.finance-director-economizar'), 'finance guidance should distinguish liquidity priority');
+assert.ok(html.includes('obterEstrategiaClube()'), 'dashboard should expose club strategy');
+assert.ok(css.includes('.club-strategy-grid'), 'club strategy should have a compact summary grid');
 
 console.log('responsive_layout.test.js passed');
