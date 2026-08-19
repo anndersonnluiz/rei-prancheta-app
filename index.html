@@ -947,7 +947,7 @@
             </div>
 
             <!-- TELA: CATEGORIAS DE BASE -->
-            <div ng-if="telaAtual === 'base'">
+            <div class="youth-screen" ng-if="telaAtual === 'base'">
                 <div class="card" style="padding: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px;">
                         <div>
@@ -1655,7 +1655,7 @@
 
             <!-- TELAS EM BREVE -->
             <!-- TELA: MERCADO DA BOLA -->
-            <div ng-if="telaAtual === 'mercado'">
+            <div class="market-screen" ng-if="telaAtual === 'mercado'">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h3>Mercado da Bola</h3>
                     <div style="background: var(--bg-color); padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd;">
@@ -1962,7 +1962,7 @@
                 </div>
 
             </div>
-            <div ng-if="telaAtual === 'financas'">
+            <div class="finance-screen" ng-if="telaAtual === 'financas'">
                 <div class="finance-director-guidance" ng-class="'finance-director-' + obterOrientacaoFinanceiraDiretoria().classe">
                     <strong>{{obterOrientacaoFinanceiraDiretoria().titulo}}</strong>
                     <span>{{obterOrientacaoFinanceiraDiretoria().detalhe}}</span>

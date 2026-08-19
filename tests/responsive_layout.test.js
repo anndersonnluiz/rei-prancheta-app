@@ -124,6 +124,9 @@ assert.ok(css.includes('.competition-screen table { min-width: 420px; }'), 'comp
 assert.ok(html.includes('squad-screen'), 'squad screen should be identifiable for mobile layout');
 assert.ok(css.includes('.tactics-screen .tactics-layout'), 'tactics layout should stack on mobile');
 assert.ok(css.includes('.medical-screen .infrastructure-management-grid'), 'medical screen should stack infrastructure cards on mobile');
+assert.ok(html.includes('youth-screen'), 'youth screen should be identifiable for mobile layout');
+assert.ok(css.includes('.market-screen .market-director-guidance'), 'market screen should have mobile spacing rules');
+assert.ok(css.includes('.finance-screen table { min-width: 520px; }'), 'finance tables should preserve readable columns on mobile');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

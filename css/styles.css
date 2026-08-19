@@ -2906,6 +2906,16 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .tactics-screen .pitch-area > div { border-radius: 10px !important; }
     .tactics-screen select, .tactics-screen button { min-height: 42px; }
     .tactics-screen .pitch-area [style*="grid-template-columns: 1fr 1fr 1fr"] { gap: 8px !important; grid-template-columns: 1fr !important; }
+    .youth-screen > .card, .market-screen > .card, .finance-screen > .card { border-radius: 10px; padding: 12px !important; }
+    .youth-screen .youth-summary-pills { display: grid; gap: 5px; grid-template-columns: repeat(2, 1fr); }
+    .youth-screen .youth-grid { gap: 8px; grid-template-columns: 1fr; }
+    .youth-screen .youth-card { padding: 11px; }
+    .youth-screen .youth-actions button, .market-screen button, .finance-screen button { min-height: 42px; }
+    .market-screen .market-director-guidance, .finance-screen .finance-director-guidance { margin-bottom: 10px; }
+    .market-screen .market-list, .finance-screen .finance-list { overflow-x: auto; }
+    .finance-screen .infrastructure-finance-grid { grid-template-columns: 1fr; }
+    .finance-screen table { min-width: 520px; }
+    .finance-screen [style*="display: flex"] { flex-wrap: wrap; }
     .calendar-day-row { grid-template-columns: minmax(0, 1fr) !important; gap: 9px !important; padding: 12px !important; }
     .calendar-day-row > div { min-width: 0; }
     .calendar-day-row > div:last-child { justify-self: stretch; }
