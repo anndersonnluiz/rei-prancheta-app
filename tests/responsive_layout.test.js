@@ -53,5 +53,7 @@ assert.ok(html.includes('obterResumoHistoricoPartidas()'), 'career history shoul
 assert.ok(css.includes('.career-history-summary'), 'career aggregate statistics should have a compact layout');
 assert.ok(html.includes('obterResumoPorTemporada()'), 'career history should compare seasons');
 assert.ok(css.includes('.career-season-summary'), 'season comparison should have a responsive grid');
+assert.ok(html.includes('obterTendenciaCarreira()'), 'career history should expose performance trend');
+assert.ok(css.includes('.career-trend-alta'), 'career trend should distinguish positive evolution');
 
 console.log('responsive_layout.test.js passed');

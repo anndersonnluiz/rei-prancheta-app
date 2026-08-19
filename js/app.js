@@ -110,6 +110,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return grupo;
         });
     };
+    $scope.obterTendenciaCarreira = function() {
+        var temporadas = $scope.obterResumoPorTemporada();
+        if (temporadas.length < 2) return { classe: 'base', titulo: 'Base inicial', detalhe: 'Mais uma temporada será necessária para medir a evolução.' };
+        var atual = temporadas[0];
+        var anterior = temporadas[1];
+        var aproveitamentoAtual = atual.jogos ? (atual.vitorias * 3 + atual.empates) / (atual.jogos * 3) : 0;
+        var aproveitamentoAnterior = anterior.jogos ? (anterior.vitorias * 3 + anterior.empates) / (anterior.jogos * 3) : 0;
+        var delta = aproveitamentoAtual - aproveitamentoAnterior;
+        var deltaXg = Number(atual.mediaXg) - Number(anterior.mediaXg);
+        if (delta >= 0.08 || deltaXg >= 0.25) return { classe: 'alta', titulo: 'Desempenho em evolução', detalhe: 'A campanha recente mostra avanço em relação à temporada anterior.' };
+        if (delta <= -0.08 || deltaXg <= -0.25) return { classe: 'baixa', titulo: 'Desempenho em queda', detalhe: 'A campanha recente pede atenção e revisão das decisões.' };
+        return { classe: 'estavel', titulo: 'Desempenho estável', detalhe: 'Os indicadores permanecem próximos da temporada anterior.' };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

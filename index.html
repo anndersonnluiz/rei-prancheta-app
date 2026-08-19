@@ -609,6 +609,10 @@
                         <div><span>Gols</span><strong>{{obterResumoHistoricoPartidas().golsMarcados}}–{{obterResumoHistoricoPartidas().golsSofridos}}</strong></div>
                         <div><span>Média xG</span><strong>{{obterResumoHistoricoPartidas().mediaXg}}</strong></div>
                     </div>
+                    <div class="career-trend" ng-class="'career-trend-' + obterTendenciaCarreira().classe">
+                        <div><span>Tendência da carreira</span><strong>{{obterTendenciaCarreira().titulo}}</strong></div>
+                        <p>{{obterTendenciaCarreira().detalhe}}</p>
+                    </div>
                     <div class="career-season-summary" ng-if="obterResumoPorTemporada().length > 0">
                         <div class="career-season-card" ng-repeat="temporada in obterResumoPorTemporada() track by temporada.temporada">
                             <strong>Temporada {{temporada.temporada}}</strong>
