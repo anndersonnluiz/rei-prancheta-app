@@ -101,6 +101,8 @@ assert.ok(css.includes('.board-goals-grid'), 'board goals should use a responsiv
 assert.ok(html.includes('meta.progresso'), 'board goals should show live progress');
 assert.ok(js.includes('ultimaReacaoMetasDia'), 'board should throttle strategic goal reactions');
 assert.ok(js.includes("chave: 'meta_diretoria|"), 'strategic goal reactions should affect squad environment');
+assert.ok(html.includes('season-report-goals'), 'season report should summarize goals by area');
+assert.ok(html.includes('ambienteElenco'), 'season report should show squad environment');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

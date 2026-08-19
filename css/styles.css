@@ -141,7 +141,15 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .season-report-grid span { color: var(--text-muted); display: block; font-size: 11px; }
 .season-report-grid strong { color: var(--text-main); display: block; font-size: 16px; margin-top: 4px; }
 .season-report-footer { border-top: 1px solid #e7edf2; color: var(--text-muted); font-size: 12px; margin-top: 13px; padding-top: 11px; }
+.season-report-goals { border-top: 1px solid #e7edf2; display: grid; gap: 7px; grid-template-columns: repeat(4, 1fr); margin-top: 13px; padding-top: 11px; }
+.season-report-goals > span { color: var(--text-muted); font-size: 10px; grid-column: 1 / -1; text-transform: uppercase; }
+.season-report-goals div { background: #fff; border: 1px solid #e2e8ee; border-radius: 6px; padding: 7px; }
+.season-report-goals strong, .season-report-goals em, .season-report-goals small { display: block; }
+.season-report-goals strong { color: var(--text-muted); font-size: 10px; text-transform: capitalize; }
+.season-report-goals em { color: var(--br-green); font-size: 17px; font-style: normal; font-weight: 800; margin: 2px 0; }
+.season-report-goals small { color: var(--text-muted); font-size: 10px; }
 @media (max-width: 760px) { .season-report-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .season-report-goals { grid-template-columns: repeat(2, 1fr); } }
 .season-next-plan { align-items: center; background: #eff8f2; border-left: 5px solid var(--br-green); display: flex; gap: 18px; justify-content: space-between; margin-bottom: 20px; }
 .season-plan-label { color: #218c4b; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
 .season-next-plan h3 { margin: 4px 0; }

@@ -5424,6 +5424,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         var resumoGerencial = $scope.obterResumoGerencialTemporada($scope.dados.anoAtual, $scope.clubeAtual && $scope.clubeAtual.id);
         var planoProximaTemporada = $scope.obterPlanoProximaTemporada(resumoGerencial, posicaoTabela, $scope.clubeAtual.divisao);
+        var confiancaFinal = $scope.obterConfiancaDiretoria ? $scope.obterConfiancaDiretoria() : null;
+        var ambienteFinal = $scope.ambienteElencoResumo || ($scope.atualizarAmbienteElencoResumo ? $scope.atualizarAmbienteElencoResumo() : null);
         $scope.relatorioFimAno = {
             campeaoSerieA: campeaoSerieA,
             rebaixadosA: rebaixadosA,
@@ -5437,8 +5439,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             meuDesempenhoCopa: copaFaseAlcance,
             resumoGerencial: resumoGerencial,
             planoProximaTemporada: planoProximaTemporada,
-            confiancaDiretoria: $scope.obterConfiancaDiretoria ? $scope.obterConfiancaDiretoria().percentual : null,
-            margemPlanejamento: $scope.obterMargemPlanejamentoDiretoria ? $scope.obterMargemPlanejamentoDiretoria().percentual : null
+            confiancaDiretoria: confiancaFinal ? confiancaFinal.percentual : null,
+            margemPlanejamento: $scope.obterMargemPlanejamentoDiretoria ? $scope.obterMargemPlanejamentoDiretoria().percentual : null,
+            ambienteElenco: ambienteFinal ? ambienteFinal.valor : null,
+            metasTemporada: angular.copy(($scope.diretoriaStatus && $scope.diretoriaStatus.metasTemporada) || [])
         };
         
         $scope.telaAtual = 'cerimonia';

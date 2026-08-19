@@ -2206,7 +2206,10 @@
                     <div><span>Decisões de gestão</span><strong>{{relatorioFimAno.resumoGerencial.decisoes}}</strong></div>
                 </div>
                 <div class="season-report-footer" ng-if="relatorioFimAno.confiancaDiretoria !== null">
-                    Confiança da diretoria: <strong>{{relatorioFimAno.confiancaDiretoria}}%</strong> · Margem de planejamento: <strong>{{relatorioFimAno.margemPlanejamento}}%</strong>
+                    Confiança da diretoria: <strong>{{relatorioFimAno.confiancaDiretoria}}%</strong> · Margem de planejamento: <strong>{{relatorioFimAno.margemPlanejamento}}%</strong> · Ambiente do elenco: <strong>{{relatorioFimAno.ambienteElenco}}/100</strong>
+                </div>
+                <div class="season-report-goals" ng-if="relatorioFimAno.metasTemporada.length > 0">
+                    <span>Resumo das metas</span><div ng-repeat="meta in relatorioFimAno.metasTemporada track by meta.tipo"><strong>{{meta.tipo}}</strong><em>{{meta.progresso}}%</em><small>{{meta.progressoLabel}}</small></div>
                 </div>
             </div>
 
