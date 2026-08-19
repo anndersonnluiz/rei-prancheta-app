@@ -111,6 +111,7 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-recommendation strong, .career-recommendation span { display: block; }
 .career-recommendation strong { color: var(--text-main); font-size: 13px; }
 .career-recommendation span { color: var(--text-muted); font-size: 11px; line-height: 1.4; margin-top: 4px; }
+.career-recommendation button { background: white; border: 1px solid var(--br-blue); border-radius: 6px; color: var(--br-blue); cursor: pointer; font-size: 11px; font-weight: 800; margin-top: 8px; padding: 6px 8px; }
 .career-recommendation-defesa { border-left-color: #c0392b; }
 .career-recommendation-ataque { border-left-color: #e67e22; }
 .career-recommendation-alerta { border-left-color: #8e44ad; }

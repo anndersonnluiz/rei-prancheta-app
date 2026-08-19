@@ -57,5 +57,6 @@ assert.ok(html.includes('obterTendenciaCarreira()'), 'career history should expo
 assert.ok(css.includes('.career-trend-alta'), 'career trend should distinguish positive evolution');
 assert.ok(html.includes('obterRecomendacoesCarreira()'), 'career history should expose practical recommendations');
 assert.ok(css.includes('.career-recommendations'), 'career recommendations should have a responsive layout');
+assert.ok(html.includes('aplicarRecomendacaoComoMeta(recomendacao)'), 'career recommendations should connect to board goals');
 
 console.log('responsive_layout.test.js passed');

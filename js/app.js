@@ -134,6 +134,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (recomendacoes.length === 0) recomendacoes.push({ titulo: 'Mantenha o planejamento', detalhe: 'Os indicadores estão equilibrados; priorize continuidade e evolução gradual.', tipo: 'manter' });
         return recomendacoes;
     };
+    $scope.aplicarRecomendacaoComoMeta = function(recomendacao) {
+        if (!recomendacao || !$scope.clubeAtual) return false;
+        var tipo = recomendacao.tipo === 'defesa' ? 'elenco' : (recomendacao.tipo === 'ataque' ? 'desempenho' : 'temporada');
+        $scope.clubeAtual.metaTipo = tipo;
+        $scope.clubeAtual.metaDescricao = recomendacao.titulo;
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        $scope.diretoriaStatus.tipoObjetivo = tipo;
+        $scope.diretoriaStatus.objetivoAtual = recomendacao.titulo;
+        $scope.diretoriaStatus.ultimaObservacao = recomendacao.detalhe;
+        $scope.diretoriaStatus.progressoLabel = 'Prioridade definida pelo treinador';
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return true;
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

@@ -617,6 +617,7 @@
                         <div class="career-recommendation" ng-repeat="recomendacao in obterRecomendacoesCarreira()" ng-class="'career-recommendation-' + recomendacao.tipo">
                             <strong>{{recomendacao.titulo}}</strong>
                             <span>{{recomendacao.detalhe}}</span>
+                            <button ng-click="aplicarRecomendacaoComoMeta(recomendacao); $event.stopPropagation()">Definir como meta</button>
                         </div>
                     </div>
                     <div class="career-season-summary" ng-if="obterResumoPorTemporada().length > 0">
