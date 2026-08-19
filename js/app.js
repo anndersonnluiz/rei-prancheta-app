@@ -170,6 +170,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (progresso.percentual >= 50) return { classe: 'acompanhamento', titulo: 'Dentro do esperado', detalhe: 'A diretoria recomenda manter o foco e acelerar a evolução.' };
         return { classe: 'risco', titulo: 'Abaixo do esperado', detalhe: 'A prioridade entrou em risco e exige reação imediata.' };
     };
+    $scope.registrarAvaliacaoDiretoriaCarreira = function() {
+        if (!$scope.diretoriaStatus || !$scope.diretoriaStatus.objetivoAtual) return false;
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        var temporada = $scope.dados && $scope.dados.anoAtual ? $scope.dados.anoAtual : 'Não identificada';
+        var existente = $scope.diretoriaStatus.historicoAvaliacoes.some(function(item) { return item.origem === 'carreira' && item.temporada === temporada; });
+        if (existente) return false;
+        var progresso = $scope.obterProgressoMetaCarreira();
+        var avaliacao = $scope.obterAvaliacaoDiretoriaCarreira();
+        $scope.diretoriaStatus.historicoAvaliacoes.unshift({ origem: 'carreira', temporada: temporada, objetivo: $scope.diretoriaStatus.objetivoAtual, percentual: progresso.percentual, resultado: avaliacao.titulo, dia: $scope.diaAtual || 0 });
+        $scope.diretoriaStatus.historicoAvaliacoes = $scope.diretoriaStatus.historicoAvaliacoes.slice(0, 10);
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return true;
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

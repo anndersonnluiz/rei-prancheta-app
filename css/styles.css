@@ -121,6 +121,13 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-board-evaluation-acompanhamento { background: #fffbea; border-left-color: #f1c40f; }
 .career-board-evaluation-risco { background: #fff3f2; border-left-color: #c0392b; }
 .career-board-evaluation-sem-meta { background: #f8fafc; }
+.career-board-evaluation button { background: white; border: 1px solid var(--br-blue); border-radius: 6px; color: var(--br-blue); cursor: pointer; font-size: 11px; font-weight: 800; margin-top: 8px; padding: 6px 8px; }
+.career-board-history { background: #f8fafc; border: 1px solid #dfe7ee; border-radius: 8px; margin-bottom: 14px; padding: 11px 13px; }
+.career-board-history > strong { color: var(--text-main); display: block; font-size: 13px; margin-bottom: 7px; }
+.career-board-history div { border-top: 1px solid #e7edf2; padding: 7px 0; }
+.career-board-history span, .career-board-history small { display: block; }
+.career-board-history span { color: var(--text-main); font-size: 12px; font-weight: 800; }
+.career-board-history small { color: var(--text-muted); font-size: 11px; margin-top: 3px; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }

@@ -622,6 +622,13 @@
                         <span>Avaliação da diretoria</span>
                         <strong>{{obterAvaliacaoDiretoriaCarreira().titulo}}</strong>
                         <p>{{obterAvaliacaoDiretoriaCarreira().detalhe}}</p>
+                        <button ng-if="diretoriaStatus && diretoriaStatus.objetivoAtual" ng-click="registrarAvaliacaoDiretoriaCarreira()">Registrar avaliação</button>
+                    </div>
+                    <div class="career-board-history" ng-if="diretoriaStatus.historicoAvaliacoes && diretoriaStatus.historicoAvaliacoes.length > 0">
+                        <strong>Histórico de avaliações</strong>
+                        <div ng-repeat="avaliacao in diretoriaStatus.historicoAvaliacoes | filter:{origem:'carreira'} track by $index">
+                            <span>Temporada {{avaliacao.temporada}} · {{avaliacao.percentual}}%</span><small>{{avaliacao.resultado}} · {{avaliacao.objetivo}}</small>
+                        </div>
                     </div>
                     <div class="career-recommendations">
                         <div class="career-recommendation" ng-repeat="recomendacao in obterRecomendacoesCarreira()" ng-class="'career-recommendation-' + recomendacao.tipo">
