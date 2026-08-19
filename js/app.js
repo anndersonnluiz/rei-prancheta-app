@@ -1360,6 +1360,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             ultimaObservacao: 'A diretoria aguarda os primeiros resultados da temporada.',
             bonusConfianca: 0,
             prioridadeEstrategica: '',
+            planoAtual: null,
             historicoAvaliacoes: []
         };
     }
@@ -1376,6 +1377,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         base.ultimaObservacao = base.ultimaObservacao || 'A diretoria aguarda os primeiros resultados da temporada.';
         base.bonusConfianca = Math.max(-10, Math.min(10, Number(base.bonusConfianca) || 0));
         base.prioridadeEstrategica = base.prioridadeEstrategica || '';
+        base.planoAtual = base.planoAtual && typeof base.planoAtual === 'object' ? base.planoAtual : null;
         base.historicoAvaliacoes = Array.isArray(base.historicoAvaliacoes) ? base.historicoAvaliacoes.slice(0, 10) : [];
         return base;
     }
@@ -5567,6 +5569,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         
         $scope.gerarCalendario();
         $scope.gerarMetaDiretoria();
+        if ($scope.relatorioFimAno && $scope.relatorioFimAno.planoProximaTemporada) {
+            $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+            $scope.diretoriaStatus.planoAtual = angular.copy($scope.relatorioFimAno.planoProximaTemporada);
+        }
 
         $scope.caixaEntrada.unshift({
             id: 'msg_janela_inicio_ano_' + $scope.dados.anoAtual,
@@ -5578,6 +5584,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             data: new Date().toLocaleDateString('pt-BR')
         });
         $scope.mensagensNaoLidas++;
+        if ($scope.diretoriaStatus.planoAtual) {
+            $scope.caixaEntrada.unshift({
+                id: 'msg_plano_diretoria_' + $scope.dados.anoAtual,
+                remetente: 'Diretoria', assunto: 'Briefing da nova temporada',
+                mensagem: $scope.diretoriaStatus.planoAtual.titulo + '. ' + $scope.diretoriaStatus.planoAtual.detalhe,
+                lida: false, tipo: 'diretoria', data: new Date().toLocaleDateString('pt-BR')
+            });
+            $scope.mensagensNaoLidas++;
+        }
 
         $scope.mudarTela('dashboard');
         $scope.salvarJogoSilencioso();

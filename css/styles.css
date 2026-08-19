@@ -147,6 +147,10 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .season-next-plan h3 { margin: 4px 0; }
 .season-next-plan p { color: var(--text-muted); margin: 0; }
 @media (max-width: 760px) { .season-next-plan { align-items: stretch; flex-direction: column; } }
+.club-strategy-briefing { background: #fffaf0; border-left: 3px solid #f2a93b; border-radius: 6px; margin-top: 10px; padding: 9px 11px; }
+.club-strategy-briefing span { color: #a56a12; display: block; font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+.club-strategy-briefing strong { color: var(--text-main); display: block; font-size: 13px; margin-top: 3px; }
+.club-strategy-briefing p { color: var(--text-muted); font-size: 11px; margin: 3px 0 0; }
 .career-confidence { background: #eef3ff; border: 1px solid #cbd8f2; border-radius: 8px; margin-bottom: 14px; padding: 11px 13px; }
 .career-confidence span, .career-confidence strong { display: block; }
 .career-confidence span { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }

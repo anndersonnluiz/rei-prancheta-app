@@ -302,6 +302,10 @@
                         <strong>{{obterFocoEstrategicoAtual().titulo}}</strong>
                         <p>{{obterFocoEstrategicoAtual().detalhe}}</p>
                     </div>
+                    <div class="club-strategy-briefing" ng-if="diretoriaStatus.planoAtual">
+                        <span>Briefing da diretoria</span><strong>{{diretoriaStatus.planoAtual.titulo}}</strong>
+                        <p>{{diretoriaStatus.planoAtual.detalhe}}</p>
+                    </div>
                     <div class="club-strategy-alert" ng-class="'club-strategy-alert-' + obterAlertaFocoEstrategico().classe">
                         <strong>{{obterAlertaFocoEstrategico().titulo}}</strong>
                         <span>{{obterAlertaFocoEstrategico().detalhe}}</span>
