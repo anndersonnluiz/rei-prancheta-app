@@ -95,6 +95,8 @@ assert.ok(html.includes('season-next-plan'), 'season ceremony should suggest the
 assert.ok(css.includes('.season-next-plan'), 'next season plan should have a responsive layout');
 assert.ok(html.includes('club-strategy-briefing'), 'dashboard should show the board seasonal briefing');
 assert.ok(css.includes('.club-strategy-briefing'), 'board briefing should have a visual treatment');
+assert.ok(html.includes('metasTemporada'), 'dashboard should show categorized board goals');
+assert.ok(css.includes('.board-goals-grid'), 'board goals should use a responsive grid');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

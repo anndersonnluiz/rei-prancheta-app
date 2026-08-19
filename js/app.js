@@ -1361,6 +1361,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             bonusConfianca: 0,
             prioridadeEstrategica: '',
             planoAtual: null,
+            metasTemporada: [],
             historicoAvaliacoes: []
         };
     }
@@ -1378,6 +1379,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         base.bonusConfianca = Math.max(-10, Math.min(10, Number(base.bonusConfianca) || 0));
         base.prioridadeEstrategica = base.prioridadeEstrategica || '';
         base.planoAtual = base.planoAtual && typeof base.planoAtual === 'object' ? base.planoAtual : null;
+        base.metasTemporada = Array.isArray(base.metasTemporada) ? base.metasTemporada : [];
         base.historicoAvaliacoes = Array.isArray(base.historicoAvaliacoes) ? base.historicoAvaliacoes.slice(0, 10) : [];
         return base;
     }
@@ -5616,6 +5618,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
         $scope.diretoriaStatus.objetivoAtual = $scope.clubeAtual.metaDescricao;
         $scope.diretoriaStatus.tipoObjetivo = $scope.clubeAtual.metaTipo;
+        $scope.diretoriaStatus.metasTemporada = [
+            { tipo: 'esportiva', titulo: $scope.clubeAtual.metaDescricao, detalhe: 'Cumprir a expectativa de desempenho na competição nacional.', status: 'principal' },
+            { tipo: 'financeira', titulo: 'Manter a operação sustentável', detalhe: 'Preservar caixa para salários, compromissos e oportunidades da temporada.', status: 'acompanhar' },
+            { tipo: 'desenvolvimento', titulo: 'Evoluir o elenco', detalhe: 'Registrar evolução e aproveitar melhor os atletas em desenvolvimento.', status: 'acompanhar' },
+            { tipo: 'mercado', titulo: 'Qualificar o planejamento de mercado', detalhe: 'Resolver carências sem comprometer a saúde financeira do clube.', status: 'acompanhar' }
+        ];
         $scope.atualizarDiretoriaStatus();
     };
 

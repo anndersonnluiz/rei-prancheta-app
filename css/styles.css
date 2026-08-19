@@ -151,6 +151,11 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .club-strategy-briefing span { color: #a56a12; display: block; font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
 .club-strategy-briefing strong { color: var(--text-main); display: block; font-size: 13px; margin-top: 3px; }
 .club-strategy-briefing p { color: var(--text-muted); font-size: 11px; margin: 3px 0 0; }
+.board-goals-grid { display: grid; gap: 7px; grid-template-columns: repeat(2, 1fr); margin-top: 13px; }
+.board-goal-item { background: rgba(255,255,255,.72); border: 1px solid rgba(30,70,50,.12); border-radius: 6px; padding: 8px; }
+.board-goal-item span, .board-goal-item small { color: var(--text-muted); display: block; font-size: 10px; text-transform: capitalize; }
+.board-goal-item strong { color: var(--text-main); display: block; font-size: 11px; margin: 3px 0; }
+@media (max-width: 760px) { .board-goals-grid { grid-template-columns: 1fr; } }
 .career-confidence { background: #eef3ff; border: 1px solid #cbd8f2; border-radius: 8px; margin-bottom: 14px; padding: 11px 13px; }
 .career-confidence span, .career-confidence strong { display: block; }
 .career-confidence span { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
