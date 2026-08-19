@@ -4,6 +4,7 @@ const path = require('path');
 
 const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'styles.css'), 'utf8');
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const js = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
 
 assert.ok(css.includes('@media (max-width: 900px)'), 'responsive layout should define tablet breakpoint');
 assert.ok(css.includes('@media (max-width: 560px)'), 'responsive layout should define mobile breakpoint');
@@ -98,6 +99,7 @@ assert.ok(css.includes('.club-strategy-briefing'), 'board briefing should have a
 assert.ok(html.includes('metasTemporada'), 'dashboard should show categorized board goals');
 assert.ok(css.includes('.board-goals-grid'), 'board goals should use a responsive grid');
 assert.ok(html.includes('meta.progresso'), 'board goals should show live progress');
+assert.ok(js.includes('ultimaReacaoMetasDia'), 'board should throttle strategic goal reactions');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

@@ -1362,6 +1362,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             prioridadeEstrategica: '',
             planoAtual: null,
             metasTemporada: [],
+            ultimaReacaoMetasDia: 0,
             historicoAvaliacoes: []
         };
     }
@@ -1380,6 +1381,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         base.prioridadeEstrategica = base.prioridadeEstrategica || '';
         base.planoAtual = base.planoAtual && typeof base.planoAtual === 'object' ? base.planoAtual : null;
         base.metasTemporada = Array.isArray(base.metasTemporada) ? base.metasTemporada : [];
+        base.ultimaReacaoMetasDia = typeof base.ultimaReacaoMetasDia === 'number' ? base.ultimaReacaoMetasDia : 0;
         base.historicoAvaliacoes = Array.isArray(base.historicoAvaliacoes) ? base.historicoAvaliacoes.slice(0, 10) : [];
         return base;
     }
@@ -1492,6 +1494,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.diretoriaStatus.ultimaAvaliacaoDia = dia;
         $scope.diretoriaStatus.historicoAvaliacoes.unshift(avaliacao);
         $scope.diretoriaStatus.historicoAvaliacoes = $scope.diretoriaStatus.historicoAvaliacoes.slice(0, 10);
+
+        var metas = $scope.diretoriaStatus.metasTemporada || [];
+        var metaCritica = metas.reduce(function(pior, meta) { return !pior || meta.progresso < pior.progresso ? meta : pior; }, null);
+        if (metaCritica && dia - $scope.diretoriaStatus.ultimaReacaoMetasDia >= 16) {
+            var reacao = metaCritica.progresso >= 75 ? 'A diretoria reconhece o avanço em ' + metaCritica.tipo + ' e espera consistência.' : (metaCritica.progresso >= 45 ? 'A diretoria acompanha ' + metaCritica.tipo + ' com atenção e recomenda ajustes graduais.' : 'A diretoria solicita uma reação no eixo de ' + metaCritica.tipo + ' antes da próxima avaliação.');
+            $scope.diretoriaStatus.ultimaReacaoMetasDia = dia;
+            $scope.adicionarMensagem('Diretoria', 'Acompanhamento das metas', reacao + ' ' + metaCritica.progressoLabel, false, 'diretoria');
+        }
 
         if (typeof $scope.adicionarMensagem === 'function') {
             $scope.adicionarMensagem('Diretoria', 'Avaliacao parcial da temporada', avaliacao.observacao + ' ' + avaliacao.progressoLabel + '.', false, 'diretoria');
