@@ -643,6 +643,11 @@
                         <div><span>Confiança da diretoria</span><strong>{{obterConfiancaDiretoria().percentual}}% · {{obterConfiancaDiretoria().label}}</strong></div>
                         <div class="career-confidence-bar"><div ng-style="{'width': obterConfiancaDiretoria().percentual + '%'}"></div></div>
                     </div>
+                    <div class="career-planning-margin" ng-class="'career-planning-margin-' + obterMargemPlanejamentoDiretoria().classe">
+                        <span>Margem de planejamento</span>
+                        <strong>{{obterMargemPlanejamentoDiretoria().titulo}}</strong>
+                        <p>{{obterMargemPlanejamentoDiretoria().detalhe}}</p>
+                    </div>
                     <div class="career-recommendations">
                         <div class="career-recommendation" ng-repeat="recomendacao in obterRecomendacoesCarreira()" ng-class="'career-recommendation-' + recomendacao.tipo">
                             <strong>{{recomendacao.titulo}}</strong>

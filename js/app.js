@@ -215,6 +215,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         confianca = Math.max(0, Math.min(100, confianca));
         return { percentual: confianca, label: confianca >= 75 ? 'Alta confiança' : (confianca >= 50 ? 'Confiança moderada' : 'Confiança em risco') };
     };
+    $scope.obterMargemPlanejamentoDiretoria = function() {
+        var confianca = $scope.obterConfiancaDiretoria().percentual;
+        if (confianca >= 75) return { classe: 'longa', titulo: 'Margem para projeto de longo prazo', detalhe: 'A diretoria aceita investir em base, infraestrutura e evolução gradual.' };
+        if (confianca >= 50) return { classe: 'moderada', titulo: 'Planejamento com acompanhamento', detalhe: 'Projetos estruturais são possíveis, mas precisam mostrar progresso.' };
+        return { classe: 'curta', titulo: 'Foco em resultado imediato', detalhe: 'A diretoria exige reação antes de ampliar projetos de longo prazo.' };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

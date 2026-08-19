@@ -134,6 +134,14 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-confidence strong { color: var(--br-blue); font-size: 14px; margin: 3px 0 8px; }
 .career-confidence-bar { background: #d5def2; border-radius: 999px; height: 8px; overflow: hidden; }
 .career-confidence-bar div { background: var(--br-blue); border-radius: inherit; height: 100%; }
+.career-planning-margin { border-left: 5px solid var(--br-blue); border-radius: 8px; margin-bottom: 14px; padding: 11px 13px; }
+.career-planning-margin span, .career-planning-margin strong, .career-planning-margin p { display: block; }
+.career-planning-margin span { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
+.career-planning-margin strong { color: var(--text-main); font-size: 14px; margin-top: 3px; }
+.career-planning-margin p { color: var(--text-main); font-size: 12px; margin-top: 4px; }
+.career-planning-margin-longa { background: var(--br-green-light); border-left-color: var(--br-green); }
+.career-planning-margin-moderada { background: #fffbea; border-left-color: #f1c40f; }
+.career-planning-margin-curta { background: #fff3f2; border-left-color: #c0392b; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }

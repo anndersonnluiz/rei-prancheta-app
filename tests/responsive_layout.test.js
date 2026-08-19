@@ -68,5 +68,7 @@ assert.ok(html.includes('registrarAvaliacaoDiretoriaCarreira()'), 'career should
 assert.ok(html.includes('career-board-history'), 'career should show board evaluation history');
 assert.ok(html.includes('obterConfiancaDiretoria()'), 'career should expose board confidence');
 assert.ok(css.includes('.career-confidence'), 'board confidence should have a visible indicator');
+assert.ok(html.includes('obterMargemPlanejamentoDiretoria()'), 'career should expose planning margin');
+assert.ok(css.includes('.career-planning-margin-curta'), 'planning margin should distinguish immediate pressure');
 
 console.log('responsive_layout.test.js passed');
