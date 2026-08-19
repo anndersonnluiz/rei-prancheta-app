@@ -5364,6 +5364,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         resumo.ambienteMedio = ambientes.length ? Math.round(ambientes.reduce(function(a, b) { return a + b; }, 0) / ambientes.length) : null;
         return resumo;
     };
+    $scope.obterResumoCarreiraPorClube = function() {
+        var grupos = {};
+        (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; }).forEach(function(item) {
+            var chave = item.clubeId || item.clubeNome || 'clube_desconhecido';
+            if (!grupos[chave]) grupos[chave] = { clubeId: item.clubeId, clubeNome: item.clubeNome || 'Clube não identificado', temporadas: 0, partidas: 0, vitorias: 0, empates: 0, derrotas: 0, conquistas: 0 };
+            var grupo = grupos[chave];
+            grupo.temporadas++;
+            grupo.vitorias += item.vitorias || 0;
+            grupo.empates += item.empates || 0;
+            grupo.derrotas += item.derrotas || 0;
+            grupo.partidas += (item.vitorias || 0) + (item.empates || 0) + (item.derrotas || 0);
+            grupo.conquistas += Array.isArray(item.conquistas) ? item.conquistas.length : 0;
+        });
+        return Object.keys(grupos).map(function(chave) { return grupos[chave]; }).sort(function(a, b) { return b.temporadas - a.temporadas || b.vitorias - a.vitorias; });
+    };
     $scope.obterPlanoProximaTemporada = function(resumo, posicao, divisao) {
         if (posicao >= 17 && divisao !== 'D') return { prioridade: 'planejamento', titulo: 'Reagir no resultado esportivo', detalhe: 'Reforce a comissão e estabilize o desempenho antes de assumir novos compromissos.' };
         if (resumo && resumo.golsSofridos > resumo.golsMarcados) return { prioridade: 'mercado', titulo: 'Corrigir o equilíbrio do elenco', detalhe: 'A defesa sofreu mais do que o ataque produziu. Mapeie reforços e soluções internas para a próxima janela.' };

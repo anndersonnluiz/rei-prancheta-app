@@ -107,6 +107,8 @@ assert.ok(html.includes('career-evolution-card'), 'career should show recent evo
 assert.ok(js.includes('obterEvolucaoCarreira'), 'career should expose season evolution data');
 assert.ok(html.includes('career-total-card'), 'career should show cumulative trajectory');
 assert.ok(js.includes('obterResumoCarreira'), 'career should expose cumulative data');
+assert.ok(html.includes('career-club-card'), 'career should show performance by club');
+assert.ok(js.includes('obterResumoCarreiraPorClube'), 'career should expose club breakdown');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

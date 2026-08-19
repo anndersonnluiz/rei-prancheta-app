@@ -144,6 +144,13 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-total-grid span { color: var(--text-muted); font-size: 10px; }
 .career-total-grid b { color: var(--text-main); display: block; font-size: 16px; }
 @media (max-width: 560px) { .career-total-grid { grid-template-columns: repeat(2, 1fr); } }
+.career-club-card { background: #fff; border: 1px solid #dfe7ee; border-radius: 8px; margin-top: 12px; padding: 11px 13px; }
+.career-club-card > strong { color: var(--text-main); display: block; font-size: 13px; margin-bottom: 7px; }
+.career-club-row { align-items: center; border-top: 1px solid #e7edf2; display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; }
+.career-club-row b, .career-club-row small, .career-club-row span { display: block; }
+.career-club-row b { color: var(--text-main); font-size: 12px; }
+.career-club-row small, .career-club-row span { color: var(--text-muted); font-size: 10px; margin-top: 3px; }
+@media (max-width: 560px) { .career-club-row { align-items: flex-start; flex-direction: column; } }
 .season-management-report { margin-bottom: 20px; }
 .season-report-intro { color: var(--text-muted); margin: -7px 0 14px; }
 .season-report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
