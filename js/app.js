@@ -123,6 +123,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (delta <= -0.08 || deltaXg <= -0.25) return { classe: 'baixa', titulo: 'Desempenho em queda', detalhe: 'A campanha recente pede atenção e revisão das decisões.' };
         return { classe: 'estavel', titulo: 'Desempenho estável', detalhe: 'Os indicadores permanecem próximos da temporada anterior.' };
     };
+    $scope.obterRecomendacoesCarreira = function() {
+        var resumo = $scope.obterResumoHistoricoPartidas();
+        var tendencia = $scope.obterTendenciaCarreira();
+        var recomendacoes = [];
+        if (resumo.jogos === 0) return [{ titulo: 'Construa sua base de dados', detalhe: 'Finalize partidas para receber recomendações personalizadas.', tipo: 'base' }];
+        if (resumo.golsSofridos > resumo.golsMarcados) recomendacoes.push({ titulo: 'Reforce a proteção defensiva', detalhe: 'O time sofreu mais gols do que marcou no histórico recente.', tipo: 'defesa' });
+        if (resumo.mediaXg < 1.2) recomendacoes.push({ titulo: 'Aumente a criação de chances', detalhe: 'A média de xG está baixa; avalie mentalidade, foco de passes e qualidade do elenco.', tipo: 'ataque' });
+        if (tendencia.classe === 'baixa') recomendacoes.push({ titulo: 'Revise a estratégia', detalhe: 'A tendência de queda indica necessidade de ajustes antes da próxima temporada.', tipo: 'alerta' });
+        if (recomendacoes.length === 0) recomendacoes.push({ titulo: 'Mantenha o planejamento', detalhe: 'Os indicadores estão equilibrados; priorize continuidade e evolução gradual.', tipo: 'manter' });
+        return recomendacoes;
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

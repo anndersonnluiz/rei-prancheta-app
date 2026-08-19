@@ -613,6 +613,12 @@
                         <div><span>Tendência da carreira</span><strong>{{obterTendenciaCarreira().titulo}}</strong></div>
                         <p>{{obterTendenciaCarreira().detalhe}}</p>
                     </div>
+                    <div class="career-recommendations">
+                        <div class="career-recommendation" ng-repeat="recomendacao in obterRecomendacoesCarreira()" ng-class="'career-recommendation-' + recomendacao.tipo">
+                            <strong>{{recomendacao.titulo}}</strong>
+                            <span>{{recomendacao.detalhe}}</span>
+                        </div>
+                    </div>
                     <div class="career-season-summary" ng-if="obterResumoPorTemporada().length > 0">
                         <div class="career-season-card" ng-repeat="temporada in obterResumoPorTemporada() track by temporada.temporada">
                             <strong>Temporada {{temporada.temporada}}</strong>
