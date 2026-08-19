@@ -112,6 +112,15 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-goal-progress strong { color: var(--text-main); font-size: 14px; margin: 3px 0 8px; }
 .career-goal-progress-bar { background: #eadf9b; border-radius: 999px; height: 8px; overflow: hidden; }
 .career-goal-progress-bar div { background: var(--br-green); border-radius: inherit; height: 100%; }
+.career-board-evaluation { border-left: 5px solid var(--br-blue); border-radius: 8px; margin-bottom: 14px; padding: 11px 13px; }
+.career-board-evaluation span, .career-board-evaluation strong, .career-board-evaluation p { display: block; }
+.career-board-evaluation span { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
+.career-board-evaluation strong { color: var(--text-main); font-size: 15px; margin-top: 3px; }
+.career-board-evaluation p { color: var(--text-main); font-size: 12px; margin-top: 4px; }
+.career-board-evaluation-excelente, .career-board-evaluation-cumprida { background: var(--br-green-light); border-left-color: var(--br-green); }
+.career-board-evaluation-acompanhamento { background: #fffbea; border-left-color: #f1c40f; }
+.career-board-evaluation-risco { background: #fff3f2; border-left-color: #c0392b; }
+.career-board-evaluation-sem-meta { background: #f8fafc; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }

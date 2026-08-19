@@ -618,6 +618,11 @@
                         <div class="career-goal-progress-bar"><div ng-style="{'width': obterProgressoMetaCarreira().percentual + '%'}"></div></div>
                         <small>{{obterProgressoMetaCarreira().percentual}}% · {{obterProgressoMetaCarreira().label}}</small>
                     </div>
+                    <div class="career-board-evaluation" ng-class="'career-board-evaluation-' + obterAvaliacaoDiretoriaCarreira().classe">
+                        <span>Avaliação da diretoria</span>
+                        <strong>{{obterAvaliacaoDiretoriaCarreira().titulo}}</strong>
+                        <p>{{obterAvaliacaoDiretoriaCarreira().detalhe}}</p>
+                    </div>
                     <div class="career-recommendations">
                         <div class="career-recommendation" ng-repeat="recomendacao in obterRecomendacoesCarreira()" ng-class="'career-recommendation-' + recomendacao.tipo">
                             <strong>{{recomendacao.titulo}}</strong>

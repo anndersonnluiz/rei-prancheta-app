@@ -60,5 +60,7 @@ assert.ok(css.includes('.career-recommendations'), 'career recommendations shoul
 assert.ok(html.includes('aplicarRecomendacaoComoMeta(recomendacao)'), 'career recommendations should connect to board goals');
 assert.ok(html.includes('obterProgressoMetaCarreira()'), 'career goal should expose live progress');
 assert.ok(css.includes('.career-goal-progress'), 'career goal should have a progress panel');
+assert.ok(html.includes('obterAvaliacaoDiretoriaCarreira()'), 'career should expose board evaluation');
+assert.ok(css.includes('.career-board-evaluation-risco'), 'board evaluation should distinguish risk');
 
 console.log('responsive_layout.test.js passed');

@@ -162,6 +162,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         return { percentual: percentual, label: percentual >= 80 ? 'Meta no caminho certo' : (percentual >= 50 ? 'Meta em acompanhamento' : 'Meta em risco') };
     };
+    $scope.obterAvaliacaoDiretoriaCarreira = function() {
+        var progresso = $scope.obterProgressoMetaCarreira();
+        if (!$scope.diretoriaStatus || !$scope.diretoriaStatus.objetivoAtual) return { classe: 'sem-meta', titulo: 'Sem avaliação ativa', detalhe: 'Defina uma meta para receber a avaliação da diretoria.' };
+        if (progresso.percentual >= 100) return { classe: 'excelente', titulo: 'Superou as expectativas', detalhe: 'A diretoria reconhece o avanço alcançado nesta prioridade.' };
+        if (progresso.percentual >= 80) return { classe: 'cumprida', titulo: 'Meta cumprida', detalhe: 'O trabalho está alinhado com o que foi planejado.' };
+        if (progresso.percentual >= 50) return { classe: 'acompanhamento', titulo: 'Dentro do esperado', detalhe: 'A diretoria recomenda manter o foco e acelerar a evolução.' };
+        return { classe: 'risco', titulo: 'Abaixo do esperado', detalhe: 'A prioridade entrou em risco e exige reação imediata.' };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
