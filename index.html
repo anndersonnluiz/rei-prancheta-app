@@ -630,6 +630,10 @@
                             <span>Temporada {{avaliacao.temporada}} · {{avaliacao.percentual}}%</span><small>{{avaliacao.resultado}} · {{avaliacao.objetivo}}</small>
                         </div>
                     </div>
+                    <div class="career-confidence">
+                        <div><span>Confiança da diretoria</span><strong>{{obterConfiancaDiretoria().percentual}}% · {{obterConfiancaDiretoria().label}}</strong></div>
+                        <div class="career-confidence-bar"><div ng-style="{'width': obterConfiancaDiretoria().percentual + '%'}"></div></div>
+                    </div>
                     <div class="career-recommendations">
                         <div class="career-recommendation" ng-repeat="recomendacao in obterRecomendacoesCarreira()" ng-class="'career-recommendation-' + recomendacao.tipo">
                             <strong>{{recomendacao.titulo}}</strong>

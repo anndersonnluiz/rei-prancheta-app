@@ -183,6 +183,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
         return true;
     };
+    $scope.obterConfiancaDiretoria = function() {
+        var historico = ($scope.diretoriaStatus && Array.isArray($scope.diretoriaStatus.historicoAvaliacoes)) ? $scope.diretoriaStatus.historicoAvaliacoes.filter(function(item) { return item.origem === 'carreira'; }) : [];
+        var confianca = 60;
+        historico.slice(0, 5).forEach(function(item) {
+            if (item.percentual >= 100) confianca += 8;
+            else if (item.percentual >= 80) confianca += 5;
+            else if (item.percentual < 50) confianca -= 8;
+            else confianca += 1;
+        });
+        confianca = Math.max(0, Math.min(100, confianca));
+        return { percentual: confianca, label: confianca >= 75 ? 'Alta confiança' : (confianca >= 50 ? 'Confiança moderada' : 'Confiança em risco') };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
