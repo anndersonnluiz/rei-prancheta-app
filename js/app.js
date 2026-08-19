@@ -185,6 +185,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var tituloMensagem = confianca.percentual >= 75 ? 'Diretoria reforça apoio' : (confianca.percentual >= 50 ? 'Diretoria acompanha a evolução' : 'Diretoria cobra reação');
             $scope.adicionarMensagem('Diretoria', tituloMensagem, avaliacao.detalhe + ' Confiança atual: ' + confianca.percentual + '%.', false, 'diretoria');
         }
+        if ($scope.registrarEventoAmbiente) {
+            var impacto = confianca.percentual >= 75 ? 1 : (confianca.percentual < 50 ? -1 : 0);
+            if (impacto !== 0) {
+                $scope.registrarEventoAmbiente({
+                    id: 'amb_diretoria_' + temporada,
+                    chave: 'diretoria|' + temporada,
+                    dia: $scope.diaAtual || 0,
+                    tipo: 'diretoria',
+                    impacto: impacto,
+                    titulo: impacto > 0 ? 'Apoio da diretoria fortalece o grupo' : 'Pressão da diretoria chega ao elenco',
+                    detalhe: impacto > 0 ? 'O respaldo da diretoria elevou a confiança do ambiente.' : 'A cobrança por resultados aumentou a tensão no ambiente.'
+                });
+            }
+        }
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
         return true;
     };
