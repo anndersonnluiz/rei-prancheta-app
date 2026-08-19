@@ -701,6 +701,9 @@
                             <span>Temporadas {{obterEvolucaoCarreira().anterior}} → {{obterEvolucaoCarreira().atual}}</span>
                             <small>Vitórias: {{obterEvolucaoCarreira().deltaVitorias >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaVitorias}} · Confiança: {{obterEvolucaoCarreira().deltaConfianca >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaConfianca}} p.p. · Ambiente: {{obterEvolucaoCarreira().deltaAmbiente >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaAmbiente}}</small>
                         </div>
+                        <div class="career-total-card" ng-if="obterResumoCarreira().temporadas > 0">
+                            <strong>Trajetória acumulada</strong><div class="career-total-grid"><span><b>{{obterResumoCarreira().temporadas}}</b> temporadas</span><span><b>{{obterResumoCarreira().partidas}}</b> partidas</span><span><b>{{obterResumoCarreira().vitorias}}</b> vitórias</span><span><b>{{obterResumoCarreira().conquistas}}</b> conquistas</span><span ng-if="obterResumoCarreira().confiancaMedia !== null"><b>{{obterResumoCarreira().confiancaMedia}}%</b> confiança média</span><span ng-if="obterResumoCarreira().ambienteMedio !== null"><b>{{obterResumoCarreira().ambienteMedio}}</b> ambiente médio</span></div>
+                        </div>
                     </div>
                     <div class="career-match-history" ng-repeat="partida in obterHistoricoPartidasFiltrado() track by $index" ng-click="alternarDetalhesPartidaHistorico(partida)" tabindex="0" role="button">
                         <div>

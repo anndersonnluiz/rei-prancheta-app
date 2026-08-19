@@ -5347,6 +5347,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var deltaAmbiente = (atual.ambienteElenco || 0) - (anterior.ambienteElenco || 0);
         return { disponivel: true, atual: atual.temporada, anterior: anterior.temporada, deltaVitorias: deltaVitorias, deltaConfianca: deltaConfianca, deltaAmbiente: deltaAmbiente, tendencia: deltaVitorias > 0 || deltaConfianca > 0 ? 'Evolução positiva' : (deltaVitorias < 0 || deltaConfianca < 0 ? 'Pontos de atenção' : 'Desempenho estável') };
     };
+    $scope.obterResumoCarreira = function() {
+        var temporadas = (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; });
+        var resumo = { temporadas: temporadas.length, partidas: 0, vitorias: 0, empates: 0, derrotas: 0, conquistas: 0, confiancaMedia: null, ambienteMedio: null };
+        var confiancas = [], ambientes = [];
+        temporadas.forEach(function(item) {
+            resumo.partidas += (item.vitorias || 0) + (item.empates || 0) + (item.derrotas || 0);
+            resumo.vitorias += item.vitorias || 0;
+            resumo.empates += item.empates || 0;
+            resumo.derrotas += item.derrotas || 0;
+            resumo.conquistas += Array.isArray(item.conquistas) ? item.conquistas.length : 0;
+            if (typeof item.confiancaDiretoria === 'number') confiancas.push(item.confiancaDiretoria);
+            if (typeof item.ambienteElenco === 'number') ambientes.push(item.ambienteElenco);
+        });
+        resumo.confiancaMedia = confiancas.length ? Math.round(confiancas.reduce(function(a, b) { return a + b; }, 0) / confiancas.length) : null;
+        resumo.ambienteMedio = ambientes.length ? Math.round(ambientes.reduce(function(a, b) { return a + b; }, 0) / ambientes.length) : null;
+        return resumo;
+    };
     $scope.obterPlanoProximaTemporada = function(resumo, posicao, divisao) {
         if (posicao >= 17 && divisao !== 'D') return { prioridade: 'planejamento', titulo: 'Reagir no resultado esportivo', detalhe: 'Reforce a comissão e estabilize o desempenho antes de assumir novos compromissos.' };
         if (resumo && resumo.golsSofridos > resumo.golsMarcados) return { prioridade: 'mercado', titulo: 'Corrigir o equilíbrio do elenco', detalhe: 'A defesa sofreu mais do que o ataque produziu. Mapeie reforços e soluções internas para a próxima janela.' };

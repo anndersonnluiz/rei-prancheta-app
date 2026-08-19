@@ -105,6 +105,8 @@ assert.ok(html.includes('season-report-goals'), 'season report should summarize 
 assert.ok(html.includes('ambienteElenco'), 'season report should show squad environment');
 assert.ok(html.includes('career-evolution-card'), 'career should show recent evolution comparison');
 assert.ok(js.includes('obterEvolucaoCarreira'), 'career should expose season evolution data');
+assert.ok(html.includes('career-total-card'), 'career should show cumulative trajectory');
+assert.ok(js.includes('obterResumoCarreira'), 'career should expose cumulative data');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

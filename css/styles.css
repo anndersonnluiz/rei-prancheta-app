@@ -138,6 +138,12 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-evolution-card strong, .career-evolution-card span, .career-evolution-card small { display: block; }
 .career-evolution-card strong { color: #218c4b; font-size: 13px; }
 .career-evolution-card span, .career-evolution-card small { color: var(--text-muted); font-size: 11px; margin-top: 4px; }
+.career-total-card { background: #f8fafc; border: 1px solid #dfe7ee; border-radius: 8px; margin-top: 12px; padding: 11px 13px; }
+.career-total-card > strong { color: var(--text-main); display: block; font-size: 13px; margin-bottom: 8px; }
+.career-total-grid { display: grid; gap: 7px; grid-template-columns: repeat(3, 1fr); }
+.career-total-grid span { color: var(--text-muted); font-size: 10px; }
+.career-total-grid b { color: var(--text-main); display: block; font-size: 16px; }
+@media (max-width: 560px) { .career-total-grid { grid-template-columns: repeat(2, 1fr); } }
 .season-management-report { margin-bottom: 20px; }
 .season-report-intro { color: var(--text-muted); margin: -7px 0 14px; }
 .season-report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
