@@ -2185,6 +2185,22 @@
                 </div>
             </div>
 
+            <div class="card season-management-report" ng-if="relatorioFimAno.resumoGerencial">
+                <h3>📈 Relatório gerencial da temporada</h3>
+                <p class="season-report-intro">Um resumo do trabalho realizado dentro e fora de campo.</p>
+                <div class="season-report-grid">
+                    <div><span>Partidas</span><strong>{{relatorioFimAno.resumoGerencial.jogos}}</strong></div>
+                    <div><span>Campanha</span><strong>{{relatorioFimAno.resumoGerencial.vitorias}}V · {{relatorioFimAno.resumoGerencial.empates}}E · {{relatorioFimAno.resumoGerencial.derrotas}}D</strong></div>
+                    <div><span>Gols</span><strong>{{relatorioFimAno.resumoGerencial.golsMarcados}} marcados · {{relatorioFimAno.resumoGerencial.golsSofridos}} sofridos</strong></div>
+                    <div><span>Aproveitamento</span><strong>{{relatorioFimAno.resumoGerencial.aproveitamento}}%</strong></div>
+                    <div><span>Evoluções registradas</span><strong>{{relatorioFimAno.resumoGerencial.evolucoes}}</strong></div>
+                    <div><span>Decisões de gestão</span><strong>{{relatorioFimAno.resumoGerencial.decisoes}}</strong></div>
+                </div>
+                <div class="season-report-footer" ng-if="relatorioFimAno.confiancaDiretoria !== null">
+                    Confiança da diretoria: <strong>{{relatorioFimAno.confiancaDiretoria}}%</strong> · Margem de planejamento: <strong>{{relatorioFimAno.margemPlanejamento}}%</strong>
+                </div>
+            </div>
+
             <!-- Balanço da Diretoria -->
             <div class="card" style="margin-bottom: 20px; border-left: 8px solid {{relatorioFimAno.demitido ? '#e74c3c' : (relatorioFimAno.statusDiretoria === 'Aprovado' ? 'var(--br-green)' : '#f39c12')}}; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
                 <h3 style="margin-bottom: 10px;">📋 Avaliação da Diretoria</h3>

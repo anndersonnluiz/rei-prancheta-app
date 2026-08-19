@@ -5274,6 +5274,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
     };
 
+    $scope.obterResumoGerencialTemporada = function(temporada, clubeId) {
+        var partidas = (Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : []).filter(function(partida) {
+            return String(partida.temporada || '') === String(temporada) && (!clubeId || partida.clubeId === clubeId || partida.clubeAtualId === clubeId);
+        });
+        var resumo = { jogos: partidas.length, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0, xgMedio: 0, aproveitamento: 0, evolucoes: 0, decisoes: 0 };
+        partidas.forEach(function(partida) {
+            var resultado = partida.placar && partida.placar.resultadoMeuTime;
+            if (resultado === 'Vitoria') resumo.vitorias++;
+            else if (resultado === 'Empate') resumo.empates++;
+            else if (resultado === 'Derrota') resumo.derrotas++;
+            resumo.golsMarcados += Number(partida.placar && partida.placar.meuTime) || 0;
+            resumo.golsSofridos += Number(partida.placar && partida.placar.adversario) || 0;
+            resumo.xgMedio += Number(partida.xg && (partida.xg.meuTime || partida.xg.favor)) || 0;
+        });
+        resumo.xgMedio = resumo.jogos ? Math.round((resumo.xgMedio / resumo.jogos) * 100) / 100 : 0;
+        resumo.aproveitamento = resumo.jogos ? Math.round(((resumo.vitorias * 3 + resumo.empates) / (resumo.jogos * 3)) * 100) : 0;
+        resumo.evolucoes = (Array.isArray($scope.relatorioEvolucao) ? $scope.relatorioEvolucao : []).filter(function(item) { return item.temporada === temporada; }).length;
+        resumo.decisoes = (Array.isArray($scope.historicoDecisoesGestao) ? $scope.historicoDecisoesGestao : []).filter(function(item) { return String(item.temporada) === String(temporada); }).length;
+        return resumo;
+    };
+
     // FASE 16: Balanço da Diretoria e Cerimônia
     $scope.prepararCerimonia = function() {
         var classificadosA = $scope.ordenarTabela("A");
@@ -5350,6 +5371,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.aplicarEvolucaoElenco('Fechamento da temporada');
         }
 
+        var resumoGerencial = $scope.obterResumoGerencialTemporada($scope.dados.anoAtual, $scope.clubeAtual && $scope.clubeAtual.id);
         $scope.relatorioFimAno = {
             campeaoSerieA: campeaoSerieA,
             rebaixadosA: rebaixadosA,
@@ -5360,7 +5382,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             statusDiretoria: statusDiretoria,
             demitido: demitido,
             meuDesempenhoLiga: posicaoTabela + "º Lugar (Série " + $scope.clubeAtual.divisao + ")",
-            meuDesempenhoCopa: copaFaseAlcance
+            meuDesempenhoCopa: copaFaseAlcance,
+            resumoGerencial: resumoGerencial,
+            confiancaDiretoria: $scope.obterConfiancaDiretoria ? $scope.obterConfiancaDiretoria().percentual : null,
+            margemPlanejamento: $scope.obterMargemPlanejamentoDiretoria ? $scope.obterMargemPlanejamentoDiretoria().percentual : null
         };
         
         $scope.telaAtual = 'cerimonia';

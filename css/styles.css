@@ -134,6 +134,14 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-decision-history span, .career-decision-history small { display: block; }
 .career-decision-history span { color: var(--text-muted); font-size: 10px; }
 .career-decision-history small { color: var(--text-main); font-size: 11px; margin-top: 3px; }
+.season-management-report { margin-bottom: 20px; }
+.season-report-intro { color: var(--text-muted); margin: -7px 0 14px; }
+.season-report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.season-report-grid div { background: #f8fafc; border: 1px solid #e2e8ee; border-radius: 8px; padding: 10px 12px; }
+.season-report-grid span { color: var(--text-muted); display: block; font-size: 11px; }
+.season-report-grid strong { color: var(--text-main); display: block; font-size: 16px; margin-top: 4px; }
+.season-report-footer { border-top: 1px solid #e7edf2; color: var(--text-muted); font-size: 12px; margin-top: 13px; padding-top: 11px; }
+@media (max-width: 760px) { .season-report-grid { grid-template-columns: repeat(2, 1fr); } }
 .career-confidence { background: #eef3ff; border: 1px solid #cbd8f2; border-radius: 8px; margin-bottom: 14px; padding: 11px 13px; }
 .career-confidence span, .career-confidence strong { display: block; }
 .career-confidence span { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }

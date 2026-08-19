@@ -89,6 +89,8 @@ assert.ok(html.includes('obterAlertaFocoEstrategico()'), 'dashboard should show 
 assert.ok(css.includes('.club-strategy-alert-alerta'), 'focus alerts should distinguish risk');
 assert.ok(html.includes('historicoDecisoesGestao'), 'career should show management decision history');
 assert.ok(css.includes('.career-decision-history'), 'management decisions should have a history layout');
+assert.ok(html.includes('season-management-report'), 'season ceremony should show a management report');
+assert.ok(css.includes('.season-report-grid'), 'season management report should have a responsive grid');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');
