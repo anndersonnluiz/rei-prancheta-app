@@ -175,6 +175,11 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .club-strategy-grid button { background: var(--bg-color); border: 1px solid #dfe7ee; border-radius: 8px; cursor: pointer; padding: 10px; text-align: left; }
 .club-strategy-grid button:hover, .club-strategy-grid button.strategy-selected { background: #eef3ff; border-color: var(--br-blue); box-shadow: 0 0 0 2px rgba(0,39,118,0.12); }
 .club-strategy-grid button span, .club-strategy-grid button strong { display: block; }
+.club-strategy-focus { background: #eef3ff; border-left: 4px solid var(--br-blue); border-radius: 7px; margin-top: 10px; padding: 9px 11px; }
+.club-strategy-focus span, .club-strategy-focus strong, .club-strategy-focus p { display: block; }
+.club-strategy-focus span { color: var(--br-blue); font-size: 10px; font-weight: 900; text-transform: uppercase; }
+.club-strategy-focus strong { color: var(--text-main); font-size: 14px; margin-top: 3px; }
+.club-strategy-focus p { color: var(--text-muted); font-size: 12px; margin-top: 3px; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }

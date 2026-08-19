@@ -264,6 +264,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
         return true;
     };
+    $scope.obterFocoEstrategicoAtual = function() {
+        var estrategia = $scope.obterEstrategiaClube();
+        var prioridade = ($scope.diretoriaStatus && $scope.diretoriaStatus.prioridadeEstrategica) || 'planejamento';
+        var foco = estrategia[prioridade] || estrategia.planejamento;
+        return { prioridade: prioridade, titulo: foco.titulo, detalhe: foco.detalhe };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

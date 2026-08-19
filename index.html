@@ -297,6 +297,11 @@
                         <button ng-click="definirPrioridadeEstrategica('mercado')" ng-class="{'strategy-selected': diretoriaStatus.prioridadeEstrategica === 'mercado'}"><span>Mercado</span><strong>{{obterEstrategiaClube().mercado.titulo}}</strong></button>
                         <button ng-click="definirPrioridadeEstrategica('financas')" ng-class="{'strategy-selected': diretoriaStatus.prioridadeEstrategica === 'financas'}"><span>Finanças</span><strong>{{obterEstrategiaClube().financas.titulo}}</strong></button>
                     </div>
+                    <div class="club-strategy-focus">
+                        <span>Próximo foco</span>
+                        <strong>{{obterFocoEstrategicoAtual().titulo}}</strong>
+                        <p>{{obterFocoEstrategicoAtual().detalhe}}</p>
+                    </div>
                 </section>
                 <div class="dashboard-grid">
                     <section class="dashboard-main">

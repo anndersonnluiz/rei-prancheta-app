@@ -83,5 +83,7 @@ assert.ok(html.includes('obterEstrategiaClube()'), 'dashboard should expose club
 assert.ok(css.includes('.club-strategy-grid'), 'club strategy should have a compact summary grid');
 assert.ok(html.includes('definirPrioridadeEstrategica'), 'dashboard should allow selecting a strategic priority');
 assert.ok(css.includes('.strategy-selected'), 'selected strategic priority should be highlighted');
+assert.ok(html.includes('obterFocoEstrategicoAtual()'), 'dashboard should prioritize the selected strategic focus');
+assert.ok(css.includes('.club-strategy-focus'), 'dashboard should show the selected strategic focus');
 
 console.log('responsive_layout.test.js passed');
