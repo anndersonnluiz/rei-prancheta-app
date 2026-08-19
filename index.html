@@ -613,6 +613,11 @@
                         <div><span>Tendência da carreira</span><strong>{{obterTendenciaCarreira().titulo}}</strong></div>
                         <p>{{obterTendenciaCarreira().detalhe}}</p>
                     </div>
+                    <div class="career-goal-progress" ng-if="diretoriaStatus && diretoriaStatus.objetivoAtual">
+                        <div><span>Meta da diretoria</span><strong>{{diretoriaStatus.objetivoAtual}}</strong></div>
+                        <div class="career-goal-progress-bar"><div ng-style="{'width': obterProgressoMetaCarreira().percentual + '%'}"></div></div>
+                        <small>{{obterProgressoMetaCarreira().percentual}}% · {{obterProgressoMetaCarreira().label}}</small>
+                    </div>
                     <div class="career-recommendations">
                         <div class="career-recommendation" ng-repeat="recomendacao in obterRecomendacoesCarreira()" ng-class="'career-recommendation-' + recomendacao.tipo">
                             <strong>{{recomendacao.titulo}}</strong>

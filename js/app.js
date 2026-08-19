@@ -147,6 +147,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
         return true;
     };
+    $scope.obterProgressoMetaCarreira = function() {
+        var meta = $scope.diretoriaStatus && $scope.diretoriaStatus.objetivoAtual;
+        if (!meta) return { percentual: 0, label: 'Nenhuma meta definida' };
+        var resumo = $scope.obterResumoHistoricoPartidas();
+        var percentual = 50;
+        if (($scope.diretoriaStatus.tipoObjetivo || '') === 'elenco') {
+            percentual = resumo.golsMarcados >= resumo.golsSofridos ? 100 : Math.max(0, Math.round((resumo.golsMarcados / Math.max(1, resumo.golsSofridos)) * 100));
+        } else if (($scope.diretoriaStatus.tipoObjetivo || '') === 'desempenho') {
+            percentual = Math.min(100, Math.round((Number(resumo.mediaXg) / 1.5) * 100));
+        } else {
+            var tendencia = $scope.obterTendenciaCarreira();
+            percentual = tendencia.classe === 'alta' ? 100 : (tendencia.classe === 'baixa' ? 25 : 65);
+        }
+        return { percentual: percentual, label: percentual >= 80 ? 'Meta no caminho certo' : (percentual >= 50 ? 'Meta em acompanhamento' : 'Meta em risco') };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

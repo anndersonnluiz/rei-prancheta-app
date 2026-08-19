@@ -106,6 +106,12 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-trend-alta { background: var(--br-green-light); border-left-color: var(--br-green); }
 .career-trend-baixa { background: #fff3f2; border-left-color: #c0392b; }
 .career-trend-estavel, .career-trend-base { background: #f8fafc; }
+.career-goal-progress { background: #fffbea; border: 1px solid #f1d875; border-radius: 8px; margin-bottom: 14px; padding: 11px 13px; }
+.career-goal-progress span, .career-goal-progress strong, .career-goal-progress small { display: block; }
+.career-goal-progress span, .career-goal-progress small { color: var(--text-muted); font-size: 11px; }
+.career-goal-progress strong { color: var(--text-main); font-size: 14px; margin: 3px 0 8px; }
+.career-goal-progress-bar { background: #eadf9b; border-radius: 999px; height: 8px; overflow: hidden; }
+.career-goal-progress-bar div { background: var(--br-green); border-radius: inherit; height: 100%; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }
