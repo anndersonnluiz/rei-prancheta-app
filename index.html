@@ -601,6 +601,14 @@
                             </select>
                         </label>
                     </div>
+                    <div class="career-history-summary">
+                        <div><span>Jogos</span><strong>{{obterResumoHistoricoPartidas().jogos}}</strong></div>
+                        <div><span>Vitórias</span><strong>{{obterResumoHistoricoPartidas().vitorias}}</strong></div>
+                        <div><span>Empates</span><strong>{{obterResumoHistoricoPartidas().empates}}</strong></div>
+                        <div><span>Derrotas</span><strong>{{obterResumoHistoricoPartidas().derrotas}}</strong></div>
+                        <div><span>Gols</span><strong>{{obterResumoHistoricoPartidas().golsMarcados}}–{{obterResumoHistoricoPartidas().golsSofridos}}</strong></div>
+                        <div><span>Média xG</span><strong>{{obterResumoHistoricoPartidas().mediaXg}}</strong></div>
+                    </div>
                     <div class="career-match-history" ng-repeat="partida in obterHistoricoPartidasFiltrado() track by $index" ng-click="alternarDetalhesPartidaHistorico(partida)" tabindex="0" role="button">
                         <div>
                             <strong>{{partida.mandante.nome}} {{partida.placar.mandante}} x {{partida.placar.visitante}} {{partida.visitante.nome}}</strong>

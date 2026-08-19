@@ -49,5 +49,7 @@ assert.ok(html.includes('obterHistoricoPartidasFiltrado()'), 'career history sho
 assert.ok(html.includes('alternarDetalhesPartidaHistorico(partida)'), 'career history should allow expanding match details');
 assert.ok(html.includes('partidaHistoricoAberta === partida'), 'career history should render expanded match details');
 assert.ok(css.includes('.career-match-history-details'), 'expanded match details should have a dedicated layout');
+assert.ok(html.includes('obterResumoHistoricoPartidas()'), 'career history should expose aggregate statistics');
+assert.ok(css.includes('.career-history-summary'), 'career aggregate statistics should have a compact layout');
 
 console.log('responsive_layout.test.js passed');

@@ -69,6 +69,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.alternarDetalhesPartidaHistorico = function(partida) {
         $scope.partidaHistoricoAberta = $scope.partidaHistoricoAberta === partida ? null : partida;
     };
+    $scope.obterResumoHistoricoPartidas = function() {
+        var partidas = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
+        var resumo = { jogos: partidas.length, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0, xgTotal: 0, xgPartidas: 0 };
+        partidas.forEach(function(partida) {
+            var resultado = partida.placar && partida.placar.resultadoMeuTime;
+            if (resultado === 'Vitoria') resumo.vitorias++;
+            else if (resultado === 'Empate') resumo.empates++;
+            else if (resultado === 'Derrota') resumo.derrotas++;
+            var meuTimeMandante = partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id;
+            if (partida.placar) {
+                resumo.golsMarcados += Number(meuTimeMandante ? partida.placar.mandante : partida.placar.visitante) || 0;
+                resumo.golsSofridos += Number(meuTimeMandante ? partida.placar.visitante : partida.placar.mandante) || 0;
+            }
+            if (partida.xg) {
+                resumo.xgTotal += (Number(partida.xg.mandante) || 0) + (Number(partida.xg.visitante) || 0);
+                resumo.xgPartidas++;
+            }
+        });
+        resumo.mediaXg = resumo.xgPartidas ? (resumo.xgTotal / resumo.xgPartidas).toFixed(2) : '0.00';
+        return resumo;
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
