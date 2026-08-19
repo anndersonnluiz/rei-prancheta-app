@@ -1608,6 +1608,10 @@
                         <strong style="font-size: 18px; color: var(--br-green);">{{formatarMoeda(clubeAtual.orcamento)}}</strong>
                     </div>
                 </div>
+                <div class="market-director-guidance" ng-class="'market-director-' + obterOrientacaoMercadoDiretoria().classe">
+                    <strong>{{obterOrientacaoMercadoDiretoria().titulo}}</strong>
+                    <span>{{obterOrientacaoMercadoDiretoria().detalhe}}</span>
+                </div>
 
                 <!-- Sub-Navegação do Mercado -->
                 <div class="card" style="margin-bottom: 20px; padding: 16px; border-left: 4px solid var(--br-blue);">

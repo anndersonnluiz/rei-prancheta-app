@@ -75,5 +75,7 @@ assert.ok(css.includes('.structural-investment-prioridade'), 'investment guidanc
 assert.ok(html.includes('obterOrientacaoCategoriasBase()'), 'youth academy should show board guidance');
 assert.ok(css.includes('.youth-director-proteger'), 'youth guidance should distinguish protection mode');
 assert.ok(html.includes('sugestao.orientacao'), 'promotion suggestions should include board guidance');
+assert.ok(html.includes('obterOrientacaoMercadoDiretoria()'), 'market should show board guidance');
+assert.ok(css.includes('.market-director-preservar'), 'market guidance should distinguish cash preservation');
 
 console.log('responsive_layout.test.js passed');
