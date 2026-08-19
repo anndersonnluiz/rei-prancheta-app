@@ -180,6 +180,12 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .club-strategy-focus span { color: var(--br-blue); font-size: 10px; font-weight: 900; text-transform: uppercase; }
 .club-strategy-focus strong { color: var(--text-main); font-size: 14px; margin-top: 3px; }
 .club-strategy-focus p { color: var(--text-muted); font-size: 12px; margin-top: 3px; }
+.club-strategy-alert { border-left: 4px solid var(--br-blue); border-radius: 7px; display: grid; gap: 3px; margin-top: 8px; padding: 8px 11px; }
+.club-strategy-alert strong { color: var(--text-main); font-size: 12px; }
+.club-strategy-alert span { color: var(--text-muted); font-size: 11px; }
+.club-strategy-alert-alerta { background: #fff3f2; border-left-color: #c0392b; }
+.club-strategy-alert-info { background: #fffbea; border-left-color: #f1c40f; }
+.club-strategy-alert-ok { background: var(--br-green-light); border-left-color: var(--br-green); }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }

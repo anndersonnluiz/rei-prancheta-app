@@ -85,5 +85,7 @@ assert.ok(html.includes('definirPrioridadeEstrategica'), 'dashboard should allow
 assert.ok(css.includes('.strategy-selected'), 'selected strategic priority should be highlighted');
 assert.ok(html.includes('obterFocoEstrategicoAtual()'), 'dashboard should prioritize the selected strategic focus');
 assert.ok(css.includes('.club-strategy-focus'), 'dashboard should show the selected strategic focus');
+assert.ok(html.includes('obterAlertaFocoEstrategico()'), 'dashboard should show focus-specific alerts');
+assert.ok(css.includes('.club-strategy-alert-alerta'), 'focus alerts should distinguish risk');
 
 console.log('responsive_layout.test.js passed');

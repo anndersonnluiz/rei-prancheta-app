@@ -302,6 +302,10 @@
                         <strong>{{obterFocoEstrategicoAtual().titulo}}</strong>
                         <p>{{obterFocoEstrategicoAtual().detalhe}}</p>
                     </div>
+                    <div class="club-strategy-alert" ng-class="'club-strategy-alert-' + obterAlertaFocoEstrategico().classe">
+                        <strong>{{obterAlertaFocoEstrategico().titulo}}</strong>
+                        <span>{{obterAlertaFocoEstrategico().detalhe}}</span>
+                    </div>
                 </section>
                 <div class="dashboard-grid">
                     <section class="dashboard-main">

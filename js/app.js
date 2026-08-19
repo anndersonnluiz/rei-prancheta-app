@@ -270,6 +270,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var foco = estrategia[prioridade] || estrategia.planejamento;
         return { prioridade: prioridade, titulo: foco.titulo, detalhe: foco.detalhe };
     };
+    $scope.obterAlertaFocoEstrategico = function() {
+        var foco = $scope.obterFocoEstrategicoAtual().prioridade;
+        if (foco === 'base') {
+            var carencias = $scope.obterResumoNecessidadesBase().carencias;
+            if (carencias.length > 0) return { classe: 'alerta', titulo: 'Carência para resolver', detalhe: 'Priorize a posição: ' + carencias.map(function(item) { return item.label; }).join(', ') + '.' };
+            return { classe: 'ok', titulo: 'Base sem carência crítica', detalhe: 'Mantenha o acompanhamento e o desenvolvimento dos jovens.' };
+        }
+        if (foco === 'financas') {
+            var orcamento = $scope.clubeAtual ? Number($scope.clubeAtual.orcamento) || 0 : 0;
+            if (orcamento < 30000000) return { classe: 'alerta', titulo: 'Caixa exige atenção', detalhe: 'Evite novas despesas e preserve recursos para salários e compromissos.' };
+            return { classe: 'ok', titulo: 'Caixa sob controle', detalhe: 'Há espaço para planejar sem comprometer a operação.' };
+        }
+        if (foco === 'mercado') return { classe: 'info', titulo: 'Revise as oportunidades', detalhe: 'Compare carências, exigências dos jogadores e impacto na folha antes de negociar.' };
+        var obras = $scope.infraestruturaResumo && $scope.infraestruturaResumo.obras ? $scope.infraestruturaResumo.obras.length : 0;
+        return obras > 0 ? { classe: 'info', titulo: 'Obra em andamento', detalhe: 'Acompanhe os prazos antes de iniciar um novo projeto estrutural.' } : { classe: 'ok', titulo: 'Infraestrutura disponível', detalhe: 'Escolha a próxima melhoria conforme o retorno esperado.' };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
