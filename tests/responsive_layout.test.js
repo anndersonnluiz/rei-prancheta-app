@@ -121,6 +121,9 @@ assert.ok(css.includes('.calendar-day-row { grid-template-columns: minmax(0, 1fr
 assert.ok(html.includes('calendar-filters'), 'calendar filters should be identifiable for mobile layout');
 assert.ok(html.includes('competition-screen'), 'competition screens should be identifiable for mobile layout');
 assert.ok(css.includes('.competition-screen table { min-width: 420px; }'), 'competition tables should preserve readable columns on mobile');
+assert.ok(html.includes('squad-screen'), 'squad screen should be identifiable for mobile layout');
+assert.ok(css.includes('.tactics-screen .tactics-layout'), 'tactics layout should stack on mobile');
+assert.ok(css.includes('.medical-screen .infrastructure-management-grid'), 'medical screen should stack infrastructure cards on mobile');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

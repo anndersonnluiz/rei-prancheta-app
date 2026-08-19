@@ -2892,6 +2892,20 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .competition-screen .card { max-width: 100%; overflow-x: auto; padding: 12px !important; }
     .competition-screen table { min-width: 420px; }
     .competition-screen .card > div[style*="overflow-x: auto"] { margin-right: -4px; }
+    .squad-screen > .card, .medical-screen > div { border-radius: 10px; padding: 12px !important; }
+    .squad-screen .tabela-classificacao { min-width: 760px; }
+    .squad-screen .development-panel { margin-bottom: 12px; }
+    .medical-screen { padding: 0 !important; }
+    .medical-screen > div > div:last-child { padding: 12px !important; }
+    .medical-screen .infrastructure-management-grid { grid-template-columns: 1fr; }
+    .medical-screen .infrastructure-management-card { padding: 12px; }
+    .medical-screen .infrastructure-management-card button { min-height: 42px; width: 100%; }
+    .tactics-screen .tactics-layout { gap: 12px; grid-template-columns: 1fr; }
+    .tactics-screen .bench-area, .tactics-screen .pitch-area { min-width: 0; }
+    .tactics-screen .bench-list { max-height: 330px; }
+    .tactics-screen .pitch-area > div { border-radius: 10px !important; }
+    .tactics-screen select, .tactics-screen button { min-height: 42px; }
+    .tactics-screen .pitch-area [style*="grid-template-columns: 1fr 1fr 1fr"] { gap: 8px !important; grid-template-columns: 1fr !important; }
     .calendar-day-row { grid-template-columns: minmax(0, 1fr) !important; gap: 9px !important; padding: 12px !important; }
     .calendar-day-row > div { min-width: 0; }
     .calendar-day-row > div:last-child { justify-self: stretch; }
