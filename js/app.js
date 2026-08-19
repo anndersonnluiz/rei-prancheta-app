@@ -205,7 +205,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
     $scope.obterConfiancaDiretoria = function() {
         var historico = ($scope.diretoriaStatus && Array.isArray($scope.diretoriaStatus.historicoAvaliacoes)) ? $scope.diretoriaStatus.historicoAvaliacoes.filter(function(item) { return item.origem === 'carreira'; }) : [];
-        var confianca = 60;
+        var confianca = 60 + (Number($scope.diretoriaStatus && $scope.diretoriaStatus.bonusConfianca) || 0);
         historico.slice(0, 5).forEach(function(item) {
             if (item.percentual >= 100) confianca += 8;
             else if (item.percentual >= 80) confianca += 5;
@@ -1274,6 +1274,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             statusClasse: 'board-ok',
             ultimaAvaliacaoDia: 0,
             ultimaObservacao: 'A diretoria aguarda os primeiros resultados da temporada.',
+            bonusConfianca: 0,
             historicoAvaliacoes: []
         };
     }
@@ -1288,6 +1289,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         base.statusClasse = base.statusClasse || obterClasseStatusDiretoria(base.status);
         base.ultimaAvaliacaoDia = (typeof base.ultimaAvaliacaoDia === 'number') ? base.ultimaAvaliacaoDia : 0;
         base.ultimaObservacao = base.ultimaObservacao || 'A diretoria aguarda os primeiros resultados da temporada.';
+        base.bonusConfianca = Math.max(-10, Math.min(10, Number(base.bonusConfianca) || 0));
         base.historicoAvaliacoes = Array.isArray(base.historicoAvaliacoes) ? base.historicoAvaliacoes.slice(0, 10) : [];
         return base;
     }
@@ -2016,6 +2018,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         };
         msg.respondida = true;
         msg.respostaTreinador = textos[postura] || textos.paciencia;
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        $scope.diretoriaStatus.bonusConfianca = Math.max(-10, Math.min(10, ($scope.diretoriaStatus.bonusConfianca || 0) + (postura === 'apoio' ? 2 : (postura === 'cobranca' ? -2 : 0))));
         if ($scope.registrarEventoAmbiente) {
             var impacto = postura === 'apoio' ? 1 : (postura === 'cobranca' ? -1 : 0);
             if (impacto !== 0) $scope.registrarEventoAmbiente({ id: 'amb_resposta_' + msg.id, chave: 'resposta_diretoria|' + msg.id, dia: $scope.diaAtual || 0, tipo: 'diretoria', impacto: impacto, titulo: postura === 'apoio' ? 'Treinador protege o elenco' : 'Treinador aumenta a cobrança', detalhe: msg.respostaTreinador });
