@@ -240,6 +240,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (confianca >= 50) return { classe: 'negociar', titulo: 'Negocie com disciplina', detalhe: 'Priorize oportunidades, empréstimos e contratos sustentáveis.' };
         return { classe: 'preservar', titulo: 'Preserve o caixa', detalhe: 'Evite compromissos longos e priorize vendas estratégicas ou soluções internas.' };
     };
+    $scope.obterOrientacaoFinanceiraDiretoria = function() {
+        var confianca = $scope.obterConfiancaDiretoria().percentual;
+        var orcamento = $scope.clubeAtual ? Number($scope.clubeAtual.orcamento) || 0 : 0;
+        if (confianca >= 75 && orcamento >= 100000000) return { classe: 'investir', titulo: 'Capacidade para investir', detalhe: 'Há confiança e caixa para financiar melhorias sem comprometer a operação.' };
+        if (confianca >= 50 && orcamento >= 30000000) return { classe: 'equilibrar', titulo: 'Equilibre crescimento e reserva', detalhe: 'Mantenha uma reserva e escolha investimentos com retorno previsível.' };
+        return { classe: 'economizar', titulo: 'Priorize liquidez', detalhe: 'Evite gastos não essenciais e preserve caixa para salários e compromissos.' };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

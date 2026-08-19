@@ -1908,6 +1908,10 @@
 
             </div>
             <div ng-if="telaAtual === 'financas'">
+                <div class="finance-director-guidance" ng-class="'finance-director-' + obterOrientacaoFinanceiraDiretoria().classe">
+                    <strong>{{obterOrientacaoFinanceiraDiretoria().titulo}}</strong>
+                    <span>{{obterOrientacaoFinanceiraDiretoria().detalhe}}</span>
+                </div>
                 <div class="card" style="margin-bottom: 20px;">
                     <h3 style="margin-bottom: 20px; color: var(--primary-color);">🏢 Gestão do Clube & Estádio</h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
