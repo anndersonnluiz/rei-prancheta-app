@@ -72,5 +72,7 @@ assert.ok(html.includes('obterMargemPlanejamentoDiretoria()'), 'career should ex
 assert.ok(css.includes('.career-planning-margin-curta'), 'planning margin should distinguish immediate pressure');
 assert.ok(html.includes('obterOrientacaoInvestimentoEstrutural()'), 'infrastructure should show investment guidance');
 assert.ok(css.includes('.structural-investment-prioridade'), 'investment guidance should distinguish priority mode');
+assert.ok(html.includes('obterOrientacaoCategoriasBase()'), 'youth academy should show board guidance');
+assert.ok(css.includes('.youth-director-proteger'), 'youth guidance should distinguish protection mode');
 
 console.log('responsive_layout.test.js passed');

@@ -923,6 +923,10 @@
                             <span ng-repeat="sugestao in obterSugestoesPromocaoBase()" style="display:inline-flex; align-items:center; gap:5px; margin:3px 8px 3px 0;">{{sugestao.atleta.nome}} para {{sugestao.label}} (OVR {{sugestao.atleta.overallAtual}})<button ng-click="promoverSugestaoBase(sugestao)" style="border:0; border-radius:4px; padding:3px 6px; background:var(--br-green); color:white; cursor:pointer; font-size:11px;">Promover</button></span>
                         </div>
                     </div>
+                    <div class="youth-director-guidance" ng-class="'youth-director-' + obterOrientacaoCategoriasBase().classe">
+                        <strong>{{obterOrientacaoCategoriasBase().titulo}}</strong>
+                        <span>{{obterOrientacaoCategoriasBase().detalhe}}</span>
+                    </div>
 
                     <div class="youth-grid" ng-if="baseResumo.atletasVisiveis.length > 0">
                         <div class="youth-card" ng-repeat="atleta in baseResumo.atletasVisiveis track by atleta.id" ng-class="'status-' + atleta.statusBase">

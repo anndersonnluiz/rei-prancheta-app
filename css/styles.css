@@ -148,6 +148,12 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .structural-investment-favoravel { background: var(--br-green-light); border-left-color: var(--br-green); }
 .structural-investment-cautela { background: #fffbea; border-left-color: #f1c40f; }
 .structural-investment-prioridade { background: #fff3f2; border-left-color: #c0392b; }
+.youth-director-guidance { border-left: 5px solid var(--br-blue); border-radius: 8px; display: grid; gap: 4px; margin-bottom: 15px; padding: 11px 13px; }
+.youth-director-guidance strong { color: var(--text-main); font-size: 14px; }
+.youth-director-guidance span { color: var(--text-muted); font-size: 12px; }
+.youth-director-promover { background: var(--br-green-light); border-left-color: var(--br-green); }
+.youth-director-emprestar { background: #fffbea; border-left-color: #f1c40f; }
+.youth-director-proteger { background: #fff3f2; border-left-color: #c0392b; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }

@@ -227,6 +227,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (margem.classe === 'moderada') return { classe: 'cautela', titulo: 'Invista com cautela', detalhe: 'Escolha melhorias com retorno claro e preserve uma reserva de orçamento.' };
         return { classe: 'prioridade', titulo: 'Priorize o resultado antes do investimento', detalhe: 'Projetos estruturais continuam disponíveis, mas a diretoria espera reação esportiva primeiro.' };
     };
+    $scope.obterOrientacaoCategoriasBase = function() {
+        var margem = $scope.obterMargemPlanejamentoDiretoria();
+        if (margem.classe === 'longa') return { classe: 'promover', titulo: 'Ambiente para formar e promover', detalhe: 'A confiança permite dar minutos a jovens e acelerar a integração de promessas.' };
+        if (margem.classe === 'moderada') return { classe: 'emprestar', titulo: 'Desenvolva com minutos controlados', detalhe: 'Priorize empréstimos bem escolhidos para jovens que precisam jogar.' };
+        return { classe: 'proteger', titulo: 'Proteja o desenvolvimento', detalhe: 'Mantenha os jovens em evolução e evite expor atletas sem maturidade ao peso dos resultados.' };
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
