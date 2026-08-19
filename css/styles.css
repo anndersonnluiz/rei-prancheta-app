@@ -2831,6 +2831,7 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .main-content, .card, .dashboard-panel, .dashboard-grid, .dashboard-side { min-width: 0; }
 .main-content header { flex-wrap: wrap; gap: 14px; }
 .main-content header > * { min-width: 0; }
+.mobile-menu-bar { display: none; }
 button, input, select, textarea { max-width: 100%; }
 table { max-width: 100%; }
 button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
@@ -2852,12 +2853,17 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 }
 
 @media (max-width: 560px) {
+    .mobile-menu-bar { align-items: center; background: var(--sidebar-bg); color: #fff; display: flex; gap: 10px; justify-content: space-between; padding: 10px 12px; position: sticky; top: 0; z-index: 30; }
+    .mobile-menu-bar button { background: transparent; border: 1px solid rgba(255,255,255,.35); border-radius: 6px; color: #fff; cursor: pointer; padding: 7px 9px; }
+    .mobile-menu-bar button span { font-size: 12px; margin-left: 3px; }
+    .mobile-menu-bar strong, .mobile-menu-bar > span { font-size: 11px; }
     .main-content { margin-left: 0; max-width: 100%; padding: 12px; }
-    .sidebar { position: relative; width: 100%; height: auto; max-height: none; min-height: auto; }
+    .sidebar { background: var(--sidebar-bg); display: none; left: 0; max-height: calc(100vh - 47px); position: fixed; top: 47px; width: min(88vw, 320px); z-index: 25; }
+    .sidebar.mobile-menu-open { display: flex; box-shadow: 8px 0 24px rgba(0,0,0,.25); }
     .app-layout { display: block; }
     .sidebar-header { padding: 14px; }
     .game-logo-small { max-width: 90px; margin-bottom: 8px; }
-    .nav-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 8px; gap: 4px; }
+    .nav-links { display: block; padding: 8px; }
     .nav-links li { padding: 10px 8px; font-size: 12px; min-width: 0; }
     .sidebar-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
     .sidebar-footer button, .sidebar-footer input + button { margin-bottom: 0 !important; }

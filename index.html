@@ -81,9 +81,10 @@
 
     <!-- Layout Principal do Jogo -->
     <div class="app-layout" ng-if="telaAtual !== 'loading' && telaAtual !== 'menu_inicial'" ng-cloak>
+        <div class="mobile-menu-bar"><button ng-click="alternarMenuMobile()" aria-label="Abrir menu">☰ <span>Menu</span></button><strong>Rei da Prancheta</strong><span>Temporada {{dados.anoAtual}}</span></div>
         
         <!-- Sidebar -->
-        <nav class="sidebar" aria-label="Navegação principal do clube">
+        <nav class="sidebar" ng-class="{'mobile-menu-open': menuMobileAberto}" aria-label="Navegação principal do clube">
             <div class="sidebar-header">
                 <img src="assets/logo.png" alt="Rei da Prancheta" class="game-logo-small">
                 <div class="manager-name">👤 Prof. {{ dados.nomeTreinador }}</div>

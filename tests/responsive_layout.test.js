@@ -8,7 +8,7 @@ const js = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
 
 assert.ok(css.includes('@media (max-width: 900px)'), 'responsive layout should define tablet breakpoint');
 assert.ok(css.includes('@media (max-width: 560px)'), 'responsive layout should define mobile breakpoint');
-assert.ok(css.includes('.sidebar { position: relative; width: 100%'), 'mobile sidebar should return to document flow');
+assert.ok(css.includes('.sidebar { background: var(--sidebar-bg); display: none;'), 'mobile sidebar should become a compact overlay');
 assert.ok(css.includes('.main-content { margin-left: 0; max-width: 100%'), 'mobile content should use full width');
 assert.ok(css.includes('overflow-x: hidden'), 'page should prevent accidental horizontal overflow');
 assert.ok(css.includes('focus-visible'), 'interactive controls should expose visible keyboard focus');
@@ -113,6 +113,8 @@ assert.ok(html.includes('career-filter-tabs'), 'career should provide history fi
 assert.ok(js.includes('definirFiltroCarreira'), 'career filters should be controlled by the app');
 assert.ok(html.includes('grouped-nav'), 'main navigation should be organized in groups');
 assert.ok(js.includes('alternarGrupoMenu'), 'navigation groups should be collapsible');
+assert.ok(html.includes('mobile-menu-bar'), 'mobile navigation should have a compact top bar');
+assert.ok(js.includes('alternarMenuMobile'), 'mobile navigation should be toggleable');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');
