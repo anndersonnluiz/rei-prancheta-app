@@ -51,5 +51,7 @@ assert.ok(html.includes('partidaHistoricoAberta === partida'), 'career history s
 assert.ok(css.includes('.career-match-history-details'), 'expanded match details should have a dedicated layout');
 assert.ok(html.includes('obterResumoHistoricoPartidas()'), 'career history should expose aggregate statistics');
 assert.ok(css.includes('.career-history-summary'), 'career aggregate statistics should have a compact layout');
+assert.ok(html.includes('obterResumoPorTemporada()'), 'career history should compare seasons');
+assert.ok(css.includes('.career-season-summary'), 'season comparison should have a responsive grid');
 
 console.log('responsive_layout.test.js passed');

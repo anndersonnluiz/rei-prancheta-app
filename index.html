@@ -609,6 +609,13 @@
                         <div><span>Gols</span><strong>{{obterResumoHistoricoPartidas().golsMarcados}}–{{obterResumoHistoricoPartidas().golsSofridos}}</strong></div>
                         <div><span>Média xG</span><strong>{{obterResumoHistoricoPartidas().mediaXg}}</strong></div>
                     </div>
+                    <div class="career-season-summary" ng-if="obterResumoPorTemporada().length > 0">
+                        <div class="career-season-card" ng-repeat="temporada in obterResumoPorTemporada() track by temporada.temporada">
+                            <strong>Temporada {{temporada.temporada}}</strong>
+                            <span>{{temporada.jogos}} jogos · {{temporada.vitorias}}V {{temporada.empates}}E {{temporada.derrotas}}D</span>
+                            <span>{{temporada.gols}} gols marcados · {{temporada.sofridos}} sofridos · xG médio {{temporada.mediaXg}}</span>
+                        </div>
+                    </div>
                     <div class="career-match-history" ng-repeat="partida in obterHistoricoPartidasFiltrado() track by $index" ng-click="alternarDetalhesPartidaHistorico(partida)" tabindex="0" role="button">
                         <div>
                             <strong>{{partida.mandante.nome}} {{partida.placar.mandante}} x {{partida.placar.visitante}} {{partida.visitante.nome}}</strong>

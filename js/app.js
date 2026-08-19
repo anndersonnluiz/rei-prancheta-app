@@ -90,6 +90,26 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         resumo.mediaXg = resumo.xgPartidas ? (resumo.xgTotal / resumo.xgPartidas).toFixed(2) : '0.00';
         return resumo;
     };
+    $scope.obterResumoPorTemporada = function() {
+        var grupos = {};
+        (Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : []).forEach(function(partida) {
+            var temporada = partida.temporada || 'Não identificada';
+            if (!grupos[temporada]) grupos[temporada] = { temporada: temporada, jogos: 0, vitorias: 0, empates: 0, derrotas: 0, gols: 0, sofridos: 0, xgTotal: 0, xgPartidas: 0 };
+            var grupo = grupos[temporada];
+            grupo.jogos++;
+            if (partida.placar && partida.placar.resultadoMeuTime === 'Vitoria') grupo.vitorias++;
+            else if (partida.placar && partida.placar.resultadoMeuTime === 'Empate') grupo.empates++;
+            else if (partida.placar && partida.placar.resultadoMeuTime === 'Derrota') grupo.derrotas++;
+            var mandante = partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id;
+            if (partida.placar) { grupo.gols += Number(mandante ? partida.placar.mandante : partida.placar.visitante) || 0; grupo.sofridos += Number(mandante ? partida.placar.visitante : partida.placar.mandante) || 0; }
+            if (partida.xg) { grupo.xgTotal += (Number(partida.xg.mandante) || 0) + (Number(partida.xg.visitante) || 0); grupo.xgPartidas++; }
+        });
+        return Object.keys(grupos).sort().reverse().map(function(chave) {
+            var grupo = grupos[chave];
+            grupo.mediaXg = grupo.xgPartidas ? (grupo.xgTotal / grupo.xgPartidas).toFixed(2) : '0.00';
+            return grupo;
+        });
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
@@ -4024,6 +4044,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var resumoTatico = telemetria.length > 0 ? $scope.gerarResumoTaticoPartida(partida) : null;
         var resumo = {
             origem: origem === 'rapido' ? 'rapido' : 'completo',
+            temporada: $scope.dados && $scope.dados.anoAtual ? $scope.dados.anoAtual : 'Não identificada',
             competicao: calendarioDia && calendarioDia.titulo ? calendarioDia.titulo : 'Partida',
             dia: (typeof $scope.diaAtual === 'number' ? $scope.diaAtual : 0) + 1,
             mandante: resumirTimePreJogo(partida.mandante),

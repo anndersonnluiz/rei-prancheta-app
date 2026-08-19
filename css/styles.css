@@ -98,6 +98,11 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-history-summary span, .career-history-summary strong { display: block; }
 .career-history-summary span { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
 .career-history-summary strong { color: var(--text-main); font-size: 18px; margin-top: 3px; }
+.career-season-summary { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
+.career-season-card { background: #f8fafc; border: 1px solid #dfe7ee; border-top: 3px solid var(--br-blue); border-radius: 8px; padding: 10px; }
+.career-season-card strong, .career-season-card span { display: block; }
+.career-season-card strong { color: var(--text-main); font-size: 14px; }
+.career-season-card span { color: var(--text-muted); font-size: 11px; margin-top: 5px; }
 .career-match-history { cursor: pointer; flex-wrap: wrap; }
 .career-match-history:focus-visible { outline: 3px solid var(--br-yellow); outline-offset: 2px; }
 .career-match-history-details { background: var(--bg-color); border-left: 4px solid var(--br-blue); display: grid; gap: 8px; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 12px; width: 100%; }
