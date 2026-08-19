@@ -1724,13 +1724,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.obterSugestoesPromocaoBase = function() {
         var necessidades = $scope.obterResumoNecessidadesBase().carencias;
         var atletas = ($scope.baseResumo && $scope.baseResumo.atletasVisiveis) || [];
+        var orientacao = $scope.obterOrientacaoCategoriasBase();
         return necessidades.map(function(necessidade) {
             var candidatos = atletas.filter(function(atleta) {
                 return atleta.posicao === necessidade.posicao && $scope.obterStatusPromocaoBase(atleta).elegivel;
             }).sort(function(a, b) {
                 return ((b.overallAtual || 0) + (b.potencial || 0) * 0.2) - ((a.overallAtual || 0) + (a.potencial || 0) * 0.2);
             });
-            return { posicao: necessidade.posicao, label: necessidade.label, atleta: candidatos[0] || null };
+            return { posicao: necessidade.posicao, label: necessidade.label, atleta: candidatos[0] || null, orientacao: orientacao.classe === 'emprestar' ? 'Priorizar minutos por empréstimo' : (orientacao.classe === 'proteger' ? 'Promover apenas se houver necessidade' : 'Boa oportunidade de integração') };
         }).filter(function(item) { return !!item.atleta; });
     };
 

@@ -74,5 +74,6 @@ assert.ok(html.includes('obterOrientacaoInvestimentoEstrutural()'), 'infrastruct
 assert.ok(css.includes('.structural-investment-prioridade'), 'investment guidance should distinguish priority mode');
 assert.ok(html.includes('obterOrientacaoCategoriasBase()'), 'youth academy should show board guidance');
 assert.ok(css.includes('.youth-director-proteger'), 'youth guidance should distinguish protection mode');
+assert.ok(html.includes('sugestao.orientacao'), 'promotion suggestions should include board guidance');
 
 console.log('responsive_layout.test.js passed');
