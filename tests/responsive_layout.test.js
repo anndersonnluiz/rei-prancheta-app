@@ -115,6 +115,8 @@ assert.ok(html.includes('grouped-nav'), 'main navigation should be organized in 
 assert.ok(js.includes('alternarGrupoMenu'), 'navigation groups should be collapsible');
 assert.ok(html.includes('mobile-menu-bar'), 'mobile navigation should have a compact top bar');
 assert.ok(js.includes('alternarMenuMobile'), 'mobile navigation should be toggleable');
+assert.ok(css.includes('.dashboard-v2 .club-strategy-panel'), 'mobile dashboard should have a compact strategy panel');
+assert.ok(css.includes('.dashboard-v2 .dashboard-panel'), 'mobile dashboard panels should use compact spacing');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

@@ -2872,6 +2872,20 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .dashboard-side, .summary-kpis, .post-match-kpi-grid, .club-kpis { grid-template-columns: 1fr; }
     .card { padding: 14px !important; }
     .pre-match-grid, .post-match-grid { grid-template-columns: 1fr; }
+    .dashboard-v2 { margin: 0; }
+    .dashboard-v2 .club-strategy-panel { border-radius: 10px; margin-bottom: 12px; padding: 12px; }
+    .dashboard-v2 .club-strategy-grid { gap: 6px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dashboard-v2 .club-strategy-grid button { min-height: 58px; padding: 8px; }
+    .dashboard-v2 .club-strategy-grid button strong { font-size: 11px; line-height: 1.2; }
+    .dashboard-v2 .dashboard-grid { gap: 12px; }
+    .dashboard-v2 .dashboard-panel { border-radius: 10px; padding: 12px; }
+    .dashboard-v2 .dashboard-panel-header { gap: 8px; }
+    .dashboard-v2 .dashboard-panel-header h2 { font-size: 17px; }
+    .dashboard-v2 .dashboard-panel-header h3 { font-size: 14px; }
+    .dashboard-v2 .dashboard-eyebrow { font-size: 9px; }
+    .dashboard-v2 .upcoming-events-list .upcoming-event { gap: 7px; grid-template-columns: 34px minmax(0, 1fr); padding: 8px 0; }
+    .dashboard-v2 .upcoming-events-list .event-badges { grid-column: 2; justify-content: flex-start; }
+    .dashboard-v2 .board-goals-grid { margin-top: 9px; }
 }
 
 /* Partida ao vivo: o placar e o painel de eventos precisam continuar legíveis
