@@ -1445,6 +1445,31 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.diretoriaStatus.statusLabel = obterLabelStatusDiretoria($scope.diretoriaStatus.status);
         $scope.diretoriaStatus.statusClasse = obterClasseStatusDiretoria($scope.diretoriaStatus.status);
         $scope.diretoriaStatus.ultimaObservacao = obterObservacaoDiretoria($scope.diretoriaStatus.status);
+        var metas = $scope.diretoriaStatus.metasTemporada || [];
+        var resumo = $scope.obterResumoGerencialTemporada ? $scope.obterResumoGerencialTemporada($scope.dados.anoAtual, $scope.clubeAtual.id) : null;
+        metas.forEach(function(meta) {
+            var progresso = 0;
+            var label = 'Aguardando indicadores';
+            if (meta.tipo === 'esportiva') {
+                var alvo = obterAlvoMetaDiretoria(tipo) || 20;
+                progresso = indice >= 0 ? Math.max(0, Math.min(100, Math.round(((alvo + 5 - indice - 1) / (alvo + 5)) * 100))) : 0;
+                label = indice >= 0 ? progresso + '% da expectativa esportiva' : 'Aguardando classificação';
+            } else if (meta.tipo === 'financeira') {
+                var caixa = Number($scope.clubeAtual.orcamento) || 0;
+                progresso = caixa >= 100000000 ? 100 : (caixa >= 30000000 ? 75 : (caixa > 0 ? 45 : 0));
+                label = progresso + '% de sustentabilidade financeira';
+            } else if (meta.tipo === 'desenvolvimento') {
+                var evolucoes = (Array.isArray($scope.relatorioEvolucao) ? $scope.relatorioEvolucao : []).filter(function(item) { return item.temporada === $scope.dados.anoAtual; }).length;
+                progresso = Math.min(100, evolucoes * 20);
+                label = evolucoes + ' evolução(ões) registrada(s)';
+            } else if (meta.tipo === 'mercado') {
+                var carencias = $scope.obterResumoNecessidadesBase ? $scope.obterResumoNecessidadesBase().carencias.length : 0;
+                progresso = carencias === 0 ? 100 : Math.max(25, 100 - carencias * 15);
+                label = carencias === 0 ? 'Carências principais cobertas' : carencias + ' carência(s) para avaliar';
+            }
+            meta.progresso = progresso;
+            meta.progressoLabel = label;
+        });
         return $scope.diretoriaStatus;
     };
 
@@ -5619,10 +5644,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.diretoriaStatus.objetivoAtual = $scope.clubeAtual.metaDescricao;
         $scope.diretoriaStatus.tipoObjetivo = $scope.clubeAtual.metaTipo;
         $scope.diretoriaStatus.metasTemporada = [
-            { tipo: 'esportiva', titulo: $scope.clubeAtual.metaDescricao, detalhe: 'Cumprir a expectativa de desempenho na competição nacional.', status: 'principal' },
-            { tipo: 'financeira', titulo: 'Manter a operação sustentável', detalhe: 'Preservar caixa para salários, compromissos e oportunidades da temporada.', status: 'acompanhar' },
-            { tipo: 'desenvolvimento', titulo: 'Evoluir o elenco', detalhe: 'Registrar evolução e aproveitar melhor os atletas em desenvolvimento.', status: 'acompanhar' },
-            { tipo: 'mercado', titulo: 'Qualificar o planejamento de mercado', detalhe: 'Resolver carências sem comprometer a saúde financeira do clube.', status: 'acompanhar' }
+            { tipo: 'esportiva', titulo: $scope.clubeAtual.metaDescricao, detalhe: 'Cumprir a expectativa de desempenho na competição nacional.', status: 'principal', progresso: 0 },
+            { tipo: 'financeira', titulo: 'Manter a operação sustentável', detalhe: 'Preservar caixa para salários, compromissos e oportunidades da temporada.', status: 'acompanhar', progresso: 0 },
+            { tipo: 'desenvolvimento', titulo: 'Evoluir o elenco', detalhe: 'Registrar evolução e aproveitar melhor os atletas em desenvolvimento.', status: 'acompanhar', progresso: 0 },
+            { tipo: 'mercado', titulo: 'Qualificar o planejamento de mercado', detalhe: 'Resolver carências sem comprometer a saúde financeira do clube.', status: 'acompanhar', progresso: 0 }
         ];
         $scope.atualizarDiretoriaStatus();
     };

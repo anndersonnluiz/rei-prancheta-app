@@ -97,6 +97,7 @@ assert.ok(html.includes('club-strategy-briefing'), 'dashboard should show the bo
 assert.ok(css.includes('.club-strategy-briefing'), 'board briefing should have a visual treatment');
 assert.ok(html.includes('metasTemporada'), 'dashboard should show categorized board goals');
 assert.ok(css.includes('.board-goals-grid'), 'board goals should use a responsive grid');
+assert.ok(html.includes('meta.progresso'), 'board goals should show live progress');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

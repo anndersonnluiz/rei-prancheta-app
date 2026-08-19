@@ -585,7 +585,7 @@
                             <small>{{diretoriaStatus.ultimaObservacao}}</small>
                             <div class="board-goals-grid" ng-if="diretoriaStatus.metasTemporada.length > 0">
                                 <div class="board-goal-item" ng-repeat="meta in diretoriaStatus.metasTemporada track by meta.tipo">
-                                    <span>{{meta.tipo}}</span><strong>{{meta.titulo}}</strong><small>{{meta.status === 'principal' ? 'Meta principal' : 'A acompanhar'}}</small>
+                                    <span>{{meta.tipo}} · {{meta.progresso}}%</span><strong>{{meta.titulo}}</strong><small>{{meta.progressoLabel || (meta.status === 'principal' ? 'Meta principal' : 'A acompanhar')}}</small>
                                 </div>
                             </div>
                         </div>
