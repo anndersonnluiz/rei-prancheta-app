@@ -46,5 +46,8 @@ assert.ok(html.includes('historicoPartidas'), 'career screen should include matc
 assert.ok(css.includes('.career-match-history'), 'match history should have a responsive-friendly layout');
 assert.ok(html.includes('historicoPartidasFiltro'), 'career history should expose match filters');
 assert.ok(html.includes('obterHistoricoPartidasFiltrado()'), 'career history should render filtered matches');
+assert.ok(html.includes('alternarDetalhesPartidaHistorico(partida)'), 'career history should allow expanding match details');
+assert.ok(html.includes('partidaHistoricoAberta === partida'), 'career history should render expanded match details');
+assert.ok(css.includes('.career-match-history-details'), 'expanded match details should have a dedicated layout');
 
 console.log('responsive_layout.test.js passed');

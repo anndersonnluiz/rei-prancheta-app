@@ -65,6 +65,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.historicoTreinador = [];
     $scope.historicoPartidas = [];
     $scope.historicoPartidasFiltro = 'TODAS';
+    $scope.partidaHistoricoAberta = null;
+    $scope.alternarDetalhesPartidaHistorico = function(partida) {
+        $scope.partidaHistoricoAberta = $scope.partidaHistoricoAberta === partida ? null : partida;
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';

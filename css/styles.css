@@ -93,6 +93,15 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-match-history span, .career-match-history small { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
 .career-match-history-meta { text-align: right; }
 .career-match-history-meta > span { background: var(--br-green-light); border-radius: 999px; color: var(--br-green-dark); font-weight: 900; padding: 5px 8px; }
+.career-match-history { cursor: pointer; flex-wrap: wrap; }
+.career-match-history:focus-visible { outline: 3px solid var(--br-yellow); outline-offset: 2px; }
+.career-match-history-details { background: var(--bg-color); border-left: 4px solid var(--br-blue); display: grid; gap: 8px; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 12px; width: 100%; }
+.career-match-history-details div { min-width: 0; }
+.career-match-history-details span, .career-match-history-details strong { display: block; }
+.career-match-history-details span, .career-match-history-details small { color: var(--text-muted); font-size: 11px; }
+.career-match-history-details strong { color: var(--text-main); font-size: 14px; margin-top: 3px; }
+.career-match-history-details p { color: var(--text-main); font-size: 12px; grid-column: 1 / -1; line-height: 1.4; }
+.career-match-history-details small { grid-column: 1 / -1; }
 .btn-save { width: 100%; background-color: var(--br-blue); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(0,39,118,0.3); }
 .btn-save:hover { background-color: #001f5c; transform: translateY(-2px); }
 .btn-save:disabled { background-color: #7f8c8d; cursor: not-allowed; box-shadow: none; transform: none; }
@@ -2878,6 +2887,15 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 
     .career-match-history-meta {
         text-align: left;
+    }
+
+    .career-match-history-details {
+        grid-template-columns: 1fr;
+    }
+
+    .career-match-history-details p,
+    .career-match-history-details small {
+        grid-column: auto;
     }
 
     .btn-delete-save {

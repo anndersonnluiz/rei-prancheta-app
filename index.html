@@ -601,7 +601,7 @@
                             </select>
                         </label>
                     </div>
-                    <div class="career-match-history" ng-repeat="partida in obterHistoricoPartidasFiltrado() track by $index">
+                    <div class="career-match-history" ng-repeat="partida in obterHistoricoPartidasFiltrado() track by $index" ng-click="alternarDetalhesPartidaHistorico(partida)" tabindex="0" role="button">
                         <div>
                             <strong>{{partida.mandante.nome}} {{partida.placar.mandante}} x {{partida.placar.visitante}} {{partida.visitante.nome}}</strong>
                             <span>{{partida.competicao}} · Dia {{partida.dia}} · {{partida.origem === 'rapido' ? 'Resultado rápido' : 'Partida 3D'}}</span>
@@ -609,6 +609,14 @@
                         <div class="career-match-history-meta">
                             <span>{{partida.placar.resultadoMeuTime}}</span>
                             <small>{{partida.gestao.substituicoes}} substituição(ões) · {{partida.gestao.pausasTaticas}} pausa(s)</small>
+                        </div>
+                        <div class="career-match-history-details" ng-if="partidaHistoricoAberta === partida" ng-click="$event.stopPropagation()">
+                            <div><span>Posse</span><strong>{{partida.estatisticas.posseMandante}}% x {{partida.estatisticas.posseVisitante}}%</strong></div>
+                            <div><span>Chutes</span><strong>{{partida.estatisticas.chutesMandante}} x {{partida.estatisticas.chutesVisitante}}</strong></div>
+                            <div><span>xG</span><strong>{{partida.xg.mandante}} x {{partida.xg.visitante}}</strong></div>
+                            <p>{{partida.taticas.leitura}}</p>
+                            <small>{{partida.gestao.resumo}}</small>
+                            <div ng-if="partida.destaques.length > 0"><b>Destaques:</b> <span ng-repeat="destaque in partida.destaques">{{destaque.nome}}{{$last ? '' : ', '}}</span></div>
                         </div>
                     </div>
                     <div class="post-match-empty" ng-if="obterHistoricoPartidasFiltrado().length === 0">Nenhuma partida encontrada para este filtro.</div>
