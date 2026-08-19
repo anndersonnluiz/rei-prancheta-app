@@ -186,6 +186,7 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .club-strategy-alert-alerta { background: #fff3f2; border-left-color: #c0392b; }
 .club-strategy-alert-info { background: #fffbea; border-left-color: #f1c40f; }
 .club-strategy-alert-ok { background: var(--br-green-light); border-left-color: var(--br-green); }
+.club-strategy-alert button { align-self: start; background: white; border: 1px solid var(--br-blue); border-radius: 6px; color: var(--br-blue); cursor: pointer; font-size: 11px; font-weight: 800; margin-top: 4px; padding: 6px 9px; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }

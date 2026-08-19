@@ -286,6 +286,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var obras = $scope.infraestruturaResumo && $scope.infraestruturaResumo.obras ? $scope.infraestruturaResumo.obras.length : 0;
         return obras > 0 ? { classe: 'info', titulo: 'Obra em andamento', detalhe: 'Acompanhe os prazos antes de iniciar um novo projeto estrutural.' } : { classe: 'ok', titulo: 'Infraestrutura disponível', detalhe: 'Escolha a próxima melhoria conforme o retorno esperado.' };
     };
+    $scope.irParaFocoEstrategico = function() {
+        var destino = { base: 'base', mercado: 'mercado', financas: 'financas', planejamento: 'medico' }[$scope.obterFocoEstrategicoAtual().prioridade] || 'dashboard';
+        $scope.mudarTela(destino);
+        return destino;
+    };
     $scope.obterHistoricoPartidasFiltrado = function() {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
