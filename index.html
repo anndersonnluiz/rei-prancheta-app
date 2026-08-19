@@ -593,8 +593,15 @@
                     </div>
                 </div>
                 <div class="card" style="margin-top:20px; padding:20px;" ng-if="historicoPartidas && historicoPartidas.length > 0">
-                    <h3 style="margin-bottom:14px;">📊 Histórico de partidas</h3>
-                    <div class="career-match-history" ng-repeat="partida in historicoPartidas track by $index">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+                        <h3>📊 Histórico de partidas</h3>
+                        <label style="font-size:12px; color:var(--text-muted);">Filtrar
+                            <select ng-model="historicoPartidasFiltro" style="margin-left:6px; padding:7px; border-radius:6px; border:1px solid #dfe7ee;">
+                                <option value="TODAS">Todas</option><option value="VITORIAS">Vitórias</option><option value="EMPATES">Empates</option><option value="DERROTAS">Derrotas</option><option value="COMPLETAS">Partidas 3D</option><option value="RAPIDAS">Resultados rápidos</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="career-match-history" ng-repeat="partida in obterHistoricoPartidasFiltrado() track by $index">
                         <div>
                             <strong>{{partida.mandante.nome}} {{partida.placar.mandante}} x {{partida.placar.visitante}} {{partida.visitante.nome}}</strong>
                             <span>{{partida.competicao}} · Dia {{partida.dia}} · {{partida.origem === 'rapido' ? 'Resultado rápido' : 'Partida 3D'}}</span>
@@ -604,6 +611,7 @@
                             <small>{{partida.gestao.substituicoes}} substituição(ões) · {{partida.gestao.pausasTaticas}} pausa(s)</small>
                         </div>
                     </div>
+                    <div class="post-match-empty" ng-if="obterHistoricoPartidasFiltrado().length === 0">Nenhuma partida encontrada para este filtro.</div>
                 </div>
             </div>
 

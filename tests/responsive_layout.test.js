@@ -44,5 +44,7 @@ assert.ok(html.includes('posJogo.resumo.gestao.substituicoes'), 'post-match shou
 assert.ok(html.includes('posJogo.resumo.gestao.pausasTaticas'), 'post-match should report tactical pauses');
 assert.ok(html.includes('historicoPartidas'), 'career screen should include match history');
 assert.ok(css.includes('.career-match-history'), 'match history should have a responsive-friendly layout');
+assert.ok(html.includes('historicoPartidasFiltro'), 'career history should expose match filters');
+assert.ok(html.includes('obterHistoricoPartidasFiltrado()'), 'career history should render filtered matches');
 
 console.log('responsive_layout.test.js passed');

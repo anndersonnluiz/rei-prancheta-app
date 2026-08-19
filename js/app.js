@@ -64,6 +64,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
     $scope.historicoTreinador = [];
     $scope.historicoPartidas = [];
+    $scope.historicoPartidasFiltro = 'TODAS';
+    $scope.obterHistoricoPartidasFiltrado = function() {
+        var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
+        var filtro = $scope.historicoPartidasFiltro || 'TODAS';
+        if (filtro === 'TODAS') return lista;
+        return lista.filter(function(partida) {
+            if (filtro === 'VITORIAS' || filtro === 'EMPATES' || filtro === 'DERROTAS') {
+                return (partida.placar && partida.placar.resultadoMeuTime || '').toUpperCase() === filtro.slice(0, -1) ||
+                    (filtro === 'VITORIAS' && partida.placar.resultadoMeuTime === 'Vitoria') ||
+                    (filtro === 'EMPATES' && partida.placar.resultadoMeuTime === 'Empate') ||
+                    (filtro === 'DERROTAS' && partida.placar.resultadoMeuTime === 'Derrota');
+            }
+            if (filtro === 'COMPLETAS') return partida.origem === 'completo';
+            if (filtro === 'RAPIDAS') return partida.origem === 'rapido';
+            return true;
+        });
+    };
     $scope.mudancaClubePendente = null;
     $scope.staffClube = [];
     $scope.emprestimosAtivos = [];
@@ -5883,6 +5900,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.dados.nomeTreinador = $scope.saveInfo.nomeTreinador;
         $scope.historicoTreinador = Array.isArray($scope.saveInfo.historicoTreinador) ? $scope.saveInfo.historicoTreinador : [];
         $scope.historicoPartidas = Array.isArray($scope.saveInfo.historicoPartidas) ? $scope.saveInfo.historicoPartidas : [];
+        $scope.historicoPartidasFiltro = 'TODAS';
         $scope.historicoFinanceiroMensal = $scope.saveInfo.historicoFinanceiroMensal || {};
         $scope.staffClube = normalizarStaff($scope.saveInfo.staffClube);
         $scope.emprestimosAtivos = Array.isArray($scope.saveInfo.emprestimosAtivos) ? $scope.saveInfo.emprestimosAtivos : [];
