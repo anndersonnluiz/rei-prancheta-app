@@ -2886,6 +2886,13 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .dashboard-v2 .upcoming-events-list .upcoming-event { gap: 7px; grid-template-columns: 34px minmax(0, 1fr); padding: 8px 0; }
     .dashboard-v2 .upcoming-events-list .event-badges { grid-column: 2; justify-content: flex-start; }
     .dashboard-v2 .board-goals-grid { margin-top: 9px; }
+    .calendar-day-row { grid-template-columns: minmax(0, 1fr) !important; gap: 9px !important; padding: 12px !important; }
+    .calendar-day-row > div { min-width: 0; }
+    .calendar-day-row > div:last-child { justify-self: stretch; }
+    .calendar-day-row button { min-height: 42px; width: 100%; }
+    .calendar-filters { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: thin; }
+    .calendar-filters button { flex: 0 0 auto; white-space: nowrap; }
+    .card:has(> .calendar-day-row) { overflow-x: hidden; }
 }
 
 /* Partida ao vivo: o placar e o painel de eventos precisam continuar legíveis

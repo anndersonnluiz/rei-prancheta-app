@@ -117,6 +117,8 @@ assert.ok(html.includes('mobile-menu-bar'), 'mobile navigation should have a com
 assert.ok(js.includes('alternarMenuMobile'), 'mobile navigation should be toggleable');
 assert.ok(css.includes('.dashboard-v2 .club-strategy-panel'), 'mobile dashboard should have a compact strategy panel');
 assert.ok(css.includes('.dashboard-v2 .dashboard-panel'), 'mobile dashboard panels should use compact spacing');
+assert.ok(css.includes('.calendar-day-row { grid-template-columns: minmax(0, 1fr) !important;'), 'calendar rows should stack on mobile');
+assert.ok(html.includes('calendar-filters'), 'calendar filters should be identifiable for mobile layout');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');
