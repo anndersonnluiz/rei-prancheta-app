@@ -109,6 +109,8 @@ assert.ok(html.includes('career-total-card'), 'career should show cumulative tra
 assert.ok(js.includes('obterResumoCarreira'), 'career should expose cumulative data');
 assert.ok(html.includes('career-club-card'), 'career should show performance by club');
 assert.ok(js.includes('obterResumoCarreiraPorClube'), 'career should expose club breakdown');
+assert.ok(html.includes('career-filter-tabs'), 'career should provide history filters');
+assert.ok(js.includes('definirFiltroCarreira'), 'career filters should be controlled by the app');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

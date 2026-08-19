@@ -616,6 +616,7 @@
                 <div class="card" style="margin-bottom: 20px; padding: 24px; background: linear-gradient(135deg, #2c3e50, #34495e); color: white;">
                     <h2>📚 Minha Carreira</h2>
                     <p style="opacity: 0.85; margin-top: 8px;">Acompanhe a trajetória do treinador e as temporadas já concluídas.</p>
+                    <div class="career-filter-tabs"><button ng-click="definirFiltroCarreira('geral')" ng-class="{'active': filtroCarreira === 'geral'}">Visão geral</button><button ng-click="definirFiltroCarreira('temporadas')" ng-class="{'active': filtroCarreira === 'temporadas'}">Temporadas</button><button ng-click="definirFiltroCarreira('clubes')" ng-class="{'active': filtroCarreira === 'clubes'}">Clubes</button></div>
                 </div>
                 <div class="card" ng-if="!historicoTreinador || historicoTreinador.length === 0" style="padding: 30px; text-align: center;">
                     <p style="color: var(--text-muted);">O histórico será preenchido conforme sua carreira avançar.</p>
@@ -691,20 +692,20 @@
                         </div>
                     </div>
                     <div class="career-season-summary" ng-if="obterResumoPorTemporada().length > 0">
-                        <div class="career-season-card" ng-repeat="temporada in obterResumoPorTemporada() track by temporada.temporada">
+                        <div ng-if="filtroCarreira !== 'clubes'"><div class="career-season-card" ng-repeat="temporada in obterResumoPorTemporada() track by temporada.temporada">
                             <strong>Temporada {{temporada.temporada}}</strong>
                             <span>{{temporada.jogos}} jogos · {{temporada.vitorias}}V {{temporada.empates}}E {{temporada.derrotas}}D</span>
                             <span>{{temporada.gols}} gols marcados · {{temporada.sofridos}} sofridos · xG médio {{temporada.mediaXg}}</span>
-                        </div>
-                        <div class="career-evolution-card" ng-if="obterEvolucaoCarreira().disponivel">
+                        </div></div>
+                        <div class="career-evolution-card" ng-if="filtroCarreira !== 'clubes' && obterEvolucaoCarreira().disponivel">
                             <strong>Evolução recente: {{obterEvolucaoCarreira().tendencia}}</strong>
                             <span>Temporadas {{obterEvolucaoCarreira().anterior}} → {{obterEvolucaoCarreira().atual}}</span>
                             <small>Vitórias: {{obterEvolucaoCarreira().deltaVitorias >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaVitorias}} · Confiança: {{obterEvolucaoCarreira().deltaConfianca >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaConfianca}} p.p. · Ambiente: {{obterEvolucaoCarreira().deltaAmbiente >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaAmbiente}}</small>
                         </div>
-                        <div class="career-total-card" ng-if="obterResumoCarreira().temporadas > 0">
+                        <div class="career-total-card" ng-if="filtroCarreira !== 'temporadas' && obterResumoCarreira().temporadas > 0">
                             <strong>Trajetória acumulada</strong><div class="career-total-grid"><span><b>{{obterResumoCarreira().temporadas}}</b> temporadas</span><span><b>{{obterResumoCarreira().partidas}}</b> partidas</span><span><b>{{obterResumoCarreira().vitorias}}</b> vitórias</span><span><b>{{obterResumoCarreira().conquistas}}</b> conquistas</span><span ng-if="obterResumoCarreira().confiancaMedia !== null"><b>{{obterResumoCarreira().confiancaMedia}}%</b> confiança média</span><span ng-if="obterResumoCarreira().ambienteMedio !== null"><b>{{obterResumoCarreira().ambienteMedio}}</b> ambiente médio</span></div>
                         </div>
-                        <div class="career-club-card" ng-if="obterResumoCarreiraPorClube().length > 0">
+                        <div class="career-club-card" ng-if="filtroCarreira !== 'temporadas' && obterResumoCarreiraPorClube().length > 0">
                             <strong>Desempenho por clube</strong>
                             <div class="career-club-row" ng-repeat="clube in obterResumoCarreiraPorClube() track by clube.clubeId || clube.clubeNome">
                                 <div><b>{{clube.clubeNome}}</b><small>{{clube.temporadas}} temporada(s) · {{clube.partidas}} partidas</small></div>

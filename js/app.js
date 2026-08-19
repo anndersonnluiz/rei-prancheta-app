@@ -71,6 +71,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.historicoDecisoesGestao = $scope.historicoDecisoesGestao.slice(0, 30);
     };
     $scope.historicoPartidasFiltro = 'TODAS';
+    $scope.filtroCarreira = 'geral';
+    $scope.definirFiltroCarreira = function(filtro) {
+        if (['geral', 'temporadas', 'clubes'].indexOf(filtro) === -1) return false;
+        $scope.filtroCarreira = filtro;
+        return true;
+    };
     $scope.partidaHistoricoAberta = null;
     $scope.alternarDetalhesPartidaHistorico = function(partida) {
         $scope.partidaHistoricoAberta = $scope.partidaHistoricoAberta === partida ? null : partida;
