@@ -103,6 +103,8 @@ assert.ok(js.includes('ultimaReacaoMetasDia'), 'board should throttle strategic 
 assert.ok(js.includes("chave: 'meta_diretoria|"), 'strategic goal reactions should affect squad environment');
 assert.ok(html.includes('season-report-goals'), 'season report should summarize goals by area');
 assert.ok(html.includes('ambienteElenco'), 'season report should show squad environment');
+assert.ok(html.includes('career-evolution-card'), 'career should show recent evolution comparison');
+assert.ok(js.includes('obterEvolucaoCarreira'), 'career should expose season evolution data');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

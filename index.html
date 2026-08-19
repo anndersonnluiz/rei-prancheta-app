@@ -696,6 +696,11 @@
                             <span>{{temporada.jogos}} jogos · {{temporada.vitorias}}V {{temporada.empates}}E {{temporada.derrotas}}D</span>
                             <span>{{temporada.gols}} gols marcados · {{temporada.sofridos}} sofridos · xG médio {{temporada.mediaXg}}</span>
                         </div>
+                        <div class="career-evolution-card" ng-if="obterEvolucaoCarreira().disponivel">
+                            <strong>Evolução recente: {{obterEvolucaoCarreira().tendencia}}</strong>
+                            <span>Temporadas {{obterEvolucaoCarreira().anterior}} → {{obterEvolucaoCarreira().atual}}</span>
+                            <small>Vitórias: {{obterEvolucaoCarreira().deltaVitorias >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaVitorias}} · Confiança: {{obterEvolucaoCarreira().deltaConfianca >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaConfianca}} p.p. · Ambiente: {{obterEvolucaoCarreira().deltaAmbiente >= 0 ? '+' : ''}}{{obterEvolucaoCarreira().deltaAmbiente}}</small>
+                        </div>
                     </div>
                     <div class="career-match-history" ng-repeat="partida in obterHistoricoPartidasFiltrado() track by $index" ng-click="alternarDetalhesPartidaHistorico(partida)" tabindex="0" role="button">
                         <div>

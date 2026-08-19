@@ -5338,6 +5338,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         resumo.decisoes = (Array.isArray($scope.historicoDecisoesGestao) ? $scope.historicoDecisoesGestao : []).filter(function(item) { return String(item.temporada) === String(temporada); }).length;
         return resumo;
     };
+    $scope.obterEvolucaoCarreira = function() {
+        var temporadas = (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; });
+        if (temporadas.length < 2) return { disponivel: false, detalhe: 'Mais uma temporada encerrada será necessária para comparar a evolução.' };
+        var atual = temporadas[0], anterior = temporadas[1];
+        var deltaVitorias = (atual.vitorias || 0) - (anterior.vitorias || 0);
+        var deltaConfianca = (atual.confiancaDiretoria || 0) - (anterior.confiancaDiretoria || 0);
+        var deltaAmbiente = (atual.ambienteElenco || 0) - (anterior.ambienteElenco || 0);
+        return { disponivel: true, atual: atual.temporada, anterior: anterior.temporada, deltaVitorias: deltaVitorias, deltaConfianca: deltaConfianca, deltaAmbiente: deltaAmbiente, tendencia: deltaVitorias > 0 || deltaConfianca > 0 ? 'Evolução positiva' : (deltaVitorias < 0 || deltaConfianca < 0 ? 'Pontos de atenção' : 'Desempenho estável') };
+    };
     $scope.obterPlanoProximaTemporada = function(resumo, posicao, divisao) {
         if (posicao >= 17 && divisao !== 'D') return { prioridade: 'planejamento', titulo: 'Reagir no resultado esportivo', detalhe: 'Reforce a comissão e estabilize o desempenho antes de assumir novos compromissos.' };
         if (resumo && resumo.golsSofridos > resumo.golsMarcados) return { prioridade: 'mercado', titulo: 'Corrigir o equilíbrio do elenco', detalhe: 'A defesa sofreu mais do que o ataque produziu. Mapeie reforços e soluções internas para a próxima janela.' };
@@ -5595,6 +5604,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             derrotas: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.derrotas : 0,
             saldo: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.saldo : 0,
             conquistas: conquistasTemporada,
+            confiancaDiretoria: $scope.relatorioFimAno && $scope.relatorioFimAno.confiancaDiretoria,
+            ambienteElenco: $scope.relatorioFimAno && $scope.relatorioFimAno.ambienteElenco,
+            aproveitamento: $scope.relatorioFimAno && $scope.relatorioFimAno.resumoGerencial && $scope.relatorioFimAno.resumoGerencial.aproveitamento,
             descricao: trocouDeClube ? 'Mudança de clube após a temporada ' + temporadaEncerrada : 'Temporada ' + temporadaEncerrada + ' concluída'
         };
         if (trocouDeClube && mudancaClube) {
