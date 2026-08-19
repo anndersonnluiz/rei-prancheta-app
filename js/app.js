@@ -180,6 +180,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var avaliacao = $scope.obterAvaliacaoDiretoriaCarreira();
         $scope.diretoriaStatus.historicoAvaliacoes.unshift({ origem: 'carreira', temporada: temporada, objetivo: $scope.diretoriaStatus.objetivoAtual, percentual: progresso.percentual, resultado: avaliacao.titulo, dia: $scope.diaAtual || 0 });
         $scope.diretoriaStatus.historicoAvaliacoes = $scope.diretoriaStatus.historicoAvaliacoes.slice(0, 10);
+        var confianca = $scope.obterConfiancaDiretoria();
+        if ($scope.adicionarMensagem) {
+            var tituloMensagem = confianca.percentual >= 75 ? 'Diretoria reforça apoio' : (confianca.percentual >= 50 ? 'Diretoria acompanha a evolução' : 'Diretoria cobra reação');
+            $scope.adicionarMensagem('Diretoria', tituloMensagem, avaliacao.detalhe + ' Confiança atual: ' + confianca.percentual + '%.', false, 'diretoria');
+        }
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
         return true;
     };
