@@ -182,8 +182,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.diretoriaStatus.historicoAvaliacoes = $scope.diretoriaStatus.historicoAvaliacoes.slice(0, 10);
         var confianca = $scope.obterConfiancaDiretoria();
         if ($scope.adicionarMensagem) {
-            var tituloMensagem = confianca.percentual >= 75 ? 'Diretoria reforça apoio' : (confianca.percentual >= 50 ? 'Diretoria acompanha a evolução' : 'Diretoria cobra reação');
-            $scope.adicionarMensagem('Diretoria', tituloMensagem, avaliacao.detalhe + ' Confiança atual: ' + confianca.percentual + '%.', false, 'diretoria');
+            var tituloMensagem = confianca.percentual >= 75 ? 'Comunicado público de apoio' : (confianca.percentual >= 50 ? 'Reunião de alinhamento' : 'Reunião emergencial da diretoria');
+            var detalheMensagem = confianca.percentual >= 75 ? 'A diretoria confirmou publicamente a confiança no trabalho da comissão.' : (confianca.percentual >= 50 ? 'A diretoria quer alinhar prioridades para a sequência da temporada.' : 'A diretoria convocou uma conversa para cobrar reação imediata.');
+            $scope.adicionarMensagem('Diretoria', tituloMensagem, detalheMensagem + ' ' + avaliacao.detalhe + ' Confiança atual: ' + confianca.percentual + '%.', false, 'diretoria');
         }
         if ($scope.registrarEventoAmbiente) {
             var impacto = confianca.percentual >= 75 ? 1 : (confianca.percentual < 50 ? -1 : 0);
@@ -194,8 +195,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     dia: $scope.diaAtual || 0,
                     tipo: 'diretoria',
                     impacto: impacto,
-                    titulo: impacto > 0 ? 'Apoio da diretoria fortalece o grupo' : 'Pressão da diretoria chega ao elenco',
-                    detalhe: impacto > 0 ? 'O respaldo da diretoria elevou a confiança do ambiente.' : 'A cobrança por resultados aumentou a tensão no ambiente.'
+                    titulo: impacto > 0 ? 'Comunicado público anima o elenco' : 'Reunião emergencial pressiona o elenco',
+                    detalhe: impacto > 0 ? 'O respaldo público da diretoria elevou a confiança do ambiente.' : 'A cobrança em reunião aumentou a tensão no ambiente.'
                 });
             }
         }
