@@ -2886,6 +2886,12 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .dashboard-v2 .upcoming-events-list .upcoming-event { gap: 7px; grid-template-columns: 34px minmax(0, 1fr); padding: 8px 0; }
     .dashboard-v2 .upcoming-events-list .event-badges { grid-column: 2; justify-content: flex-start; }
     .dashboard-v2 .board-goals-grid { margin-top: 9px; }
+    .competition-screen { max-width: 100%; overflow: hidden; }
+    .competition-screen .competition-tabs, .competition-screen .division-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px !important; scrollbar-width: thin; }
+    .competition-screen .competition-tabs button, .competition-screen .division-tabs button { flex: 0 0 auto; min-height: 42px; white-space: nowrap; }
+    .competition-screen .card { max-width: 100%; overflow-x: auto; padding: 12px !important; }
+    .competition-screen table { min-width: 420px; }
+    .competition-screen .card > div[style*="overflow-x: auto"] { margin-right: -4px; }
     .calendar-day-row { grid-template-columns: minmax(0, 1fr) !important; gap: 9px !important; padding: 12px !important; }
     .calendar-day-row > div { min-width: 0; }
     .calendar-day-row > div:last-child { justify-self: stretch; }

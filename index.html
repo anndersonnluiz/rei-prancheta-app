@@ -1190,16 +1190,16 @@
             <!-- Fim TELA: TATICAS -->
 
             <!-- TELA: TABELAS (FASE 15) -->
-            <div ng-if="telaAtual === 'tabela'" ng-init="filtroCompeticao = 'LIGA'; filtroDivisao = 'A'">
+            <div class="competition-screen" ng-if="telaAtual === 'tabela'" ng-init="filtroCompeticao = 'LIGA'; filtroDivisao = 'A'">
                 <!-- MENU DE COMPETIÇÕES -->
-                <div style="display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                <div class="competition-tabs" style="display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
                     <button style="background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer; padding-bottom: 5px; border-bottom: 3px solid {{filtroCompeticao === 'LIGA' ? 'var(--br-green)' : 'transparent'}}; color: {{filtroCompeticao === 'LIGA' ? 'var(--text-dark)' : 'var(--text-muted)'}};" ng-click="filtroCompeticao = 'LIGA'">Brasileirão</button>
                     <button style="background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer; padding-bottom: 5px; border-bottom: 3px solid {{filtroCompeticao === 'COPA' ? 'var(--br-green)' : 'transparent'}}; color: {{filtroCompeticao === 'COPA' ? 'var(--text-dark)' : 'var(--text-muted)'}};" ng-click="filtroCompeticao = 'COPA'">Copa do Brasil</button>
                 </div>
 
                 <!-- TELA BRASILEIRÃO -->
                 <div ng-if="filtroCompeticao === 'LIGA'">
-                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <div class="division-tabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
                         <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;" ng-style="{'background': filtroDivisao === 'A' ? 'var(--br-blue)' : '#e1e8ed', 'color': filtroDivisao === 'A' ? 'white' : 'var(--text-main)'}" ng-click="filtroDivisao = 'A'">Série A</button>
                         <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;" ng-style="{'background': filtroDivisao === 'B' ? 'var(--br-blue)' : '#e1e8ed', 'color': filtroDivisao === 'B' ? 'white' : 'var(--text-main)'}" ng-click="filtroDivisao = 'B'">Série B</button>
                         <button style="padding: 10px 20px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;" ng-style="{'background': filtroDivisao === 'C' ? 'var(--br-blue)' : '#e1e8ed', 'color': filtroDivisao === 'C' ? 'white' : 'var(--text-main)'}" ng-click="filtroDivisao = 'C'">Série C</button>
@@ -1282,7 +1282,7 @@
             </div>
 
             <!-- TELA: LIBERTADORES -->
-            <div ng-if="telaAtual === 'libertadores'">
+            <div class="competition-screen" ng-if="telaAtual === 'libertadores'">
                 <!-- FASE DE GRUPOS -->
                 <div class="card" style="padding: 20px; margin-bottom: 20px;">
                     <h3 style="margin-bottom: 20px; color: var(--text-dark);">🌎 Copa Libertadores da América - Fase de Grupos</h3>
@@ -1347,7 +1347,7 @@
             </div>
 
             <!-- TELA: SUL-AMERICANA -->
-            <div ng-if="telaAtual === 'sulamericana'">
+            <div class="competition-screen" ng-if="telaAtual === 'sulamericana'">
                 <!-- FASE DE GRUPOS -->
                 <div class="card" style="padding: 20px; margin-bottom: 20px;">
                     <h3 style="margin-bottom: 20px; color: var(--text-dark);">🏆 Copa Sul-Americana - Fase de Grupos</h3>
