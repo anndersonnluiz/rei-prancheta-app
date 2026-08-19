@@ -142,6 +142,11 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .season-report-grid strong { color: var(--text-main); display: block; font-size: 16px; margin-top: 4px; }
 .season-report-footer { border-top: 1px solid #e7edf2; color: var(--text-muted); font-size: 12px; margin-top: 13px; padding-top: 11px; }
 @media (max-width: 760px) { .season-report-grid { grid-template-columns: repeat(2, 1fr); } }
+.season-next-plan { align-items: center; background: #eff8f2; border-left: 5px solid var(--br-green); display: flex; gap: 18px; justify-content: space-between; margin-bottom: 20px; }
+.season-plan-label { color: #218c4b; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.season-next-plan h3 { margin: 4px 0; }
+.season-next-plan p { color: var(--text-muted); margin: 0; }
+@media (max-width: 760px) { .season-next-plan { align-items: stretch; flex-direction: column; } }
 .career-confidence { background: #eef3ff; border: 1px solid #cbd8f2; border-radius: 8px; margin-bottom: 14px; padding: 11px 13px; }
 .career-confidence span, .career-confidence strong { display: block; }
 .career-confidence span { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }

@@ -5294,6 +5294,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         resumo.decisoes = (Array.isArray($scope.historicoDecisoesGestao) ? $scope.historicoDecisoesGestao : []).filter(function(item) { return String(item.temporada) === String(temporada); }).length;
         return resumo;
     };
+    $scope.obterPlanoProximaTemporada = function(resumo, posicao, divisao) {
+        if (posicao >= 17 && divisao !== 'D') return { prioridade: 'planejamento', titulo: 'Reagir no resultado esportivo', detalhe: 'Reforce a comissão e estabilize o desempenho antes de assumir novos compromissos.' };
+        if (resumo && resumo.golsSofridos > resumo.golsMarcados) return { prioridade: 'mercado', titulo: 'Corrigir o equilíbrio do elenco', detalhe: 'A defesa sofreu mais do que o ataque produziu. Mapeie reforços e soluções internas para a próxima janela.' };
+        if (resumo && resumo.aproveitamento < 50) return { prioridade: 'planejamento', titulo: 'Revisar o plano de jogo', detalhe: 'O aproveitamento pede ajustes de escalação, treinamento e gestão do elenco.' };
+        if (resumo && resumo.evolucoes < 3) return { prioridade: 'base', titulo: 'Acelerar o desenvolvimento', detalhe: 'A próxima temporada pode aproveitar melhor a base e criar uma rotação de jovens.' };
+        return { prioridade: 'financas', titulo: 'Consolidar o crescimento', detalhe: 'Mantenha o desempenho e use o orçamento com disciplina para sustentar a evolução.' };
+    };
 
     // FASE 16: Balanço da Diretoria e Cerimônia
     $scope.prepararCerimonia = function() {
@@ -5372,6 +5379,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
 
         var resumoGerencial = $scope.obterResumoGerencialTemporada($scope.dados.anoAtual, $scope.clubeAtual && $scope.clubeAtual.id);
+        var planoProximaTemporada = $scope.obterPlanoProximaTemporada(resumoGerencial, posicaoTabela, $scope.clubeAtual.divisao);
         $scope.relatorioFimAno = {
             campeaoSerieA: campeaoSerieA,
             rebaixadosA: rebaixadosA,
@@ -5384,6 +5392,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             meuDesempenhoLiga: posicaoTabela + "º Lugar (Série " + $scope.clubeAtual.divisao + ")",
             meuDesempenhoCopa: copaFaseAlcance,
             resumoGerencial: resumoGerencial,
+            planoProximaTemporada: planoProximaTemporada,
             confiancaDiretoria: $scope.obterConfiancaDiretoria ? $scope.obterConfiancaDiretoria().percentual : null,
             margemPlanejamento: $scope.obterMargemPlanejamentoDiretoria ? $scope.obterMargemPlanejamentoDiretoria().percentual : null
         };

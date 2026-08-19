@@ -91,6 +91,8 @@ assert.ok(html.includes('historicoDecisoesGestao'), 'career should show manageme
 assert.ok(css.includes('.career-decision-history'), 'management decisions should have a history layout');
 assert.ok(html.includes('season-management-report'), 'season ceremony should show a management report');
 assert.ok(css.includes('.season-report-grid'), 'season management report should have a responsive grid');
+assert.ok(html.includes('season-next-plan'), 'season ceremony should suggest the next season plan');
+assert.ok(css.includes('.season-next-plan'), 'next season plan should have a responsive layout');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');

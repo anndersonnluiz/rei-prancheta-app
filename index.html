@@ -2201,6 +2201,11 @@
                 </div>
             </div>
 
+            <div class="card season-next-plan" ng-if="relatorioFimAno.planoProximaTemporada">
+                <div><span class="season-plan-label">PLANO SUGERIDO PARA {{dados.anoAtual + 1}}</span><h3>{{relatorioFimAno.planoProximaTemporada.titulo}}</h3><p>{{relatorioFimAno.planoProximaTemporada.detalhe}}</p></div>
+                <button class="btn-secondary" ng-click="definirPrioridadeEstrategica(relatorioFimAno.planoProximaTemporada.prioridade)">Adotar prioridade</button>
+            </div>
+
             <!-- Balanço da Diretoria -->
             <div class="card" style="margin-bottom: 20px; border-left: 8px solid {{relatorioFimAno.demitido ? '#e74c3c' : (relatorioFimAno.statusDiretoria === 'Aprovado' ? 'var(--br-green)' : '#f39c12')}}; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
                 <h3 style="margin-bottom: 10px;">📋 Avaliação da Diretoria</h3>
