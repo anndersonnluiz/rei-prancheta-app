@@ -661,6 +661,10 @@
                             <span>Temporada {{avaliacao.temporada}} · {{avaliacao.percentual}}%</span><small>{{avaliacao.resultado}} · {{avaliacao.objetivo}}</small>
                         </div>
                     </div>
+                    <div class="career-decision-history" ng-if="historicoDecisoesGestao && historicoDecisoesGestao.length > 0">
+                        <strong>Últimas decisões de gestão</strong>
+                        <div ng-repeat="decisao in historicoDecisoesGestao | limitTo:5 track by $index"><span>Temporada {{decisao.temporada}} · Dia {{decisao.dia}}</span><small>{{decisao.descricao}}</small></div>
+                    </div>
                     <div class="career-confidence">
                         <div><span>Confiança da diretoria</span><strong>{{obterConfiancaDiretoria().percentual}}% · {{obterConfiancaDiretoria().label}}</strong></div>
                         <div class="career-confidence-bar"><div ng-style="{'width': obterConfiancaDiretoria().percentual + '%'}"></div></div>

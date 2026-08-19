@@ -87,6 +87,8 @@ assert.ok(html.includes('obterFocoEstrategicoAtual()'), 'dashboard should priori
 assert.ok(css.includes('.club-strategy-focus'), 'dashboard should show the selected strategic focus');
 assert.ok(html.includes('obterAlertaFocoEstrategico()'), 'dashboard should show focus-specific alerts');
 assert.ok(css.includes('.club-strategy-alert-alerta'), 'focus alerts should distinguish risk');
+assert.ok(html.includes('historicoDecisoesGestao'), 'career should show management decision history');
+assert.ok(css.includes('.career-decision-history'), 'management decisions should have a history layout');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');
