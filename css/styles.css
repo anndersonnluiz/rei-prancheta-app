@@ -134,6 +134,9 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-decision-history span, .career-decision-history small { display: block; }
 .career-decision-history span { color: var(--text-muted); font-size: 10px; }
 .career-decision-history small { color: var(--text-main); font-size: 11px; margin-top: 3px; }
+.grouped-nav .nav-group-title { align-items: center; color: #8fa1ae; display: flex; font-size: 10px; font-weight: 800; justify-content: space-between; letter-spacing: .08em; padding: 12px 14px 5px; text-transform: uppercase; }
+.grouped-nav .nav-group-title span { color: #d4dee5; font-size: 15px; line-height: 10px; }
+.grouped-nav .nav-group-title:hover { color: #fff; }
 .career-filter-tabs { display: flex; gap: 7px; margin: 14px 0; }
 .career-filter-tabs button { background: #f8fafc; border: 1px solid #dfe7ee; border-radius: 6px; color: var(--text-muted); cursor: pointer; font-size: 11px; padding: 7px 11px; }
 .career-filter-tabs button.active { background: var(--br-green); border-color: var(--br-green); color: #fff; font-weight: 700; }

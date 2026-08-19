@@ -89,24 +89,27 @@
                 <div class="manager-name">👤 Prof. {{ dados.nomeTreinador }}</div>
             </div>
             
-            <ul class="nav-links" role="list">
-                <li ng-class="{'active': telaAtual === 'historico_treinador'}" ng-click="mudarTela('historico_treinador')">📚 Minha Carreira</li>
-                <li ng-class="{'active': telaAtual === 'staff'}" ng-click="mudarTela('staff')">🧑‍💼 Comissão Técnica</li>
-                <li ng-class="{'active': telaAtual === 'dashboard'}" ng-click="mudarTela('dashboard')">📊 Visão Geral</li>
-                <li ng-class="{'active': telaAtual === 'mensagens'}" ng-click="mudarTela('mensagens')">
-                    ✉️ Mensagens 
-                    <span class="badge" style="background: var(--br-green); font-size: 10px; margin-left: 5px;" ng-if="qtdMensagensNaoLidas() > 0">{{qtdMensagensNaoLidas()}}</span>
-                </li>
-                <li ng-class="{'active': telaAtual === 'calendario'}" ng-click="mudarTela('calendario')">📅 Calendário</li>
-                <li ng-class="{'active': telaAtual === 'tabela'}" ng-click="mudarTela('tabela')">🏆 Classificação</li>
-                <li ng-class="{'active': telaAtual === 'libertadores'}" ng-click="mudarTela('libertadores')" ng-if="libertadores">🌎 Libertadores</li>
-                <li ng-class="{'active': telaAtual === 'sulamericana'}" ng-click="mudarTela('sulamericana')" ng-if="sulAmericana">🏆 Sul-Americana</li>
-                <li ng-class="{'active': telaAtual === 'elenco'}" ng-click="mudarTela('elenco')">👕 Meu Elenco</li>
-                <li ng-class="{'active': telaAtual === 'base'}" ng-click="mudarTela('base')">🌱 Categorias de Base</li>
-                <li ng-class="{'active': telaAtual === 'medico'}" ng-click="mudarTela('medico')">🚑 Dep. Médico</li>
-                <li ng-class="{'active': telaAtual === 'taticas'}" ng-click="mudarTela('taticas')">⚽ Táticas / Escalação</li>
-                <li ng-class="{'active': telaAtual === 'mercado'}" ng-click="mudarTela('mercado')">🔄 Mercado da Bola</li>
-                <li ng-class="{'active': telaAtual === 'financas'}" ng-click="mudarTela('financas')">💰 Finanças</li>
+            <ul class="nav-links grouped-nav" role="list">
+                <li class="nav-group-title" ng-click="alternarGrupoMenu('inicio')">Início <span>{{menuGrupos.inicio ? '−' : '+'}}</span></li>
+                <li ng-if="menuGrupos.inicio" ng-class="{'active': telaAtual === 'dashboard'}" ng-click="mudarTela('dashboard')">📊 Visão Geral</li>
+                <li ng-if="menuGrupos.inicio" ng-class="{'active': telaAtual === 'mensagens'}" ng-click="mudarTela('mensagens')">✉️ Mensagens <span class="badge" style="background: var(--br-green); font-size: 10px; margin-left: 5px;" ng-if="qtdMensagensNaoLidas() > 0">{{qtdMensagensNaoLidas()}}</span></li>
+                <li ng-if="menuGrupos.inicio" ng-class="{'active': telaAtual === 'calendario'}" ng-click="mudarTela('calendario')">📅 Calendário</li>
+                <li class="nav-group-title" ng-click="alternarGrupoMenu('competicoes')">Competições <span>{{menuGrupos.competicoes ? '−' : '+'}}</span></li>
+                <li ng-if="menuGrupos.competicoes" ng-class="{'active': telaAtual === 'tabela'}" ng-click="mudarTela('tabela')">🏆 Campeonatos</li>
+                <li ng-if="menuGrupos.competicoes && libertadores" ng-class="{'active': telaAtual === 'libertadores'}" ng-click="mudarTela('libertadores')">🌎 Libertadores</li>
+                <li ng-if="menuGrupos.competicoes && sulAmericana" ng-class="{'active': telaAtual === 'sulamericana'}" ng-click="mudarTela('sulamericana')">🏆 Sul-Americana</li>
+                <li class="nav-group-title" ng-click="alternarGrupoMenu('clube')">Clube <span>{{menuGrupos.clube ? '−' : '+'}}</span></li>
+                <li ng-if="menuGrupos.clube" ng-class="{'active': telaAtual === 'elenco'}" ng-click="mudarTela('elenco')">👕 Meu Elenco</li>
+                <li ng-if="menuGrupos.clube" ng-class="{'active': telaAtual === 'taticas'}" ng-click="mudarTela('taticas')">⚽ Táticas / Escalação</li>
+                <li ng-if="menuGrupos.clube" ng-class="{'active': telaAtual === 'medico'}" ng-click="mudarTela('medico')">🚑 Dep. Médico</li>
+                <li ng-if="menuGrupos.clube" ng-class="{'active': telaAtual === 'base'}" ng-click="mudarTela('base')">🌱 Categorias de Base</li>
+                <li ng-if="menuGrupos.clube" ng-class="{'active': telaAtual === 'staff'}" ng-click="mudarTela('staff')">🧑‍💼 Comissão Técnica</li>
+                <li class="nav-group-title" ng-click="alternarGrupoMenu('gestao')">Gestão <span>{{menuGrupos.gestao ? '−' : '+'}}</span></li>
+                <li ng-if="menuGrupos.gestao" ng-class="{'active': telaAtual === 'mercado'}" ng-click="mudarTela('mercado')">🔄 Mercado da Bola</li>
+                <li ng-if="menuGrupos.gestao" ng-class="{'active': telaAtual === 'financas'}" ng-click="mudarTela('financas')">💰 Finanças</li>
+                <li class="nav-group-title" ng-click="alternarGrupoMenu('carreira')">Carreira <span>{{menuGrupos.carreira ? '−' : '+'}}</span></li>
+                <li ng-if="menuGrupos.carreira" ng-class="{'active': telaAtual === 'historico_treinador'}" ng-click="mudarTela('historico_treinador')">📚 Minha Carreira</li>
+                <li class="nav-group-title" ng-click="alternarGrupoMenu('sistema')">Sistema <span>{{menuGrupos.sistema ? '−' : '+'}}</span></li>
             </ul>
 
             <div class="sidebar-footer">

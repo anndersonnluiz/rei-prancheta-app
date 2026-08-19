@@ -72,6 +72,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
     $scope.historicoPartidasFiltro = 'TODAS';
     $scope.filtroCarreira = 'geral';
+    $scope.menuGrupos = { inicio: true, competicoes: false, clube: false, gestao: false, carreira: false, sistema: false };
+    $scope.alternarGrupoMenu = function(grupo) {
+        if (!$scope.menuGrupos.hasOwnProperty(grupo)) return false;
+        $scope.menuGrupos[grupo] = !$scope.menuGrupos[grupo];
+        return $scope.menuGrupos[grupo];
+    };
     $scope.definirFiltroCarreira = function(filtro) {
         if (['geral', 'temporadas', 'clubes'].indexOf(filtro) === -1) return false;
         $scope.filtroCarreira = filtro;

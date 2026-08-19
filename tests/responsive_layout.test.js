@@ -111,6 +111,8 @@ assert.ok(html.includes('career-club-card'), 'career should show performance by 
 assert.ok(js.includes('obterResumoCarreiraPorClube'), 'career should expose club breakdown');
 assert.ok(html.includes('career-filter-tabs'), 'career should provide history filters');
 assert.ok(js.includes('definirFiltroCarreira'), 'career filters should be controlled by the app');
+assert.ok(html.includes('grouped-nav'), 'main navigation should be organized in groups');
+assert.ok(js.includes('alternarGrupoMenu'), 'navigation groups should be collapsible');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');
