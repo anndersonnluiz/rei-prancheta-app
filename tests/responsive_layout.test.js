@@ -162,7 +162,8 @@ assert.ok(html.includes('bulk-contract-panel'), 'squad should expose bulk contra
 assert.ok(!html.includes('</tr>\n                                </tr>'), 'squad table should not contain duplicate row closing tags');
 assert.ok(js.includes("$scope.financasHistorico = [];"), 'club change should start a clean financial history');
 assert.ok(js.includes("assunto: 'Bem-vindo ao ' + $scope.clubeAtual.nome"), 'new club should receive a welcome briefing');
-assert.ok(js.includes('// A comissão pertence ao clube anterior; o novo clube começa com suas próprias vagas.'), 'club change should reset the technical staff');
+assert.ok(js.includes('estadosOperacionaisClubes'), 'save should persist operational state per club');
+assert.ok(js.includes('restaurarEstadoOperacionalClube(clubeId)'), 'club change should restore or initialize the technical staff by club');
 assert.ok(js.includes('var relatorio = $scope.relatorioFimAno || {};'), 'ceremony continuation should tolerate a missing report');
 assert.ok(js.includes('if (!relatorio.resumoGerencial || !relatorio.statusDiretoria)'), 'ceremony should rebuild an incomplete season report');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');

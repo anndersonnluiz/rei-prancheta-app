@@ -446,6 +446,42 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.infraestruturaResumo = criarResumoInfraestrutura(null);
     $scope.contextoExterno = criarContextoExternoPadrao();
     $scope.contextoExternoResumo = criarResumoContextoExterno($scope.contextoExterno);
+    $scope.estadosOperacionaisClubes = {};
+
+    function capturarEstadoOperacionalClube(clubeId) {
+        if (!clubeId) return;
+        $scope.estadosOperacionaisClubes = $scope.estadosOperacionaisClubes || {};
+        $scope.estadosOperacionaisClubes[clubeId] = angular.copy({
+            staffClube: $scope.staffClube || criarStaffPadrao(),
+            financasHistorico: $scope.financasHistorico || [],
+            historicoFinanceiroMensal: $scope.historicoFinanceiroMensal || {},
+            caixaEntrada: $scope.caixaEntrada || [],
+            ambienteElenco: $scope.ambienteElenco || criarAmbienteElencoPadrao(),
+            contextoExterno: $scope.contextoExterno || criarContextoExternoPadrao(),
+            diretoriaStatus: $scope.diretoriaStatus || criarDiretoriaStatusPadrao(),
+            patrocinioAtual: $scope.patrocinioAtual || null,
+            propostasPendentes: $scope.propostasPendentes || [],
+            ultimoResumoPartida: $scope.ultimoResumoPartida || null
+        });
+    }
+
+    function restaurarEstadoOperacionalClube(clubeId) {
+        var estado = $scope.estadosOperacionaisClubes && $scope.estadosOperacionaisClubes[clubeId];
+        if (!estado) return false;
+        $scope.staffClube = normalizarStaff(angular.copy(estado.staffClube));
+        $scope.financasHistorico = angular.copy(estado.financasHistorico || []);
+        $scope.historicoFinanceiroMensal = angular.copy(estado.historicoFinanceiroMensal || {});
+        $scope.caixaEntrada = angular.copy(estado.caixaEntrada || []);
+        $scope.ambienteElenco = normalizarAmbienteElencoInterno(angular.copy(estado.ambienteElenco || criarAmbienteElencoPadrao()));
+        $scope.contextoExterno = normalizarContextoExternoInterno(angular.copy(estado.contextoExterno || criarContextoExternoPadrao()));
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno(angular.copy(estado.diretoriaStatus || criarDiretoriaStatusPadrao()));
+        $scope.patrocinioAtual = angular.copy(estado.patrocinioAtual || null);
+        $scope.propostasPendentes = angular.copy(estado.propostasPendentes || []);
+        $scope.ultimoResumoPartida = angular.copy(estado.ultimoResumoPartida || null);
+        $scope.atualizarAmbienteElencoResumo();
+        $scope.atualizarResumoContextoExterno();
+        return true;
+    }
     $scope.baseResumo = criarResumoBase(null);
     $scope.contratosResumo = criarResumoContratos([]);
 
@@ -5584,6 +5620,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.aceitarProposta = function(clubeId) {
         var clubeAnterior = $scope.clubeAtual;
         var novoClube = $scope.clubes.find(function(clube) { return clube.id === clubeId; });
+        if (!novoClube || (clubeAnterior && novoClube.id === clubeAnterior.id)) return;
+        capturarEstadoOperacionalClube(clubeAnterior && clubeAnterior.id);
         $scope.mudancaClubePendente = {
             clubeAnteriorId: clubeAnterior && clubeAnterior.id,
             clubeAnteriorNome: clubeAnterior && clubeAnterior.nome,
@@ -5594,8 +5632,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             reputacao: $scope.dados.reputacaoTreinador || 3
         };
         $scope.selecionarClube(clubeId);
-        // A comissão pertence ao clube anterior; o novo clube começa com suas próprias vagas.
-        $scope.staffClube = criarStaffPadrao();
+        // A comissão e o restante da gestão pertencem ao clube assumido.
+        if (!restaurarEstadoOperacionalClube(clubeId)) $scope.staffClube = criarStaffPadrao();
         $scope.executarViradaDeAno(true);
     };
 
@@ -5603,6 +5641,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var clubeAntesDaVirada = $scope.clubeAtual;
         var temporadaEncerrada = $scope.dados.anoAtual;
         var mudancaClube = $scope.mudancaClubePendente;
+        var estadoNovoRestaurado = trocouDeClube && !!($scope.estadosOperacionaisClubes && $scope.estadosOperacionaisClubes[clubeAntesDaVirada && clubeAntesDaVirada.id]);
         var divs = ["A", "B", "C", "D"];
         var classificados = {};
         divs.forEach(function(d) { classificados[d] = $scope.ordenarTabela(d); });
@@ -5719,7 +5758,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         $scope.historicoTreinador.unshift(eventoHistorico);
         $scope.historicoTreinador = $scope.historicoTreinador.slice(0, 30);
-        if (trocouDeClube) {
+        if (trocouDeClube && !estadoNovoRestaurado) {
             $scope.financasHistorico = [];
             $scope.historicoFinanceiroMensal = {};
             $scope.caixaEntrada = [];
@@ -6002,6 +6041,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (!Array.isArray(saveInfo.historicoTreinador)) saveInfo.historicoTreinador = [];
         if (!Array.isArray(saveInfo.historicoPartidas)) saveInfo.historicoPartidas = [];
         if (!Array.isArray(saveInfo.historicoDecisoesGestao)) saveInfo.historicoDecisoesGestao = [];
+        if (!saveInfo.estadosOperacionaisClubes || typeof saveInfo.estadosOperacionaisClubes !== 'object') saveInfo.estadosOperacionaisClubes = {};
         if (!saveInfo.historicoFinanceiroMensal || typeof saveInfo.historicoFinanceiroMensal !== 'object') saveInfo.historicoFinanceiroMensal = {};
         saveInfo.staffClube = normalizarStaff(saveInfo.staffClube);
         if (!Array.isArray(saveInfo.emprestimosAtivos)) saveInfo.emprestimosAtivos = [];
@@ -6055,6 +6095,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             historicoTreinador: $scope.historicoTreinador || [],
             historicoPartidas: $scope.historicoPartidas || [],
             historicoDecisoesGestao: $scope.historicoDecisoesGestao || [],
+            estadosOperacionaisClubes: $scope.estadosOperacionaisClubes || {},
             historicoFinanceiroMensal: $scope.historicoFinanceiroMensal || {},
             staffClube: normalizarStaff($scope.staffClube),
             emprestimosAtivos: $scope.emprestimosAtivos || [],
@@ -6427,6 +6468,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.historicoTreinador = Array.isArray($scope.saveInfo.historicoTreinador) ? $scope.saveInfo.historicoTreinador : [];
         $scope.historicoPartidas = Array.isArray($scope.saveInfo.historicoPartidas) ? $scope.saveInfo.historicoPartidas : [];
         $scope.historicoDecisoesGestao = Array.isArray($scope.saveInfo.historicoDecisoesGestao) ? $scope.saveInfo.historicoDecisoesGestao : [];
+        $scope.estadosOperacionaisClubes = $scope.saveInfo.estadosOperacionaisClubes || {};
         $scope.historicoPartidasFiltro = 'TODAS';
         $scope.historicoFinanceiroMensal = $scope.saveInfo.historicoFinanceiroMensal || {};
         $scope.staffClube = normalizarStaff($scope.saveInfo.staffClube);
