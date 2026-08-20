@@ -3272,6 +3272,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var analise = {
             modo: modo === 'rapido' ? 'rapido' : 'completo',
             modoLabel: modo === 'rapido' ? 'Resultado rapido' : 'Partida 3D',
+            clubeAtualId: $scope.clubeAtual && $scope.clubeAtual.id,
             competicao: calendarioDia && calendarioDia.titulo ? calendarioDia.titulo : 'Partida',
             dia: (typeof $scope.diaAtual === 'number' ? $scope.diaAtual : 0) + 1,
             mandante: resumirTimePreJogo(mandante),
@@ -5347,7 +5348,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.obterResumoGerencialTemporada = function(temporada, clubeId) {
         var partidas = (Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : []).filter(function(partida) {
-            return String(partida.temporada || '') === String(temporada) && (!clubeId || partida.clubeId === clubeId || partida.clubeAtualId === clubeId);
+            var clubeRegistrado = partida.clubeId || partida.clubeAtualId;
+            var clubeParticipou = clubeRegistrado === clubeId || (partida.mandante && partida.mandante.id === clubeId) || (partida.visitante && partida.visitante.id === clubeId);
+            return String(partida.temporada || '') === String(temporada) && (!clubeId || clubeParticipou);
         });
         var resumo = { jogos: partidas.length, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0, xgMedio: 0, aproveitamento: 0, evolucoes: 0, decisoes: 0 };
         partidas.forEach(function(partida) {

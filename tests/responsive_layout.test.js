@@ -147,6 +147,7 @@ assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"alternarSom()\"
 assert.ok(js.includes('resumoExigenciasJogadorCache'), 'negotiation summary should be cached to avoid digest loops');
 assert.ok(js.includes('lesoesNaPartida = 0'), 'match injury counter should reset at kickoff');
 assert.ok(js.includes('($scope.lesoesNaPartida || 0) < 2'), 'match injury simulation should limit repeated injuries');
+assert.ok(js.includes('clubeAtualId: $scope.clubeAtual && $scope.clubeAtual.id'), 'match summaries should retain the manager club id');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');
 assert.ok(css.includes('.ceremony-screen > div[style*="grid-template-columns"]'), 'season ceremony should stack its main cards on mobile');
 assert.ok(css.includes('@media (max-width: 420px)'), 'mobile layout should include a narrow-phone breakpoint');
