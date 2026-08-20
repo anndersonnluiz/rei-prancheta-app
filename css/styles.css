@@ -2936,6 +2936,12 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .finance-screen [style*="repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
     .finance-screen [style*="repeat(auto-fill, minmax(300px"] { grid-template-columns: 1fr !important; }
     .finance-screen .card > div[style*="padding: 20px"] { min-width: 0; }
+    .messages-screen > div[style*="background: #34495e"] { border-radius: 10px !important; padding: 16px !important; }
+    .messages-screen .messages-layout { flex-direction: column; gap: 12px !important; }
+    .messages-screen .messages-list { max-height: 240px !important; }
+    .messages-screen .message-reader { min-height: 300px !important; padding: 16px !important; }
+    .messages-screen .message-reader h2 { font-size: 20px !important; overflow-wrap: anywhere; }
+    .messages-screen .message-reader [style*="justify-content: space-between"] { align-items: flex-start; flex-direction: column; gap: 5px; }
     .career-screen .career-history-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .career-screen .career-trend { align-items: stretch; flex-direction: column; }
     .career-screen .career-recommendations { grid-template-columns: 1fr; }

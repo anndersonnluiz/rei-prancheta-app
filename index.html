@@ -228,7 +228,7 @@
             </div>
 
             <!-- TELA: MENSAGENS (FASE 17) -->
-            <div ng-if="telaAtual === 'mensagens'" aria-live="polite">
+            <div class="messages-screen" ng-if="telaAtual === 'mensagens'" aria-live="polite">
                 <div class="card" style="margin-bottom: 20px; padding: 20px; background: linear-gradient(to right, #2c3e50, #34495e); color: white;">
                     <h2 style="display: flex; align-items: center; gap: 10px;">✉️ Comunicações Internas</h2>
                     <p style="opacity: 0.8; margin-top: 5px;">Caixa de entrada exclusiva para assuntos do clube (Diretoria, Médicos, Finanças, etc).</p>
@@ -239,9 +239,9 @@
                     <p style="color: var(--text-muted); margin-top: 10px;">Continue avançando os dias no calendário para receber novidades.</p>
                 </div>
 
-                <div ng-if="caixaEntrada.length > 0" style="display: flex; gap: 20px;">
+                <div class="messages-layout" ng-if="caixaEntrada.length > 0" style="display: flex; gap: 20px;">
                     <!-- Lista de Mensagens -->
-                    <div style="flex: 1; background: white; border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; max-height: 600px; overflow-y: auto;">
+                    <div class="messages-list" style="flex: 1; background: white; border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; max-height: 600px; overflow-y: auto;">
                         <div ng-repeat="msg in caixaEntrada track by msg.id" 
                              style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s;"
                              ng-style="{'background-color': mensagemAberta.id === msg.id ? '#f0f8ff' : (msg.lida ? 'white' : '#fcf3cf'), 'border-left': '4px solid ' + (msg.lida ? 'transparent' : 'var(--br-green)')}"
@@ -257,7 +257,7 @@
                     </div>
 
                     <!-- Mensagem Aberta -->
-                    <div style="flex: 2; background: white; border-radius: 8px; box-shadow: var(--shadow); padding: 25px; min-height: 400px;">
+                    <div class="message-reader" style="flex: 2; background: white; border-radius: 8px; box-shadow: var(--shadow); padding: 25px; min-height: 400px;">
                         <div ng-if="!mensagemAberta" style="height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
                             Selecione uma mensagem para ler.
                         </div>
