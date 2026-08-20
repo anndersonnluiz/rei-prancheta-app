@@ -6015,18 +6015,30 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
         slots[String($scope.slotSaveAtual || 0)] = saveObj;
         window.localStorage.setItem('reiDaPranchetaSaveSlots', JSON.stringify(slots));
+        $scope.atualizarSlotsSaveVisiveis();
         $scope.checarSaveExistente(); 
     };
 
     $scope.slotSaveAtual = 0;
+    $scope.slotsSaveVisiveis = null;
+    $scope.slotsSaveCacheFonte = null;
     $scope.listarSlotsSave = function() {
+        var fonteAtual = window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}';
+        if (Array.isArray($scope.slotsSaveVisiveis) && $scope.slotsSaveCacheFonte === fonteAtual) return $scope.slotsSaveVisiveis;
         var slots = {};
-        try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
-        return [0, 1, 2, 3].map(function(indice) {
+        try { slots = JSON.parse(fonteAtual); } catch (e) { slots = {}; }
+        $scope.slotsSaveVisiveis = [0, 1, 2, 3].map(function(indice) {
             var save = slots[String(indice)] || null;
             var clube = save && (save.clubeAtualInfo || {}).nome;
             return { id: indice, save: save, clubeNome: clube || (save ? 'Clube não identificado' : '') };
         });
+        $scope.slotsSaveCacheFonte = fonteAtual;
+        return $scope.slotsSaveVisiveis;
+    };
+    $scope.atualizarSlotsSaveVisiveis = function() {
+        $scope.slotsSaveVisiveis = null;
+        $scope.slotsSaveCacheFonte = null;
+        return $scope.listarSlotsSave();
     };
     $scope.salvarNoSlot = function(indice) {
         var slot = parseInt(indice, 10) || 0;

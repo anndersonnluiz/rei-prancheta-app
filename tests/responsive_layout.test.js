@@ -131,6 +131,8 @@ assert.ok(html.includes('career-screen'), 'career screen should be identifiable 
 assert.ok(css.includes('.ceremony-screen > div[style*="grid-template-columns"]'), 'season ceremony should stack its main cards on mobile');
 assert.ok(css.includes('@media (max-width: 420px)'), 'mobile layout should include a narrow-phone breakpoint');
 assert.ok(css.includes('.dashboard-v2 .club-strategy-grid { grid-template-columns: 1fr; }'), 'dashboard should simplify further on narrow phones');
+assert.ok(js.includes('slotsSaveVisiveis'), 'save slot options should be cached to avoid digest loops');
+assert.ok(html.includes('rel="icon"'), 'page should declare a favicon');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
 console.log('responsive_layout.test.js passed');
