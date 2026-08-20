@@ -5638,10 +5638,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.executarViradaDeAno = function(trocouDeClube) {
-        var clubeAntesDaVirada = $scope.clubeAtual;
-        var temporadaEncerrada = $scope.dados.anoAtual;
         var mudancaClube = $scope.mudancaClubePendente;
-        var estadoNovoRestaurado = trocouDeClube && !!($scope.estadosOperacionaisClubes && $scope.estadosOperacionaisClubes[clubeAntesDaVirada && clubeAntesDaVirada.id]);
+        var clubeAntesDaVirada = trocouDeClube && mudancaClube ? $scope.clubes.find(function(clube) { return clube.id === mudancaClube.clubeAnteriorId; }) : $scope.clubeAtual;
+        var temporadaEncerrada = $scope.dados.anoAtual;
+        var estadoNovoRestaurado = trocouDeClube && !!($scope.estadosOperacionaisClubes && $scope.estadosOperacionaisClubes[$scope.clubeAtual && $scope.clubeAtual.id]);
         var divs = ["A", "B", "C", "D"];
         var classificados = {};
         divs.forEach(function(d) { classificados[d] = $scope.ordenarTabela(d); });
