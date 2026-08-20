@@ -7499,6 +7499,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    var resumoExigenciasJogadorCache = { chave: null, valor: null };
     $scope.obterResumoExigenciasJogador = function() {
         var jogador = $scope.jogadorNegociacao;
         if (!jogador) return null;
@@ -7509,7 +7510,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (reputacaoClube >= 85) fator -= 0.04;
         else if (reputacaoClube < 65) fator += 0.04;
         var proposta = ($scope.propostasPendentes || []).find(function(item) { return item.id === $scope.propostaNegociacaoAtualId; });
-        return { salarioMinimo: salarioBase * fator, anosMinimos: 1, concorrencia: proposta && proposta.concorrencia ? proposta.concorrencia : null };
+        var concorrencia = proposta && proposta.concorrencia ? proposta.concorrencia : null;
+        var chave = [jogador.id, salarioBase, reputacaoClube, $scope.clubeAtual && $scope.clubeAtual.divisao, $scope.propostaNegociacaoAtualId, concorrencia && concorrencia.clubeNome, concorrencia && concorrencia.salarioOferta, concorrencia && concorrencia.criadaNoDia].join('|');
+        if (resumoExigenciasJogadorCache.chave === chave) return resumoExigenciasJogadorCache.valor;
+        resumoExigenciasJogadorCache = {
+            chave: chave,
+            valor: { salarioMinimo: salarioBase * fator, anosMinimos: 1, concorrencia: concorrencia }
+        };
+        return resumoExigenciasJogadorCache.valor;
     };
 
     $scope.concluirTransferencia = function(jogador, salario, anos, valorPagoClube) {

@@ -144,6 +144,7 @@ assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"salvarJogo()\""
 assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"exportarSave()\""), 'system menu should expose export action');
 assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"abrirImportadorSave()\""), 'system menu should expose import action');
 assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"alternarSom()\""), 'system menu should expose sound action');
+assert.ok(js.includes('resumoExigenciasJogadorCache'), 'negotiation summary should be cached to avoid digest loops');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');
 assert.ok(css.includes('.ceremony-screen > div[style*="grid-template-columns"]'), 'season ceremony should stack its main cards on mobile');
 assert.ok(css.includes('@media (max-width: 420px)'), 'mobile layout should include a narrow-phone breakpoint');
