@@ -4539,7 +4539,6 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var resumo = $scope.montarResumoPosJogo(partida, origem);
         $scope.historicoPartidas = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         $scope.historicoPartidas.unshift(angular.copy(resumo));
-        $scope.historicoPartidas = $scope.historicoPartidas.slice(0, 30);
         $scope.partidaEmAndamento = false;
         $scope.partidaPausada = false;
         if (partida && partida.telemetriaShots && partida.telemetriaShots.length > 0) {

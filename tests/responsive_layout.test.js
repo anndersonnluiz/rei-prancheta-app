@@ -46,6 +46,7 @@ assert.ok(html.includes('posJogo.resumo.gestao.pausasTaticas'), 'post-match shou
 assert.ok(html.includes('historicoPartidas'), 'career screen should include match history');
 assert.ok(css.includes('.career-match-history'), 'match history should have a responsive-friendly layout');
 assert.ok(html.includes('historicoPartidasFiltro'), 'career history should expose match filters');
+assert.ok(!js.includes('historicoPartidas = $scope.historicoPartidas.slice(0, 30)'), 'match history should retain the full season for reports');
 assert.ok(html.includes('obterHistoricoPartidasFiltrado()'), 'career history should render filtered matches');
 assert.ok(html.includes('alternarDetalhesPartidaHistorico(partida)'), 'career history should allow expanding match details');
 assert.ok(html.includes('partidaHistoricoAberta === partida'), 'career history should render expanded match details');
