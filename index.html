@@ -610,7 +610,7 @@
                         <h3 style="margin: 8px 0;">{{vaga.nome}}</h3>
                         <p style="color: var(--text-muted); margin-bottom: 14px;">Efeito: {{vaga.efeito}}</p>
                         <p ng-if="vaga.contratado" style="color: var(--br-green-dark); font-weight: bold; margin-bottom: 12px;">Contratado · R$ {{vaga.salario | number:0}} / mês</p>
-                        <button class="btn-play-quick" ng-if="!vaga.contratado" ng-click="contratarStaff(vaga)">Contratar</button>
+                        <button class="staff-hire-button" ng-if="!vaga.contratado" ng-click="contratarStaff(vaga)">Contratar · R$ {{25000 * vaga.nivel | number:0}}/mês</button>
                         <button class="btn" ng-if="vaga.contratado" ng-click="demitirStaff(vaga)" style="padding: 9px 12px; border: 1px solid #e74c3c; color: #c0392b; background: white; border-radius: 6px; cursor: pointer;">Demitir</button>
                     </div>
                 </div>

@@ -132,6 +132,8 @@ assert.ok(css.includes('.finance-screen table { min-width: 520px; }'), 'finance 
 assert.ok(css.includes('.finance-screen [style*="repeat(3, 1fr)"]'), 'finance summary cards should stack on mobile');
 assert.ok(html.includes('messages-layout'), 'messages should expose a mobile layout hook');
 assert.ok(css.includes('.messages-screen .messages-layout'), 'messages should stack list and reader on mobile');
+assert.ok(html.includes('staff-hire-button'), 'staff hiring action should remain visible on light cards');
+assert.ok(css.includes('.staff-hire-button'), 'staff hiring action should have a visible contract style');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');
 assert.ok(css.includes('.ceremony-screen > div[style*="grid-template-columns"]'), 'season ceremony should stack its main cards on mobile');
 assert.ok(css.includes('@media (max-width: 420px)'), 'mobile layout should include a narrow-phone breakpoint');

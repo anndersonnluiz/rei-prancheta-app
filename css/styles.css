@@ -2326,6 +2326,8 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
     background-color: rgba(255,255,255,0.1);
     transform: translateY(-2px);
 }
+.staff-hire-button { background: var(--br-green); border: 1px solid var(--br-green); border-radius: 6px; color: #fff; cursor: pointer; font-size: 13px; font-weight: 800; min-height: 42px; padding: 9px 12px; }
+.staff-hire-button:hover { background: var(--br-green-dark); }
 .btn-play-full {
     background-color: var(--br-green);
     color: white;
