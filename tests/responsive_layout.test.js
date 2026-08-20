@@ -138,6 +138,7 @@ assert.ok(css.includes('.staff-hire-button'), 'staff hiring action should have a
 assert.ok(html.includes('director-response-button'), 'director responses should use dedicated buttons');
 assert.ok(css.includes('.director-response-support'), 'director support response should have a styled variant');
 assert.ok(js.includes('salarioVariavel'), 'player salary should vary by player profile');
+assert.ok(js.includes('[60000, 10000, 2000]'), 'legacy salary defaults across divisions should be differentiated');
 assert.ok(js.includes('Pré-contrato enviado'), 'pre-contract action should provide visible feedback');
 assert.ok(js.includes('if (!jAlvo.emNegociacao)'), 'transfer offers should also reach starting players');
 assert.ok(js.includes('Este jogador está escalado'), 'selling a starting player should require removing him first');

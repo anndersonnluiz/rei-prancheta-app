@@ -598,10 +598,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var desejadoCalculado = calcularSalarioDesejadoJogadorInterno(jogador);
         if (jogador.salarioDesejado === undefined || jogador.salarioDesejado === null) jogador.salarioDesejado = desejadoCalculado;
         else jogador.salarioDesejado = Math.max(parseFloat(jogador.salarioDesejado) || desejadoCalculado, parseFloat(jogador.salario) || 10000);
-        if (!jogador.salarioPersonalizado && jogador.salario === 60000 && jogador.salarioDesejado === 60000) {
+        if (!jogador.salarioPersonalizado && [60000, 10000, 2000].indexOf(Number(jogador.salario)) !== -1 && Number(jogador.salarioDesejado) === Number(jogador.salario)) {
             var overallBase = calcularOverallBaseJogador(jogador);
             var potencialBase = valorNumericoOuPadrao(jogador.potencial, overallBase);
-            var salarioVariavel = Math.round((8000 + overallBase * 520 + potencialBase * 180) / 100) * 100;
+            var fatorPerfil = 0.55 + (overallBase / 100) * 0.85 + Math.max(0, potencialBase - overallBase) * 0.003;
+            var salarioVariavel = Math.round((Number(jogador.salario) * fatorPerfil) / 100) * 100;
             jogador.salario = salarioVariavel;
             jogador.salarioDesejado = Math.max(salarioVariavel, Math.round((salarioVariavel * (1 + Math.max(0, potencialBase - overallBase) * 0.01)) / 100) * 100);
         }
