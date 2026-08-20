@@ -133,6 +133,8 @@ assert.ok(css.includes('@media (max-width: 420px)'), 'mobile layout should inclu
 assert.ok(css.includes('.dashboard-v2 .club-strategy-grid { grid-template-columns: 1fr; }'), 'dashboard should simplify further on narrow phones');
 assert.ok(js.includes('slotsSaveVisiveis'), 'save slot options should be cached to avoid digest loops');
 assert.ok(js.includes('alertasFinanceirosCache'), 'financial alerts should be cached to avoid digest loops');
+assert.ok(html.includes('strategy-open-area'), 'strategy action should have a scoped compact button');
+assert.ok(css.includes('.club-strategy-alert .strategy-open-area'), 'strategy action should not expand unexpectedly');
 assert.ok(html.includes('rel="icon"'), 'page should declare a favicon');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 

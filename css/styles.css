@@ -260,6 +260,7 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .club-strategy-alert-info { background: #fffbea; border-left-color: #f1c40f; }
 .club-strategy-alert-ok { background: var(--br-green-light); border-left-color: var(--br-green); }
 .club-strategy-alert button { align-self: start; background: white; border: 1px solid var(--br-blue); border-radius: 6px; color: var(--br-blue); cursor: pointer; font-size: 11px; font-weight: 800; margin-top: 4px; padding: 6px 9px; }
+.club-strategy-alert .strategy-open-area { max-width: 140px; width: auto; }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }
@@ -2876,7 +2877,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .sidebar-header { padding: 14px; }
     .game-logo-small { max-width: 90px; margin-bottom: 8px; }
     .nav-links { display: block; padding: 8px; }
-    .nav-links li { padding: 10px 8px; font-size: 12px; min-width: 0; }
+    .nav-links li { padding: 11px 10px; font-size: 13px; min-width: 0; }
+    .grouped-nav .nav-group-title { font-size: 11px; padding: 13px 10px 6px; }
+    .grouped-nav .nav-group-title span { font-size: 16px; }
     .sidebar-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; }
     .sidebar-footer button, .sidebar-footer input + button { margin-bottom: 0 !important; }
     .main-content header { padding: 16px; }
@@ -2889,6 +2892,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .dashboard-v2 .club-strategy-grid { gap: 6px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .dashboard-v2 .club-strategy-grid button { min-height: 58px; padding: 8px; }
     .dashboard-v2 .club-strategy-grid button strong { font-size: 11px; line-height: 1.2; }
+    .dashboard-v2 .strategy-open-area { font-size: 12px; max-width: 140px; padding: 8px 12px; }
     .dashboard-v2 .dashboard-grid { gap: 12px; }
     .dashboard-v2 .dashboard-panel { border-radius: 10px; padding: 12px; }
     .dashboard-v2 .dashboard-panel-header { gap: 8px; }
