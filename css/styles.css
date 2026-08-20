@@ -191,6 +191,12 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .season-next-plan h3 { margin: 4px 0; }
 .season-next-plan p { color: var(--text-muted); margin: 0; }
 @media (max-width: 760px) { .season-next-plan { align-items: stretch; flex-direction: column; } }
+.season-next-plan .btn-secondary { background: var(--br-blue); border: 0; border-radius: 8px; color: #fff; cursor: pointer; font-size: 14px; font-weight: 700; min-height: 42px; padding: 10px 16px; transition: transform .2s, background .2s; white-space: nowrap; }
+.season-next-plan .btn-secondary:hover { background: #001f5c; transform: translateY(-1px); }
+.ceremony-empty-state { align-items: center; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px; padding: 25px 12px; }
+.ceremony-empty-state span { font-size: 30px; filter: grayscale(1); opacity: .6; }
+.ceremony-empty-state strong { color: var(--text-main); font-size: 16px; }
+.ceremony-empty-state small { font-size: 12px; }
 .ceremony-summary-grid > .card { min-height: 230px; }
 .ceremony-summary-grid h3 { color: var(--text-main); font-size: 18px; }
 .ceremony-director-card { background: linear-gradient(135deg, #fff, #f8fafc); }

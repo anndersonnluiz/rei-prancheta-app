@@ -150,6 +150,8 @@ assert.ok(js.includes('($scope.lesoesNaPartida || 0) < 2'), 'match injury simula
 assert.ok(js.includes('clubeAtualId: $scope.clubeAtual && $scope.clubeAtual.id'), 'match summaries should retain the manager club id');
 assert.ok(html.includes('ceremony-summary-grid'), 'season ceremony should use a structured summary grid');
 assert.ok(css.includes('.ceremony-director-card'), 'season ceremony director panel should have dedicated styling');
+assert.ok(css.includes('.season-next-plan .btn-secondary'), 'season plan action should have a dedicated button style');
+assert.ok(html.includes('ceremony-empty-state'), 'season ceremony should explain when no scorer is available');
 assert.ok(js.includes('var relatorio = $scope.relatorioFimAno || {};'), 'ceremony continuation should tolerate a missing report');
 assert.ok(js.includes('if (!relatorio.resumoGerencial || !relatorio.statusDiretoria)'), 'ceremony should rebuild an incomplete season report');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');

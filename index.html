@@ -2210,6 +2210,11 @@
                         <div style="font-size: 22px; font-weight: bold; color: var(--text-dark);">{{relatorioFimAno.artilheiro.nome}}</div>
                         <div style="font-size: 14px; color: var(--text-muted); margin-top: 5px; padding: 5px 15px; background: #eee; border-radius: 20px; display: inline-block;">{{(clubes | filter:{id: relatorioFimAno.artilheiro.clubeId})[0].nome}}</div>
                     </div>
+                    <div class="ceremony-empty-state" ng-if="!relatorioFimAno.artilheiro">
+                        <span>⚽</span>
+                        <strong>Nenhum artilheiro definido</strong>
+                        <small>Não houve gols registrados nesta temporada.</small>
+                    </div>
                 </div>
             </div>
 
@@ -2225,7 +2230,7 @@
                     <div><span>Decisões de gestão</span><strong>{{relatorioFimAno.resumoGerencial.decisoes}}</strong></div>
                 </div>
                 <div class="season-report-footer" ng-if="relatorioFimAno.confiancaDiretoria !== null">
-                    Confiança da diretoria: <strong>{{relatorioFimAno.confiancaDiretoria}}%</strong> · Margem de planejamento: <strong>{{relatorioFimAno.margemPlanejamento}}%</strong> · Ambiente do elenco: <strong>{{relatorioFimAno.ambienteElenco}}/100</strong>
+                    Confiança da diretoria: <strong>{{relatorioFimAno.confiancaDiretoria || '—'}}<span ng-if="relatorioFimAno.confiancaDiretoria !== null">%</span></strong> · Margem de planejamento: <strong>{{relatorioFimAno.margemPlanejamento || '—'}}<span ng-if="relatorioFimAno.margemPlanejamento !== null">%</span></strong> · Ambiente do elenco: <strong>{{relatorioFimAno.ambienteElenco === null || relatorioFimAno.ambienteElenco === undefined ? '—' : relatorioFimAno.ambienteElenco + '/100'}}</strong>
                 </div>
                 <div class="season-report-goals" ng-if="relatorioFimAno.metasTemporada.length > 0">
                     <span>Resumo das metas</span><div ng-repeat="meta in relatorioFimAno.metasTemporada track by meta.tipo"><strong>{{meta.tipo}}</strong><em>{{meta.progresso}}%</em><small>{{meta.progressoLabel}}</small></div>
