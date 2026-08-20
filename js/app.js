@@ -5619,7 +5619,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.elencoAtual = $scope.elencoAtual.filter(function(j) { return j.anosContrato > 0; });
             if (dispensados.length > 0) {
                 alert("Os seguintes jogadores ficaram sem contrato e deixaram o clube: " + dispensados.join(", "));
-                $scope.atualizarTaticas();
+                if (typeof $scope.atualizarTaticas === 'function') $scope.atualizarTaticas();
             }
         }
         
