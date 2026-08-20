@@ -158,6 +158,7 @@ assert.ok(js.includes("if (typeof $scope.atualizarTaticas === 'function')"), 'cl
 assert.ok(js.includes("Rafael Martins") && js.includes("Dr. Marcelo Nogueira"), 'staff hiring should assign professional generic names');
 assert.ok(js.includes('abrirRenovacaoGeral') && js.includes('confirmarRenovacaoGeral'), 'squad should support bulk contract renewals');
 assert.ok(html.includes('bulk-contract-panel'), 'squad should expose bulk contract renewal panel');
+assert.ok(!html.includes('</tr>\n                                </tr>'), 'squad table should not contain duplicate row closing tags');
 assert.ok(js.includes("$scope.financasHistorico = [];"), 'club change should start a clean financial history');
 assert.ok(js.includes("assunto: 'Bem-vindo ao ' + $scope.clubeAtual.nome"), 'new club should receive a welcome briefing');
 assert.ok(js.includes('// A comissão pertence ao clube anterior; o novo clube começa com suas próprias vagas.'), 'club change should reset the technical staff');
