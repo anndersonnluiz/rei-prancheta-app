@@ -2190,6 +2190,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var clubeCompradorNome = msg.remetente || 'Clube interessado';
 
         if (aceitar) {
+            if (jogadorAlvo.emCampo) {
+                alert('Este jogador está escalado. Retire-o da equipe titular antes de concluir a venda.');
+                return;
+            }
             $scope.clubeAtual.orcamento += msg.valorOferta;
             $scope.financasHistorico.unshift({
                 tipo: 'receita',
@@ -7699,7 +7703,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         // 1. Propostas pelo seu jogador (Apenas 5% de chance agora por dia de janela)
         if (Math.random() < 0.05 && $scope.elencoAtual.length > 15) { 
             var jAlvo = $scope.elencoAtual[Math.floor(Math.random() * $scope.elencoAtual.length)];
-            if (jAlvo.emCampo === false && !jAlvo.emNegociacao) {
+            if (!jAlvo.emNegociacao) {
                 var possiveisClubes = $scope.clubes.filter(function(c) { return c.id !== $scope.clubeAtual.id && (c.divisao === 'A' || c.divisao === 'B'); });
                 if (possiveisClubes.length > 0) {
                     var clubeComprador = possiveisClubes[Math.floor(Math.random() * possiveisClubes.length)];

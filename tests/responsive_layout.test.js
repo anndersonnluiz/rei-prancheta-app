@@ -138,6 +138,8 @@ assert.ok(html.includes('director-response-button'), 'director responses should 
 assert.ok(css.includes('.director-response-support'), 'director support response should have a styled variant');
 assert.ok(js.includes('salarioVariavel'), 'player salary should vary by player profile');
 assert.ok(js.includes('Pré-contrato enviado'), 'pre-contract action should provide visible feedback');
+assert.ok(js.includes('if (!jAlvo.emNegociacao)'), 'transfer offers should also reach starting players');
+assert.ok(js.includes('Este jogador está escalado'), 'selling a starting player should require removing him first');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');
 assert.ok(css.includes('.ceremony-screen > div[style*="grid-template-columns"]'), 'season ceremony should stack its main cards on mobile');
 assert.ok(css.includes('@media (max-width: 420px)'), 'mobile layout should include a narrow-phone breakpoint');
