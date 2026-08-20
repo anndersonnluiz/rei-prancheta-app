@@ -5687,6 +5687,30 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         $scope.historicoTreinador.unshift(eventoHistorico);
         $scope.historicoTreinador = $scope.historicoTreinador.slice(0, 30);
+        if (trocouDeClube) {
+            $scope.financasHistorico = [];
+            $scope.historicoFinanceiroMensal = {};
+            $scope.caixaEntrada = [];
+            $scope.ambienteElenco = criarAmbienteElencoPadrao();
+            $scope.atualizarAmbienteElencoResumo();
+            $scope.contextoExterno = criarContextoExternoPadrao();
+            $scope.atualizarResumoContextoExterno();
+            $scope.diretoriaStatus = criarDiretoriaStatusPadrao();
+            $scope.ultimoResumoPartida = null;
+            $scope.staffClube = criarStaffPadrao();
+            $scope.patrocinioAtual = null;
+            $scope.propostasPendentes = [];
+            $scope.caixaEntrada.unshift({
+                id: 'msg_boas_vindas_' + $scope.dados.anoAtual + '_' + $scope.clubeAtual.id,
+                remetente: 'Diretoria',
+                assunto: 'Bem-vindo ao ' + $scope.clubeAtual.nome,
+                mensagem: 'A nova temporada começa agora. A diretoria deseja um bom trabalho e espera conhecer suas prioridades para o clube.',
+                lida: false,
+                tipo: 'diretoria',
+                data: new Date().toLocaleDateString('pt-BR')
+            });
+            $scope.mensagensNaoLidas = 1;
+        }
         $scope.mudancaClubePendente = null;
         $scope.patrocinioAtual = null; // Renovar patrocínios todo ano
         $scope.gerarPatrocinadores();
