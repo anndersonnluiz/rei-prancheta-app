@@ -2907,6 +2907,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .competition-screen .competition-tabs button, .competition-screen .division-tabs button { flex: 0 0 auto; min-height: 42px; white-space: nowrap; }
     .competition-screen .card { max-width: 100%; overflow-x: auto; padding: 12px !important; }
     .competition-screen table { min-width: 420px; }
+    .continental-screen table { min-width: 0; table-layout: fixed; width: 100%; }
+    .continental-screen table td:first-child { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .continental-screen table th:not(:first-child), .continental-screen table td:not(:first-child) { width: 36px; }
     .competition-screen .card > div[style*="overflow-x: auto"] { margin-right: -4px; }
     .squad-screen > .card, .medical-screen > div { border-radius: 10px; padding: 12px !important; }
     .squad-screen .tabela-classificacao { min-width: 760px; }
