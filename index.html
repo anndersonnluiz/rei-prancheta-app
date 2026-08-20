@@ -2268,7 +2268,7 @@
             </div>
 
             <div class="club-grid">
-                <div class="club-select-card" ng-repeat="clube in propostasEmprego" ng-click="aceitarProposta(clube.id)">
+                <div class="club-select-card" ng-repeat="clube in propostasEmprego">
                     <div class="club-color-bar" ng-style="{ 'background-color': clube.cores[0] }"></div>
                     <h4>{{ clube.nome }} <span style="font-size: 12px; color: var(--text-muted);">{{clube.sigla}}</span></h4>
                     <p style="margin-top: 10px;">Reputação do Clube: {{clube.reputacao}}</p>
