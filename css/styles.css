@@ -197,6 +197,21 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .ceremony-empty-state span { font-size: 30px; filter: grayscale(1); opacity: .6; }
 .ceremony-empty-state strong { color: var(--text-main); font-size: 16px; }
 .ceremony-empty-state small { font-size: 12px; }
+.bulk-contract-button { background: var(--br-blue); border: 0; border-radius: 7px; color: #fff; cursor: pointer; font-size: 12px; font-weight: 700; padding: 8px 11px; }
+.bulk-contract-panel { background: #f6fafc; border: 1px solid #d9e5ec; border-left: 4px solid var(--br-blue); border-radius: 9px; margin-bottom: 18px; padding: 14px; }
+.bulk-contract-header, .bulk-contract-summary { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+.bulk-contract-header h4 { margin: 3px 0; }
+.bulk-contract-header p { color: var(--text-muted); font-size: 12px; margin: 0; }
+.bulk-contract-close { background: transparent; border: 1px solid #9aa9b5; border-radius: 6px; color: var(--text-main); cursor: pointer; padding: 6px 9px; }
+.bulk-contract-list { display: grid; gap: 6px; margin: 12px 0; }
+.bulk-contract-list > div { align-items: center; background: #fff; border: 1px solid #e2e8ee; border-radius: 7px; display: grid; gap: 10px; grid-template-columns: 1.5fr 1fr 1fr; padding: 8px 10px; }
+.bulk-contract-list span { color: var(--text-muted); font-size: 12px; }
+.bulk-contract-list b { color: var(--br-green-dark); font-size: 12px; text-align: right; }
+.bulk-contract-list em { color: #d68910; font-style: normal; }
+.bulk-contract-empty { color: var(--text-muted); padding: 15px 0; }
+.bulk-contract-summary { border-top: 1px solid #d9e5ec; flex-wrap: wrap; padding-top: 12px; }
+.bulk-contract-confirm { background: var(--br-green); border: 0; border-radius: 7px; color: #fff; cursor: pointer; font-weight: 700; padding: 10px 14px; }
+@media (max-width: 760px) { .bulk-contract-button { margin-top: 6px; } .bulk-contract-list > div { grid-template-columns: 1fr; } .bulk-contract-list b { text-align: left; } .bulk-contract-summary { align-items: stretch; flex-direction: column; } .bulk-contract-confirm { width: 100%; } }
 .ceremony-summary-grid > .card { min-height: 230px; }
 .ceremony-summary-grid h3 { color: var(--text-main); font-size: 18px; }
 .ceremony-director-card { background: linear-gradient(135deg, #fff, #f8fafc); }

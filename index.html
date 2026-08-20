@@ -839,8 +839,17 @@
             <div class="squad-screen" ng-if="telaAtual === 'elenco'">
                 <div class="card" style="padding: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="color: var(--text-dark);">Meu Elenco</h3>
+                        <div style="display:flex; align-items:center; gap:12px;"><h3 style="color: var(--text-dark); margin:0;">Meu Elenco</h3><button class="bulk-contract-button" ng-click="abrirRenovacaoGeral()">📋 Renovar contratos em lote</button></div>
                         <span style="background: var(--bg-light); padding: 8px 15px; border-radius: 6px; font-weight: bold; border: 1px solid #ddd;">Total: {{elencoAtual.length}} jogadores</span>
+                    </div>
+
+                    <div class="bulk-contract-panel" ng-if="renovacaoGeral.aberta">
+                        <div class="bulk-contract-header"><div><span class="dashboard-eyebrow">Escritório do clube</span><h4>Renovação geral de contratos</h4><p>Confira os jogadores em fim de vínculo antes de confirmar.</p></div><button class="bulk-contract-close" ng-click="fecharRenovacaoGeral()">Fechar</button></div>
+                        <div ng-if="renovacaoGeral.itens.length === 0" class="bulk-contract-empty">Nenhum jogador elegível para renovação em lote.</div>
+                        <div ng-if="renovacaoGeral.itens.length > 0">
+                            <div class="bulk-contract-list"><div ng-repeat="item in renovacaoGeral.itens track by item.jogador.id"><strong>{{item.jogador.nome}}</strong><span>{{item.jogador.posicao}} · {{item.anos}} anos</span><b>{{formatarMoeda(item.salarioProposto)}}/mês <em ng-if="item.aumento > 0">(+{{formatarMoeda(item.aumento)}})</em></b></div></div>
+                            <div class="bulk-contract-summary"><span>{{renovacaoGeral.itens.length}} contratos</span><span>Folha atual: <strong>{{formatarMoeda(renovacaoGeral.custoAtual)}}</strong></span><span>Nova folha: <strong>{{formatarMoeda(renovacaoGeral.custoNovo)}}</strong></span><button class="bulk-contract-confirm" ng-click="confirmarRenovacaoGeral()">Confirmar renovação geral</button></div>
+                        </div>
                     </div>
 
                     <div class="development-panel" ng-if="relatorioEvolucaoVisivel.length > 0">

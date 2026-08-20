@@ -663,6 +663,35 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return jogador;
     };
 
+    $scope.abrirRenovacaoGeral = function() {
+        var elegiveis = ($scope.elencoAtual || []).filter(function(jogador) {
+            normalizarEstadoContratoJogadorInterno(jogador);
+            return jogador && (jogador.anosContrato || 0) <= 1 && !jogador.emNegociacao;
+        }).map(function(jogador) {
+            var salarioAtual = parseFloat(jogador.salario) || 0;
+            var salarioProposto = Math.max(salarioAtual, Math.ceil((calcularSalarioDesejadoJogadorInterno(jogador) || salarioAtual) / 100) * 100);
+            return { jogador: jogador, salarioAtual: salarioAtual, salarioProposto: salarioProposto, anos: 2, aumento: salarioProposto - salarioAtual };
+        });
+        $scope.renovacaoGeral = {
+            aberta: true,
+            itens: elegiveis,
+            custoAtual: elegiveis.reduce(function(total, item) { return total + item.salarioAtual; }, 0),
+            custoNovo: elegiveis.reduce(function(total, item) { return total + item.salarioProposto; }, 0)
+        };
+    };
+
+    $scope.fecharRenovacaoGeral = function() { $scope.renovacaoGeral = { aberta: false, itens: [] }; };
+
+    $scope.confirmarRenovacaoGeral = function() {
+        if (!$scope.renovacaoGeral || !$scope.renovacaoGeral.itens.length) return;
+        $scope.renovacaoGeral.itens.forEach(function(item) {
+            $scope.aplicarRenovacaoContratoJogador(item.jogador, item.salarioProposto, item.anos);
+        });
+        $scope.adicionarMensagem('Diretoria', 'Renovações do elenco concluídas', $scope.renovacaoGeral.itens.length + ' contrato(s) foram renovados em lote. Nova folha mensal: ' + $scope.formatarMoeda($scope.renovacaoGeral.custoNovo) + '.', false, 'diretoria');
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        $scope.fecharRenovacaoGeral();
+    };
+
     $scope.revisarContratosElencoDia = function() {
         var dia = typeof $scope.diaAtual === 'number' ? $scope.diaAtual : 0;
         var revisados = [];
