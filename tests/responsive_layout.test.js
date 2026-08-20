@@ -140,6 +140,10 @@ assert.ok(js.includes('salarioVariavel'), 'player salary should vary by player p
 assert.ok(js.includes('Pré-contrato enviado'), 'pre-contract action should provide visible feedback');
 assert.ok(js.includes('if (!jAlvo.emNegociacao)'), 'transfer offers should also reach starting players');
 assert.ok(js.includes('Este jogador está escalado'), 'selling a starting player should require removing him first');
+assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"salvarJogo()\""), 'system menu should expose save action');
+assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"exportarSave()\""), 'system menu should expose export action');
+assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"abrirImportadorSave()\""), 'system menu should expose import action');
+assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"alternarSom()\""), 'system menu should expose sound action');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');
 assert.ok(css.includes('.ceremony-screen > div[style*="grid-template-columns"]'), 'season ceremony should stack its main cards on mobile');
 assert.ok(css.includes('@media (max-width: 420px)'), 'mobile layout should include a narrow-phone breakpoint');
