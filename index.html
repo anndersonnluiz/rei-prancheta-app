@@ -2175,7 +2175,7 @@
                 <p style="font-size: 20px; opacity: 0.95; max-width: 600px; margin: 0 auto; font-weight: 300;">Mais um ano de muito suor, táticas e gols chegou ao fim no Rei da Prancheta.</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
+            <div class="ceremony-summary-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
                 <!-- Campeões -->
                 <div class="card" style="border-top: 5px solid #3498db; box-shadow: var(--shadow);">
                     <h3 style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 24px;">👑</span> Galeria de Campeões</h3>
@@ -2238,7 +2238,7 @@
             </div>
 
             <!-- Balanço da Diretoria -->
-            <div class="card" style="margin-bottom: 20px; border-left: 8px solid {{relatorioFimAno.demitido ? '#e74c3c' : (relatorioFimAno.statusDiretoria === 'Aprovado' ? 'var(--br-green)' : '#f39c12')}}; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+            <div class="card ceremony-director-card" style="margin-bottom: 20px; border-left: 8px solid {{relatorioFimAno.demitido ? '#e74c3c' : (relatorioFimAno.statusDiretoria === 'Aprovado' ? 'var(--br-green)' : '#f39c12')}}; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
                 <h3 style="margin-bottom: 10px;">📋 Avaliação da Diretoria</h3>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
                     <div>
@@ -2247,7 +2247,7 @@
                         </p>
                         <p style="font-size: 16px; color: var(--text-dark); font-style: italic; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-top: 10px;">"{{relatorioFimAno.msgDiretoria}}"</p>
                     </div>
-                    <button class="btn-play" ng-click="avancarAposCerimonia()" style="font-size: 18px; padding: 20px 40px; border-radius: 50px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); font-weight: bold;">
+                    <button class="btn-play ceremony-continue-button" ng-click="avancarAposCerimonia()" style="font-size: 18px; padding: 20px 40px; border-radius: 50px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); font-weight: bold;">
                         {{relatorioFimAno.demitido ? 'Pegar as Malas 🧳' : 'Avançar para ' + (anoAtual + 1) + ' ➡️'}}
                     </button>
                 </div>

@@ -191,6 +191,17 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .season-next-plan h3 { margin: 4px 0; }
 .season-next-plan p { color: var(--text-muted); margin: 0; }
 @media (max-width: 760px) { .season-next-plan { align-items: stretch; flex-direction: column; } }
+.ceremony-summary-grid > .card { min-height: 230px; }
+.ceremony-summary-grid h3 { color: var(--text-main); font-size: 18px; }
+.ceremony-director-card { background: linear-gradient(135deg, #fff, #f8fafc); }
+.ceremony-director-card > div { gap: 24px; }
+.ceremony-continue-button { border: 0; min-width: 250px; }
+@media (max-width: 760px) {
+    .ceremony-summary-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .ceremony-summary-grid > .card { min-height: 0; }
+    .ceremony-director-card > div { align-items: stretch !important; flex-direction: column; }
+    .ceremony-continue-button { min-width: 0; width: 100%; }
+}
 .club-strategy-briefing { background: #fffaf0; border-left: 3px solid #f2a93b; border-radius: 6px; margin-top: 10px; padding: 9px 11px; }
 .club-strategy-briefing span { color: #a56a12; display: block; font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
 .club-strategy-briefing strong { color: var(--text-main); display: block; font-size: 13px; margin-top: 3px; }
