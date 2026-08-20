@@ -5817,6 +5817,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.obterAlertasFinanceiros = function() {
         var resumo = $scope.calcularResumoFinanceiro();
+        var chaveCache = [resumo.cotaTransmissaoMensal, resumo.folhaMensal, resumo.resultadoMensalEstimado, $scope.clubeAtual && $scope.clubeAtual.orcamento].join('|');
+        if ($scope.alertasFinanceirosCache && $scope.alertasFinanceirosCache.chave === chaveCache) return $scope.alertasFinanceirosCache.itens;
         var alertas = [];
         var receitaMensalBase = resumo.cotaTransmissaoMensal + ((parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 0) * 25000);
         if (resumo.folhaMensal > receitaMensalBase * 0.7) {
@@ -5828,6 +5830,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (($scope.clubeAtual && $scope.clubeAtual.orcamento || 0) < resumo.folhaMensal * 2) {
             alertas.push({ nivel: 'critico', titulo: 'Caixa curto', texto: 'O caixa cobre menos de dois ciclos de folha salarial.' });
         }
+        $scope.alertasFinanceirosCache = { chave: chaveCache, itens: alertas };
         return alertas;
     };
 
