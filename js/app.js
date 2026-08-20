@@ -3604,6 +3604,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         $scope.substituicoesFeitas = 0;
         $scope.pausasTaticasFeitas = 0;
+        $scope.lesoesNaPartida = 0;
         $scope.elencoAtual.forEach(function(j) { j.substituidoNaPartida = false; });
         $scope.partidaPausada = false;
         $scope.intervaloJaAconteceu = false;
@@ -3707,9 +3708,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 j.condicaoFisica -= queda;
                 if (j.condicaoFisica < 0) j.condicaoFisica = 0;
                 
-                if (j.condicaoFisica < 60) {
+                if (j.condicaoFisica < 60 && ($scope.lesoesNaPartida || 0) < 2) {
                     var chanceLesao = $scope.calcularChanceLesaoPorFadiga(j.condicaoFisica, cargaCalendarioPartida);
                     if (Math.random() < chanceLesao) {
+                        $scope.lesoesNaPartida = ($scope.lesoesNaPartida || 0) + 1;
                         j.lesionado = true;
                         j.diasLesao = Math.floor(Math.random() * 4) + 1; 
                         j.acabouDeSerLesionado = true;
