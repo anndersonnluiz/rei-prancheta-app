@@ -598,6 +598,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var desejadoCalculado = calcularSalarioDesejadoJogadorInterno(jogador);
         if (jogador.salarioDesejado === undefined || jogador.salarioDesejado === null) jogador.salarioDesejado = desejadoCalculado;
         else jogador.salarioDesejado = Math.max(parseFloat(jogador.salarioDesejado) || desejadoCalculado, parseFloat(jogador.salario) || 10000);
+        if (!jogador.salarioPersonalizado && jogador.salario === 60000 && jogador.salarioDesejado === 60000) {
+            var overallBase = calcularOverallBaseJogador(jogador);
+            var potencialBase = valorNumericoOuPadrao(jogador.potencial, overallBase);
+            var salarioVariavel = Math.round((8000 + overallBase * 520 + potencialBase * 180) / 100) * 100;
+            jogador.salario = salarioVariavel;
+            jogador.salarioDesejado = Math.max(salarioVariavel, Math.round((salarioVariavel * (1 + Math.max(0, potencialBase - overallBase) * 0.01)) / 100) * 100);
+        }
         jogador.statusContrato = calcularStatusContratoJogadorInterno(jogador);
         jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
         jogador.satisfacaoContrato = calcularSatisfacaoContratoJogadorInterno(jogador, jogador.salarioDesejado);
@@ -6206,9 +6213,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.proporPreContrato = function(jogador, salarioOferta, anos) {
-        if (!jogador || !$scope.clubeAtual || jogador.clubeId === $scope.clubeAtual.id || (jogador.anosContrato || 0) > 1) return null;
+        if (!jogador || !$scope.clubeAtual) return null;
+        if (jogador.clubeId === 'mercado' || jogador.clubeId === $scope.clubeAtual.id || (jogador.anosContrato || 0) > 1) {
+            alert('Este jogador não está elegível para pré-contrato. A regra vale para atletas de outros clubes em fim de contrato.');
+            return null;
+        }
         var existente = ($scope.propostasPendentes || []).find(function(item) { return item.tipo === 'pre_contrato' && item.jogadorId === jogador.id && !statusPropostaFinal(item.status); });
-        if (existente) return existente;
+        if (existente) {
+            alert('Já existe uma proposta de pré-contrato para este jogador.');
+            return existente;
+        }
         var proposta = {
             id: 'precontrato_' + jogador.id + '_' + Date.now(), tipo: 'pre_contrato', status: 'em_jogador',
             jogadorId: jogador.id, jogadorNome: jogador.nome, clubeOrigemId: jogador.clubeId,
@@ -6221,6 +6235,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.propostasPendentes.unshift(proposta);
         jogador.emNegociacao = true;
         $scope.salvarJogoSilencioso();
+        $scope.adicionarMensagem('Diretoria', 'Pré-contrato enviado', 'A proposta por ' + jogador.nome + ' foi registrada e será avaliada no fim do vínculo atual.', false, 'transferencia');
+        alert('Pré-contrato enviado para ' + jogador.nome + '. A resposta ficará na aba Propostas.');
         return proposta;
     };
 
