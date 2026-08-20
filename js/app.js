@@ -6820,6 +6820,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (novaTela === 'base') {
             $scope.atualizarResumoBase();
         }
+        if (novaTela === 'cerimonia' && (!$scope.relatorioFimAno || !$scope.relatorioFimAno.resumoGerencial)) {
+            $scope.prepararCerimonia();
+        }
     };
     $scope.voltarParaPartidaAoVivo = function() {
         if (!$scope.partidaEmAndamento) return false;

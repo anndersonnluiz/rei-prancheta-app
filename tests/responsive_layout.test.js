@@ -160,6 +160,7 @@ assert.ok(js.includes("Rafael Martins") && js.includes("Dr. Marcelo Nogueira"), 
 assert.ok(js.includes('abrirRenovacaoGeral') && js.includes('confirmarRenovacaoGeral'), 'squad should support bulk contract renewals');
 assert.ok(html.includes('bulk-contract-panel'), 'squad should expose bulk contract renewal panel');
 assert.ok(!html.includes('</tr>\n                                </tr>'), 'squad table should not contain duplicate row closing tags');
+assert.ok(html.includes('ng-click="prepararCerimonia()">🏆 Visualizar Cerimônia'), 'ceremony action should build the final report before navigating');
 assert.ok(js.includes("$scope.financasHistorico = [];"), 'club change should start a clean financial history');
 assert.ok(js.includes("assunto: 'Bem-vindo ao ' + $scope.clubeAtual.nome"), 'new club should receive a welcome briefing');
 assert.ok(js.includes('estadosOperacionaisClubes'), 'save should persist operational state per club');
