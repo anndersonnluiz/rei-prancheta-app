@@ -5521,6 +5521,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.avancarAposCerimonia = function() {
         var relatorio = $scope.relatorioFimAno || {};
+        if (!relatorio.resumoGerencial || !relatorio.statusDiretoria) {
+            $scope.prepararCerimonia();
+            return;
+        }
         if (relatorio.demitido) {
             if (!$scope.dados.reputacaoTreinador) $scope.dados.reputacaoTreinador = 3;
             $scope.dados.reputacaoTreinador--;
