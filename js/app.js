@@ -5564,6 +5564,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             reputacao: $scope.dados.reputacaoTreinador || 3
         };
         $scope.selecionarClube(clubeId);
+        // A comissão pertence ao clube anterior; o novo clube começa com suas próprias vagas.
+        $scope.staffClube = criarStaffPadrao();
         $scope.executarViradaDeAno(true);
     };
 
