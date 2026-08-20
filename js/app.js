@@ -6141,7 +6141,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             alert('Orçamento insuficiente para contratar este profissional.');
             return;
         }
-        vaga.nome = 'Profissional ' + vaga.cargo;
+        var nomesStaff = {
+            auxiliar: 'Rafael Martins',
+            preparador: 'Eduardo Lima',
+            medico: 'Dr. Marcelo Nogueira',
+            analista: 'Bruno Carvalho'
+        };
+        vaga.nome = nomesStaff[vaga.id] || 'Profissional da comissão';
         vaga.salario = custo;
         vaga.contratado = true;
         $scope.clubeAtual.orcamento -= custo;

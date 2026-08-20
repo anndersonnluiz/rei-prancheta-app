@@ -155,6 +155,7 @@ assert.ok(css.includes('.season-next-plan .btn-secondary'), 'season plan action 
 assert.ok(html.includes('ceremony-empty-state'), 'season ceremony should explain when no scorer is available');
 assert.ok(!html.includes('class="club-select-card" ng-repeat="clube in propostasEmprego" ng-click="aceitarProposta(clube.id)"'), 'employment cards should not trigger duplicate contract actions');
 assert.ok(js.includes("if (typeof $scope.atualizarTaticas === 'function')"), 'club change should tolerate missing tactics refresh');
+assert.ok(js.includes("Rafael Martins") && js.includes("Dr. Marcelo Nogueira"), 'staff hiring should assign professional generic names');
 assert.ok(js.includes("$scope.financasHistorico = [];"), 'club change should start a clean financial history');
 assert.ok(js.includes("assunto: 'Bem-vindo ao ' + $scope.clubeAtual.nome"), 'new club should receive a welcome briefing');
 assert.ok(js.includes('// A comissão pertence ao clube anterior; o novo clube começa com suas próprias vagas.'), 'club change should reset the technical staff');
