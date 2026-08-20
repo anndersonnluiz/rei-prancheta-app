@@ -273,9 +273,9 @@
                             <div ng-if="mensagemAberta.tipo === 'diretoria' && !mensagemAberta.respondida" style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
                                 <strong style="display:block; margin-bottom:10px;">Como deseja responder?</strong>
                                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                                    <button ng-click="responderEventoDiretoria(mensagemAberta, 'apoio')" class="btn">Apoiar o elenco</button>
-                                    <button ng-click="responderEventoDiretoria(mensagemAberta, 'cobranca')" class="btn">Cobrar reação</button>
-                                    <button ng-click="responderEventoDiretoria(mensagemAberta, 'paciencia')" class="btn">Pedir paciência</button>
+                                    <button ng-click="responderEventoDiretoria(mensagemAberta, 'apoio')" class="director-response-button director-response-support">🤝 Apoiar o elenco</button>
+                                    <button ng-click="responderEventoDiretoria(mensagemAberta, 'cobranca')" class="director-response-button director-response-demand">⚡ Cobrar reação</button>
+                                    <button ng-click="responderEventoDiretoria(mensagemAberta, 'paciencia')" class="director-response-button director-response-patience">🕊️ Pedir paciência</button>
                                 </div>
                             </div>
                             <div ng-if="mensagemAberta.tipo === 'diretoria' && mensagemAberta.respondida" style="margin-top:20px; padding:12px; background:#f8fafc; border-radius:6px; color:var(--text-muted);">Resposta registrada: {{mensagemAberta.respostaTreinador}}</div>

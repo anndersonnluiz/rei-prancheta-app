@@ -261,6 +261,15 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .club-strategy-alert-ok { background: var(--br-green-light); border-left-color: var(--br-green); }
 .club-strategy-alert button { align-self: start; background: white; border: 1px solid var(--br-blue); border-radius: 6px; color: var(--br-blue); cursor: pointer; font-size: 11px; font-weight: 800; margin-top: 4px; padding: 6px 9px; }
 .club-strategy-alert .strategy-open-area { max-width: 140px; width: auto; }
+.director-response-button { align-items: center; border: 1px solid transparent; border-radius: 7px; cursor: pointer; display: inline-flex; font-size: 12px; font-weight: 800; gap: 5px; min-height: 38px; padding: 8px 12px; transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+.director-response-button:hover { transform: translateY(-1px); }
+.director-response-support { background: #eaf7ef; border-color: #a9dcb9; color: #19713a; }
+.director-response-support:hover { background: #d8f0df; }
+.director-response-demand { background: #fff1ee; border-color: #f0b1a7; color: #a63125; }
+.director-response-demand:hover { background: #ffe2dd; }
+.director-response-patience { background: #eef3fb; border-color: #b7c9e5; color: #26558e; }
+.director-response-patience:hover { background: #e0eaf8; }
+@media (max-width: 560px) { .director-response-button { flex: 1 1 100%; justify-content: center; min-height: 44px; } }
 .career-recommendations { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 14px; }
 .career-recommendation { background: #f8fafc; border-left: 4px solid var(--br-blue); border-radius: 8px; padding: 10px 12px; }
 .career-recommendation strong, .career-recommendation span { display: block; }

@@ -134,6 +134,8 @@ assert.ok(html.includes('messages-layout'), 'messages should expose a mobile lay
 assert.ok(css.includes('.messages-screen .messages-layout'), 'messages should stack list and reader on mobile');
 assert.ok(html.includes('staff-hire-button'), 'staff hiring action should remain visible on light cards');
 assert.ok(css.includes('.staff-hire-button'), 'staff hiring action should have a visible contract style');
+assert.ok(html.includes('director-response-button'), 'director responses should use dedicated buttons');
+assert.ok(css.includes('.director-response-support'), 'director support response should have a styled variant');
 assert.ok(js.includes('salarioVariavel'), 'player salary should vary by player profile');
 assert.ok(js.includes('Pré-contrato enviado'), 'pre-contract action should provide visible feedback');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');
