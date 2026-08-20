@@ -5520,7 +5520,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.avancarAposCerimonia = function() {
-        if ($scope.relatorioFimAno.demitido) {
+        var relatorio = $scope.relatorioFimAno || {};
+        if (relatorio.demitido) {
             if (!$scope.dados.reputacaoTreinador) $scope.dados.reputacaoTreinador = 3;
             $scope.dados.reputacaoTreinador--;
             if ($scope.dados.reputacaoTreinador < 1) $scope.dados.reputacaoTreinador = 1;
