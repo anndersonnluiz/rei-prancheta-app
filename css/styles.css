@@ -2932,6 +2932,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .finance-screen .infrastructure-finance-grid { grid-template-columns: 1fr; }
     .finance-screen table { min-width: 520px; }
     .finance-screen [style*="display: flex"] { flex-wrap: wrap; }
+    .finance-screen [style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+    .finance-screen [style*="repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
+    .finance-screen [style*="repeat(auto-fill, minmax(300px"] { grid-template-columns: 1fr !important; }
+    .finance-screen .card > div[style*="padding: 20px"] { min-width: 0; }
     .career-screen .career-history-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .career-screen .career-trend { align-items: stretch; flex-direction: column; }
     .career-screen .career-recommendations { grid-template-columns: 1fr; }
