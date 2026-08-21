@@ -142,6 +142,36 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .career-filter-tabs button.active { background: var(--br-green); border-color: var(--br-green); color: #fff; font-weight: 700; }
 @media (max-width: 420px) { .career-filter-tabs button { flex: 1; padding-left: 5px; padding-right: 5px; } }
 @media (max-width: 420px) {
+    /* Textos longos não podem expandir cards nem criar rolagem horizontal global. */
+    .card,
+    .panel,
+    .dashboard-card,
+    .finance-screen > div,
+    .market-screen > div,
+    .messages-screen > div {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .card button,
+    .panel button,
+    .finance-screen button,
+    .market-screen button {
+        max-width: 100%;
+        white-space: normal;
+    }
+
+    .finance-screen table,
+    .market-screen table {
+        font-size: 12px;
+    }
+
+    .messages-screen .messages-list,
+    .messages-screen .message-reader {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
     .main-content { padding: 8px; }
     .mobile-menu-bar { gap: 6px; padding-left: 8px; padding-right: 8px; }
     .mobile-menu-bar strong { font-size: 10px; }
