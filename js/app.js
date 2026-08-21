@@ -3579,7 +3579,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var forcaUsuario = $scope.calcularForcaTime();
         var userIsMandante = partida.mandante.id === $scope.clubeAtual.id;
         var adversario = userIsMandante ? partida.visitante : partida.mandante;
-        var forcaAdv = adversario.reputacao - 10;
+        var forcaAdv = $scope.calcularForcaElencoPreJogo(adversario, false);
 
         var golsUser = $scope.gerarGols(forcaUsuario);
         var golsAdv = $scope.gerarGols(forcaAdv);
@@ -3675,8 +3675,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.elencoAtual.forEach(function(j) { j.substituidoNaPartida = false; });
         $scope.partidaPausada = false;
         $scope.intervaloJaAconteceu = false;
-        $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
-        $scope.forcaVisitanteAoVivo = partida.visitante.reputacao - 10;
+        var forcaMeuTimeAoVivo = $scope.calcularForcaTime();
+        var adversarioAoVivo = partida.mandante.id === $scope.clubeAtual.id ? partida.visitante : partida.mandante;
+        var forcaAdversarioAoVivo = $scope.calcularForcaElencoPreJogo(adversarioAoVivo, false);
+        if (partida.mandante.id === $scope.clubeAtual.id) {
+            $scope.forcaMandanteAoVivo = forcaMeuTimeAoVivo;
+            $scope.forcaVisitanteAoVivo = forcaAdversarioAoVivo;
+        } else {
+            $scope.forcaMandanteAoVivo = forcaAdversarioAoVivo;
+            $scope.forcaVisitanteAoVivo = forcaMeuTimeAoVivo;
+        }
 
         $scope.tocarSom('apito');
         $scope.narracao = ["O árbitro apita e a bola está rolando! Público presente: " + $scope.estatisticas.publico.toLocaleString('pt-BR')];
@@ -3746,8 +3754,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
             $scope.minutoAtual += 2; 
             
-            var forcaUsuario = $scope.forcaMandanteAoVivo;
-            var forcaAdv = $scope.forcaVisitanteAoVivo;
+            var userTeamIsMandante = $scope.partidaAoVivo.mandante.id === $scope.clubeAtual.id;
+            var forcaMandante = $scope.forcaMandanteAoVivo;
+            var forcaVisitante = $scope.forcaVisitanteAoVivo;
+            var forcaUsuario = userTeamIsMandante ? forcaMandante : forcaVisitante;
+            var forcaAdv = userTeamIsMandante ? forcaVisitante : forcaMandante;
             
             // FASE 8: Atualizar Posse
             var basePosseM = (forcaUsuario / (forcaUsuario + forcaAdv)) * 100;
@@ -3843,8 +3854,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             }
 
             if (Math.random() < $scope.calcularChanceEventoTatico()) {
-                var forcaAtaqueMandante = forcaUsuario;
-                var forcaDefesaMandante = forcaUsuario;
+                var forcaAtaqueMandante = forcaMandante;
+                var forcaDefesaMandante = forcaMandante;
 
                 // FASE 12: Mentalidade Tática
                 if ($scope.taticas.mentalidade === 'Retranca') {
@@ -3933,7 +3944,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var reflexoMand = $scope.aplicarFadigaAtributoGoleiro(reflexoMandBase, goleiroMand ? goleiroMand.condicaoFisica : 100);
                     var posicionamentoMand = goleiroMand && goleiroMand.atributos ? goleiroMand.atributos.posicionamento : 75;
                     var bolaParadaAttV = $scope.obterAtributoBolaParada(atacanteV, chanceTypeV);
-                    var xgV = $scope.calcularXG(forcaAdv, forcaDefesaMandante, zonaV, finalAttV, reflexoMand, chanceTypeV, posicionamentoMand, bolaParadaAttV);
+                    var xgV = $scope.calcularXG(forcaVisitante, forcaMandante, zonaV, finalAttV, reflexoMand, chanceTypeV, posicionamentoMand, bolaParadaAttV);
                     xgV = Math.max(0.005, Math.min(0.6, xgV * $scope.calcularModificadorTaticoXG('visitante', zonaV, chanceTypeV)));
                     var isGoalV = (Math.random() < xgV);
                     $scope.registrarUltimaChanceXG('visitante', xgV, chanceTypeV, zonaV, isGoalV, atacanteV);

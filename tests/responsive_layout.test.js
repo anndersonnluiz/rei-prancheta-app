@@ -166,6 +166,8 @@ assert.ok(js.includes("assunto: 'Bem-vindo ao ' + $scope.clubeAtual.nome"), 'new
 assert.ok(js.includes('estadosOperacionaisClubes'), 'save should persist operational state per club');
 assert.ok(js.includes('restaurarEstadoOperacionalClube(clubeId)'), 'club change should restore or initialize the technical staff by club');
 assert.ok(js.includes('mudancaClube.clubeAnteriorId'), 'career rollover should attribute the closed season to the previous club');
+assert.ok(js.includes('calcularForcaElencoPreJogo(adversario, false)'), 'both match modes should use the opponent squad strength');
+assert.ok(js.includes('var forcaMandante = $scope.forcaMandanteAoVivo'), 'live match should keep home strength separate from manager strength');
 assert.ok(js.includes('var relatorio = $scope.relatorioFimAno || {};'), 'ceremony continuation should tolerate a missing report');
 assert.ok(js.includes('if (!relatorio.resumoGerencial || !relatorio.statusDiretoria)'), 'ceremony should rebuild an incomplete season report');
 assert.ok(html.includes('career-screen'), 'career screen should be identifiable for mobile layout');
