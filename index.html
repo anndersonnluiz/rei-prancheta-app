@@ -903,7 +903,7 @@
                             <div class="development-report-item" ng-repeat="item in relatorioEvolucaoVisivel track by item.id" ng-class="item.overallDepois > item.overallAntes ? 'positive' : (item.overallDepois < item.overallAntes ? 'negative' : 'neutral')">
                                 <div>
                                     <strong>{{item.nome}}</strong>
-                                    <span>{{item.posicao}} · {{item.motivo}}</span>
+                                    <span>{{item.posicao}} · Foco {{item.foco || 'equilibrado'}} · {{item.motivo}}</span>
                                 </div>
                                 <em>{{item.overallDepois > item.overallAntes ? '+' : ''}}{{item.overallDepois - item.overallAntes}}</em>
                             </div>

@@ -565,8 +565,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         preparacao.entrosamentoGeral = Math.min(100, preparacao.entrosamentoGeral + config.geral + (preparacao.foco === tipo ? 2 : 0));
         if (config.setor) preparacao.entrosamentoSetores[config.setor] = Math.min(100, preparacao.entrosamentoSetores[config.setor] + config.geral + 2);
         ($scope.elencoAtual || []).forEach(function(jogador) {
+            normalizarJogadorSalvo(jogador);
             jogador.condicaoFisica = Math.max(35, Math.min(100, (Number(jogador.condicaoFisica) || 100) + config.fisico));
             jogador.moral = Math.max(0, Math.min(100, (Number(jogador.moral) || 70) + config.moral));
+            var focoCompativel = jogador.desenvolvimentoFoco === tipo;
+            jogador.xpTemporada = Math.min(100, (jogador.xpTemporada || 0) + config.geral + (focoCompativel ? 2 : 0));
         });
         preparacao.historico.unshift({ dia: $scope.diaAtual, tipo: tipo, nome: config.nome, foco: preparacao.foco });
         preparacao.historico = preparacao.historico.slice(0, 30);
@@ -4653,6 +4656,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             overallAntes: overallAntes,
             overallDepois: overallDepois,
             mudancas: mudancas,
+            foco: jogador.desenvolvimentoFoco || 'equilibrado',
             motivo: motivo
         };
     }
