@@ -5945,6 +5945,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             });
         }
         $scope.processarPreContratos();
+        if (trocouDeClube && $scope.clubeAtual) {
+            // A virada ajusta contratos no cadastro global; reconstrói o elenco ativo
+            // para não manter a lista do clube anterior ou uma lista vazia.
+            $scope.selecionarClube($scope.clubeAtual.id);
+        }
 
         if (!trocouDeClube) {
             if (!$scope.dados.reputacaoTreinador) $scope.dados.reputacaoTreinador = 3;

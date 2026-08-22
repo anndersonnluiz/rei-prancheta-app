@@ -154,6 +154,18 @@ for (let temporada = 0; temporada < 2; temporada++) {
 }
 assert.ok(scope.historicoTreinador.length >= 3, 'history should retain consecutive seasons');
 
+// Troca de clube: o estado operacional deve ser próprio do novo clube.
+const clubeAnteriorId = scope.clubeAtual.id;
+const novoClube = scope.clubes.find((item) => item.id !== clubeAnteriorId && scope.jogadores.some((jogador) => jogador.clubeId === item.id));
+scope.financasHistorico = [{ clubeId: clubeAnteriorId, descricao: 'Dado do clube anterior', valor: 123 }];
+scope.staffClube[0].contratado = true;
+scope.aceitarProposta(novoClube.id);
+assert.strictEqual(scope.clubeAtual.id, novoClube.id, 'career should switch to accepted club');
+assert.strictEqual(scope.financasHistorico.length, 0, 'new club should start with clean financial history');
+assert.ok(scope.staffClube.every((item) => !item.contratado), 'new club should start with an uncontracted staff');
+assert.ok(scope.caixaEntrada.some((item) => String(item.assunto).indexOf('Bem-vindo') >= 0), 'new club should send welcome message');
+assert.strictEqual(scope.ambienteElenco.valor, 70, 'new club should start with default squad environment');
+
 const freeDay = scope.calendarioGeral.findIndex((dia, index) => {
   scope.diaAtual = index;
   return !scope.obterMeuJogoHoje();
@@ -172,7 +184,7 @@ const save = scope.migrarSave({
   calendarioGeral: scope.calendarioGeral
 });
 assert.strictEqual(save.saveVersion, 11);
-assert.strictEqual(save.clubeAtualId, clube.id);
+assert.strictEqual(save.clubeAtualId, novoClube.id);
 assert.ok(Array.isArray(save.elencoAtual) && save.elencoAtual.length > 0);
 
 console.log('career_smoke.test.js passed');
