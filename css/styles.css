@@ -3095,6 +3095,16 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .finance-screen [style*="repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
     .finance-screen [style*="repeat(auto-fill, minmax(300px"] { grid-template-columns: 1fr !important; }
     .finance-screen .card > div[style*="padding: 20px"] { min-width: 0; }
+    .market-screen label, .finance-screen label, .staff-screen label { display: block; min-width: 0; }
+    .market-screen select, .market-screen input, .finance-screen select, .finance-screen input, .staff-screen select, .staff-screen input { font-size: 16px !important; min-height: 42px; }
+    .market-screen .mercado-list-item { align-items: stretch; gap: 10px; padding: 12px; }
+    .market-screen .mercado-list-side { min-width: 0; width: 100%; }
+    .market-screen .mercado-actions { flex-wrap: wrap; width: 100%; }
+    .market-screen .mercado-actions button { flex: 1 1 140px; min-height: 42px; }
+    .finance-screen .infrastructure-work-list > div { align-items: flex-start; flex-direction: column; }
+    .finance-screen .infrastructure-work-list button, .finance-screen .infrastructure-finance-grid button { min-height: 42px; width: 100%; }
+    .staff-screen > div, .staff-screen .card { min-width: 0; }
+    .staff-screen button { min-height: 42px; }
     .messages-screen > div[style*="background: #34495e"] { border-radius: 10px !important; padding: 16px !important; }
     .messages-screen .messages-layout { flex-direction: column; gap: 12px !important; }
     .messages-screen .messages-list { max-height: 240px !important; }
