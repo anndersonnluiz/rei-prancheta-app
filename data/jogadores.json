@@ -27336,9 +27336,9 @@
   {
     "id": 1495,
     "clubeId": 4,
-    "nome": "Cássio",
+    "nome": "Hugo Souza",
     "posicao": "GOL",
-    "idade": 26,
+    "idade": 27,
     "salario": 963581.7472702905,
     "atributos": {
       "marcacao": 10,
@@ -27357,9 +27357,9 @@
   {
     "id": 1496,
     "clubeId": 4,
-    "nome": "Fagner",
+    "nome": "Matheuzinho",
     "posicao": "LAT",
-    "idade": 22,
+    "idade": 25,
     "salario": 666243.0573407864,
     "atributos": {
       "marcacao": 82,
@@ -27376,7 +27376,7 @@
   {
     "id": 1497,
     "clubeId": 4,
-    "nome": "Hugo",
+    "nome": "Pedro Milans",
     "posicao": "LAT",
     "idade": 24,
     "salario": 893392.965569989,
@@ -27395,9 +27395,9 @@
   {
     "id": 1498,
     "clubeId": 4,
-    "nome": "Félix Torres",
+    "nome": "André Ramalho",
     "posicao": "ZAG",
-    "idade": 23,
+    "idade": 34,
     "salario": 765077.9717353741,
     "atributos": {
       "marcacao": 82,
@@ -27416,7 +27416,7 @@
     "clubeId": 4,
     "nome": "Gustavo Henrique",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 31,
     "salario": 686233.3648024901,
     "atributos": {
       "marcacao": 80,
@@ -27452,9 +27452,9 @@
   {
     "id": 1501,
     "clubeId": 4,
-    "nome": "Fausto Vera",
+    "nome": "André Carrillo",
     "posicao": "VOL",
-    "idade": 24,
+    "idade": 35,
     "salario": 609220.1915679561,
     "atributos": {
       "marcacao": 78,
@@ -27473,7 +27473,7 @@
     "clubeId": 4,
     "nome": "Rodrigo Garro",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 28,
     "salario": 851455.8065830073,
     "atributos": {
       "marcacao": 60,
@@ -27492,7 +27492,7 @@
     "clubeId": 4,
     "nome": "Yuri Alberto",
     "posicao": "ATA",
-    "idade": 29,
+    "idade": 25,
     "salario": 771443.5974624001,
     "atributos": {
       "marcacao": 40,
@@ -27509,9 +27509,9 @@
   {
     "id": 1504,
     "clubeId": 4,
-    "nome": "Wesley",
+    "nome": "Jesse Lingard",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 33,
     "salario": 568026.6052611284,
     "atributos": {
       "marcacao": 35,
@@ -27528,9 +27528,9 @@
   {
     "id": 1505,
     "clubeId": 4,
-    "nome": "Romero",
+    "nome": "Pedro Raul",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 29,
     "salario": 723309.9176115945,
     "atributos": {
       "marcacao": 60,
@@ -27547,9 +27547,9 @@
   {
     "id": 1506,
     "clubeId": 4,
-    "nome": "Matheuzinho",
+    "nome": "Bidon",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 21,
     "salario": 515426.08913130546,
     "atributos": {
       "marcacao": 74,
@@ -27566,9 +27566,9 @@
   {
     "id": 1507,
     "clubeId": 4,
-    "nome": "Cacá",
+    "nome": "Gustavo",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 24,
     "salario": 745292.472858333,
     "atributos": {
       "marcacao": 78,
@@ -27585,9 +27585,9 @@
   {
     "id": 1508,
     "clubeId": 4,
-    "nome": "Igor Coronado",
+    "nome": "Allan",
     "posicao": "MEI",
-    "idade": 23,
+    "idade": 21,
     "salario": 756938.3234112982,
     "atributos": {
       "marcacao": 50,
@@ -27604,9 +27604,9 @@
   {
     "id": 1509,
     "clubeId": 4,
-    "nome": "Pedro Raul",
+    "nome": "Kaio Lima",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 20,
     "salario": 701797.0884241762,
     "atributos": {
       "marcacao": 35,
@@ -27623,9 +27623,9 @@
   {
     "id": 1510,
     "clubeId": 4,
-    "nome": "Breno Bidon",
+    "nome": "Raniele",
     "posicao": "VOL",
-    "idade": 27,
+    "idade": 29,
     "salario": 572870.3731113272,
     "atributos": {
       "marcacao": 75,
@@ -27642,9 +27642,9 @@
   {
     "id": 1511,
     "clubeId": 4,
-    "nome": "Palacios",
+    "nome": "Matheus Bidu",
     "posicao": "LAT",
-    "idade": 23,
+    "idade": 27,
     "salario": 865759.7123047549,
     "atributos": {
       "marcacao": 76,
@@ -27661,9 +27661,9 @@
   {
     "id": 1512,
     "clubeId": 4,
-    "nome": "Carlos Miguel",
+    "nome": "Zakaria",
     "posicao": "GOL",
-    "idade": 25,
+    "idade": 29,
     "salario": 658353.6628863793,
     "atributos": {
       "marcacao": 10,
