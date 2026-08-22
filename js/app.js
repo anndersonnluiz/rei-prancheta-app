@@ -446,7 +446,69 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.infraestruturaResumo = criarResumoInfraestrutura(null);
     $scope.contextoExterno = criarContextoExternoPadrao();
     $scope.contextoExternoResumo = criarResumoContextoExterno($scope.contextoExterno);
+    $scope.preparacaoTemporada = {
+        foco: 'equilibrio',
+        entrosamentoGeral: 50,
+        entrosamentoSetores: { defesa: 50, meio: 50, ataque: 50 },
+        ultimoTreinoDia: -1,
+        historico: []
+    };
     $scope.estadosOperacionaisClubes = {};
+
+    function normalizarPreparacaoTemporada(preparacao) {
+        var base = preparacao || {};
+        var resultado = {
+            foco: ['equilibrio', 'fisico', 'tatico', 'tecnico'].indexOf(base.foco) !== -1 ? base.foco : 'equilibrio',
+            entrosamentoGeral: Math.max(0, Math.min(100, Number(base.entrosamentoGeral) || 50)),
+            entrosamentoSetores: angular.copy(base.entrosamentoSetores || {}),
+            ultimoTreinoDia: typeof base.ultimoTreinoDia === 'number' ? base.ultimoTreinoDia : -1,
+            historico: Array.isArray(base.historico) ? base.historico.slice(0, 30) : []
+        };
+        ['defesa', 'meio', 'ataque'].forEach(function(setor) {
+            resultado.entrosamentoSetores[setor] = Math.max(0, Math.min(100, Number(resultado.entrosamentoSetores[setor]) || resultado.entrosamentoGeral));
+        });
+        return resultado;
+    }
+
+    function atualizarResumoPreparacao() {
+        $scope.preparacaoTemporada = normalizarPreparacaoTemporada($scope.preparacaoTemporada);
+        return $scope.preparacaoTemporada;
+    }
+
+    $scope.obterFatorEntrosamento = function() {
+        var preparacao = atualizarResumoPreparacao();
+        return 0.94 + (preparacao.entrosamentoGeral / 100) * 0.12;
+    };
+
+    $scope.definirFocoPreparacao = function(foco) {
+        if (['equilibrio', 'fisico', 'tatico', 'tecnico'].indexOf(foco) === -1) return false;
+        atualizarResumoPreparacao().foco = foco;
+        $scope.salvarJogoSilencioso();
+        return true;
+    };
+
+    $scope.aplicarTreinamento = function(tipo) {
+        var tipos = {
+            recuperacao: { nome: 'Recuperação', geral: 1, setor: null, fisico: 3, moral: 1 },
+            fisico: { nome: 'Treino físico', geral: 2, setor: null, fisico: -6, moral: 0 },
+            tatico: { nome: 'Treino tático', geral: 3, setor: 'meio', fisico: -3, moral: 1 },
+            tecnico: { nome: 'Treino técnico', geral: 2, setor: 'ataque', fisico: -2, moral: 1 }
+        };
+        var config = tipos[tipo];
+        var preparacao = atualizarResumoPreparacao();
+        if (!config || preparacao.ultimoTreinoDia === $scope.diaAtual) return false;
+        preparacao.ultimoTreinoDia = $scope.diaAtual;
+        preparacao.entrosamentoGeral = Math.min(100, preparacao.entrosamentoGeral + config.geral + (preparacao.foco === tipo ? 2 : 0));
+        if (config.setor) preparacao.entrosamentoSetores[config.setor] = Math.min(100, preparacao.entrosamentoSetores[config.setor] + config.geral + 2);
+        ($scope.elencoAtual || []).forEach(function(jogador) {
+            jogador.condicaoFisica = Math.max(35, Math.min(100, (Number(jogador.condicaoFisica) || 100) + config.fisico));
+            jogador.moral = Math.max(0, Math.min(100, (Number(jogador.moral) || 70) + config.moral));
+        });
+        preparacao.historico.unshift({ dia: $scope.diaAtual, tipo: tipo, nome: config.nome, foco: preparacao.foco });
+        preparacao.historico = preparacao.historico.slice(0, 30);
+        $scope.salvarJogoSilencioso();
+        return true;
+    };
 
     function capturarEstadoOperacionalClube(clubeId) {
         if (!clubeId) return;
@@ -458,6 +520,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             caixaEntrada: $scope.caixaEntrada || [],
             ambienteElenco: $scope.ambienteElenco || criarAmbienteElencoPadrao(),
             contextoExterno: $scope.contextoExterno || criarContextoExternoPadrao(),
+            preparacaoTemporada: $scope.preparacaoTemporada || normalizarPreparacaoTemporada(),
             diretoriaStatus: $scope.diretoriaStatus || criarDiretoriaStatusPadrao(),
             patrocinioAtual: $scope.patrocinioAtual || null,
             propostasPendentes: $scope.propostasPendentes || [],
@@ -474,6 +537,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.caixaEntrada = angular.copy(estado.caixaEntrada || []);
         $scope.ambienteElenco = normalizarAmbienteElencoInterno(angular.copy(estado.ambienteElenco || criarAmbienteElencoPadrao()));
         $scope.contextoExterno = normalizarContextoExternoInterno(angular.copy(estado.contextoExterno || criarContextoExternoPadrao()));
+        $scope.preparacaoTemporada = normalizarPreparacaoTemporada(angular.copy(estado.preparacaoTemporada));
         $scope.diretoriaStatus = normalizarDiretoriaStatusInterno(angular.copy(estado.diretoriaStatus || criarDiretoriaStatusPadrao()));
         $scope.patrocinioAtual = angular.copy(estado.patrocinioAtual || null);
         $scope.propostasPendentes = angular.copy(estado.propostasPendentes || []);
@@ -2378,6 +2442,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.diretoriaStatus = criarDiretoriaStatusPadrao();
         $scope.contextoExterno = criarContextoExternoPadrao();
         $scope.atualizarResumoContextoExterno();
+        $scope.preparacaoTemporada = normalizarPreparacaoTemporada();
         $scope.mercadoUI = { aba: 'busca' };
         $scope.propostaNegociacaoAtualId = null;
         
@@ -3519,7 +3584,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var fatorFadiga = $scope.calcularFatorFadiga(j.condicaoFisica);
             forcaTime += ($scope.calcularOverall(j) * penalty * fatorFadiga);
         });
-        return (forcaTime / 11) * $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor);
+        return (forcaTime / 11) * $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor) * $scope.obterFatorEntrosamento();
     };
 
     $scope.calcularFatorFadiga = function(condicaoFisica) {
@@ -5777,6 +5842,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.atualizarAmbienteElencoResumo();
             $scope.contextoExterno = criarContextoExternoPadrao();
             $scope.atualizarResumoContextoExterno();
+            $scope.preparacaoTemporada = normalizarPreparacaoTemporada();
             $scope.diretoriaStatus = criarDiretoriaStatusPadrao();
             $scope.ultimoResumoPartida = null;
             $scope.staffClube = criarStaffPadrao();
@@ -6070,6 +6136,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (saveInfo.ultimoResumoPartida === undefined) saveInfo.ultimoResumoPartida = null;
         if (!Array.isArray(saveInfo.relatorioEvolucao)) saveInfo.relatorioEvolucao = [];
         if (saveInfo.ultimoDiaEvolucao === undefined) saveInfo.ultimoDiaEvolucao = 0;
+        saveInfo.preparacaoTemporada = normalizarPreparacaoTemporada(saveInfo.preparacaoTemporada);
         saveInfo.ambienteElenco = normalizarAmbienteElencoInterno(saveInfo.ambienteElenco || criarAmbienteElencoPadrao());
         if (saveInfo.clubeAtualInfo) normalizarScoutingClube(saveInfo.clubeAtualInfo);
         if (saveInfo.clubeAtualInfo) normalizarInfraestruturaClubeInterno(saveInfo.clubeAtualInfo);
@@ -6097,6 +6164,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.atualizarResumoInfraestrutura();
         $scope.atualizarResumoBase();
         $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        $scope.preparacaoTemporada = normalizarPreparacaoTemporada($scope.preparacaoTemporada);
         $scope.contextoExterno = normalizarContextoExternoInterno($scope.contextoExterno || criarContextoExternoPadrao());
         $scope.atualizarResumoContextoExterno();
         var saveObj = {
@@ -6107,6 +6175,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             historicoPartidas: $scope.historicoPartidas || [],
             historicoDecisoesGestao: $scope.historicoDecisoesGestao || [],
             estadosOperacionaisClubes: $scope.estadosOperacionaisClubes || {},
+            preparacaoTemporada: $scope.preparacaoTemporada,
             historicoFinanceiroMensal: $scope.historicoFinanceiroMensal || {},
             staffClube: normalizarStaff($scope.staffClube),
             emprestimosAtivos: $scope.emprestimosAtivos || [],
@@ -6569,6 +6638,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.relatorioEvolucao = $scope.saveInfo.relatorioEvolucao || [];
         $scope.ultimoDiaEvolucao = $scope.saveInfo.ultimoDiaEvolucao || 0;
         $scope.ambienteElenco = normalizarAmbienteElencoInterno($scope.saveInfo.ambienteElenco || criarAmbienteElencoPadrao());
+        $scope.preparacaoTemporada = normalizarPreparacaoTemporada($scope.saveInfo.preparacaoTemporada);
         $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.saveInfo.diretoriaStatus || criarDiretoriaStatusPadrao());
         $scope.contextoExterno = normalizarContextoExternoInterno($scope.saveInfo.contextoExterno || criarContextoExternoPadrao());
         $scope.atualizarAmbienteElencoResumo();

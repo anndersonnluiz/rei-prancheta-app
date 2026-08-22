@@ -178,6 +178,9 @@ assert.ok(js.includes('slotsSaveVisiveis'), 'save slot options should be cached 
 assert.ok(js.includes('alertasFinanceirosCache'), 'financial alerts should be cached to avoid digest loops');
 assert.ok(html.includes('strategy-open-area'), 'strategy action should have a scoped compact button');
 assert.ok(css.includes('.club-strategy-alert .strategy-open-area'), 'strategy action should not expand unexpectedly');
+assert.ok(js.includes('aplicarTreinamento'), 'season preparation should expose training actions');
+assert.ok(js.includes('obterFatorEntrosamento'), 'team strength should include squad chemistry');
+assert.ok(html.includes('season-preparation-panel'), 'dashboard should expose season preparation controls');
 assert.ok(html.includes('rel="icon"'), 'page should declare a favicon');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 

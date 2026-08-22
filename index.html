@@ -354,6 +354,23 @@
                                 <button class="btn-play-quick" ng-click="prepararPartida('rapido')" ng-if="obterMeuJogoHoje()">⚡ Resultado Rápido</button>
                                 <button class="btn-play-full btn-rest-day" ng-click="avancarDiaLivre()" ng-if="!obterMeuJogoHoje()">⏩ Avançar Dia</button>
                             </div>
+
+                            <div class="season-preparation-panel">
+                                <div class="dashboard-panel-header compact-header">
+                                    <div><span class="dashboard-eyebrow">Preparação do elenco</span><h3>Entrosamento {{preparacaoTemporada.entrosamentoGeral}}/100</h3></div>
+                                    <span class="tactic-pill">Foco: {{preparacaoTemporada.foco}}</span>
+                                </div>
+                                <p>Escolha um foco e faça um treino nos dias sem partida. O treino só pode ser realizado uma vez por dia.</p>
+                                <div class="preparation-focus-actions">
+                                    <button ng-repeat="foco in [{id:'equilibrio',label:'Equilíbrio'},{id:'fisico',label:'Físico'},{id:'tatico',label:'Tático'},{id:'tecnico',label:'Técnico'}]" ng-click="definirFocoPreparacao(foco.id)" ng-class="{'strategy-selected': preparacaoTemporada.foco === foco.id}">{{foco.label}}</button>
+                                </div>
+                                <div class="preparation-training-actions">
+                                    <button ng-click="aplicarTreinamento('recuperacao')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual">↩ Recuperação</button>
+                                    <button ng-click="aplicarTreinamento('fisico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual">💪 Físico</button>
+                                    <button ng-click="aplicarTreinamento('tatico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual">🧠 Tático</button>
+                                    <button ng-click="aplicarTreinamento('tecnico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual">⚽ Técnico</button>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="dashboard-panel season-finished-compact" ng-if="!calendarioGeral[diaAtual]">

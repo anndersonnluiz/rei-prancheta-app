@@ -323,6 +323,14 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .club-strategy-alert-ok { background: var(--br-green-light); border-left-color: var(--br-green); }
 .club-strategy-alert button { align-self: start; background: white; border: 1px solid var(--br-blue); border-radius: 6px; color: var(--br-blue); cursor: pointer; font-size: 11px; font-weight: 800; margin-top: 4px; padding: 6px 9px; }
 .club-strategy-alert .strategy-open-area { max-width: 140px; width: auto; }
+.season-preparation-panel { background: #f8fbfd; border: 1px solid #dfe8ee; border-radius: 10px; margin-top: 14px; padding: 14px; }
+.season-preparation-panel p { color: var(--text-muted); font-size: 12px; margin: 0 0 10px; }
+.preparation-focus-actions, .preparation-training-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.preparation-focus-actions { margin-bottom: 9px; }
+.preparation-focus-actions button, .preparation-training-actions button { background: #fff; border: 1px solid #cfdbe4; border-radius: 6px; color: var(--text-main); cursor: pointer; font-size: 12px; font-weight: 700; min-height: 36px; padding: 7px 10px; }
+.preparation-focus-actions button.strategy-selected { background: var(--br-green); border-color: var(--br-green); color: #fff; }
+.preparation-training-actions button { background: #edf4f8; }
+.preparation-training-actions button:disabled { cursor: not-allowed; opacity: .48; }
 .director-response-button { align-items: center; border: 1px solid transparent; border-radius: 7px; cursor: pointer; display: inline-flex; font-size: 12px; font-weight: 800; gap: 5px; min-height: 38px; padding: 8px 12px; transition: background .18s ease, border-color .18s ease, transform .18s ease; }
 .director-response-button:hover { transform: translateY(-1px); }
 .director-response-support { background: #eaf7ef; border-color: #a9dcb9; color: #19713a; }
@@ -2964,6 +2972,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .dashboard-v2 .club-strategy-panel { border-radius: 10px; margin-bottom: 12px; padding: 12px; }
     .dashboard-v2 .club-strategy-grid { gap: 6px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .dashboard-v2 .club-strategy-grid button { min-height: 58px; padding: 8px; }
+    .preparation-focus-actions button, .preparation-training-actions button { flex: 1 1 calc(50% - 7px); }
     .dashboard-v2 .club-strategy-grid button strong { font-size: 11px; line-height: 1.2; }
     .dashboard-v2 .strategy-open-area { font-size: 12px; max-width: 140px; padding: 8px 12px; }
     .dashboard-v2 .dashboard-grid { gap: 12px; }
