@@ -3183,6 +3183,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
         height: min(42vh, 300px);
         padding: 16px;
     }
+
+    .commentary-item { font-size: 13px; padding: 10px 12px; }
+    .commentary-item.goal { font-size: 14px; }
+    .team-color .club-crest { height: 42px; width: 42px; }
 }
 
 @media (max-width: 420px) {
@@ -3264,6 +3268,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .formation-selector select,
     .formation-selector button {
         min-height: 40px;
+        max-width: 100%;
     }
 
     .bench-item {
@@ -3286,6 +3291,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .token-name {
         font-size: 9px;
     }
+    .pitch-container { overflow: hidden; }
+    .tactics-screen .bench-list { overscroll-behavior: contain; }
 
     /* Alvos de toque com pelo menos 44px, sem aumentar cards de leitura. */
     .nav-links li,
