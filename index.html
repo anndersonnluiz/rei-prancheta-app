@@ -315,6 +315,18 @@
                         <button class="strategy-open-area" ng-click="irParaFocoEstrategico()">Abrir área</button>
                     </div>
                 </section>
+                <section class="season-briefing-panel" ng-if="diretoriaStatus && !diretoriaStatus.briefingInicialConcluido && preparacaoTemporada && !preparacaoTemporada.concluida">
+                    <div class="dashboard-panel-header compact-header">
+                        <div><span class="dashboard-eyebrow">Reunião de abertura</span><h3>Defina a prioridade da temporada</h3></div>
+                        <span class="dashboard-count-badge">Diretoria</span>
+                    </div>
+                    <p>Você pode manter o foco esportivo ou assumir uma prioridade de gestão para orientar as decisões iniciais do clube.</p>
+                    <div class="season-briefing-options">
+                        <button ng-repeat="meta in diretoriaStatus.metasTemporada" ng-click="confirmarPrioridadeTemporada(meta.tipo)">
+                            <span>{{meta.tipo}}</span><strong>{{meta.titulo}}</strong><small>{{meta.detalhe}}</small>
+                        </button>
+                    </div>
+                </section>
                 <div class="dashboard-grid">
                     <section class="dashboard-main">
                         <div class="dashboard-panel next-match-compact" ng-if="calendarioGeral[diaAtual]">

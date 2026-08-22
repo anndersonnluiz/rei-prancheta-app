@@ -184,6 +184,9 @@ assert.ok(js.includes('obterFatorEntrosamentoSetor'), 'team strength should incl
 assert.ok(js.includes("defensivo: { nome: 'Treino defensivo'"), 'preparation should support defensive training');
 assert.ok(js.includes('obterMeuJogoHoje && $scope.obterMeuJogoHoje()'), 'training should be blocked on match days');
 assert.ok(html.includes('season-preparation-panel'), 'dashboard should expose season preparation controls');
+assert.ok(html.includes('season-briefing-panel'), 'dashboard should expose the initial board briefing');
+assert.ok(js.includes('confirmarPrioridadeTemporada'), 'board should persist the chosen seasonal priority');
+assert.ok(css.includes('.season-briefing-options'), 'board briefing should have responsive option cards');
 assert.ok(html.includes('rel="icon"'), 'page should declare a favicon');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 

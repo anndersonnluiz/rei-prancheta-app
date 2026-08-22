@@ -204,6 +204,11 @@ scope.atualizarFasePreparacao();
 assert.strictEqual(scope.preparacaoTemporada.concluida, true, 'pre-season should close after its preparation window');
 assert.strictEqual(scope.preparacaoTemporada.fase, 'temporada', 'season phase should advance after pre-season');
 
+scope.gerarMetaDiretoria();
+assert.strictEqual(scope.confirmarPrioridadeTemporada('financeira'), true, 'board briefing should accept a valid seasonal priority');
+assert.strictEqual(scope.diretoriaStatus.prioridadeTemporada, 'financeira', 'board should persist the chosen seasonal priority');
+assert.strictEqual(scope.diretoriaStatus.briefingInicialConcluido, true, 'board briefing should be marked complete');
+
 scope.salvarJogoSilencioso();
 const saved = JSON.parse(storage.value);
 assert.strictEqual(saved.saveVersion, 11, 'save should persist contracts version');

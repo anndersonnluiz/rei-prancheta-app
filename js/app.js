@@ -1543,6 +1543,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             ultimaObservacao: 'A diretoria aguarda os primeiros resultados da temporada.',
             bonusConfianca: 0,
             prioridadeEstrategica: '',
+            prioridadeTemporada: '',
+            briefingInicialConcluido: false,
             planoAtual: null,
             metasTemporada: [],
             ultimaReacaoMetasDia: 0,
@@ -1562,6 +1564,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         base.ultimaObservacao = base.ultimaObservacao || 'A diretoria aguarda os primeiros resultados da temporada.';
         base.bonusConfianca = Math.max(-10, Math.min(10, Number(base.bonusConfianca) || 0));
         base.prioridadeEstrategica = base.prioridadeEstrategica || '';
+        base.prioridadeTemporada = base.prioridadeTemporada || '';
+        base.briefingInicialConcluido = !!base.briefingInicialConcluido;
         base.planoAtual = base.planoAtual && typeof base.planoAtual === 'object' ? base.planoAtual : null;
         base.metasTemporada = Array.isArray(base.metasTemporada) ? base.metasTemporada : [];
         base.ultimaReacaoMetasDia = typeof base.ultimaReacaoMetasDia === 'number' ? base.ultimaReacaoMetasDia : 0;
@@ -5952,6 +5956,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             { tipo: 'mercado', titulo: 'Qualificar o planejamento de mercado', detalhe: 'Resolver carências sem comprometer a saúde financeira do clube.', status: 'acompanhar', progresso: 0 }
         ];
         $scope.atualizarDiretoriaStatus();
+    };
+
+    $scope.confirmarPrioridadeTemporada = function(tipo) {
+        var metas = $scope.diretoriaStatus && $scope.diretoriaStatus.metasTemporada;
+        if (!Array.isArray(metas) || !metas.some(function(meta) { return meta.tipo === tipo; })) return false;
+        $scope.diretoriaStatus = normalizarDiretoriaStatusInterno($scope.diretoriaStatus);
+        $scope.diretoriaStatus.prioridadeTemporada = tipo;
+        $scope.diretoriaStatus.briefingInicialConcluido = true;
+        metas.forEach(function(meta) { meta.status = meta.tipo === tipo ? 'principal' : 'acompanhar'; });
+        var metaEscolhida = metas.find(function(meta) { return meta.tipo === tipo; });
+        $scope.diretoriaStatus.ultimaObservacao = 'A diretoria colocou ' + metaEscolhida.tipo + ' como prioridade da temporada.';
+        $scope.registrarDecisaoGestao('briefing_temporada', 'Prioridade definida para a temporada: ' + metaEscolhida.titulo + '.');
+        $scope.adicionarMensagem('Diretoria', 'Prioridade da temporada confirmada', 'A diretoria registrou "' + metaEscolhida.titulo + '" como prioridade principal. A meta esportiva continua sendo ' + $scope.diretoriaStatus.objetivoAtual + '.', false, 'diretoria');
+        $scope.salvarJogoSilencioso();
+        return true;
     };
 
     $scope.avaliarMetaDiretoria = function(classificados) {
