@@ -583,8 +583,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (!jogador || preparacao.ultimoTreinoIndividualDia === $scope.diaAtual || ($scope.obterMeuJogoHoje && $scope.obterMeuJogoHoje()) || jogador.lesionado) return false;
         normalizarJogadorSalvo(jogador);
         preparacao.ultimoTreinoIndividualDia = $scope.diaAtual;
-        jogador.xpTemporada = Math.min(100, (jogador.xpTemporada || 0) + 6);
-        jogador.condicaoFisica = Math.max(35, (Number(jogador.condicaoFisica) || 100) - 2);
+        var auxiliar = ($scope.staffClube || []).find(function(item) { return item.id === 'auxiliar' && item.contratado; });
+        var analista = ($scope.staffClube || []).find(function(item) { return item.id === 'analista' && item.contratado; });
+        var preparador = ($scope.staffClube || []).find(function(item) { return item.id === 'preparador' && item.contratado; });
+        var bonusXp = (auxiliar ? 1 : 0) + (analista ? 1 : 0) + ($scope.calcularBonusDesenvolvimentoInfraestrutura() >= 2 ? 1 : 0);
+        var desgaste = preparador ? 1 : 2;
+        jogador.xpTemporada = Math.min(100, (jogador.xpTemporada || 0) + 6 + bonusXp);
+        jogador.condicaoFisica = Math.max(35, (Number(jogador.condicaoFisica) || 100) - desgaste);
         jogador.moral = Math.min(100, (Number(jogador.moral) || 70) + 1);
         $scope.adicionarMensagem('Comissão Técnica', 'Treino individual concluído', jogador.nome + ' treinou com foco ' + (jogador.desenvolvimentoFoco || 'equilibrado') + ' e recebeu 6 XP de desenvolvimento.', false, 'ambiente');
         $scope.salvarJogoSilencioso();

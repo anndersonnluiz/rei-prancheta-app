@@ -186,9 +186,11 @@ assert.strictEqual(scope.definirFocoDesenvolvimento(jovem, 'tecnico'), true, 'pl
 assert.strictEqual(jovem.desenvolvimentoFoco, 'tecnico');
 assert.strictEqual(scope.definirFocoDesenvolvimento(jovem, 'invalido'), false, 'invalid player focus should be rejected');
 scope.diaAtual = 2;
+scope.staffClube = [{ id: 'auxiliar', contratado: true }, { id: 'analista', contratado: true }, { id: 'preparador', contratado: true }];
 const xpAntesTreinoIndividual = jovem.xpTemporada;
 assert.strictEqual(scope.aplicarTreinoIndividual(jovem), true, 'individual training should be available once per day');
-assert.ok(jovem.xpTemporada > xpAntesTreinoIndividual, 'individual training should grant development XP');
+assert.strictEqual(jovem.xpTemporada - xpAntesTreinoIndividual, 8, 'staff should improve individual training XP');
+assert.strictEqual(jovem.condicaoFisica, 89, 'preparador should reduce individual training fatigue');
 assert.strictEqual(scope.aplicarTreinoIndividual(adulto), false, 'only one individual training should be allowed per day');
 
 jovem.xpTemporada = 60;
