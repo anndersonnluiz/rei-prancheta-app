@@ -192,6 +192,14 @@ scope.atualizarStatusHumorElenco();
 assert.strictEqual(scope.elencoAtual[0].statusHumor, 'Confiante');
 assert.strictEqual(scope.elencoAtual[1].statusHumor, 'Insatisfeito');
 
+scope.obterMeuJogoHoje = function() { return null; };
+scope.diaAtual = 3;
+scope.preparacaoTemporada.entrosamentoSetores.defesa = 50;
+const entrosamentoAntes = scope.preparacaoTemporada.entrosamentoSetores.defesa;
+assert.strictEqual(scope.aplicarTreinamento('defensivo'), true, 'defensive training should be available on a rest day');
+assert.ok(scope.preparacaoTemporada.entrosamentoSetores.defesa > entrosamentoAntes, 'sector training should improve the matching sector chemistry');
+assert.strictEqual(scope.aplicarTreinamento('tecnico'), false, 'only one training should be allowed per day');
+
 scope.salvarJogoSilencioso();
 const saved = JSON.parse(storage.value);
 assert.strictEqual(saved.saveVersion, 11, 'save should persist contracts version');
