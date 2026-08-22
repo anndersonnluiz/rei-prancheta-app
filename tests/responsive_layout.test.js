@@ -180,6 +180,9 @@ assert.ok(html.includes('strategy-open-area'), 'strategy action should have a sc
 assert.ok(css.includes('.club-strategy-alert .strategy-open-area'), 'strategy action should not expand unexpectedly');
 assert.ok(js.includes('aplicarTreinamento'), 'season preparation should expose training actions');
 assert.ok(js.includes('obterFatorEntrosamento'), 'team strength should include squad chemistry');
+assert.ok(js.includes('obterFatorEntrosamentoSetor'), 'team strength should include chemistry by sector');
+assert.ok(js.includes("defensivo: { nome: 'Treino defensivo'"), 'preparation should support defensive training');
+assert.ok(js.includes('obterMeuJogoHoje && $scope.obterMeuJogoHoje()'), 'training should be blocked on match days');
 assert.ok(html.includes('season-preparation-panel'), 'dashboard should expose season preparation controls');
 assert.ok(html.includes('rel="icon"'), 'page should declare a favicon');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');

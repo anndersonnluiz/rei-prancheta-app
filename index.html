@@ -365,10 +365,11 @@
                                     <button ng-repeat="foco in [{id:'equilibrio',label:'Equilíbrio'},{id:'fisico',label:'Físico'},{id:'tatico',label:'Tático'},{id:'tecnico',label:'Técnico'}]" ng-click="definirFocoPreparacao(foco.id)" ng-class="{'strategy-selected': preparacaoTemporada.foco === foco.id}">{{foco.label}}</button>
                                 </div>
                                 <div class="preparation-training-actions">
-                                    <button ng-click="aplicarTreinamento('recuperacao')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual">↩ Recuperação</button>
-                                    <button ng-click="aplicarTreinamento('fisico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual">💪 Físico</button>
-                                    <button ng-click="aplicarTreinamento('tatico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual">🧠 Tático</button>
-                                    <button ng-click="aplicarTreinamento('tecnico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual">⚽ Técnico</button>
+                                    <button ng-click="aplicarTreinamento('recuperacao')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual || obterMeuJogoHoje()">↩ Recuperação</button>
+                                    <button ng-click="aplicarTreinamento('fisico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual || obterMeuJogoHoje()">💪 Físico</button>
+                                    <button ng-click="aplicarTreinamento('tatico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual || obterMeuJogoHoje()">🧠 Tático</button>
+                                    <button ng-click="aplicarTreinamento('tecnico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual || obterMeuJogoHoje()">⚽ Técnico</button>
+                                    <button ng-click="aplicarTreinamento('defensivo')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual || obterMeuJogoHoje()">🛡️ Defensivo</button>
                                 </div>
                             </div>
                         </div>

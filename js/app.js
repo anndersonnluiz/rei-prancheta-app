@@ -480,6 +480,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return 0.94 + (preparacao.entrosamentoGeral / 100) * 0.12;
     };
 
+    $scope.obterSetorJogador = function(jogador) {
+        var posicao = jogador && jogador.posicao;
+        if (posicao === 'GOL' || posicao === 'ZAG' || posicao === 'LAT') return 'defesa';
+        if (posicao === 'VOL' || posicao === 'MEI') return 'meio';
+        return 'ataque';
+    };
+
+    $scope.obterFatorEntrosamentoSetor = function(jogador) {
+        var preparacao = atualizarResumoPreparacao();
+        var setor = $scope.obterSetorJogador(jogador);
+        var valor = preparacao.entrosamentoSetores[setor] || preparacao.entrosamentoGeral;
+        return 0.96 + (valor / 100) * 0.08;
+    };
+
     $scope.definirFocoPreparacao = function(foco) {
         if (['equilibrio', 'fisico', 'tatico', 'tecnico'].indexOf(foco) === -1) return false;
         atualizarResumoPreparacao().foco = foco;
@@ -492,11 +506,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             recuperacao: { nome: 'Recuperação', geral: 1, setor: null, fisico: 3, moral: 1 },
             fisico: { nome: 'Treino físico', geral: 2, setor: null, fisico: -6, moral: 0 },
             tatico: { nome: 'Treino tático', geral: 3, setor: 'meio', fisico: -3, moral: 1 },
-            tecnico: { nome: 'Treino técnico', geral: 2, setor: 'ataque', fisico: -2, moral: 1 }
+            tecnico: { nome: 'Treino técnico', geral: 2, setor: 'ataque', fisico: -2, moral: 1 },
+            defensivo: { nome: 'Treino defensivo', geral: 2, setor: 'defesa', fisico: -2, moral: 1 }
         };
         var config = tipos[tipo];
         var preparacao = atualizarResumoPreparacao();
-        if (!config || preparacao.ultimoTreinoDia === $scope.diaAtual) return false;
+        if (!config || preparacao.ultimoTreinoDia === $scope.diaAtual || ($scope.obterMeuJogoHoje && $scope.obterMeuJogoHoje())) return false;
         preparacao.ultimoTreinoDia = $scope.diaAtual;
         preparacao.entrosamentoGeral = Math.min(100, preparacao.entrosamentoGeral + config.geral + (preparacao.foco === tipo ? 2 : 0));
         if (config.setor) preparacao.entrosamentoSetores[config.setor] = Math.min(100, preparacao.entrosamentoSetores[config.setor] + config.geral + 2);
@@ -3362,7 +3377,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var overall = calcularOverallPreJogo(j);
             var fatorFadiga = ($scope.clubeAtual && clube && clube.id === $scope.clubeAtual.id) ? $scope.calcularFatorFadiga(j.condicaoFisica) : 1;
             var fatorMoral = (typeof j.moral === 'number' && j.moral < 50) ? (0.8 + ((j.moral / 50) * 0.2)) : 1;
-            soma += overall * fatorFadiga * fatorMoral;
+            soma += overall * fatorFadiga * fatorMoral * $scope.obterFatorEntrosamentoSetor(j);
         });
         var media = soma / jogadoresBase.length;
         if (clube && clubeEhAtual(clube.id)) media *= $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor);
@@ -3582,7 +3597,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 penalty = 0.8 + ((j.moral / 50) * 0.2); // Moral 0 = 80% do overall. Moral 50 = 100%.
             }
             var fatorFadiga = $scope.calcularFatorFadiga(j.condicaoFisica);
-            forcaTime += ($scope.calcularOverall(j) * penalty * fatorFadiga);
+            forcaTime += ($scope.calcularOverall(j) * penalty * fatorFadiga * $scope.obterFatorEntrosamentoSetor(j));
         });
         return (forcaTime / 11) * $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor) * $scope.obterFatorEntrosamento();
     };
