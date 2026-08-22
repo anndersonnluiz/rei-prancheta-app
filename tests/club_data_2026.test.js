@@ -11,6 +11,10 @@ const porDivisao = clubes.reduce((grupos, clube) => {
 
 ['A', 'B', 'C', 'D'].forEach((divisao) => assert.strictEqual(porDivisao[divisao], 20, `division ${divisao} should have 20 clubs`));
 assert.strictEqual(new Set(clubes.map((clube) => clube.nome)).size, clubes.length, 'club names should be unique');
+clubes.forEach((item) => {
+  const elenco = jogadores.filter((jogador) => jogador.clubeId === item.id);
+  assert.strictEqual(elenco.length, 18, `${item.nome} should have 18 players`);
+});
 
 const clube = (nome) => clubes.find((item) => item.nome === nome);
 assert.strictEqual(clube('Chapecoense').divisao, 'A');

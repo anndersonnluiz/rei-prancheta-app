@@ -26644,9 +26644,9 @@
   {
     "id": 1459,
     "clubeId": 2,
-    "nome": "Weverton",
+    "nome": "Carlos Miguel",
     "posicao": "GOL",
-    "idade": 24,
+    "idade": 27,
     "salario": 923360.4940489118,
     "atributos": {
       "marcacao": 10,
@@ -26665,9 +26665,9 @@
   {
     "id": 1460,
     "clubeId": 2,
-    "nome": "Mayke",
+    "nome": "Khellven",
     "posicao": "LAT",
-    "idade": 24,
+    "idade": 23,
     "salario": 978032.3802586751,
     "atributos": {
       "marcacao": 78,
@@ -26686,7 +26686,7 @@
     "clubeId": 2,
     "nome": "Piquerez",
     "posicao": "LAT",
-    "idade": 23,
+    "idade": 27,
     "salario": 851901.6187257646,
     "atributos": {
       "marcacao": 82,
@@ -26705,7 +26705,7 @@
     "clubeId": 2,
     "nome": "Gustavo Gómez",
     "posicao": "ZAG",
-    "idade": 23,
+    "idade": 33,
     "salario": 531333.239386312,
     "atributos": {
       "marcacao": 88,
@@ -26724,7 +26724,7 @@
     "clubeId": 2,
     "nome": "Murilo",
     "posicao": "ZAG",
-    "idade": 28,
+    "idade": 29,
     "salario": 586215.4325132802,
     "atributos": {
       "marcacao": 85,
@@ -26741,9 +26741,9 @@
   {
     "id": 1464,
     "clubeId": 2,
-    "nome": "Zé Rafael",
+    "nome": "Marlon Freitas",
     "posicao": "VOL",
-    "idade": 24,
+    "idade": 31,
     "salario": 957860.5644249466,
     "atributos": {
       "marcacao": 82,
@@ -26760,7 +26760,7 @@
   {
     "id": 1465,
     "clubeId": 2,
-    "nome": "Aníbal Moreno",
+    "nome": "Emiliano Martínez",
     "posicao": "VOL",
     "idade": 26,
     "salario": 975753.4588074491,
@@ -26779,9 +26779,9 @@
   {
     "id": 1466,
     "clubeId": 2,
-    "nome": "Raphael Veiga",
+    "nome": "Andreas Pereira",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 30,
     "salario": 773395.4858859193,
     "atributos": {
       "marcacao": 60,
@@ -26798,9 +26798,9 @@
   {
     "id": 1467,
     "clubeId": 2,
-    "nome": "Estêvão",
+    "nome": "Jhon Arias",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 28,
     "salario": 664891.2984655242,
     "atributos": {
       "marcacao": 40,
@@ -26817,9 +26817,9 @@
   {
     "id": 1468,
     "clubeId": 2,
-    "nome": "Dudu",
+    "nome": "Felipe Anderson",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 33,
     "salario": 543133.9223081165,
     "atributos": {
       "marcacao": 45,
@@ -26836,9 +26836,9 @@
   {
     "id": 1469,
     "clubeId": 2,
-    "nome": "Flaco López",
+    "nome": "Vitor Roque",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 21,
     "salario": 930607.4325375459,
     "atributos": {
       "marcacao": 40,
@@ -26855,9 +26855,9 @@
   {
     "id": 1470,
     "clubeId": 2,
-    "nome": "Lázaro",
+    "nome": "Paulinho",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 26,
     "salario": 873340.4762410065,
     "atributos": {
       "marcacao": 45,
@@ -26874,7 +26874,7 @@
   {
     "id": 1471,
     "clubeId": 2,
-    "nome": "Marcos Rocha",
+    "nome": "Bruno Fuchs",
     "posicao": "LAT",
     "idade": 25,
     "salario": 800177.4115722779,
@@ -26893,9 +26893,9 @@
   {
     "id": 1472,
     "clubeId": 2,
-    "nome": "Richard Ríos",
+    "nome": "Lucas Evangelista",
     "posicao": "VOL",
-    "idade": 29,
+    "idade": 30,
     "salario": 501959.65117302485,
     "atributos": {
       "marcacao": 78,
@@ -26912,9 +26912,9 @@
   {
     "id": 1473,
     "clubeId": 2,
-    "nome": "Rony",
+    "nome": "José López",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 25,
     "salario": 727493.7869934775,
     "atributos": {
       "marcacao": 50,
@@ -26931,9 +26931,9 @@
   {
     "id": 1474,
     "clubeId": 2,
-    "nome": "Vanderlan",
+    "nome": "Jeferson",
     "posicao": "LAT",
-    "idade": 26,
+    "idade": 21,
     "salario": 773625.6383818546,
     "atributos": {
       "marcacao": 75,
@@ -26950,9 +26950,9 @@
   {
     "id": 1475,
     "clubeId": 2,
-    "nome": "Naves",
+    "nome": "Victor",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 25,
     "salario": 980658.6488755313,
     "atributos": {
       "marcacao": 78,
@@ -26971,7 +26971,7 @@
     "clubeId": 2,
     "nome": "Marcelo Lomba",
     "posicao": "GOL",
-    "idade": 28,
+    "idade": 39,
     "salario": 608609.7974834725,
     "atributos": {
       "marcacao": 10,
