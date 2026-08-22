@@ -118,6 +118,7 @@ assert.strictEqual(typeof scope.revisarContratosElencoDia, 'function', 'daily co
 assert.strictEqual(typeof scope.atualizarResumoContratos, 'function', 'contract summary helper should exist');
 assert.strictEqual(typeof scope.aplicarRenovacaoContratoJogador, 'function', 'contract renewal helper should exist');
 assert.strictEqual(typeof scope.calcularValorMercadoJogador, 'function', 'market value helper should exist');
+assert.strictEqual(typeof scope.obterStatusPreContrato, 'function', 'pre-contract eligibility helper should exist');
 
 const legado = jogador(1, 1, 'Legado', 'MEI', 76, { salario: 15000, anosContrato: 1 });
 const migrated = scope.migrarSave({ saveVersion: 10, calendarioGeral: [], elencoAtual: [legado], jogadores: [jogador(2, 2, 'Global', 'ATA', 72)] });
@@ -147,6 +148,8 @@ const valorizado = jogador(10, 1, 'Valorizado', 'ATA', 82, {
   evolucaoTemporada: 4
 });
 scope.clubeAtual = { id: 1, nome: 'Meu Clube', sigla: 'MEU', reputacao: 78, divisao: 'A', orcamento: 1000000, estadio: { capacidade: 30000 }, olheiros: [] };
+assert.strictEqual(scope.obterStatusPreContrato({ clubeId: 2, anosContrato: 3 }).elegivel, false, 'long contracts should not be eligible for pre-contract');
+assert.strictEqual(scope.obterStatusPreContrato({ clubeId: 2, anosContrato: 1 }).elegivel, true, 'last-year contracts should be eligible for pre-contract');
 scope.clubes = [scope.clubeAtual];
 scope.elencoAtual = [valorizado];
 scope.jogadores = [valorizado];

@@ -6612,6 +6612,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return proposta;
     };
 
+    $scope.obterStatusPreContrato = function(jogador) {
+        if (!jogador) return { elegivel: false, texto: 'Jogador indisponível' };
+        if (jogador.clubeId === 'mercado') return { elegivel: false, texto: 'Jogador livre: negocie contrato normal' };
+        if (jogador.clubeId === ($scope.clubeAtual && $scope.clubeAtual.id)) return { elegivel: false, texto: 'Seu jogador: use renovação' };
+        if ((jogador.anosContrato || 0) > 1) return { elegivel: false, texto: 'Ainda possui contrato longo' };
+        if (jogador.emNegociacao) return { elegivel: false, texto: 'Proposta já enviada' };
+        return { elegivel: true, texto: 'Elegível no último ano de contrato' };
+    };
+
     $scope.processarPreContratos = function() {
         var concluidos = [];
         ($scope.propostasPendentes || []).forEach(function(proposta) {
