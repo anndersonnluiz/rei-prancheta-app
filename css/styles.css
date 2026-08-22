@@ -3070,6 +3070,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .squad-screen > .card, .medical-screen > div { border-radius: 10px; padding: 12px !important; }
     .squad-screen .tabela-classificacao { min-width: 760px; }
     .squad-screen .development-panel { margin-bottom: 12px; }
+    .squad-screen .development-report-item { align-items: flex-start; flex-direction: column; gap: 8px; padding: 10px; }
+    .squad-screen .development-report-item > div:last-child { align-items: stretch !important; flex-wrap: wrap; width: 100%; }
+    .squad-screen .development-report-item button { min-height: 40px; }
+    .squad-screen .tabela-classificacao th, .squad-screen .tabela-classificacao td { padding: 9px 8px; }
     .medical-screen { padding: 0 !important; }
     .medical-screen > div > div:last-child { padding: 12px !important; }
     .medical-screen .infrastructure-management-grid { grid-template-columns: 1fr; }
@@ -3111,6 +3115,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .messages-screen .message-reader { min-height: 300px !important; padding: 16px !important; }
     .messages-screen .message-reader h2 { font-size: 20px !important; overflow-wrap: anywhere; }
     .messages-screen .message-reader [style*="justify-content: space-between"] { align-items: flex-start; flex-direction: column; gap: 5px; }
+    .messages-screen .messages-list > div { min-height: 54px; }
+    .messages-screen .message-reader button { min-height: 42px; }
     .career-screen .career-history-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .career-screen .career-trend { align-items: stretch; flex-direction: column; }
     .career-screen .career-recommendations { grid-template-columns: 1fr; }
@@ -3125,12 +3131,15 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .ceremony-screen .season-report-goals { grid-template-columns: repeat(2, 1fr); }
     .ceremony-screen .season-next-plan button { min-height: 44px; width: 100%; }
     .ceremony-screen [style*="justify-content: space-between"] { align-items: stretch !important; flex-direction: column; gap: 14px; }
+    .ceremony-screen .season-report-goals { gap: 8px; }
+    .ceremony-screen .season-report-goals > div { min-width: 0; overflow-wrap: anywhere; }
     .calendar-day-row { grid-template-columns: minmax(0, 1fr) !important; gap: 9px !important; padding: 12px !important; }
     .calendar-day-row > div { min-width: 0; }
     .calendar-day-row > div:last-child { justify-self: stretch; }
     .calendar-day-row button { min-height: 42px; width: 100%; }
     .calendar-filters { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: thin; }
     .calendar-filters button { flex: 0 0 auto; white-space: nowrap; }
+    .calendar-filters select { min-height: 42px; }
     .card:has(> .calendar-day-row) { overflow-x: hidden; }
 }
 
