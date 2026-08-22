@@ -333,6 +333,9 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .season-briefing-options strong { color: var(--text-main); font-size: 13px; }
 .season-briefing-options small { color: var(--text-muted); font-size: 11px; line-height: 1.3; }
 .season-preparation-panel p { color: var(--text-muted); font-size: 12px; margin: 0 0 10px; }
+.preseason-evaluation { background: #fff; border-left: 3px solid var(--br-blue); display: grid; gap: 3px; margin-bottom: 10px; padding: 8px 10px; }
+.preseason-evaluation strong { color: var(--text-main); font-size: 13px; }
+.preseason-evaluation small { color: var(--text-muted); font-size: 11px; line-height: 1.35; }
 .preparation-focus-actions, .preparation-training-actions { display: flex; flex-wrap: wrap; gap: 7px; }
 .preparation-focus-actions { margin-bottom: 9px; }
 .preparation-focus-actions button, .preparation-training-actions button { background: #fff; border: 1px solid #cfdbe4; border-radius: 6px; color: var(--text-main); cursor: pointer; font-size: 12px; font-weight: 700; min-height: 36px; padding: 7px 10px; }

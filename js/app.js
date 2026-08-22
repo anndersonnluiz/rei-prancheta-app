@@ -502,6 +502,30 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return 0.96 + (valor / 100) * 0.08;
     };
 
+    $scope.obterAvaliacaoPreTemporada = function() {
+        var elenco = Array.isArray($scope.elencoAtual) ? $scope.elencoAtual : [];
+        var porPosicao = { GOL: 0, LAT: 0, ZAG: 0, VOL: 0, MEI: 0, ATA: 0 };
+        var soma = 0;
+        elenco.forEach(function(jogador) {
+            var posicao = jogador.posicao || 'MEI';
+            porPosicao[posicao] = (porPosicao[posicao] || 0) + 1;
+            soma += Number($scope.calcularOverall ? $scope.calcularOverall(jogador) : calcularOverallBaseJogador(jogador)) || 0;
+        });
+        var media = elenco.length ? Math.round(soma / elenco.length) : 0;
+        var alertas = [];
+        if ((porPosicao.GOL || 0) < 2) alertas.push('Falta um goleiro de rotação');
+        if ((porPosicao.ZAG || 0) < 3) alertas.push('Defesa central curta');
+        if ((porPosicao.MEI || 0) + (porPosicao.VOL || 0) < 5) alertas.push('Poucas opções no meio-campo');
+        if ((porPosicao.ATA || 0) < 3) alertas.push('Poucas opções de ataque');
+        return {
+            mediaOverall: media,
+            tamanhoElenco: elenco.length,
+            profundidade: elenco.length >= 22 ? 'Boa' : (elenco.length >= 18 ? 'Atenção' : 'Crítica'),
+            alertas: alertas,
+            recomendacao: alertas.length > 0 ? 'Resolver carências antes da sequência de jogos.' : 'Elenco equilibrado para iniciar a temporada.'
+        };
+    };
+
     $scope.definirFocoPreparacao = function(foco) {
         if (['equilibrio', 'fisico', 'tatico', 'tecnico'].indexOf(foco) === -1) return false;
         atualizarResumoPreparacao().foco = foco;

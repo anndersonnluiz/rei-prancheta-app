@@ -373,6 +373,12 @@
                                     <span class="tactic-pill">Foco: {{preparacaoTemporada.foco}}</span>
                                 </div>
                                 <p>Escolha um foco e faça um treino nos dias sem partida. O treino só pode ser realizado uma vez por dia.</p>
+                                <div class="preseason-evaluation">
+                                    <span class="dashboard-eyebrow">Avaliação inicial</span>
+                                    <strong>{{obterAvaliacaoPreTemporada().mediaOverall}} OVR médio · {{obterAvaliacaoPreTemporada().profundidade}} profundidade</strong>
+                                    <small>{{obterAvaliacaoPreTemporada().recomendacao}}</small>
+                                    <small ng-if="obterAvaliacaoPreTemporada().alertas.length > 0">Carências: {{obterAvaliacaoPreTemporada().alertas.join(' · ')}}</small>
+                                </div>
                                 <div class="preparation-focus-actions">
                                     <button ng-repeat="foco in [{id:'equilibrio',label:'Equilíbrio'},{id:'fisico',label:'Físico'},{id:'tatico',label:'Tático'},{id:'tecnico',label:'Técnico'}]" ng-click="definirFocoPreparacao(foco.id)" ng-class="{'strategy-selected': preparacaoTemporada.foco === foco.id}">{{foco.label}}</button>
                                 </div>

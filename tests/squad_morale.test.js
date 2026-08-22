@@ -208,6 +208,9 @@ scope.gerarMetaDiretoria();
 assert.strictEqual(scope.confirmarPrioridadeTemporada('financeira'), true, 'board briefing should accept a valid seasonal priority');
 assert.strictEqual(scope.diretoriaStatus.prioridadeTemporada, 'financeira', 'board should persist the chosen seasonal priority');
 assert.strictEqual(scope.diretoriaStatus.briefingInicialConcluido, true, 'board briefing should be marked complete');
+const avaliacaoPreTemporada = scope.obterAvaliacaoPreTemporada();
+assert.ok(avaliacaoPreTemporada.mediaOverall > 0, 'pre-season assessment should calculate squad average overall');
+assert.ok(Array.isArray(avaliacaoPreTemporada.alertas), 'pre-season assessment should report squad gaps');
 
 scope.salvarJogoSilencioso();
 const saved = JSON.parse(storage.value);
