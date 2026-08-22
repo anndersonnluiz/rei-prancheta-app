@@ -1281,7 +1281,7 @@
                                     {{$index + 1}}º
                                 </td>
                                 <td style="padding: 10px; font-weight: bold; color: var(--text-main);">
-                                    {{time.clube.nome}} <span style="font-size: 11px; color: #888;">{{time.clube.sigla}}</span>
+                                    <span class="table-club-identity"><img ng-if="obterLogoClube(time.clube)" ng-src="{{obterLogoClube(time.clube)}}" class="club-crest club-crest-table" alt="Escudo do {{time.clube.nome}}"><span>{{time.clube.nome}} <small>{{time.clube.sigla}}</small></span></span>
                                 </td>
                                 <td style="padding: 10px; text-align: center; font-weight: bold; font-size: 16px;">{{time.pontos}}</td>
                                 <td style="padding: 10px; text-align: center; color: var(--text-muted);">{{time.vitorias + time.empates + time.derrotas}}</td>
