@@ -1206,6 +1206,7 @@
                     </div>
 
                     <div class="pitch-container" droppable-area="campo" ng-click="colocarJogadorSelecionadoNoCampo($event)">
+                        <div class="tactics-touch-hint" ng-if="jogadorTaticaSelecionado">Jogador selecionado: toque no ponto do campo para reposicionar</div>
                         
                         <!-- FASE 7: Direção do Ataque -->
                         <div class="pitch-direction">DEFESA ◀ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ATAQUE ▶</div>
@@ -1218,7 +1219,8 @@
                         <div class="player-token pos-{{ jogador.posicao }}" 
                              ng-repeat="jogador in elencoAtual | filter:{emCampo: true}"
                              draggable-player
-                             ng-click="retirarJogadorSelecionadoDoCampo(jogador)"
+                             ng-click="selecionarJogadorParaTatica(jogador)"
+                             ng-class="{'tactile-selected': jogadorTaticaSelecionado && jogadorTaticaSelecionado.id === jogador.id}"
                              ng-style="{'left': jogador.posX + '%', 'top': jogador.posY + '%', 'border': estaImprovisado(jogador) ? '2px solid #e74c3c' : '2px solid white'}">
                              <div class="token-overall">{{ calcularOverall(jogador) }}</div>
                              <div class="token-name" style="display: flex; flex-direction: column; align-items: center; position: relative;">

@@ -31,7 +31,7 @@ assert.ok(html.includes('aria-label="Navegação principal do clube"'), 'main na
 assert.ok(html.includes('aria-live="polite"'), 'messages should announce updates to assistive technology');
 assert.ok(html.includes('selecionarJogadorParaTatica(jogador)'), 'tactics should offer tap selection for players');
 assert.ok(html.includes('colocarJogadorSelecionadoNoCampo($event)'), 'tactics should offer tap placement on the pitch');
-assert.ok(html.includes('retirarJogadorSelecionadoDoCampo(jogador)'), 'tactics should offer tap removal from the pitch');
+assert.ok(html.includes("ng-class=\"{'tactile-selected': jogadorTaticaSelecionado"), 'tactics should visibly mark the selected player on the pitch');
 assert.ok(html.includes('pausarPartidaManualmente()'), 'live match should expose a manual tactical pause');
 assert.ok(html.includes('obterResumoPausaTatica().restantes'), 'tactical pause should show remaining substitutions');
 assert.ok(html.includes('obterResumoPausaTatica().impedidos'), 'tactical pause should show unavailable players');
