@@ -10,6 +10,13 @@ const jogadores = JSON.parse(fs.readFileSync(jogadoresPath, 'utf8'));
 const firstNames = ['Arthur', 'Caio', 'Davi', 'Enzo', 'Heitor', 'Ian', 'João', 'Kaique', 'Luan', 'Miguel', 'Nicolas', 'Otávio', 'Rafael', 'Samuel', 'Theo', 'Vitor', 'Yago', 'Breno'];
 const lastNames = ['Almeida', 'Barbosa', 'Cardoso', 'Castro', 'Dias', 'Duarte', 'Ferreira', 'Freitas', 'Gomes', 'Lima', 'Mendes', 'Moreira', 'Nogueira', 'Pereira', 'Ramos', 'Santos', 'Silva', 'Teixeira'];
 const genericName = /^(Alex|Carlos|Diego|Fernando|Gabriel|Leonardo|Lucas|Marcelo|Marcos|Matheus|Pedro|Rafael|Rodrigo|Thiago|Bruno|Eduardo|Felipe|João|Gustavo|André|Paulo|Vinicius|Victor|William|Wesley|Ricardo|Daniel|Caio|Renato|Sérgio|Sergio) /;
+const protectedNames = new Set([
+  'Neymar Jr', 'Gabigol', 'Rony', 'João Paulo', 'Gabriel Brazão', 'João Schmidt', 'Lucas Veríssimo',
+  'Cássio', 'Kaio Jorge', 'Matheus Pereira', 'Lucas Romero', 'Fabrício Bruno', 'Lucas Villalba',
+  'Gustavo Gómez', 'Piquerez', 'Andreas Pereira', 'Jhon Arias', 'Vitor Roque', 'Marcelo Lomba',
+  'Hugo Souza', 'Matheuzinho', 'André Carrillo', 'Rodrigo Garro', 'Yuri Alberto', 'Jesse Lingard',
+  'Raniele', 'Hulk', 'Everson', 'Renan Lodi', 'Gustavo Scarpa', 'Bernard', 'Dudu', 'Reinier'
+]);
 const divisionBase = { A: 76, B: 69, C: 63, D: 57 };
 const divisionSalaryFactor = { A: 70, B: 45, C: 28, D: 20 };
 const positionBonus = { GOL: 0, LAT: 1, ZAG: 1, VOL: 2, MEI: 3, ATA: 3 };
@@ -32,12 +39,13 @@ for (const player of jogadores) {
   const clubStrength = Math.round((Number(club.reputacao) || 50) / 20);
   const target = Math.max(45, Math.min(92, divisionBase[club.divisao] + clubStrength + (index % 7) - 3 + (positionBonus[player.posicao] || 0)));
 
-  if (genericName.test(player.nome)) {
+  if (genericName.test(player.nome) && !protectedNames.has(player.nome) && !player.nomeFicticio) {
     let candidate = `${firstNames[seed % firstNames.length]} ${lastNames[(seed >>> 8) % lastNames.length]}`;
     const seen = usedByClub.get(player.clubeId) || new Set();
     let suffix = 2;
     while (seen.has(candidate)) candidate = `${firstNames[seed % firstNames.length]} ${lastNames[(seed >>> 8) % lastNames.length]} ${suffix++}`;
     player.nome = candidate;
+    player.nomeFicticio = true;
     seen.add(candidate);
     usedByClub.set(player.clubeId, seen);
   }
