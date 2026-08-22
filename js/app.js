@@ -478,6 +478,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 dia: typeof base.ultimoAmistoso.dia === 'number' ? base.ultimoAmistoso.dia : 0
             } : null,
             ultimoTreinoDia: typeof base.ultimoTreinoDia === 'number' ? base.ultimoTreinoDia : -1,
+            ultimoTreinoIndividualDia: typeof base.ultimoTreinoIndividualDia === 'number' ? base.ultimoTreinoIndividualDia : -1,
             historico: Array.isArray(base.historico) ? base.historico.slice(0, 30) : []
         };
         ['defesa', 'meio', 'ataque'].forEach(function(setor) {
@@ -573,6 +574,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
         preparacao.historico.unshift({ dia: $scope.diaAtual, tipo: tipo, nome: config.nome, foco: preparacao.foco });
         preparacao.historico = preparacao.historico.slice(0, 30);
+        $scope.salvarJogoSilencioso();
+        return true;
+    };
+
+    $scope.aplicarTreinoIndividual = function(jogador) {
+        var preparacao = atualizarResumoPreparacao();
+        if (!jogador || preparacao.ultimoTreinoIndividualDia === $scope.diaAtual || ($scope.obterMeuJogoHoje && $scope.obterMeuJogoHoje()) || jogador.lesionado) return false;
+        normalizarJogadorSalvo(jogador);
+        preparacao.ultimoTreinoIndividualDia = $scope.diaAtual;
+        jogador.xpTemporada = Math.min(100, (jogador.xpTemporada || 0) + 6);
+        jogador.condicaoFisica = Math.max(35, (Number(jogador.condicaoFisica) || 100) - 2);
+        jogador.moral = Math.min(100, (Number(jogador.moral) || 70) + 1);
+        $scope.adicionarMensagem('Comissão Técnica', 'Treino individual concluído', jogador.nome + ' treinou com foco ' + (jogador.desenvolvimentoFoco || 'equilibrado') + ' e recebeu 6 XP de desenvolvimento.', false, 'ambiente');
         $scope.salvarJogoSilencioso();
         return true;
     };

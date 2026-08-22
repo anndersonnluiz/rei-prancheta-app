@@ -185,6 +185,11 @@ assert.strictEqual(banco.jogosTemporada, 0, 'bench players should not receive ma
 assert.strictEqual(scope.definirFocoDesenvolvimento(jovem, 'tecnico'), true, 'player focus should be accepted');
 assert.strictEqual(jovem.desenvolvimentoFoco, 'tecnico');
 assert.strictEqual(scope.definirFocoDesenvolvimento(jovem, 'invalido'), false, 'invalid player focus should be rejected');
+scope.diaAtual = 2;
+const xpAntesTreinoIndividual = jovem.xpTemporada;
+assert.strictEqual(scope.aplicarTreinoIndividual(jovem), true, 'individual training should be available once per day');
+assert.ok(jovem.xpTemporada > xpAntesTreinoIndividual, 'individual training should grant development XP');
+assert.strictEqual(scope.aplicarTreinoIndividual(adulto), false, 'only one individual training should be allowed per day');
 
 jovem.xpTemporada = 60;
 const jovemOverallAntes = overall(jovem);

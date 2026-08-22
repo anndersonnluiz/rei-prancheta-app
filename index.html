@@ -986,6 +986,7 @@
                                     </td>
                                     <td style="display: flex; gap: 5px;">
                                         <button class="btn btn-primary" style="background: var(--br-blue); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;" ng-click="iniciarNegociacao(jogador, true)">Renovar</button>
+                                        <button class="individual-training-button" ng-disabled="preparacaoTemporada.ultimoTreinoIndividualDia === diaAtual || jogador.lesionado || obterMeuJogoHoje()" ng-click="aplicarTreinoIndividual(jogador)">Treinar foco</button>
                                         <button ng-disabled="jogador.emCampo" class="btn btn-danger" style="background: {{jogador.emCampo ? '#ccc' : '#e74c3c'}}; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: {{jogador.emCampo ? 'not-allowed' : 'pointer'}}; font-size: 11px; font-weight: bold;" ng-click="venderJogador(jogador)">Vender</button>
                                     </td>
                                 </tr>
