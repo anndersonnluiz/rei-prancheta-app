@@ -117,6 +117,7 @@ assert.strictEqual(typeof scope.calcularSalarioDesejadoJogador, 'function', 'des
 assert.strictEqual(typeof scope.revisarContratosElencoDia, 'function', 'daily contract review helper should exist');
 assert.strictEqual(typeof scope.atualizarResumoContratos, 'function', 'contract summary helper should exist');
 assert.strictEqual(typeof scope.aplicarRenovacaoContratoJogador, 'function', 'contract renewal helper should exist');
+assert.strictEqual(typeof scope.calcularValorMercadoJogador, 'function', 'market value helper should exist');
 
 const legado = jogador(1, 1, 'Legado', 'MEI', 76, { salario: 15000, anosContrato: 1 });
 const migrated = scope.migrarSave({ saveVersion: 10, calendarioGeral: [], elencoAtual: [legado], jogadores: [jogador(2, 2, 'Global', 'ATA', 72)] });
@@ -125,6 +126,12 @@ assert.ok(migrated.elencoAtual[0].salarioDesejado >= migrated.elencoAtual[0].sal
 assert.strictEqual(migrated.elencoAtual[0].statusContrato, 'urgente', 'one-year contract should be urgent');
 assert.ok(typeof migrated.elencoAtual[0].satisfacaoContrato === 'number', 'legacy player should receive contract satisfaction');
 assert.ok(typeof migrated.elencoAtual[0].valorMercadoDinamico === 'number', 'legacy player should receive dynamic market value');
+
+const jovemValioso = jogador(11, 1, 'Jovem Valioso', 'ATA', 88, { idade: 20, potencial: 94 });
+const veteranoComum = jogador(12, 1, 'Veterano Comum', 'ATA', 72, { idade: 34, potencial: 72 });
+scope.normalizarEstadoContratoJogador(jovemValioso);
+scope.normalizarEstadoContratoJogador(veteranoComum);
+assert.ok(jovemValioso.valorMercadoDinamico > veteranoComum.valorMercadoDinamico, 'market value should reflect overall, potential and age');
 
 assert.strictEqual(scope.calcularStatusContratoJogador({ anosContrato: 3 }), 'seguro');
 assert.strictEqual(scope.calcularStatusContratoJogador({ anosContrato: 2 }), 'monitorar');

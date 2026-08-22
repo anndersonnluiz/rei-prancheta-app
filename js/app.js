@@ -820,8 +820,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
         jogador.satisfacaoContrato = calcularSatisfacaoContratoJogadorInterno(jogador, jogador.salarioDesejado);
         if (jogador.ultimaRevisaoContratoDia === undefined) jogador.ultimaRevisaoContratoDia = 0;
-        jogador.valorMercadoDinamico = Math.max(0, Math.round((parseFloat(jogador.salarioDesejado) || jogador.salario || 10000) * 100));
+        jogador.valorMercadoDinamico = calcularValorMercadoJogadorInterno(jogador);
         return jogador;
+    }
+
+    function calcularValorMercadoJogadorInterno(jogador) {
+        if (!jogador) return 0;
+        var overall = calcularOverallBaseJogador(jogador);
+        var potencial = Math.max(overall, valorNumericoOuPadrao(jogador.potencial, overall));
+        var idade = valorNumericoOuPadrao(jogador.idade, 24);
+        var idadeFator = idade <= 23 ? 1.18 : (idade >= 31 ? 0.72 : 1);
+        var qualidade = 0.55 + (overall / 100) * 0.85 + Math.max(0, potencial - overall) * 0.012;
+        return Math.max(0, Math.round(((parseFloat(jogador.salarioDesejado) || jogador.salario || 10000) * 100 * qualidade * idadeFator) / 10000) * 10000);
     }
 
     function criarResumoContratos(jogadores) {
@@ -843,6 +853,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.normalizarEstadoContratoJogador = function(jogador) {
         return normalizarEstadoContratoJogadorInterno(jogador);
+    };
+
+    $scope.calcularValorMercadoJogador = function(jogador) {
+        return calcularValorMercadoJogadorInterno(jogador);
     };
 
     $scope.calcularStatusContratoJogador = function(jogador) {
@@ -868,7 +882,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         jogador.ultimaRevisaoContratoDia = $scope.diaAtual || 0;
         jogador.statusContrato = calcularStatusContratoJogadorInterno(jogador);
         jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
-        jogador.valorMercadoDinamico = Math.max(0, Math.round(jogador.salarioDesejado * 100));
+        jogador.valorMercadoDinamico = calcularValorMercadoJogadorInterno(jogador);
         $scope.atualizarResumoContratos();
         jogador.satisfacaoContrato = 90;
         return jogador;
@@ -919,7 +933,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogador.statusContrato = calcularStatusContratoJogadorInterno(jogador);
             jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
             jogador.satisfacaoContrato = calcularSatisfacaoContratoJogadorInterno(jogador, jogador.salarioDesejado);
-            jogador.valorMercadoDinamico = Math.max(0, Math.round(jogador.salarioDesejado * 100));
+            jogador.valorMercadoDinamico = calcularValorMercadoJogadorInterno(jogador);
             jogador.ultimaRevisaoContratoDia = dia;
             if (jogador.satisfacaoContrato < 50 && jogador.moral !== undefined) jogador.moral = Math.max(0, jogador.moral - 1);
             revisados.push(jogador);
