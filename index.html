@@ -389,6 +389,10 @@
                                     <button ng-click="aplicarTreinamento('tecnico')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual || obterMeuJogoHoje()">⚽ Técnico</button>
                                     <button ng-click="aplicarTreinamento('defensivo')" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual || obterMeuJogoHoje()">🛡️ Defensivo</button>
                                 </div>
+                                <div class="preparation-friendly-actions">
+                                    <button ng-click="simularAmistosoPreTemporada()" ng-disabled="preparacaoTemporada.amistosoRealizado || preparacaoTemporada.concluida || obterMeuJogoHoje()">🤝 Jogar amistoso</button>
+                                    <small ng-if="preparacaoTemporada.ultimoAmistoso">Último amistoso: {{preparacaoTemporada.ultimoAmistoso.placar}} contra {{preparacaoTemporada.ultimoAmistoso.adversario}}</small>
+                                </div>
                             </div>
                         </div>
 

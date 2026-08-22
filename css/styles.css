@@ -342,6 +342,10 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .preparation-focus-actions button.strategy-selected { background: var(--br-green); border-color: var(--br-green); color: #fff; }
 .preparation-training-actions button { background: #edf4f8; }
 .preparation-training-actions button:disabled { cursor: not-allowed; opacity: .48; }
+.preparation-friendly-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.preparation-friendly-actions button { background: #fff; border: 1px solid var(--br-blue); border-radius: 6px; color: var(--br-blue); cursor: pointer; font-size: 12px; font-weight: 800; min-height: 36px; padding: 7px 10px; }
+.preparation-friendly-actions button:disabled { cursor: not-allowed; opacity: .48; }
+.preparation-friendly-actions small { color: var(--text-muted); font-size: 11px; }
 .director-response-button { align-items: center; border: 1px solid transparent; border-radius: 7px; cursor: pointer; display: inline-flex; font-size: 12px; font-weight: 800; gap: 5px; min-height: 38px; padding: 8px 12px; transition: background .18s ease, border-color .18s ease, transform .18s ease; }
 .director-response-button:hover { transform: translateY(-1px); }
 .director-response-support { background: #eaf7ef; border-color: #a9dcb9; color: #19713a; }

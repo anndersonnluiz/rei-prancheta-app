@@ -454,6 +454,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         foco: 'equilibrio',
         entrosamentoGeral: 50,
         entrosamentoSetores: { defesa: 50, meio: 50, ataque: 50 },
+        amistosoRealizado: false,
+        ultimoAmistoso: null,
         ultimoTreinoDia: -1,
         historico: []
     };
@@ -469,6 +471,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             foco: ['equilibrio', 'fisico', 'tatico', 'tecnico'].indexOf(base.foco) !== -1 ? base.foco : 'equilibrio',
             entrosamentoGeral: Math.max(0, Math.min(100, Number(base.entrosamentoGeral) || 50)),
             entrosamentoSetores: angular.copy(base.entrosamentoSetores || {}),
+            amistosoRealizado: !!base.amistosoRealizado,
+            ultimoAmistoso: base.ultimoAmistoso && typeof base.ultimoAmistoso === 'object' ? {
+                adversario: base.ultimoAmistoso.adversario || '',
+                placar: base.ultimoAmistoso.placar || '',
+                dia: typeof base.ultimoAmistoso.dia === 'number' ? base.ultimoAmistoso.dia : 0
+            } : null,
             ultimoTreinoDia: typeof base.ultimoTreinoDia === 'number' ? base.ultimoTreinoDia : -1,
             historico: Array.isArray(base.historico) ? base.historico.slice(0, 30) : []
         };
@@ -563,6 +571,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         preparacao.historico.unshift({ dia: $scope.diaAtual, tipo: tipo, nome: config.nome, foco: preparacao.foco });
         preparacao.historico = preparacao.historico.slice(0, 30);
         $scope.salvarJogoSilencioso();
+        return true;
+    };
+
+    $scope.simularAmistosoPreTemporada = function() {
+        var preparacao = atualizarResumoPreparacao();
+        if (preparacao.concluida || preparacao.amistosoRealizado || ($scope.obterMeuJogoHoje && $scope.obterMeuJogoHoje())) return false;
+        var candidatos = ($scope.clubes || []).filter(function(clube) { return clube.id !== ($scope.clubeAtual && $scope.clubeAtual.id); });
+        if (candidatos.length === 0) return false;
+        var adversario = candidatos[Math.floor(Math.random() * candidatos.length)];
+        var forcaMeuTime = $scope.calcularForcaTime ? $scope.calcularForcaTime() : 70;
+        var forcaAdversario = $scope.calcularForcaElencoPreJogo(adversario, false);
+        var golsMeu = $scope.gerarGols ? $scope.gerarGols(forcaMeuTime) : 0;
+        var golsAdversario = $scope.gerarGols ? $scope.gerarGols(forcaAdversario) : 0;
+        preparacao.amistosoRealizado = true;
+        preparacao.entrosamentoGeral = Math.min(100, preparacao.entrosamentoGeral + 4);
+        ['defesa', 'meio', 'ataque'].forEach(function(setor) { preparacao.entrosamentoSetores[setor] = Math.min(100, preparacao.entrosamentoSetores[setor] + 3); });
+        ($scope.elencoAtual || []).forEach(function(jogador) { jogador.condicaoFisica = Math.max(40, (Number(jogador.condicaoFisica) || 100) - 4); });
+        preparacao.ultimoAmistoso = { adversario: adversario.nome, placar: golsMeu + ' x ' + golsAdversario, dia: $scope.diaAtual };
+        var resultadoAmistoso = golsMeu > golsAdversario ? 'venceu' : (golsMeu < golsAdversario ? 'perdeu' : 'empatou');
+        $scope.adicionarMensagem('Comissão Técnica', 'Relatório do amistoso', 'O ' + $scope.clubeAtual.nome + ' ' + resultadoAmistoso + ' por ' + golsMeu + ' x ' + golsAdversario + ' contra ' + adversario.nome + '. O grupo ganhou entrosamento, mas acumulou desgaste.', false, 'ambiente');
+        $scope.salvarJogoSilencioso();
+        $scope.preparacaoTemporada = preparacao;
         return true;
     };
 

@@ -189,6 +189,8 @@ assert.ok(js.includes('confirmarPrioridadeTemporada'), 'board should persist the
 assert.ok(css.includes('.season-briefing-options'), 'board briefing should have responsive option cards');
 assert.ok(js.includes('obterAvaliacaoPreTemporada'), 'dashboard should calculate a pre-season squad assessment');
 assert.ok(html.includes('preseason-evaluation'), 'dashboard should show the pre-season squad assessment');
+assert.ok(js.includes('simularAmistosoPreTemporada'), 'pre-season should support a friendly match');
+assert.ok(html.includes('preparation-friendly-actions'), 'dashboard should expose the friendly action and report');
 assert.ok(html.includes('rel="icon"'), 'page should declare a favicon');
 assert.ok(html.includes('irParaFocoEstrategico()'), 'focus alerts should offer direct navigation');
 
