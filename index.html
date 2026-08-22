@@ -1355,7 +1355,7 @@
                                     <tr ng-repeat="time in grupo.tabela | orderBy:['-pontos', '-vitorias', '-saldo']" style="border-bottom: 1px solid #f0f0f0;" ng-style="{'background-color': time.clube.id === clubeAtual.id ? '#e8f5e9' : 'transparent'}">
                                         <td style="padding: 8px; font-size: 14px;">
                                             <span style="font-size: 12px; font-weight: bold; margin-right: 5px;" ng-style="{'color': $index < 2 ? 'var(--br-blue)' : '#999'}">{{$index + 1}}</span>
-                                            {{time.clube.nome}}
+                                            <span class="table-club-identity"><img ng-if="obterLogoClube(time.clube)" ng-src="{{obterLogoClube(time.clube)}}" class="club-crest club-crest-table" alt="Escudo do {{time.clube.nome}}"><span>{{time.clube.nome}} <small>{{time.clube.sigla}}</small></span></span>
                                         </td>
                                         <td style="padding: 8px; text-align: center; font-weight: bold;">{{time.pontos}}</td>
                                         <td style="padding: 8px; text-align: center; color: #666;">{{time.saldo}}</td>
@@ -1420,7 +1420,7 @@
                                     <tr ng-repeat="time in grupo.tabela | orderBy:['-pontos', '-vitorias', '-saldo']" style="border-bottom: 1px solid #f0f0f0;" ng-style="{'background-color': time.clube.id === clubeAtual.id ? '#e8f5e9' : 'transparent'}">
                                         <td style="padding: 8px; font-size: 14px;">
                                             <span style="font-size: 12px; font-weight: bold; margin-right: 5px;" ng-style="{'color': $index < 2 ? 'var(--br-blue)' : '#999'}">{{$index + 1}}</span>
-                                            {{time.clube.nome}}
+                                            <span class="table-club-identity"><img ng-if="obterLogoClube(time.clube)" ng-src="{{obterLogoClube(time.clube)}}" class="club-crest club-crest-table" alt="Escudo do {{time.clube.nome}}"><span>{{time.clube.nome}} <small>{{time.clube.sigla}}</small></span></span>
                                         </td>
                                         <td style="padding: 8px; text-align: center; font-weight: bold;">{{time.pontos}}</td>
                                         <td style="padding: 8px; text-align: center; color: #666;">{{time.saldo}}</td>
