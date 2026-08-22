@@ -4645,7 +4645,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return true;
     };
 
-    function criarRelatorioEvolucao(jogador, overallAntes, overallDepois, mudancas, motivo) {
+    function criarRelatorioEvolucao(jogador, overallAntes, overallDepois, mudancas, motivo, fatores) {
         var sequencia = ($scope.relatorioEvolucao ? $scope.relatorioEvolucao.length : 0) + (jogador.historicoEvolucao ? jogador.historicoEvolucao.length : 0) + 1;
         return {
             id: 'evo_' + (jogador.id !== undefined ? jogador.id : 'sem_id') + '_' + ($scope.diaAtual || 0) + '_' + sequencia,
@@ -4657,6 +4657,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             overallDepois: overallDepois,
             mudancas: mudancas,
             foco: jogador.desenvolvimentoFoco || 'equilibrado',
+            fatores: fatores || [],
             motivo: motivo
         };
     }
@@ -4765,7 +4766,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var delta = overallDepois - overallAntes;
             if (mudancas.length > 0 || delta !== 0) {
                 jogador.evolucaoTemporada = (jogador.evolucaoTemporada || 0) + delta;
-                var relatorio = criarRelatorioEvolucao(jogador, overallAntes, overallDepois, mudancas, motivoCiclo);
+                var fatores = [];
+                if ((jogador.xpTemporada || 0) >= 20) fatores.push('XP acumulado');
+                if (idade <= 21) fatores.push('idade de desenvolvimento');
+                if ((jogador.minutosTemporada || 0) >= 450) fatores.push('minutos em campo');
+                if ((jogador.moral || 0) >= 80) fatores.push('moral alta');
+                if ((jogador.potencial || 0) > overallAntes) fatores.push('potencial disponível');
+                if (jogador.lesionado) fatores.push('lesão');
+                var relatorio = criarRelatorioEvolucao(jogador, overallAntes, overallDepois, mudancas, motivoCiclo, fatores);
                 jogador.historicoEvolucao.unshift(relatorio);
                 jogador.historicoEvolucao = jogador.historicoEvolucao.slice(0, 10);
                 novosRelatorios.push(relatorio);

@@ -904,6 +904,7 @@
                                 <div>
                                     <strong>{{item.nome}}</strong>
                                     <span>{{item.posicao}} · Foco {{item.foco || 'equilibrado'}} · {{item.motivo}}</span>
+                                    <small ng-if="item.fatores && item.fatores.length">Influências: {{item.fatores.join(', ')}}</small>
                                 </div>
                                 <em>{{item.overallDepois > item.overallAntes ? '+' : ''}}{{item.overallDepois - item.overallAntes}}</em>
                             </div>
