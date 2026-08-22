@@ -447,6 +447,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.contextoExterno = criarContextoExternoPadrao();
     $scope.contextoExternoResumo = criarResumoContextoExterno($scope.contextoExterno);
     $scope.preparacaoTemporada = {
+        fase: 'pre-temporada',
+        inicioDia: 0,
+        fimDia: 10,
+        concluida: false,
         foco: 'equilibrio',
         entrosamentoGeral: 50,
         entrosamentoSetores: { defesa: 50, meio: 50, ataque: 50 },
@@ -458,6 +462,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     function normalizarPreparacaoTemporada(preparacao) {
         var base = preparacao || {};
         var resultado = {
+            fase: base.concluida ? 'temporada' : (base.fase || 'pre-temporada'),
+            inicioDia: typeof base.inicioDia === 'number' ? base.inicioDia : 0,
+            fimDia: typeof base.fimDia === 'number' ? base.fimDia : 10,
+            concluida: !!base.concluida,
             foco: ['equilibrio', 'fisico', 'tatico', 'tecnico'].indexOf(base.foco) !== -1 ? base.foco : 'equilibrio',
             entrosamentoGeral: Math.max(0, Math.min(100, Number(base.entrosamentoGeral) || 50)),
             entrosamentoSetores: angular.copy(base.entrosamentoSetores || {}),
@@ -499,6 +507,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         atualizarResumoPreparacao().foco = foco;
         $scope.salvarJogoSilencioso();
         return true;
+    };
+
+    $scope.atualizarFasePreparacao = function() {
+        var preparacao = atualizarResumoPreparacao();
+        if (preparacao.concluida || $scope.diaAtual <= preparacao.fimDia) return preparacao;
+        preparacao.concluida = true;
+        preparacao.fase = 'temporada';
+        $scope.adicionarMensagem('Comissão Técnica', 'Pré-temporada encerrada', 'O período inicial de preparação terminou. O elenco inicia a temporada com entrosamento ' + preparacao.entrosamentoGeral + '/100.', false, 'ambiente');
+        return preparacao;
     };
 
     $scope.aplicarTreinamento = function(tipo) {
@@ -4767,6 +4784,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
 
         $scope.diaAtual++;
+        $scope.atualizarFasePreparacao();
         $scope.processarEmprestimosDia();
         $scope.atualizarPropostasPendentes();
         $scope.atualizarResumoJanelaMercado();

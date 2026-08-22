@@ -199,6 +199,10 @@ const entrosamentoAntes = scope.preparacaoTemporada.entrosamentoSetores.defesa;
 assert.strictEqual(scope.aplicarTreinamento('defensivo'), true, 'defensive training should be available on a rest day');
 assert.ok(scope.preparacaoTemporada.entrosamentoSetores.defesa > entrosamentoAntes, 'sector training should improve the matching sector chemistry');
 assert.strictEqual(scope.aplicarTreinamento('tecnico'), false, 'only one training should be allowed per day');
+scope.diaAtual = 11;
+scope.atualizarFasePreparacao();
+assert.strictEqual(scope.preparacaoTemporada.concluida, true, 'pre-season should close after its preparation window');
+assert.strictEqual(scope.preparacaoTemporada.fase, 'temporada', 'season phase should advance after pre-season');
 
 scope.salvarJogoSilencioso();
 const saved = JSON.parse(storage.value);
