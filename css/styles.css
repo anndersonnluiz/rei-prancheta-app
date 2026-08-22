@@ -3066,6 +3066,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .competition-screen .card { max-width: 100%; overflow-x: auto; padding: 12px !important; }
     .competition-screen table { min-width: 420px; }
     .continental-screen table { min-width: 0; table-layout: fixed; width: 100%; }
+    .continental-screen > .card > div[style*="grid-template-columns"] { overflow-x: auto; padding-bottom: 6px; }
+    .continental-screen > .card > div[style*="grid-template-columns"] > div { min-width: 330px; }
+    .continental-screen table { min-width: 330px; table-layout: auto; width: 100%; }
     .continental-screen table td:first-child { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .continental-screen table th:not(:first-child), .continental-screen table td:not(:first-child) { width: 36px; }
     .competition-screen .card > div[style*="overflow-x: auto"] { margin-right: -4px; }
