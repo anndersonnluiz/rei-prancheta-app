@@ -211,7 +211,7 @@
     "id": 14,
     "nome": "Fortaleza",
     "sigla": "FOR",
-    "divisao": "A",
+    "divisao": "B",
     "cores": [
       "#1565c0",
       "#c62828"
@@ -225,14 +225,14 @@
   },
   {
     "id": 15,
-    "nome": "Ceará",
-    "sigla": "CEA",
+    "nome": "Red Bull Bragantino",
+    "sigla": "RBB",
     "divisao": "A",
     "cores": [
       "#000000",
       "#ffffff"
     ],
-    "reputacao": 84,
+    "reputacao": 82,
     "orcamento": 100000000,
     "estadio": {
       "nome": "Arena Castelão",
@@ -241,14 +241,14 @@
   },
   {
     "id": 16,
-    "nome": "Goiás",
-    "sigla": "GOI",
+    "nome": "Remo",
+    "sigla": "REM",
     "divisao": "A",
     "cores": [
       "#2e7d32",
       "#ffffff"
     ],
-    "reputacao": 83,
+    "reputacao": 73,
     "orcamento": 100000000,
     "estadio": {
       "nome": "Estádio Goiás",
@@ -291,7 +291,7 @@
     "id": 19,
     "nome": "Sport",
     "sigla": "SPO",
-    "divisao": "A",
+    "divisao": "B",
     "cores": [
       "#c62828",
       "#000000"
@@ -451,7 +451,7 @@
     "id": 29,
     "nome": "Chapecoense",
     "sigla": "CHA",
-    "divisao": "B",
+    "divisao": "A",
     "cores": [
       "#2e7d32",
       "#ffffff"
@@ -499,7 +499,7 @@
     "id": 32,
     "nome": "Mirassol",
     "sigla": "MIR",
-    "divisao": "B",
+    "divisao": "A",
     "cores": [
       "#fbc02d",
       "#2e7d32"
@@ -529,8 +529,8 @@
   },
   {
     "id": 34,
-    "nome": "Tombense",
-    "sigla": "TOM",
+    "nome": "Goiás",
+    "sigla": "GOI",
     "divisao": "B",
     "cores": [
       "#d32f2f",
@@ -545,8 +545,8 @@
   },
   {
     "id": 35,
-    "nome": "Sampaio Corrêa",
-    "sigla": "SAM",
+    "nome": "Athletic Club",
+    "sigla": "ATH",
     "divisao": "B",
     "cores": [
       "#fbc02d",
@@ -673,8 +673,8 @@
   },
   {
     "id": 43,
-    "nome": "Remo",
-    "sigla": "REM",
+    "nome": "Itabaiana",
+    "sigla": "ITA",
     "divisao": "C",
     "cores": [
       "#0d47a1",
