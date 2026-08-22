@@ -3027,6 +3027,12 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .sidebar-footer button, .sidebar-footer input + button { margin-bottom: 0 !important; }
     .main-content header { padding: 16px; }
     .main-content header h1, .main-content header h2 { font-size: 20px; }
+    .menu-inicial { align-items: flex-start; padding: 10px; }
+    .menu-content { padding: 20px 14px; }
+    .club-grid { grid-template-columns: 1fr; gap: 10px; }
+    .club-select-card { padding: 14px; }
+    .club-select-card h4 { font-size: 16px; }
+    .club-identity { gap: 8px; }
     .dashboard-side, .summary-kpis, .post-match-kpi-grid, .club-kpis { grid-template-columns: 1fr; }
     .card { padding: 14px !important; }
     .pre-match-grid, .post-match-grid { grid-template-columns: 1fr; }
