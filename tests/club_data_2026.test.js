@@ -14,6 +14,7 @@ assert.strictEqual(new Set(clubes.map((clube) => clube.nome)).size, clubes.lengt
 clubes.forEach((item) => {
   const elenco = jogadores.filter((jogador) => jogador.clubeId === item.id);
   assert.strictEqual(elenco.length, 18, `${item.nome} should have 18 players`);
+  assert.strictEqual(new Set(elenco.map((jogador) => jogador.nome)).size, elenco.length, `${item.nome} should not duplicate players internally`);
 });
 
 const clube = (nome) => clubes.find((item) => item.nome === nome);
