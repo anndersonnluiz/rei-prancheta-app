@@ -800,7 +800,7 @@
                         </div>
 
                         <div class="pre-match-team-row">
-                            <div class="pre-match-crest">{{preJogo.analise.adversario.sigla}}</div>
+                            <div class="pre-match-crest"><img ng-if="obterLogoClube(preJogo.analise.adversario)" ng-src="{{obterLogoClube(preJogo.analise.adversario)}}" class="club-crest" alt="Escudo do {{preJogo.analise.adversario.nome}}"><span ng-if="!obterLogoClube(preJogo.analise.adversario)">{{preJogo.analise.adversario.sigla}}</span></div>
                             <div>
                                 <strong>Forca estimada {{preJogo.analise.forcaAdversario}}</strong>
                                 <span>{{preJogo.analise.statusConfronto}}</span>
@@ -1530,7 +1530,7 @@
                 <div class="scoreboard">
                     <div class="team">
                         <div class="team-color" ng-style="{'background-color': corDoTime(partidaAoVivo.mandante, 0), 'border': '3px solid ' + corDoTime(partidaAoVivo.mandante, 1)}">
-                            <span style="color: {{corDoTime(partidaAoVivo.mandante, 1)}}; font-size: 11px; font-weight: bold;">{{ partidaAoVivo.mandante.sigla }}</span>
+                            <img ng-if="obterLogoClube(partidaAoVivo.mandante)" ng-src="{{obterLogoClube(partidaAoVivo.mandante)}}" class="club-crest" alt="Escudo do {{partidaAoVivo.mandante.nome}}"><span ng-if="!obterLogoClube(partidaAoVivo.mandante)" style="color: {{corDoTime(partidaAoVivo.mandante, 1)}}; font-size: 11px; font-weight: bold;">{{ partidaAoVivo.mandante.sigla }}</span>
                         </div>
                         <h3>{{ partidaAoVivo.mandante.nome }}</h3>
                     </div>
@@ -1544,7 +1544,7 @@
                     <div class="team">
                         <h3>{{ partidaAoVivo.visitante.nome }}</h3>
                         <div class="team-color" ng-style="{'background-color': corDoTime(partidaAoVivo.visitante, 0), 'border': '3px solid ' + corDoTime(partidaAoVivo.visitante, 1)}">
-                            <span style="color: {{corDoTime(partidaAoVivo.visitante, 1)}}; font-size: 11px; font-weight: bold;">{{ partidaAoVivo.visitante.sigla }}</span>
+                            <img ng-if="obterLogoClube(partidaAoVivo.visitante)" ng-src="{{obterLogoClube(partidaAoVivo.visitante)}}" class="club-crest" alt="Escudo do {{partidaAoVivo.visitante.nome}}"><span ng-if="!obterLogoClube(partidaAoVivo.visitante)" style="color: {{corDoTime(partidaAoVivo.visitante, 1)}}; font-size: 11px; font-weight: bold;">{{ partidaAoVivo.visitante.sigla }}</span>
                         </div>
                     </div>
                 </div>
