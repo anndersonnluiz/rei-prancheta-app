@@ -8241,6 +8241,42 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    var logosClubes = {
+        'Atlético-MG': ['Serie A', 'atletico_mg.png'], 'Athletico-PR': ['Serie A', 'atletico_pr.png'],
+        'Bahia': ['Serie A', 'bahia.png'], 'Botafogo': ['Serie A', 'botafogo.png'], 'Chapecoense': ['Serie A', 'chapecoense.png'],
+        'Corinthians': ['Serie A', 'corinthians.png'], 'Coritiba': ['Serie A', 'coritiba.png'], 'Cruzeiro': ['Serie A', 'cruzeiro.png'],
+        'Flamengo': ['Serie A', 'flamengo.png'], 'Fluminense': ['Serie A', 'fluminense.png'], 'Grêmio': ['Serie A', 'gremio.png'],
+        'Internacional': ['Serie A', 'internacional.png'], 'Mirassol': ['Serie A', 'mirassol.png'], 'Palmeiras': ['Serie A', 'palmeiras.png'],
+        'Red Bull Bragantino': ['Serie A', 'redbull_bragantino.png'], 'Remo': ['Serie A', 'remo.png'], 'Santos': ['Serie A', 'santos.png'],
+        'São Paulo': ['Serie A', 'são_paulo.png'], 'Vasco': ['Serie A', 'vasco.png'], 'Vitória': ['Serie A', 'vitoria.png'],
+        'América-MG': ['Serie B', 'america_mg.png'], 'Atlético-GO': ['Serie B', 'atletico_go.png'], 'Athletic Club': ['Serie B', 'atlhetic.png'],
+        'Avaí': ['Serie B', 'avai.png'], 'Botafogo-SP': ['Serie B', 'botafogo_sp.png'], 'Ceará': ['Serie B', 'ceara.png'], 'CRB': ['Serie B', 'crb.png'],
+        'Criciúma': ['Serie B', 'criciuma.png'], 'Cuiabá': ['Serie B', 'cuiaba.png'], 'Fortaleza': ['Serie B', 'fortaleza.png'], 'Goiás': ['Serie B', 'goias.png'],
+        'Juventude': ['Serie B', 'juventude.png'], 'Londrina': ['Serie B', 'londrina.png'], 'Náutico': ['Serie B', 'nautico.png'],
+        'Novorizontino': ['Serie B', 'novorizontino.png'], 'Operário-PR': ['Serie B', 'operario.png'], 'Ponte Preta': ['Serie B', 'ponte_preta.png'],
+        'São Bernardo': ['Serie B', 'sao_bernardo.png'], 'Sport': ['Serie B', 'sport.png'], 'Vila Nova': ['Serie B', 'vila_nova.png'],
+        'Amazonas': ['Serie C', 'amazonas.png'], 'Anápolis': ['Serie C', 'anapolis.png'], 'Barra-SC': ['Serie C', 'barra.png'],
+        'Botafogo-PB': ['Serie C', 'botafogo_pb.png'], 'Brusque': ['Serie C', 'brusque.png'], 'Caxias': ['Serie C', 'caxias.png'],
+        'Confiança': ['Serie C', 'confianca.png'], 'Ferroviária': ['Serie C', 'ferroviaria.png'], 'Figueirense': ['Serie C', 'figueirense.png'],
+        'Floresta': ['Serie C', 'floresta.png'], 'Guarani': ['Serie C', 'guarani.png'], 'Inter de Limeira': ['Serie C', 'inter_limeira.png'],
+        'Itabaiana': ['Serie C', 'itabaiana.png'], 'Ituano': ['Serie C', 'itauano.png'], 'Maranhão': ['Serie C', 'maranhao.png'],
+        'Maringá': ['Serie C', 'maringa.png'], 'Paysandu': ['Serie C', 'paysandu.png'], 'Santa Cruz': ['Serie C', 'santa_cruz.png'],
+        'Volta Redonda': ['Serie C', 'volta_redonda.png'], 'Ypiranga-RS': ['Serie C', 'ypiranga.png'],
+        'ASA': ['Serie D', 'asa.webp'], 'Atlético-AC': ['Serie D', 'atletico_ac.png'], 'Bangu': ['Serie D', 'bangu.png'],
+        'Brasil de Pelotas': ['Serie D', 'brasil_pelotas.png'], 'Caldense': ['Serie D', 'caldense.png'], 'Campinense': ['Serie D', 'campinense.png'],
+        'Cianorte': ['Serie D', 'cia_norte.png'], 'Joinville': ['Serie D', 'joinville.png'], 'Moto Club': ['Serie D', 'moto_club.png'],
+        'Nacional-AM': ['Serie D', 'nacional_am.png'], 'Portuguesa-RJ': ['Serie D', 'portuguesa_rj.png'], 'Retrô': ['Serie D', 'retro.png'],
+        'Rio Branco-AC': ['Serie D', 'rio_branco_ac.png'], 'Santo André': ['Serie D', 'santo_andre.png'], 'São José-RS': ['Serie D', 'sao_jose_rs.png'],
+        'Sergipe': ['Serie D', 'sergipe.png'], 'Sousa': ['Serie D', 'sousa.png'], 'Treze': ['Serie D', 'treze.png'], 'Tuna Luso': ['Serie D', 'tuna_luso.png'],
+        'XV de Piracicaba': ['Serie D', 'xv_piracicaba.png']
+    };
+
+    $scope.obterLogoClube = function(clubeOuId) {
+        var clube = typeof clubeOuId === 'object' ? clubeOuId : ($scope.clubes || []).find(function(item) { return String(item.id) === String(clubeOuId); });
+        if (!clube || !logosClubes[clube.nome]) return null;
+        return encodeURI('assets/clubes/' + logosClubes[clube.nome][0] + '/' + logosClubes[clube.nome][1]);
+    };
+
     $scope.obterNomeClube = function(clubeId) {
         if (!clubeId || clubeId === 'mercado') return 'LIVRE NO MERCADO';
         if (!$scope.clubes) return 'Desconhecido';

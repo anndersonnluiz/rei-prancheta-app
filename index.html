@@ -72,7 +72,7 @@
             <div class="club-grid">
                 <div class="club-select-card" ng-repeat="clube in clubes | filter: (filtroDivisaoMenu ? {divisao: filtroDivisaoMenu} : undefined):true" ng-click="iniciarNovoJogo(clube)">
                     <div class="club-color-bar" ng-style="{ 'background-color': clube.cores[0] }"></div>
-                    <h4>{{ clube.nome }} <span style="font-size: 12px; color: var(--text-muted);">{{clube.sigla}}</span></h4>
+                    <div class="club-identity"><img ng-if="obterLogoClube(clube)" ng-src="{{obterLogoClube(clube)}}" class="club-crest club-crest-select" alt="Escudo do {{clube.nome}}"><h4>{{ clube.nome }} <span style="font-size: 12px; color: var(--text-muted);">{{clube.sigla}}</span></h4></div>
                     <p>Orçamento: {{ formatarMoeda(clube.orcamento) }}</p>
                     <p>Estádio: {{ clube.estadio.nome }}</p>
                 </div>
@@ -341,7 +341,7 @@
                             <div class="matchup-compact" ng-if="obterMeuJogoHoje()">
                                 <div class="matchup-team">
                                     <div class="team-chip" ng-style="{'background-color': corDoTime(obterMeuJogoHoje().mandante, 0), 'color': corDoTime(obterMeuJogoHoje().mandante, 1), 'border-color': corDoTime(obterMeuJogoHoje().mandante, 1)}">
-                                        {{ obterMeuJogoHoje().mandante.sigla }}
+                                        <img ng-if="obterLogoClube(obterMeuJogoHoje().mandante)" ng-src="{{obterLogoClube(obterMeuJogoHoje().mandante)}}" class="club-crest club-crest-match" alt="Escudo do {{obterMeuJogoHoje().mandante.nome}}"><span ng-if="!obterLogoClube(obterMeuJogoHoje().mandante)">{{ obterMeuJogoHoje().mandante.sigla }}</span>
                                     </div>
                                     <strong>{{ obterMeuJogoHoje().mandante.nome }}</strong>
                                     <span>Mandante</span>
@@ -349,7 +349,7 @@
                                 <div class="matchup-divider">X</div>
                                 <div class="matchup-team">
                                     <div class="team-chip" ng-style="{'background-color': corDoTime(obterMeuJogoHoje().visitante, 0), 'color': corDoTime(obterMeuJogoHoje().visitante, 1), 'border-color': corDoTime(obterMeuJogoHoje().visitante, 1)}">
-                                        {{ obterMeuJogoHoje().visitante.sigla }}
+                                        <img ng-if="obterLogoClube(obterMeuJogoHoje().visitante)" ng-src="{{obterLogoClube(obterMeuJogoHoje().visitante)}}" class="club-crest club-crest-match" alt="Escudo do {{obterMeuJogoHoje().visitante.nome}}"><span ng-if="!obterLogoClube(obterMeuJogoHoje().visitante)">{{ obterMeuJogoHoje().visitante.sigla }}</span>
                                     </div>
                                     <strong>{{ obterMeuJogoHoje().visitante.nome }}</strong>
                                     <span>Visitante</span>

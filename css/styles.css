@@ -78,6 +78,18 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.35); border-radius: 999px; }
 .sidebar-header { padding: 25px 20px; background-color: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; }
 .game-logo-small { max-width: 130px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+
+.club-identity { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.club-identity h4 { margin: 0; }
+.club-crest { display: block; width: 42px; height: 42px; object-fit: contain; object-position: center; flex: 0 0 auto; }
+.club-crest-select { width: 44px; height: 44px; padding: 3px; border-radius: 10px; background: #fff; border: 1px solid #e2e8ee; }
+.club-crest-match { width: 34px; height: 34px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.18)); }
+.team-chip:has(.club-crest-match) { display: flex; align-items: center; justify-content: center; }
+
+@media (max-width: 640px) {
+    .club-crest-select { width: 36px; height: 36px; }
+    .club-crest-match { width: 30px; height: 30px; }
+}
 .manager-name { font-size: 13px; color: var(--br-green); font-weight: 600; }
 .nav-links { list-style: none; padding: 20px 0; flex: 1 0 auto; }
 .nav-links li { padding: 15px 20px; cursor: pointer; font-size: 15px; font-weight: 500; transition: background 0.2s; display: flex; gap: 12px; }
