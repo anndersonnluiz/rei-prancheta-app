@@ -26,4 +26,8 @@ assert.strictEqual(clube('Cuiabá').divisao, 'B');
 const santos2026 = jogadores.filter((jogador) => jogador.clubeId === 18).map((jogador) => jogador.nome);
 ['Neymar Jr', 'Gabigol', 'Rony', 'João Paulo'].forEach((nome) => assert.ok(santos2026.includes(nome), `Santos should include ${nome}`));
 
+const cruzeiro2026 = jogadores.filter((jogador) => jogador.clubeId === 9).map((jogador) => jogador.nome);
+['Cássio', 'Kaio Jorge', 'Matheus Pereira', 'Lucas Romero'].forEach((nome) => assert.ok(cruzeiro2026.includes(nome), `Cruzeiro should include ${nome}`));
+assert.ok(!jogadores.some((jogador) => jogador.clubeId === 1 && jogador.nome === 'Gabigol'), 'Gabigol should not remain at Flamengo in 2026');
+
 console.log('club_data_2026.test.js passed');
