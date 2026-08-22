@@ -401,8 +401,8 @@
   },
   {
     "id": 26,
-    "nome": "Guarani",
-    "sigla": "GUA",
+    "nome": "Cuiabá",
+    "sigla": "CUI",
     "divisao": "B",
     "cores": [
       "#2e7d32",
@@ -561,8 +561,8 @@
   },
   {
     "id": 36,
-    "nome": "Ituano",
-    "sigla": "ITU",
+    "nome": "Náutico",
+    "sigla": "NAU",
     "divisao": "B",
     "cores": [
       "#d32f2f",
@@ -593,8 +593,8 @@
   },
   {
     "id": 38,
-    "nome": "ABC",
-    "sigla": "ABC",
+    "nome": "São Bernardo",
+    "sigla": "SBE",
     "divisao": "B",
     "cores": [
       "#000000",
@@ -689,8 +689,8 @@
   },
   {
     "id": 44,
-    "nome": "Náutico",
-    "sigla": "NÁU",
+    "nome": "Anápolis",
+    "sigla": "ANA",
     "divisao": "C",
     "cores": [
       "#c62828",
@@ -721,8 +721,8 @@
   },
   {
     "id": 46,
-    "nome": "Paraná",
-    "sigla": "PAR",
+    "nome": "Barra-SC",
+    "sigla": "BAR",
     "divisao": "C",
     "cores": [
       "#c62828",
@@ -753,8 +753,8 @@
   },
   {
     "id": 48,
-    "nome": "Joinville",
-    "sigla": "JOI",
+    "nome": "Inter de Limeira",
+    "sigla": "INT",
     "divisao": "C",
     "cores": [
       "#d32f2f",
@@ -769,8 +769,8 @@
   },
   {
     "id": 49,
-    "nome": "CSA",
-    "sigla": "CSA",
+    "nome": "Maranhão",
+    "sigla": "MAR",
     "divisao": "C",
     "cores": [
       "#0288d1",
@@ -817,8 +817,8 @@
   },
   {
     "id": 52,
-    "nome": "São Bernardo",
-    "sigla": "SÃO",
+    "nome": "Maringá",
+    "sigla": "MAR",
     "divisao": "C",
     "cores": [
       "#fbc02d",
@@ -897,8 +897,8 @@
   },
   {
     "id": 57,
-    "nome": "Aparecidense",
-    "sigla": "APA",
+    "nome": "Ferroviária",
+    "sigla": "FER",
     "divisao": "C",
     "cores": [
       "#1565c0",
@@ -913,8 +913,8 @@
   },
   {
     "id": 58,
-    "nome": "Altos",
-    "sigla": "ALT",
+    "nome": "Guarani",
+    "sigla": "GUA",
     "divisao": "C",
     "cores": [
       "#2e7d32",
@@ -929,8 +929,8 @@
   },
   {
     "id": 59,
-    "nome": "Manaus",
-    "sigla": "MAN",
+    "nome": "Ituano",
+    "sigla": "ITU",
     "divisao": "C",
     "cores": [
       "#2e7d32",
@@ -961,8 +961,8 @@
   },
   {
     "id": 61,
-    "nome": "Ferroviária",
-    "sigla": "FER",
+    "nome": "São José-RS",
+    "sigla": "SJO",
     "divisao": "D",
     "cores": [
       "#881c1c",
@@ -1233,8 +1233,8 @@
   },
   {
     "id": 78,
-    "nome": "Inter de Limeira",
-    "sigla": "INT",
+    "nome": "Joinville",
+    "sigla": "JOI",
     "divisao": "D",
     "cores": [
       "#000000",

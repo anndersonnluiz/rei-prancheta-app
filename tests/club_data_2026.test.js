@@ -18,5 +18,8 @@ assert.strictEqual(clube('Ceará').divisao, 'B');
 assert.strictEqual(clube('Remo').divisao, 'A');
 assert.strictEqual(clube('Red Bull Bragantino').divisao, 'A');
 assert.strictEqual(clube('Athletic Club').divisao, 'B');
+assert.strictEqual(clube('Joinville').divisao, 'D');
+assert.strictEqual(clube('Inter de Limeira').divisao, 'C');
+assert.strictEqual(clube('Cuiabá').divisao, 'B');
 
 console.log('club_data_2026.test.js passed');
