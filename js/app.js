@@ -709,6 +709,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (jogador.minutosTemporada === undefined) jogador.minutosTemporada = 0;
         if (jogador.evolucaoTemporada === undefined) jogador.evolucaoTemporada = 0;
         if (!Array.isArray(jogador.historicoEvolucao)) jogador.historicoEvolucao = [];
+        var focosDesenvolvimento = ['equilibrado', 'fisico', 'tecnico', 'tatico', 'defensivo'];
+        if (focosDesenvolvimento.indexOf(jogador.desenvolvimentoFoco) < 0) jogador.desenvolvimentoFoco = 'equilibrado';
 
         if (jogador.posicao === 'GOL') {
             if (attr.posicionamento === undefined) attr.posicionamento = valorNumericoOuPadrao(attr.reflexo, 75);
@@ -2192,7 +2194,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if (categoria === 'Sub-20' && atleta.moral >= 75) ganho += 1;
                 if (bonusCT >= 4 && atleta.potencial - overallAntes > 5) ganho += 1;
                 if (ganho > 0 && overallAntes < atleta.potencial) {
-                    var atributos = obterAtributosDesenvolvimento(atleta);
+                    var atributos = obterAtributosDesenvolvimentoPorFoco(atleta);
                     var atributo = atributos[obterChaveNumericaJogador(atleta) % atributos.length];
                     atleta.atributos[atributo] = Math.min(99, atleta.atributos[atributo] + ganho);
                     atleta.xpTemporada = (atleta.xpTemporada || 0) + (categoria === 'Sub-20' ? ganho * 2 : ganho);
@@ -4617,6 +4619,29 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return ['passe', 'fisico', 'velocidade', 'marcacao'];
     }
 
+    function obterAtributosDesenvolvimentoPorFoco(jogador) {
+        var foco = jogador && jogador.desenvolvimentoFoco ? jogador.desenvolvimentoFoco : 'equilibrado';
+        if (foco === 'fisico') return ['fisico', 'velocidade'];
+        if (foco === 'tecnico') return jogador && jogador.posicao === 'GOL' ? ['distribuicao', 'reflexo'] : ['passe', 'finalizacao'];
+        if (foco === 'defensivo') return jogador && jogador.posicao === 'GOL' ? ['reflexo', 'posicionamento'] : ['marcacao', 'posicionamento'];
+        if (foco === 'tatico') return ['posicionamento', 'passe'];
+        return obterAtributosDesenvolvimento(jogador);
+    }
+
+    $scope.opcoesDesenvolvimento = [
+        { id: 'equilibrado', label: 'Equilibrado' }, { id: 'fisico', label: 'Físico' },
+        { id: 'tecnico', label: 'Técnico' }, { id: 'tatico', label: 'Tático' },
+        { id: 'defensivo', label: 'Defensivo' }
+    ];
+
+    $scope.definirFocoDesenvolvimento = function(jogador, foco) {
+        if (!jogador || !$scope.opcoesDesenvolvimento.some(function(item) { return item.id === foco; })) return false;
+        jogador.desenvolvimentoFoco = foco;
+        normalizarJogadorSalvo(jogador);
+        if (typeof $scope.salvarJogoSilencioso === 'function') $scope.salvarJogoSilencioso();
+        return true;
+    };
+
     function criarRelatorioEvolucao(jogador, overallAntes, overallDepois, mudancas, motivo) {
         var sequencia = ($scope.relatorioEvolucao ? $scope.relatorioEvolucao.length : 0) + (jogador.historicoEvolucao ? jogador.historicoEvolucao.length : 0) + 1;
         return {
@@ -4694,7 +4719,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var ganhoPermitido = Math.min(limiteGanho, ciclosXp);
 
             if (ganhoPermitido > 0 && overallAntes < jogador.potencial && !jogador.lesionado) {
-                var atributos = obterAtributosDesenvolvimento(jogador);
+                var atributos = obterAtributosDesenvolvimentoPorFoco(jogador);
                 var inicio = obterChaveNumericaJogador(jogador) % atributos.length;
                 var aplicados = 0;
                 for (var i = 0; i < atributos.length && aplicados < ganhoPermitido; i++) {

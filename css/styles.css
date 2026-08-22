@@ -2184,6 +2184,24 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
     grid-template-columns: repeat(3, 1fr);
 }
 
+.development-focus-label {
+    color: var(--text-muted);
+    display: grid;
+    font-size: 11px;
+    font-weight: 700;
+    gap: 4px;
+}
+
+.development-focus-select {
+    background: white;
+    border: 1px solid #cbd6df;
+    border-radius: 6px;
+    color: var(--text-main);
+    font-size: 12px;
+    min-height: 32px;
+    padding: 4px 7px;
+}
+
 .youth-metrics span {
     background: white;
     border-radius: 8px;

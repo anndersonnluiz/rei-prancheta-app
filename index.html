@@ -966,6 +966,7 @@
                                             <span>{{jogador.jogosTemporada || 0}}j · {{jogador.minutosTemporada || 0}}min</span>
                                             <span ng-if="jogador.categoriaOrigem" style="color:var(--br-blue);">Base {{jogador.categoriaOrigem}}</span>
                                         </div>
+                                        <select class="development-focus-select" ng-model="jogador.desenvolvimentoFoco" ng-options="opcao.id as opcao.label for opcao in opcoesDesenvolvimento" ng-change="definirFocoDesenvolvimento(jogador, jogador.desenvolvimentoFoco)" title="Foco individual de desenvolvimento"></select>
                                     </td>
                                     <td>
                                         <div style="width: 80px; background: #e1e8ed; height: 8px; border-radius: 4px; overflow: hidden; display: inline-block; vertical-align: middle;">
@@ -1045,6 +1046,9 @@
                                 <span>EVO <strong>{{atleta.evolucaoTemporada || 0}}</strong></span>
                             </div>
                             <small style="display:block; margin-bottom:8px; color:var(--text-muted);">{{obterStatusPromocaoBase(atleta).texto}}</small>
+                            <label class="development-focus-label">Foco de formação
+                                <select class="development-focus-select" ng-model="atleta.desenvolvimentoFoco" ng-options="opcao.id as opcao.label for opcao in opcoesDesenvolvimento" ng-change="definirFocoDesenvolvimento(atleta, atleta.desenvolvimentoFoco)"></select>
+                            </label>
                             <div class="youth-actions">
                                 <button ng-click="promoverAtletaBase(atleta.id)" ng-disabled="!obterStatusPromocaoBase(atleta).elegivel">Promover</button>
                                 <button class="muted" ng-click="dispensarAtletaBase(atleta.id)">Dispensar</button>

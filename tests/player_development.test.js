@@ -117,6 +117,8 @@ const { scope, storage } = createControllerHarness();
 assert.strictEqual(typeof scope.registrarXpPartida, 'function', 'registrarXpPartida should exist');
 assert.strictEqual(typeof scope.aplicarEvolucaoElenco, 'function', 'aplicarEvolucaoElenco should exist');
 assert.strictEqual(typeof scope.atualizarRelatorioEvolucaoVisivel, 'function', 'atualizarRelatorioEvolucaoVisivel should exist');
+assert.ok(Array.isArray(scope.opcoesDesenvolvimento), 'development focus options should exist');
+assert.strictEqual(typeof scope.definirFocoDesenvolvimento, 'function', 'development focus setter should exist');
 
 const meuTime = { id: 1, nome: 'Meu Clube', sigla: 'MEU', reputacao: 78, divisao: 'A', estadio: { capacidade: 30000 }, orcamento: 1000000 };
 const rival = { id: 2, nome: 'Rival FC', sigla: 'RIV', reputacao: 80, divisao: 'A', estadio: { capacidade: 40000 } };
@@ -151,6 +153,7 @@ assert.strictEqual(migratedSave.elencoAtual[0].xpTemporada, 0);
 assert.strictEqual(migratedSave.elencoAtual[0].jogosTemporada, 0);
 assert.strictEqual(migratedSave.elencoAtual[0].minutosTemporada, 0);
 assert.strictEqual(migratedSave.elencoAtual[0].evolucaoTemporada, 0);
+assert.strictEqual(migratedSave.elencoAtual[0].desenvolvimentoFoco, 'equilibrado', 'legacy players should receive balanced focus');
 assert.ok(Array.isArray(migratedSave.elencoAtual[0].historicoEvolucao), 'migration should add evolution history');
 assert.ok(Array.isArray(migratedSave.relatorioEvolucao), 'migration should add global evolution report');
 assert.strictEqual(migratedSave.ambienteElenco.valor, 70, 'migration should add squad environment default');
@@ -178,6 +181,10 @@ assert.strictEqual(jovem.minutosTemporada, 90, 'players on field should receive 
 assert.ok(jovem.xpTemporada > adulto.xpTemporada, 'young player with goal/chances should receive more XP');
 assert.ok(jovem.xpTemporada <= 8, 'XP per match should be capped');
 assert.strictEqual(banco.jogosTemporada, 0, 'bench players should not receive match count');
+
+assert.strictEqual(scope.definirFocoDesenvolvimento(jovem, 'tecnico'), true, 'player focus should be accepted');
+assert.strictEqual(jovem.desenvolvimentoFoco, 'tecnico');
+assert.strictEqual(scope.definirFocoDesenvolvimento(jovem, 'invalido'), false, 'invalid player focus should be rejected');
 
 jovem.xpTemporada = 60;
 const jovemOverallAntes = overall(jovem);
