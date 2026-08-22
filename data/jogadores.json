@@ -4500,9 +4500,9 @@
   {
     "id": 307,
     "clubeId": 18,
-    "nome": "Diego Souza",
+    "nome": "Gabriel Brazão",
     "posicao": "GOL",
-    "idade": 31,
+    "idade": 25,
     "salario": 200000,
     "atributos": {
       "finalizacao": 89,
@@ -4521,9 +4521,9 @@
   {
     "id": 308,
     "clubeId": 18,
-    "nome": "Felipe Ferreira",
+    "nome": "Mayke",
     "posicao": "LAT",
-    "idade": 19,
+    "idade": 33,
     "salario": 200000,
     "atributos": {
       "finalizacao": 73,
@@ -4540,9 +4540,9 @@
   {
     "id": 309,
     "clubeId": 18,
-    "nome": "Bruno Costa",
+    "nome": "Igor Vinícius",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 29,
     "salario": 200000,
     "atributos": {
       "finalizacao": 80,
@@ -4559,9 +4559,9 @@
   {
     "id": 310,
     "clubeId": 18,
-    "nome": "Marcelo Pereira",
+    "nome": "Adonis Frías",
     "posicao": "ZAG",
-    "idade": 30,
+    "idade": 28,
     "salario": 200000,
     "atributos": {
       "finalizacao": 73,
@@ -4578,9 +4578,9 @@
   {
     "id": 311,
     "clubeId": 18,
-    "nome": "Rodrigo Costa",
+    "nome": "Luan Peres",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 32,
     "salario": 200000,
     "atributos": {
       "finalizacao": 85,
@@ -4597,9 +4597,9 @@
   {
     "id": 312,
     "clubeId": 18,
-    "nome": "Marcelo Martins",
+    "nome": "João Schmidt",
     "posicao": "VOL",
-    "idade": 29,
+    "idade": 33,
     "salario": 200000,
     "atributos": {
       "finalizacao": 88,
@@ -4616,7 +4616,7 @@
   {
     "id": 313,
     "clubeId": 18,
-    "nome": "Marcos Soares",
+    "nome": "Christian Oliva",
     "posicao": "VOL",
     "idade": 27,
     "salario": 200000,
@@ -4635,9 +4635,9 @@
   {
     "id": 314,
     "clubeId": 18,
-    "nome": "Bruno Carvalho",
+    "nome": "Neymar Jr",
     "posicao": "MEI",
-    "idade": 31,
+    "idade": 34,
     "salario": 200000,
     "atributos": {
       "finalizacao": 84,
@@ -4654,7 +4654,7 @@
   {
     "id": 315,
     "clubeId": 18,
-    "nome": "Pedro Ferreira",
+    "nome": "Miguelito",
     "posicao": "MEI",
     "idade": 18,
     "salario": 200000,
@@ -4673,9 +4673,9 @@
   {
     "id": 316,
     "clubeId": 18,
-    "nome": "Gabriel Silva",
+    "nome": "Gabigol",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 30,
     "salario": 200000,
     "atributos": {
       "finalizacao": 99,
@@ -4692,7 +4692,7 @@
   {
     "id": 317,
     "clubeId": 18,
-    "nome": "Fernando Souza",
+    "nome": "Rony",
     "posicao": "ATA",
     "idade": 31,
     "salario": 200000,
@@ -4711,9 +4711,9 @@
   {
     "id": 318,
     "clubeId": 18,
-    "nome": "Marcelo Costa",
+    "nome": "João Paulo",
     "posicao": "GOL",
-    "idade": 18,
+    "idade": 31,
     "salario": 200000,
     "atributos": {
       "finalizacao": 88,
@@ -4732,9 +4732,9 @@
   {
     "id": 319,
     "clubeId": 18,
-    "nome": "Rodrigo Souza",
+    "nome": "Lucas Veríssimo",
     "posicao": "ZAG",
-    "idade": 32,
+    "idade": 31,
     "salario": 200000,
     "atributos": {
       "finalizacao": 88,
@@ -4751,7 +4751,7 @@
   {
     "id": 320,
     "clubeId": 18,
-    "nome": "Diego Lopes",
+    "nome": "Willian Arão",
     "posicao": "MEI",
     "idade": 34,
     "salario": 200000,
@@ -4770,9 +4770,9 @@
   {
     "id": 321,
     "clubeId": 18,
-    "nome": "Bruno Oliveira",
+    "nome": "Tiquinho Soares",
     "posicao": "ATA",
-    "idade": 29,
+    "idade": 35,
     "salario": 200000,
     "atributos": {
       "finalizacao": 97,
@@ -4789,9 +4789,9 @@
   {
     "id": 322,
     "clubeId": 18,
-    "nome": "Rodrigo Pereira",
+    "nome": "JP Chermont",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 20,
     "salario": 200000,
     "atributos": {
       "finalizacao": 89,
@@ -4808,9 +4808,9 @@
   {
     "id": 323,
     "clubeId": 18,
-    "nome": "Leonardo Souza",
+    "nome": "Tomás Rincón",
     "posicao": "VOL",
-    "idade": 28,
+    "idade": 38,
     "salario": 200000,
     "atributos": {
       "finalizacao": 78,
@@ -4827,9 +4827,9 @@
   {
     "id": 324,
     "clubeId": 18,
-    "nome": "Diego Martins",
+    "nome": "Robinho Jr",
     "posicao": "ATA",
-    "idade": 33,
+    "idade": 18,
     "salario": 200000,
     "atributos": {
       "finalizacao": 99,

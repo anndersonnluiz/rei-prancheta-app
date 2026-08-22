@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const clubes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'clubes.json'), 'utf8'));
+const jogadores = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'jogadores.json'), 'utf8'));
 const porDivisao = clubes.reduce((grupos, clube) => {
   grupos[clube.divisao] = (grupos[clube.divisao] || 0) + 1;
   return grupos;
@@ -21,5 +22,8 @@ assert.strictEqual(clube('Athletic Club').divisao, 'B');
 assert.strictEqual(clube('Joinville').divisao, 'D');
 assert.strictEqual(clube('Inter de Limeira').divisao, 'C');
 assert.strictEqual(clube('Cuiabá').divisao, 'B');
+
+const santos2026 = jogadores.filter((jogador) => jogador.clubeId === 18).map((jogador) => jogador.nome);
+['Neymar Jr', 'Gabigol', 'Rony', 'João Paulo'].forEach((nome) => assert.ok(santos2026.includes(nome), `Santos should include ${nome}`));
 
 console.log('club_data_2026.test.js passed');
