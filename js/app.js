@@ -2717,6 +2717,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return { posicao: posicao, zona: emZonaAlta ? 'alta' : 'baixa' };
     };
 
+    $scope.gerarDeclaracaoPosJogo = function(partida) {
+        if (!partida || partida.golsMandante === undefined || !$scope.clubeAtual) return null;
+        var meuMandante = partida.mandante && partida.mandante.id === $scope.clubeAtual.id;
+        var golsMeu = meuMandante ? partida.golsMandante : partida.golsVisitante;
+        var golsRival = meuMandante ? partida.golsVisitante : partida.golsMandante;
+        var rival = meuMandante ? partida.visitante : partida.mandante;
+        var venceu = golsMeu > golsRival;
+        var empatou = golsMeu === golsRival;
+        var destaque = ($scope.elencoAtual || []).filter(function(jogador) { return jogador.emCampo && !jogador.lesionado; })[0];
+        var texto = venceu ? 'O grupo mostrou personalidade e mereceu a vitória.' : (empatou ? 'Precisamos ajustar detalhes, mas seguimos competitivos.' : 'A derrota dói, mas vamos trabalhar para reagir no próximo compromisso.');
+        if (destaque) texto = destaque.nome + ' falou após o jogo: "' + texto + '"';
+        $scope.adicionarMensagem(venceu ? 'Capitão do elenco' : 'Comissão Técnica', venceu ? 'Vestiário em festa' : (empatou ? 'Elenco mantém a confiança' : 'Reação no vestiário'), texto + ' O resultado foi ' + golsMeu + ' x ' + golsRival + ' contra ' + (rival ? rival.nome : 'o adversário') + '.', true, venceu ? 'torcida' : 'imprensa');
+        return texto;
+    };
+
     $scope.marcarMensagemLida = function(msg) {
         msg.lida = true;
     };
@@ -5283,6 +5298,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.simularFaseContinentalCPU(hoje);
         }
         $scope.gerarNoticiarioDia(hoje, partida);
+        $scope.gerarDeclaracaoPosJogo(partida);
         $scope.gerarRumoresMercadoDia();
         $scope.processarRumoresMercadoDia();
         $scope.processarMudancaTreinadorCpu();
