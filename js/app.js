@@ -64,6 +64,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.ordemPosicaoJogador = function(jogador) {
         return ordemPosicoes[jogador && jogador.posicao] || 99;
     };
+    $scope.filtroPosicaoElenco = 'TODOS';
+    $scope.filtrarJogadorPorPosicao = function(jogador) {
+        return !$scope.filtroPosicaoElenco || $scope.filtroPosicaoElenco === 'TODOS' || jogador.posicao === $scope.filtroPosicaoElenco;
+    };
     $scope.telaAtual = 'loading'; 
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
     $scope.historicoTreinador = [];

@@ -2367,6 +2367,9 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .bench-area .hint { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e1e8ed; }
 .bench-list { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
 .bench-item { display: flex; align-items: center; background-color: var(--bg-color); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; cursor: grab; transition: transform 0.2s; border: 1px solid #e1e8ed; }
+.squad-toolbar { align-items: flex-end; display: flex; gap: 10px; justify-content: space-between; margin-bottom: 12px; }
+.squad-toolbar label { color: var(--text-muted); display: flex; flex-direction: column; font-size: 11px; font-weight: 700; gap: 4px; }
+.squad-toolbar select { border: 1px solid #d7e0e7; border-radius: 6px; min-height: 36px; padding: 6px 28px 6px 8px; }
 .bench-item:active { cursor: grabbing; }
 .bench-item:hover { background-color: #e8f0fe; transform: translateX(5px); }
 .bench-item.tactile-selected { background-color: #e8f0fe; border: 2px solid var(--br-blue); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.18); }
@@ -3075,6 +3078,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .squad-screen > .card, .medical-screen > div { border-radius: 10px; padding: 12px !important; }
     .squad-screen .tabela-classificacao { min-width: 760px; }
     .squad-screen .development-panel { margin-bottom: 12px; }
+    .squad-toolbar { align-items: stretch; flex-direction: column; }
+    .squad-toolbar select { min-height: 42px; width: 100%; }
     .squad-screen .development-report-item { align-items: flex-start; flex-direction: column; gap: 8px; padding: 10px; }
     .squad-screen .development-report-item > div:last-child { align-items: stretch !important; flex-wrap: wrap; width: 100%; }
     .squad-screen .development-report-item button { min-height: 40px; }

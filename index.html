@@ -880,7 +880,7 @@
                 <div class="card" style="padding: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <div style="display:flex; align-items:center; gap:12px;"><h3 style="color: var(--text-dark); margin:0;">Meu Elenco</h3><button class="bulk-contract-button" ng-click="abrirRenovacaoGeral()">📋 Renovar contratos em lote</button></div>
-                        <span style="background: var(--bg-light); padding: 8px 15px; border-radius: 6px; font-weight: bold; border: 1px solid #ddd;">Total: {{elencoAtual.length}} jogadores</span>
+                        <div class="squad-toolbar"><label>Filtrar posição<select ng-model="filtroPosicaoElenco"><option value="TODOS">Todas</option><option value="GOL">Goleiros</option><option value="LAT">Laterais</option><option value="ZAG">Zagueiros</option><option value="VOL">Volantes</option><option value="MEI">Meias</option><option value="ATA">Atacantes</option></select></label><span style="background: var(--bg-light); padding: 8px 15px; border-radius: 6px; font-weight: bold; border: 1px solid #ddd;">Total: {{elencoAtual.length}} jogadores</span></div>
                     </div>
 
                     <div class="bulk-contract-panel" ng-if="renovacaoGeral.aberta">
@@ -938,7 +938,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="jogador in elencoAtual | orderBy:ordemPosicaoJogador">
+                                <tr ng-repeat="jogador in elencoAtual | filter:filtrarJogadorPorPosicao | orderBy:ordemPosicaoJogador">
                                     <td><span class="posicao-badge pos-{{ jogador.posicao }}">{{ jogador.posicao }}</span></td>
                                     <td>
                                         <strong>{{ jogador.nome }}</strong>
@@ -1148,7 +1148,7 @@
 
                     <p class="hint">Arraste para o campo 👉 ou toque no jogador e depois no campo.</p>
                     <div class="bench-list">
-                        <div class="bench-item" ng-repeat="jogador in elencoAtual | filter:{emCampo: false} | orderBy:ordemPosicaoJogador" draggable-player ng-click="selecionarJogadorParaTatica(jogador)" ng-class="{'tactile-selected': jogadorTaticaSelecionado && jogadorTaticaSelecionado.id === jogador.id, 'bench-blocked': jogadorBloqueadoParaEntrar(jogador)}" style="display: flex; align-items: center; opacity: {{jogadorBloqueadoParaEntrar(jogador) ? '0.5' : '1'}}; cursor: {{jogadorBloqueadoParaEntrar(jogador) ? 'not-allowed' : 'grab'}};">
+                        <div class="bench-item" ng-repeat="jogador in elencoAtual | filter:{emCampo: false} | filter:filtrarJogadorPorPosicao | orderBy:ordemPosicaoJogador" draggable-player ng-click="selecionarJogadorParaTatica(jogador)" ng-class="{'tactile-selected': jogadorTaticaSelecionado && jogadorTaticaSelecionado.id === jogador.id, 'bench-blocked': jogadorBloqueadoParaEntrar(jogador)}" style="display: flex; align-items: center; opacity: {{jogadorBloqueadoParaEntrar(jogador) ? '0.5' : '1'}}; cursor: {{jogadorBloqueadoParaEntrar(jogador) ? 'not-allowed' : 'grab'}};">
                             <span class="posicao-badge pos-{{ jogador.posicao }}">{{ jogador.posicao }}</span>
                             <div style="flex-grow: 1; display: flex; flex-direction: column; margin-left: 10px;">
                                 <span class="jogador-nome" style="margin-left: 0;">
