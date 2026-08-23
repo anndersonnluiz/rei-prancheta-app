@@ -47,6 +47,8 @@ assert.strictEqual(scope.telaAtual, 'dashboard');
 assert.strictEqual(scope.clubeAtual.id, clube.id);
 assert.strictEqual(scope.dados.anoAtual, 2024);
 assert.ok(Array.isArray(scope.calendarioGeral) && scope.calendarioGeral.length > 0, 'career should generate a calendar');
+assert.strictEqual(scope.calendarioGeral.slice(0, 7).every((dia) => dia.tipo === 'PRE_TEMPORADA'), true, 'calendar should begin with a real pre-season window');
+assert.ok(scope.calendarioGeral.findIndex((dia) => ['LIGA', 'COPA', 'CONTINENTAL'].includes(dia.tipo)) >= 7, 'official competitions should start after pre-season');
 assert.ok(Array.isArray(scope.elencoAtual) && scope.elencoAtual.length > 0, 'career should load a squad');
 assert.ok(scope.clubeAtual.base && scope.clubeAtual.base.atletas.length === 8, 'career should initialize youth academy');
 assert.ok(scope.clubeAtual.infraestrutura, 'career should initialize infrastructure');

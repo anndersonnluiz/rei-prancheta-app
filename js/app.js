@@ -2952,6 +2952,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.gerarCompeticoesContinentais();
 
         $scope.calendarioGeral = [];
+        // Janela real de preparação antes de qualquer compromisso oficial.
+        // Os índices dos jogos oficiais são deslocados, mas a ordem das competições permanece intacta.
+        var diasPreTemporada = 7;
+        for (var preDia = 0; preDia < diasPreTemporada; preDia++) {
+            $scope.calendarioGeral.push({
+                dia: preDia,
+                tipo: 'PRE_TEMPORADA',
+                titulo: preDia === 0 ? 'Início da pré-temporada' : 'Pré-temporada - Dia de preparação',
+                fase: 'pre-temporada',
+                preparacao: true
+            });
+        }
         var ligIdx = 0;
         var copaFase = 0;
         var libSulaFase = 0;
@@ -2969,30 +2981,30 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var tipo = masterLayout[i];
             if (tipo === 'L') {
                 if (ligIdx < 38) {
-                    $scope.calendarioGeral.push({ dia: i, tipo: 'LIGA', titulo: 'Brasileirão - Rodada ' + (ligIdx + 1), rodadaLiga: ligIdx });
+                    $scope.calendarioGeral.push({ dia: i + diasPreTemporada, tipo: 'LIGA', titulo: 'Brasileirão - Rodada ' + (ligIdx + 1), rodadaLiga: ligIdx });
                     ligIdx++;
                 } else {
-                    $scope.calendarioGeral.push({ dia: i, tipo: 'TREINO', titulo: 'Treino Livre', rodadaLiga: null });
+                    $scope.calendarioGeral.push({ dia: i + diasPreTemporada, tipo: 'TREINO', titulo: 'Treino Livre', rodadaLiga: null });
                 }
             } else if (tipo === 'C_ida') {
                 var nomeFase = ["1ª Fase", "Dezesseis-avos", "Oitavas", "Quartas", "Semifinal", "Final"][copaFase];
-                if (nomeFase) $scope.calendarioGeral.push({ dia: i, tipo: 'COPA', titulo: 'Copa do Brasil - ' + nomeFase + ' (Ida)', fase: copaFase, perna: 'ida' });
+                if (nomeFase) $scope.calendarioGeral.push({ dia: i + diasPreTemporada, tipo: 'COPA', titulo: 'Copa do Brasil - ' + nomeFase + ' (Ida)', fase: copaFase, perna: 'ida' });
             } else if (tipo === 'C_volta') {
                 var nomeFase = ["1ª Fase", "Dezesseis-avos", "Oitavas", "Quartas", "Semifinal", "Final"][copaFase];
                 if (nomeFase) {
-                    $scope.calendarioGeral.push({ dia: i, tipo: 'COPA', titulo: 'Copa do Brasil - ' + nomeFase + ' (Volta)', fase: copaFase, perna: 'volta' });
+                    $scope.calendarioGeral.push({ dia: i + diasPreTemporada, tipo: 'COPA', titulo: 'Copa do Brasil - ' + nomeFase + ' (Volta)', fase: copaFase, perna: 'volta' });
                     copaFase++;
                 }
             } else if (tipo === 'LibSul_G') {
-                $scope.calendarioGeral.push({ dia: i, tipo: 'CONTINENTAL', titulo: 'Competições Continentais - Fase de Grupos (' + (libSulaFase + 1) + 'ª Rodada)', fase: libSulaFase, perna: 'ida' });
+                $scope.calendarioGeral.push({ dia: i + diasPreTemporada, tipo: 'CONTINENTAL', titulo: 'Competições Continentais - Fase de Grupos (' + (libSulaFase + 1) + 'ª Rodada)', fase: libSulaFase, perna: 'ida' });
                 libSulaFase++;
             } else if (tipo === 'LibSul_ida') {
                 var nomeFase = ["Oitavas", "Quartas", "Semifinal", "Final"][libSulaFase - 6];
-                if (nomeFase) $scope.calendarioGeral.push({ dia: i, tipo: 'CONTINENTAL', titulo: 'Competições Continentais - ' + nomeFase + ' (Ida)', fase: libSulaFase, perna: 'ida' });
+                if (nomeFase) $scope.calendarioGeral.push({ dia: i + diasPreTemporada, tipo: 'CONTINENTAL', titulo: 'Competições Continentais - ' + nomeFase + ' (Ida)', fase: libSulaFase, perna: 'ida' });
             } else if (tipo === 'LibSul_volta') {
                 var nomeFase = ["Oitavas", "Quartas", "Semifinal", "Final"][libSulaFase - 6];
                 if (nomeFase) {
-                    $scope.calendarioGeral.push({ dia: i, tipo: 'CONTINENTAL', titulo: 'Competições Continentais - ' + nomeFase + ' (Volta)', fase: libSulaFase, perna: 'volta' });
+                    $scope.calendarioGeral.push({ dia: i + diasPreTemporada, tipo: 'CONTINENTAL', titulo: 'Competições Continentais - ' + nomeFase + ' (Volta)', fase: libSulaFase, perna: 'volta' });
                     libSulaFase++;
                 }
             }
