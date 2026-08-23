@@ -713,6 +713,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return impacto;
     };
 
+    $scope.obterPerfilFuncoesTaticas = function(jogadores) {
+        var perfil = { ataque: 0, defesa: 0, posse: 0, jogadores: 0 };
+        (jogadores || []).forEach(function(jogador) {
+            if (!jogador || jogador.expulso || jogador.lesionado || jogador.substituidoNaPartida) return;
+            var impacto = $scope.obterImpactoFuncaoTatica(jogador);
+            perfil.ataque += impacto.ataque;
+            perfil.defesa += impacto.defesa;
+            perfil.posse += impacto.posse;
+            perfil.jogadores++;
+        });
+        if (!perfil.jogadores) return perfil;
+        perfil.ataque /= perfil.jogadores;
+        perfil.defesa /= perfil.jogadores;
+        perfil.posse /= perfil.jogadores;
+        return perfil;
+    };
+
     function valorNumericoOuPadrao(valor, padrao) {
         return (typeof valor === 'number') ? valor : padrao;
     }
@@ -4004,9 +4021,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var forcaVisitante = $scope.forcaVisitanteAoVivo;
             var forcaUsuario = userTeamIsMandante ? forcaMandante : forcaVisitante;
             var forcaAdv = userTeamIsMandante ? forcaVisitante : forcaMandante;
+            var perfilTaticoUsuario = $scope.obterPerfilFuncoesTaticas($scope.elencoAtual.filter(function(j) { return j.emCampo; }));
             
             // FASE 8: Atualizar Posse
             var basePosseM = (forcaUsuario / (forcaUsuario + forcaAdv)) * 100;
+            if (userTeamIsMandante) basePosseM += perfilTaticoUsuario.posse;
+            else basePosseM -= perfilTaticoUsuario.posse;
             
             // FASE 12: Marcação Pressão
             if ($scope.taticas.marcacao === 'Pressão Alta') {
@@ -4102,6 +4122,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var forcaAtaqueMandante = forcaMandante;
                 var forcaDefesaMandante = forcaMandante;
 
+                if (userTeamIsMandante) {
+                    forcaAtaqueMandante *= 1 + (perfilTaticoUsuario.ataque / 100);
+                    forcaDefesaMandante *= 1 + (perfilTaticoUsuario.defesa / 100);
+                }
+
                 // FASE 12: Mentalidade Tática
                 if ($scope.taticas.mentalidade === 'Retranca') {
                     forcaAtaqueMandante *= 0.8;
@@ -4189,7 +4214,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var reflexoMand = $scope.aplicarFadigaAtributoGoleiro(reflexoMandBase, goleiroMand ? goleiroMand.condicaoFisica : 100);
                     var posicionamentoMand = goleiroMand && goleiroMand.atributos ? goleiroMand.atributos.posicionamento : 75;
                     var bolaParadaAttV = $scope.obterAtributoBolaParada(atacanteV, chanceTypeV);
-                    var xgV = $scope.calcularXG(forcaVisitante, forcaMandante, zonaV, finalAttV, reflexoMand, chanceTypeV, posicionamentoMand, bolaParadaAttV);
+                    var forcaAtaqueVisitante = forcaVisitante;
+                    var forcaDefesaVisitante = forcaMandante;
+                    if (!userTeamIsMandante) {
+                        forcaAtaqueVisitante *= 1 + (perfilTaticoUsuario.ataque / 100);
+                        forcaDefesaVisitante *= 1 + (perfilTaticoUsuario.defesa / 100);
+                    }
+                    var xgV = $scope.calcularXG(forcaAtaqueVisitante, forcaDefesaVisitante, zonaV, finalAttV, reflexoMand, chanceTypeV, posicionamentoMand, bolaParadaAttV);
                     xgV = Math.max(0.005, Math.min(0.6, xgV * $scope.calcularModificadorTaticoXG('visitante', zonaV, chanceTypeV)));
                     var isGoalV = (Math.random() < xgV);
                     $scope.registrarUltimaChanceXG('visitante', xgV, chanceTypeV, zonaV, isGoalV, atacanteV);
