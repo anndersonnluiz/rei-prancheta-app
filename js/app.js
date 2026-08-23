@@ -2599,6 +2599,31 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return true;
     };
 
+    $scope.processarPromessasEAgentes = function() {
+        var dia = Number($scope.diaAtual) || 0;
+        if (dia === 0 || dia % 7 !== 0) return [];
+        var eventos = [];
+        ($scope.elencoAtual || []).forEach(function(jogador) {
+            if (jogador.promessaMinutosDia !== undefined && dia - jogador.promessaMinutosDia >= 14 && (jogador.minutosTemporada || 0) < 90) {
+                jogador.satisfacaoContrato = Math.max(0, (Number(jogador.satisfacaoContrato) || 70) - 6);
+                jogador.moral = Math.max(0, (Number(jogador.moral) || 70) - 4);
+                delete jogador.promessaMinutosDia;
+                eventos.push({ tipo: 'promessa', jogador: jogador });
+            } else if ((jogador.anosContrato || 2) <= 1 && dia % 14 === 0) {
+                jogador.satisfacaoContrato = Math.max(0, (Number(jogador.satisfacaoContrato) || 70) - 2);
+                eventos.push({ tipo: 'agente', jogador: jogador });
+            }
+        });
+        eventos.forEach(function(evento) {
+            if (evento.tipo === 'promessa') {
+                $scope.adicionarMensagem('Empresário de ' + evento.jogador.nome, 'Promessa de minutos não cumprida', 'O representante afirma que ' + evento.jogador.nome + ' esperava mais oportunidades e avaliará os próximos jogos antes de discutir o futuro.', false, 'ambiente');
+            } else {
+                $scope.adicionarMensagem('Empresário de ' + evento.jogador.nome, 'Situação contratual em análise', 'O representante de ' + evento.jogador.nome + ' pediu uma definição sobre a renovação e admite ouvir outros clubes.', false, 'transferencia');
+            }
+        });
+        return eventos;
+    };
+
     $scope.gerarNoticiarioDia = function(diaObj, partida) {
         if (!diaObj) return [];
         var chave = 'mundo_' + ($scope.diaAtual || 0) + '_' + (diaObj.titulo || diaObj.tipo);
@@ -5377,6 +5402,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.processarDinamicaClubesCpu();
         $scope.gerarNarrativaCompeticaoDia();
         $scope.aplicarPressaoNarrativaCompeticao();
+        $scope.processarPromessasEAgentes();
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
