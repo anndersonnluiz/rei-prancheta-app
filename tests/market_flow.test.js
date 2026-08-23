@@ -85,6 +85,8 @@ assert.strictEqual(typeof scope.registrarOuAtualizarProposta, 'function', 'propo
 assert.strictEqual(typeof scope.atualizarPropostasPendentes, 'function', 'proposal expiration helper should exist');
 assert.ok(require('fs').readFileSync('js/app.js', 'utf8').includes('Pré-contrato efetivado'), 'pre-contract acceptance should notify the manager');
 assert.ok(require('fs').readFileSync('js/app.js', 'utf8').includes('Salário abaixo da exigência do jogador.'), 'pre-contract rejection should have a reason');
+assert.ok(require('fs').readFileSync('js/app.js', 'utf8').includes('clube_contraproposta'), 'club negotiation should support counteroffers');
+assert.ok(require('fs').readFileSync('index.html', 'utf8').includes('O clube fez uma contraproposta'), 'counteroffer should be visible in the negotiation modal');
 
 scope.dados = { anoAtual: 2026 };
 scope.diaAtual = 4;

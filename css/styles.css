@@ -2385,6 +2385,13 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .substitution-suggestion .btn { border: 1px solid #2855a6; border-radius: 5px; background: #fff; color: #173d83; cursor: pointer; font-weight: 700; padding: 6px 10px; }
 .pre-contract-hint { color: #8a6d3b; display: block; font-size: 10px; line-height: 1.25; margin-left: 6px; max-width: 110px; }
 .pre-contract-hint.pre-contract-ready { color: var(--br-green-dark); font-weight: 700; }
+.negotiation-counteroffer { background: #fff8e6; border: 1px solid #f0c36d; border-radius: 8px; color: #624a16; padding: 18px; }
+.negotiation-counteroffer h3 { color: #8a6111; margin: 0 0 8px; }
+.negotiation-counteroffer p { line-height: 1.5; margin: 0 0 16px; }
+.counteroffer-actions { display: flex; gap: 10px; }
+.counteroffer-actions button { border: 0; border-radius: 6px; cursor: pointer; font-weight: 700; padding: 11px 14px; }
+.counteroffer-accept { background: var(--br-green); color: #fff; flex: 1; }
+.counteroffer-reject { background: #e9ecef; color: #4a5560; }
 .bench-item .jogador-nome { flex-grow: 1; margin-left: 10px; font-weight: 600; font-size: 14px; }
 .dragging { opacity: 0.5; }
 
@@ -3106,6 +3113,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .tactics-screen select, .tactics-screen button { min-height: 42px; }
     .selected-player-role { flex-wrap: wrap; justify-content: center; top: 42px; }
     .selected-player-role select { min-height: 38px; max-width: 100%; }
+    .counteroffer-actions { flex-direction: column; }
+    .counteroffer-actions button { min-height: 42px; width: 100%; }
     .tactics-screen .pitch-area [style*="grid-template-columns: 1fr 1fr 1fr"] { gap: 8px !important; grid-template-columns: 1fr !important; }
     .youth-screen > .card, .market-screen > .card, .finance-screen > .card { border-radius: 10px; padding: 12px !important; }
     .youth-screen .youth-summary-pills { display: grid; gap: 5px; grid-template-columns: repeat(2, 1fr); }

@@ -7931,7 +7931,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             clubeAceita: propostaAberta && propostaAberta.status === 'clube_aceitou' ? propostaAberta.valorOferta : 0
         };
 
-        if (propostaAberta && (propostaAberta.status === 'clube_aceitou' || propostaAberta.status === 'em_jogador')) {
+        if (propostaAberta && propostaAberta.status === 'clube_contraproposta') {
+            $scope.estadoNegociacao = 'contraproposta_clube';
+            $scope.ofertaValores.clubeContraproposta = propostaAberta.valorContraproposta || propostaAberta.valorOferta;
+        } else if (propostaAberta && (propostaAberta.status === 'clube_aceitou' || propostaAberta.status === 'em_jogador')) {
             $scope.estadoNegociacao = 'proposta_jogador';
         } else if ($scope.tipoNegociacao === 'compra' && jogador.clubeId !== 'mercado') {
             $scope.estadoNegociacao = 'proposta_clube';
@@ -7988,6 +7991,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 };
                 $scope.motivoRejeicao = 'Outro clube entrou na disputa: ' + concorrente.nome + '. O jogador vai comparar as propostas.';
             }
+        } else if (oferta >= valorPasse * 0.65) {
+            var contraproposta = Math.ceil(Math.max(margemAceitacao, valorPasse * 0.95) / 100000) * 100000;
+            proposta.status = 'clube_contraproposta';
+            proposta.valorContraproposta = contraproposta;
+            proposta.valorOferta = oferta;
+            $scope.ofertaValores.clubeContraproposta = contraproposta;
+            $scope.estadoNegociacao = 'contraproposta_clube';
+            $scope.motivoRejeicao = 'O clube considerou sua oferta, mas pediu um ajuste no valor do passe.';
         } else {
             $scope.estadoNegociacao = 'rejeitado';
             $scope.motivoRejeicao = "A diretoria do clube rejeitou sua oferta. Eles não aceitariam menos de " + $scope.formatarMoeda(margemAceitacao) + ".";
@@ -8003,6 +8014,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             });
             desbloquearJogadorNegociacao($scope.jogadorNegociacao.id);
         }
+    };
+
+    $scope.aceitarContrapropostaClube = function() {
+        var proposta = ($scope.propostasPendentes || []).find(function(item) { return item.id === $scope.propostaNegociacaoAtualId; });
+        if (!proposta || !proposta.valorContraproposta) return false;
+        var valor = proposta.valorContraproposta;
+        proposta.status = 'clube_aceitou';
+        proposta.valorOferta = valor;
+        $scope.ofertaValores.clubeAceita = valor;
+        $scope.jogadorNegociacao.emNegociacao = true;
+        $scope.estadoNegociacao = 'proposta_jogador';
+        return true;
+    };
+
+    $scope.recusarContrapropostaClube = function() {
+        var proposta = ($scope.propostasPendentes || []).find(function(item) { return item.id === $scope.propostaNegociacaoAtualId; });
+        if (proposta) proposta.status = 'recusada';
+        if ($scope.jogadorNegociacao) desbloquearJogadorNegociacao($scope.jogadorNegociacao.id);
+        $scope.estadoNegociacao = 'rejeitado';
+        $scope.motivoRejeicao = 'Você recusou a contraproposta do clube.';
+        return true;
     };
 
     $scope.enviarPropostaJogador = function(salario, anos) {

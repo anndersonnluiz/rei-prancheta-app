@@ -2398,6 +2398,16 @@
                 </div>
             </div>
 
+            <!-- CONTRAPROPOSTA DO CLUBE -->
+            <div ng-if="estadoNegociacao === 'contraproposta_clube'" class="negotiation-counteroffer">
+                <h3>📨 O clube fez uma contraproposta</h3>
+                <p>Sua oferta foi considerada, mas o clube quer receber <strong>{{formatarMoeda(ofertaValores.clubeContraproposta)}}</strong> pelo passe de {{jogadorNegociacao.nome}}.</p>
+                <div class="counteroffer-actions">
+                    <button class="counteroffer-accept" ng-click="aceitarContrapropostaClube()">Aceitar e negociar salário</button>
+                    <button class="counteroffer-reject" ng-click="recusarContrapropostaClube()">Recusar proposta</button>
+                </div>
+            </div>
+
             <!-- PASSO 2: PROPOSTA AO JOGADOR -->
             <div ng-if="estadoNegociacao === 'proposta_jogador'">
                 <p style="font-size: 14px; margin-bottom: 15px;" ng-if="jogadorNegociacao.clubeId === 'mercado' || tipoNegociacao === 'renovacao'">Você está negociando diretamente com o jogador e seus empresários.</p>
