@@ -15,8 +15,11 @@ expectedRoles.forEach(role => assert.ok(app.includes(role), `função tática au
 assert.ok(app.includes("jogador.funcaoTatica = 'Automática'"));
 assert.ok(app.includes('$scope.obterImpactoFuncaoTatica'));
 assert.ok(app.includes('$scope.obterPerfilFuncoesTaticas'));
+assert.ok(app.includes('$scope.obterSugestaoSubstituicao'));
+assert.ok(app.includes('$scope.aplicarSugestaoSubstituicao'));
 assert.ok(html.includes('obterFuncoesTaticasJogador(jogador)'));
 assert.ok(html.includes('tactical-role-select'));
 assert.ok(html.includes('$event.stopPropagation()'));
+assert.ok(html.includes('Aplicar sugestão'));
 
 console.log('tactics_roles.test.js passed');

@@ -2380,6 +2380,9 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .bench-status-expulso { background: #f8d7da; color: #721c24; }
 .bench-status-utilizado { background: #e1e8ed; color: #566573; }
 .tactical-role-select { align-self: flex-start; border: 1px solid #d8e1ea; border-radius: 6px; color: #24415e; font-size: 10px; margin-top: 5px; max-width: 170px; padding: 4px 6px; }
+.substitution-suggestion { align-items: center; background: #fff; border: 1px solid #f0c36d; border-radius: 8px; color: #6b4c12; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 0 auto 12px; max-width: 680px; padding: 9px 12px; }
+.substitution-suggestion span { font-size: 12px; }
+.substitution-suggestion .btn { border: 1px solid #2855a6; border-radius: 5px; background: #fff; color: #173d83; cursor: pointer; font-weight: 700; padding: 6px 10px; }
 .bench-item .jogador-nome { flex-grow: 1; margin-left: 10px; font-weight: 600; font-size: 14px; }
 .dragging { opacity: 0.5; }
 

@@ -3983,6 +3983,32 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             impedidos: impedidos
         };
     };
+    $scope.obterSugestaoSubstituicao = function() {
+        if (!$scope.partidaPausada || ($scope.substituicoesFeitas || 0) >= 5) return null;
+        var emCampo = ($scope.elencoAtual || []).filter(function(j) { return j.emCampo && !j.expulso && !j.lesionado; });
+        var banco = ($scope.elencoAtual || []).filter(function(j) { return !j.emCampo && !$scope.jogadorBloqueadoParaEntrar(j); });
+        var cansado = emCampo.slice().sort(function(a, b) { return (a.condicaoFisica || 100) - (b.condicaoFisica || 100); })[0];
+        if (!cansado || (cansado.condicaoFisica || 100) > 62) return null;
+        var reserva = banco.filter(function(j) { return j.posicao === cansado.posicao; }).sort(function(a, b) { return $scope.calcularOverall(b) - $scope.calcularOverall(a); })[0];
+        if (!reserva) reserva = banco.slice().sort(function(a, b) { return $scope.calcularOverall(b) - $scope.calcularOverall(a); })[0];
+        if (!reserva) return null;
+        return { sai: cansado, entra: reserva, motivo: cansado.lesionado ? 'indisponibilidade médica' : 'desgaste físico' };
+    };
+    $scope.aplicarSugestaoSubstituicao = function() {
+        var sugestao = $scope.obterSugestaoSubstituicao();
+        if (!sugestao) return false;
+        var posX = sugestao.sai.posX;
+        var posY = sugestao.sai.posY;
+        sugestao.sai.emCampo = false;
+        $scope.marcarSubstituidoNaPartida(sugestao.sai);
+        sugestao.entra.emCampo = true;
+        sugestao.entra.posX = posX;
+        sugestao.entra.posY = posY;
+        $scope.substituicoesFeitas = ($scope.substituicoesFeitas || 0) + 1;
+        $scope.narracao.unshift($scope.minutoAtual + "' - 🔄 Substituição sugerida: " + sugestao.entra.nome + " entra no lugar de " + sugestao.sai.nome + ".");
+        $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
+        return true;
+    };
     $scope.obterStatusTaticaJogador = function(jogador) {
         if (!jogador) return { classe: 'disponivel', label: 'Disponível' };
         if (jogador.expulso) return { classe: 'expulso', label: 'Expulso' };

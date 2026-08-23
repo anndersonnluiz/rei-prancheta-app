@@ -1119,6 +1119,11 @@
                 <div ng-if="partidaPausada" style="background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 20px;">
                     <h3 style="color: #856404; margin-bottom: 10px;">Ajustando Tática durante o Jogo</h3>
                     <p style="color: #856404; margin-bottom: 15px;">Atenção: Ao arrastar um novo jogador pro campo, conta como substituição. (Restam {{5 - substituicoesFeitas}}).</p>
+                    <div ng-if="obterSugestaoSubstituicao()" class="substitution-suggestion">
+                        <strong>💡 Sugestão da comissão</strong>
+                        <span>{{obterSugestaoSubstituicao().entra.nome}} por {{obterSugestaoSubstituicao().sai.nome}} · {{obterSugestaoSubstituicao().motivo}}</span>
+                        <button class="btn btn-outline" ng-click="aplicarSugestaoSubstituicao()">Aplicar sugestão</button>
+                    </div>
                     <button class="btn btn-success" ng-click="retomarPartida()" style="background: var(--br-green); color: white; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">▶ Pronto! Retomar Partida</button>
                 </div>
                 <div class="pre-match-return-banner" ng-if="preJogo.partida && !preJogo.visivel && !partidaPausada">
