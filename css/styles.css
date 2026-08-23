@@ -2379,6 +2379,7 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .bench-status-lesionado, .bench-status-suspenso { background: #fff3cd; color: #856404; }
 .bench-status-expulso { background: #f8d7da; color: #721c24; }
 .bench-status-utilizado { background: #e1e8ed; color: #566573; }
+.tactical-role-select { align-self: flex-start; border: 1px solid #d8e1ea; border-radius: 6px; color: #24415e; font-size: 10px; margin-top: 5px; max-width: 170px; padding: 4px 6px; }
 .bench-item .jogador-nome { flex-grow: 1; margin-left: 10px; font-weight: 600; font-size: 14px; }
 .dragging { opacity: 0.5; }
 

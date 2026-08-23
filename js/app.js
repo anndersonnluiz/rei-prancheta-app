@@ -672,6 +672,47 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         marcacao: 'Recuada'
     };
 
+    var funcoesTaticasPorPosicao = {
+        GOL: ['Automática', 'Goleiro clássico', 'Goleiro-líbero'],
+        LAT: ['Automática', 'Lateral apoiador', 'Lateral defensivo'],
+        ZAG: ['Automática', 'Zagueiro construtor', 'Zagueiro marcador'],
+        VOL: ['Automática', 'Volante marcador', 'Volante construtor'],
+        MEI: ['Automática', 'Meia criativo', 'Meia de chegada'],
+        ATA: ['Automática', 'Atacante móvel', 'Homem de área']
+    };
+
+    $scope.obterFuncoesTaticasJogador = function(jogador) {
+        return funcoesTaticasPorPosicao[jogador && jogador.posicao] || ['Automática'];
+    };
+
+    $scope.definirFuncaoTaticaJogador = function(jogador, funcao) {
+        if (!jogador) return;
+        var funcoes = $scope.obterFuncoesTaticasJogador(jogador);
+        jogador.funcaoTatica = funcoes.indexOf(funcao) >= 0 ? funcao : 'Automática';
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+    };
+
+    $scope.obterImpactoFuncaoTatica = function(jogador) {
+        var funcao = jogador && jogador.funcaoTatica;
+        var impacto = { ataque: 0, defesa: 0, posse: 0 };
+        if (!jogador || !funcao || funcao === 'Automática') return impacto;
+        switch (funcao) {
+            case 'Goleiro clássico': impacto.defesa = 1.5; break;
+            case 'Goleiro-líbero': impacto.defesa = 0.5; impacto.posse = 1.2; break;
+            case 'Lateral apoiador': impacto.ataque = 1.3; impacto.posse = 0.5; break;
+            case 'Lateral defensivo': impacto.defesa = 1.3; break;
+            case 'Zagueiro construtor': impacto.defesa = 0.6; impacto.posse = 1.1; break;
+            case 'Zagueiro marcador': impacto.defesa = 1.4; break;
+            case 'Volante marcador': impacto.defesa = 1.4; impacto.ataque = -0.3; break;
+            case 'Volante construtor': impacto.posse = 1.4; impacto.ataque = 0.5; break;
+            case 'Meia criativo': impacto.ataque = 1.5; impacto.posse = 1.1; break;
+            case 'Meia de chegada': impacto.ataque = 1.7; break;
+            case 'Atacante móvel': impacto.ataque = 1.5; impacto.posse = 0.5; break;
+            case 'Homem de área': impacto.ataque = 2; break;
+        }
+        return impacto;
+    };
+
     function valorNumericoOuPadrao(valor, padrao) {
         return (typeof valor === 'number') ? valor : padrao;
     }
@@ -732,6 +773,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (jogador.diasLesao === undefined) jogador.diasLesao = 0;
         if (jogador.suspenso === undefined) jogador.suspenso = false;
         if (jogador.substituidoNaPartida === undefined) jogador.substituidoNaPartida = false;
+        if (!jogador.funcaoTatica) jogador.funcaoTatica = 'Automática';
 
         if (jogador.potencial === undefined || jogador.potencial === null) jogador.potencial = calcularPotencialDeterministico(jogador);
         if (jogador.xpTemporada === undefined) jogador.xpTemporada = 0;
@@ -3496,9 +3538,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var soma = 0;
         jogadoresBase.forEach(function(j) {
             var overall = calcularOverallPreJogo(j);
+            var impactoFuncao = $scope.obterImpactoFuncaoTatica ? $scope.obterImpactoFuncaoTatica(j) : { ataque: 0, defesa: 0, posse: 0 };
             var fatorFadiga = ($scope.clubeAtual && clube && clube.id === $scope.clubeAtual.id) ? $scope.calcularFatorFadiga(j.condicaoFisica) : 1;
             var fatorMoral = (typeof j.moral === 'number' && j.moral < 50) ? (0.8 + ((j.moral / 50) * 0.2)) : 1;
-            soma += overall * fatorFadiga * fatorMoral * $scope.obterFatorEntrosamentoSetor(j);
+            soma += (overall + ((impactoFuncao.ataque + impactoFuncao.defesa + impactoFuncao.posse) / 3)) * fatorFadiga * fatorMoral * $scope.obterFatorEntrosamentoSetor(j);
         });
         var media = soma / jogadoresBase.length;
         if (clube && clubeEhAtual(clube.id)) media *= $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor);
@@ -3718,7 +3761,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 penalty = 0.8 + ((j.moral / 50) * 0.2); // Moral 0 = 80% do overall. Moral 50 = 100%.
             }
             var fatorFadiga = $scope.calcularFatorFadiga(j.condicaoFisica);
-            forcaTime += ($scope.calcularOverall(j) * penalty * fatorFadiga * $scope.obterFatorEntrosamentoSetor(j));
+            var impactoFuncao = $scope.obterImpactoFuncaoTatica ? $scope.obterImpactoFuncaoTatica(j) : { ataque: 0, defesa: 0, posse: 0 };
+            forcaTime += (($scope.calcularOverall(j) + ((impactoFuncao.ataque + impactoFuncao.defesa + impactoFuncao.posse) / 3)) * penalty * fatorFadiga * $scope.obterFatorEntrosamentoSetor(j));
         });
         return (forcaTime / 11) * $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor) * $scope.obterFatorEntrosamento();
     };

@@ -1158,6 +1158,7 @@
                                     <span ng-if="partidaEmAndamento && jogador.substituidoNaPartida" title="Já foi substituído nesta partida" style="font-size: 10px;">SUB</span>
                                 </span>
                                 <span class="bench-status bench-status-{{obterStatusTaticaJogador(jogador).classe}}">{{obterStatusTaticaJogador(jogador).label}}</span>
+                                <select class="tactical-role-select" ng-model="jogador.funcaoTatica" ng-options="funcao for funcao in obterFuncoesTaticasJogador(jogador)" ng-change="definirFuncaoTaticaJogador(jogador, jogador.funcaoTatica)" ng-click="$event.stopPropagation()" aria-label="Função tática de {{jogador.nome}}"></select>
                                 <div style="width: 80%; background: #e1e8ed; height: 4px; border-radius: 2px; margin-top: 3px;">
                                     <div style="height: 100%; background: {{jogador.condicaoFisica > 60 ? 'var(--br-green)' : (jogador.condicaoFisica > 30 ? '#f39c12' : '#e74c3c')}}; width: {{jogador.condicaoFisica}}%; border-radius: 2px;"></div>
                                 </div>
