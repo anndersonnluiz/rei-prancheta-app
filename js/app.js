@@ -806,6 +806,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (jogador.suspenso === undefined) jogador.suspenso = false;
         if (jogador.substituidoNaPartida === undefined) jogador.substituidoNaPartida = false;
         if (!jogador.funcaoTatica) jogador.funcaoTatica = 'Automática';
+        // Jogadores já existentes preservam a força atual; recém-chegados recebem
+        // adaptação explícita para que a contratação tenha impacto gradual.
+        if (jogador.adaptacaoClube === undefined || jogador.adaptacaoClube === null) jogador.adaptacaoClube = 100;
+        jogador.adaptacaoClube = Math.max(0, Math.min(100, Number(jogador.adaptacaoClube) || 0));
+        if (jogador.diasNoClube === undefined) jogador.diasNoClube = 0;
 
         if (jogador.potencial === undefined || jogador.potencial === null) jogador.potencial = calcularPotencialDeterministico(jogador);
         if (jogador.xpTemporada === undefined) jogador.xpTemporada = 0;
@@ -3822,8 +3827,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 penalty = 0.8 + ((j.moral / 50) * 0.2); // Moral 0 = 80% do overall. Moral 50 = 100%.
             }
             var fatorFadiga = $scope.calcularFatorFadiga(j.condicaoFisica);
+            var adaptacao = j.adaptacaoClube === undefined ? 100 : Number(j.adaptacaoClube);
+            var fatorAdaptacao = 0.94 + (Math.max(0, Math.min(100, isNaN(adaptacao) ? 100 : adaptacao)) / 100) * 0.06;
             var impactoFuncao = $scope.obterImpactoFuncaoTatica ? $scope.obterImpactoFuncaoTatica(j) : { ataque: 0, defesa: 0, posse: 0 };
-            forcaTime += (($scope.calcularOverall(j) + ((impactoFuncao.ataque + impactoFuncao.defesa + impactoFuncao.posse) / 3)) * penalty * fatorFadiga * $scope.obterFatorEntrosamentoSetor(j));
+            forcaTime += (($scope.calcularOverall(j) + ((impactoFuncao.ataque + impactoFuncao.defesa + impactoFuncao.posse) / 3)) * penalty * fatorFadiga * fatorAdaptacao * $scope.obterFatorEntrosamentoSetor(j));
         });
         return (forcaTime / 11) * $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor) * $scope.obterFatorEntrosamento();
     };
@@ -4888,9 +4895,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (jogador.categoriaOrigem === 'Sub-17') xpFinal *= 1.05;
             if (jogador.categoriaOrigem === 'Sub-20') xpFinal *= 1.12;
             xpFinal *= (1 + ($scope.calcularBonusDesenvolvimentoInfraestrutura() / 100));
+            var impactoFuncao = $scope.obterImpactoFuncaoTatica ? $scope.obterImpactoFuncaoTatica(jogador) : null;
+            if (impactoFuncao && (impactoFuncao.ataque || impactoFuncao.defesa || impactoFuncao.posse)) xpFinal += 1;
             if (jogador.acabouDeSerLesionado || jogador.lesionado) xpFinal *= 0.5;
             xpFinal = Math.min(8, Math.max(0, Math.round(xpFinal)));
             jogador.xpTemporada = (jogador.xpTemporada || 0) + xpFinal;
+            jogador.adaptacaoClube = Math.min(100, (jogador.adaptacaoClube || 0) + 4);
+            jogador.diasNoClube = (jogador.diasNoClube || 0) + 1;
             sincronizarJogadorBaseDesenvolvimento(jogador);
         });
     };
@@ -4902,6 +4913,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         ($scope.elencoAtual || []).forEach(function(jogador) {
             normalizarJogadorSalvo(jogador);
+            var focoFuncao = jogador.funcaoTatica && jogador.funcaoTatica !== 'Automática' ? jogador.funcaoTatica : null;
             var overallAntes = calcularOverallBaseJogador(jogador);
             var mudancas = [];
             var idade = valorNumericoOuPadrao(jogador.idade, 24);
@@ -4911,6 +4923,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
             if (ganhoPermitido > 0 && overallAntes < jogador.potencial && !jogador.lesionado) {
                 var atributos = obterAtributosDesenvolvimentoPorFoco(jogador);
+                if (focoFuncao && jogador.posicao === 'GOL' && focoFuncao.toLowerCase().indexOf('distrib') >= 0) atributos = ['distribuicao', 'passe', 'reflexo'];
+                if (focoFuncao && jogador.posicao !== 'GOL' && focoFuncao.toLowerCase().indexOf('marc') >= 0) atributos = ['marcacao', 'posicionamento', 'fisico'];
                 var inicio = obterChaveNumericaJogador(jogador) % atributos.length;
                 var aplicados = 0;
                 for (var i = 0; i < atributos.length && aplicados < ganhoPermitido; i++) {
@@ -4958,6 +4972,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if ((jogador.minutosTemporada || 0) >= 450) fatores.push('minutos em campo');
                 if ((jogador.moral || 0) >= 80) fatores.push('moral alta');
                 if ((jogador.potencial || 0) > overallAntes) fatores.push('potencial disponível');
+                if (focoFuncao) fatores.push('função tática: ' + focoFuncao);
+                if ((jogador.adaptacaoClube || 100) < 100) fatores.push('adaptação ao clube em andamento');
                 if (jogador.lesionado) fatores.push('lesão');
                 var relatorio = criarRelatorioEvolucao(jogador, overallAntes, overallDepois, mudancas, motivoCiclo, fatores);
                 jogador.historicoEvolucao.unshift(relatorio);
@@ -6820,6 +6836,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var novoAtleta = angular.copy(jogador);
                 novoAtleta.emCampo = false;
                 novoAtleta.substituidoNaPartida = false;
+                novoAtleta.adaptacaoClube = 55;
+                novoAtleta.diasNoClube = 0;
                 normalizarJogadorSalvo(novoAtleta);
                 $scope.elencoAtual.push(novoAtleta);
             }
@@ -8173,6 +8191,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var novoJogador = angular.copy(jogadorBase || jogador);
             novoJogador.clubeId = $scope.clubeAtual.id;
             novoJogador.emCampo = false;
+            novoJogador.adaptacaoClube = 55;
+            novoJogador.diasNoClube = 0;
             novoJogador.condicaoFisica = 100;
             novoJogador.cartoesAmarelos = 0;
             novoJogador.lesionado = false;
