@@ -2571,6 +2571,34 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return { tipo: 'historico', titulo: 'Confronto de histórico equilibrado', detalhe: 'Os últimos encontros entre os clubes foram marcados pelo equilíbrio.' };
     };
 
+    $scope.iniciarEntrevistaJogador = function() {
+        var candidatos = ($scope.elencoAtual || []).filter(function(jogador) { return !jogador.lesionado && !jogador.suspenso; });
+        if (!candidatos.length) return null;
+        var jogador = candidatos[(Number($scope.diaAtual) || 0) % candidatos.length];
+        $scope.entrevistaJogador = {
+            jogador: jogador,
+            pergunta: jogador.rodadasNoBanco > 2 ? jogador.nome + ' pediu uma conversa para falar sobre seus minutos.' : jogador.nome + ' quer saber se terá oportunidade na próxima partida.',
+            opcoes: [
+                { texto: 'Prometer uma oportunidade', efeito: 'oportunidade' },
+                { texto: 'Explicar que todos terão de competir', efeito: 'competicao' },
+                { texto: 'Pedir paciência e foco nos treinos', efeito: 'paciencia' }
+            ]
+        };
+        return $scope.entrevistaJogador;
+    };
+
+    $scope.responderEntrevistaJogador = function(opcao) {
+        if (!$scope.entrevistaJogador || !opcao) return false;
+        var jogador = $scope.entrevistaJogador.jogador;
+        jogador.moral = Math.max(0, Math.min(100, (Number(jogador.moral) || 70) + (opcao.efeito === 'oportunidade' ? 4 : (opcao.efeito === 'competicao' ? 1 : -1))));
+        jogador.satisfacaoContrato = Math.max(0, Math.min(100, (Number(jogador.satisfacaoContrato) || 70) + (opcao.efeito === 'oportunidade' ? 2 : 0)));
+        if (opcao.efeito === 'oportunidade') jogador.promessaMinutosDia = $scope.diaAtual || 0;
+        $scope.registrarEventoAmbiente({ id: 'entrevista_' + ($scope.diaAtual || 0) + '_' + jogador.id, chave: 'entrevista|' + ($scope.diaAtual || 0) + '|' + jogador.id, tipo: 'vestiario', impacto: opcao.efeito === 'paciencia' ? -1 : 1, titulo: 'Conversa com ' + jogador.nome, detalhe: 'A comissão técnica conversou sobre espaço e expectativas para a sequência.' });
+        $scope.adicionarMensagem('Comissão Técnica', 'Conversa com jogador', jogador.nome + ' recebeu uma resposta sobre suas oportunidades no elenco.', true, 'ambiente');
+        $scope.entrevistaJogador = null;
+        return true;
+    };
+
     $scope.gerarNoticiarioDia = function(diaObj, partida) {
         if (!diaObj) return [];
         var chave = 'mundo_' + ($scope.diaAtual || 0) + '_' + (diaObj.titulo || diaObj.tipo);

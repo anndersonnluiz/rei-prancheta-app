@@ -823,6 +823,8 @@
                         <strong style="display:block; margin:4px 0 8px;">{{preJogo.analise.narrativa.manchete}}</strong>
                         <div ng-repeat="fala in preJogo.analise.narrativa.falas track by $index" style="font-size: 13px; margin-top: 5px;"><b>{{fala.autor}}:</b> {{fala.texto}}</div>
                         <div ng-if="preJogo.analise.narrativa.rivalidade" style="margin-top:10px; padding-top:8px; border-top:1px solid #f0dfbf; font-size:13px;"><b>Histórico:</b> {{preJogo.analise.narrativa.rivalidade.detalhe}}</div>
+                        <button ng-if="!entrevistaJogador" ng-click="iniciarEntrevistaJogador()" style="margin-top:12px; padding:8px 12px; border:1px solid var(--br-blue); background:#fff; color:var(--br-blue); border-radius:6px; cursor:pointer;">👥 Conversar com o elenco</button>
+                        <div ng-if="entrevistaJogador" style="margin-top:12px; padding:12px; background:#fff; border-radius:6px; border:1px solid #eadfca;"><b>{{entrevistaJogador.jogador.nome}}</b><p style="margin:5px 0 8px;">{{entrevistaJogador.pergunta}}</p><div style="display:flex; gap:6px; flex-wrap:wrap;"><button ng-repeat="opcao in entrevistaJogador.opcoes" ng-click="responderEntrevistaJogador(opcao)" style="padding:7px 9px; border:1px solid #cbd5df; border-radius:5px; background:#f8fafc; cursor:pointer;">{{opcao.texto}}</button></div></div>
                     </section>
                 </section>
                 <div class="card" ng-if="preJogo.analise.analistaAtivo" style="margin-bottom: 16px; padding: 12px 16px; border-left: 4px solid var(--br-blue);">📋 Analista ativo · Confiança do relatório: <strong>{{preJogo.analise.confiancaAnalise}}%</strong></div>
