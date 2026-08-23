@@ -2608,18 +2608,34 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var jogador = ($scope.jogadores || []).find(function(item) { return item.id === rumor.jogadorId; });
             var destino = ($scope.clubes || []).find(function(item) { return item.id === rumor.clubeDestinoId; });
             if (!jogador || !destino || jogador.clubeId === destino.id) return;
+            var clubeOrigemId = jogador.clubeId;
             rumor.confirmado = true;
             rumor.subtipo = 'confirmado';
             jogador.clubeId = destino.id;
             jogador.emNegociacao = false;
+            var valorTransferencia = $scope.calcularValorMercadoJogadorInterno ? $scope.calcularValorMercadoJogadorInterno(jogador) : Math.max(250000, (Number(jogador.overall) || 70) * 50000);
+            destino.orcamento = Math.max(0, (Number(destino.orcamento) || 0) - valorTransferencia);
+            rumor.valorTransferencia = valorTransferencia;
             rumor.titulo = 'Confirmado: ' + jogador.nome + ' acerta com ' + destino.nome;
             rumor.conteudo = 'A negociação foi concluída. ' + jogador.nome + ' deixa o ' + (($scope.clubes || []).find(function(item) { return item.id === jogador.clubeId; }) || {}).nome + ' e passa a defender o ' + destino.nome + '.';
             confirmados.push(rumor);
             if (!$scope.transferenciasHistorico) $scope.transferenciasHistorico = [];
-            $scope.transferenciasHistorico.unshift({ tipo: 'cpu', jogadorId: jogador.id, jogadorNome: jogador.nome, clubeDestinoId: destino.id, clubeDestinoNome: destino.nome, dia: dia, confirmadoPor: 'rumor' });
+            $scope.transferenciasHistorico.unshift({ tipo: 'cpu', jogadorId: jogador.id, jogadorNome: jogador.nome, clubeOrigemId: clubeOrigemId, clubeDestinoId: destino.id, clubeDestinoNome: destino.nome, valor: valorTransferencia, dia: dia, confirmadoPor: 'rumor' });
             $scope.transferenciasHistorico = $scope.transferenciasHistorico.slice(0, 100);
         });
         return confirmados;
+    };
+
+    $scope.processarMudancaTreinadorCpu = function() {
+        var dia = Number($scope.diaAtual) || 0;
+        if (dia === 0 || dia % 20 !== 0 || !$scope.clubes) return false;
+        var candidatos = $scope.clubes.filter(function(clube) { return !$scope.clubeAtual || clube.id !== $scope.clubeAtual.id; });
+        if (!candidatos.length) return false;
+        var clube = candidatos[dia % candidatos.length];
+        clube.treinadorNome = ['Rafael Monteiro', 'Eduardo Nascimento', 'Marcelo Valença', 'João Pires'][dia % 4];
+        clube.treinadorReputacao = Math.max(1, Math.min(5, Math.round((Number(clube.reputacao) || 50) / 20)));
+        $scope.adicionarMensagem('Mercado do Futebol', 'Troca de treinador', clube.nome + ' anunciou ' + clube.treinadorNome + ' como novo treinador para reagir na temporada.', true, 'transferencia');
+        return true;
     };
 
     $scope.marcarMensagemLida = function(msg) {
@@ -5190,6 +5206,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.gerarNoticiarioDia(hoje, partida);
         $scope.gerarRumoresMercadoDia();
         $scope.processarRumoresMercadoDia();
+        $scope.processarMudancaTreinadorCpu();
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
