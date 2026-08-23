@@ -1855,6 +1855,7 @@
                                 🤝 Negociar
                             </button>
                             <button ng-if="jogador.clubeId !== 'mercado' && jogador.anosContrato <= 1" ng-disabled="!obterStatusPreContrato(jogador).elegivel" title="{{obterStatusPreContrato(jogador).texto}}" style="padding: 8px 12px; background: white; color: var(--br-green-dark); border: 1px solid var(--br-green); border-radius: 8px; font-weight: bold; cursor: pointer; margin-left: 6px;" ng-style="{'opacity': obterStatusPreContrato(jogador).elegivel ? '1' : '0.55', 'cursor': obterStatusPreContrato(jogador).elegivel ? 'pointer' : 'not-allowed'}" ng-click="proporPreContrato(jogador, jogador.salarioDesejado, 2)">{{jogador.emNegociacao ? 'Proposta enviada' : 'Pré-contrato'}}</button>
+                            <small class="pre-contract-hint" ng-if="jogador.clubeId !== 'mercado'" ng-class="{'pre-contract-ready': obterStatusPreContrato(jogador).elegivel}">{{obterStatusPreContrato(jogador).texto}}</small>
                         </div>
                     </div>
                     

@@ -2383,6 +2383,8 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .substitution-suggestion { align-items: center; background: #fff; border: 1px solid #f0c36d; border-radius: 8px; color: #6b4c12; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 0 auto 12px; max-width: 680px; padding: 9px 12px; }
 .substitution-suggestion span { font-size: 12px; }
 .substitution-suggestion .btn { border: 1px solid #2855a6; border-radius: 5px; background: #fff; color: #173d83; cursor: pointer; font-weight: 700; padding: 6px 10px; }
+.pre-contract-hint { color: #8a6d3b; display: block; font-size: 10px; line-height: 1.25; margin-left: 6px; max-width: 110px; }
+.pre-contract-hint.pre-contract-ready { color: var(--br-green-dark); font-weight: 700; }
 .bench-item .jogador-nome { flex-grow: 1; margin-left: 10px; font-weight: 600; font-size: 14px; }
 .dragging { opacity: 0.5; }
 
