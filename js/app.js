@@ -552,10 +552,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.atualizarFasePreparacao = function() {
         var preparacao = atualizarResumoPreparacao();
-        if (preparacao.concluida || $scope.diaAtual <= preparacao.fimDia) return preparacao;
+        if (preparacao.concluida) return preparacao;
+        var primeiroJogoOficial = null;
+        if (Array.isArray($scope.calendarioGeral) && typeof $scope.obterMeuJogoNoDia === 'function') {
+            for (var dia = 0; dia < $scope.calendarioGeral.length; dia++) {
+                var compromisso = $scope.obterMeuJogoNoDia(dia);
+                if (compromisso && ['LIGA', 'COPA', 'CONTINENTAL'].indexOf(compromisso.tipo) !== -1) {
+                    primeiroJogoOficial = dia;
+                    break;
+                }
+            }
+        }
+        var deveEncerrar = primeiroJogoOficial !== null
+            ? $scope.diaAtual >= primeiroJogoOficial
+            : $scope.diaAtual > preparacao.fimDia;
+        if (!deveEncerrar) return preparacao;
         preparacao.concluida = true;
         preparacao.fase = 'temporada';
-        $scope.adicionarMensagem('Comissão Técnica', 'Pré-temporada encerrada', 'O período inicial de preparação terminou. O elenco inicia a temporada com entrosamento ' + preparacao.entrosamentoGeral + '/100.', false, 'ambiente');
+        var referencia = primeiroJogoOficial !== null ? ' antes do primeiro compromisso oficial' : '';
+        $scope.adicionarMensagem('Comissão Técnica', 'Pré-temporada encerrada', 'O período inicial de preparação terminou' + referencia + '. O elenco inicia a temporada com entrosamento ' + preparacao.entrosamentoGeral + '/100.', false, 'ambiente');
         return preparacao;
     };
 
@@ -3647,6 +3662,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             alert("Você não tem jogo hoje!");
             return;
         }
+
+        // A preparação termina antes do primeiro compromisso oficial, nunca depois de uma rodada.
+        $scope.atualizarFasePreparacao();
 
         var emCampo = ($scope.elencoAtual || []).filter(function(j) { return j.emCampo; });
         if (emCampo.length !== 11) {

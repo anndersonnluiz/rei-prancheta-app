@@ -192,6 +192,18 @@ scope.atualizarStatusHumorElenco();
 assert.strictEqual(scope.elencoAtual[0].statusHumor, 'Confiante');
 assert.strictEqual(scope.elencoAtual[1].statusHumor, 'Insatisfeito');
 
+// A pré-temporada deve respeitar o primeiro compromisso oficial, não uma janela fixa.
+scope.calendarioGeral = [{ tipo: 'DESCANSO' }, { tipo: 'LIGA' }];
+scope.obterMeuJogoNoDia = function(dia) { return dia === 1 ? { tipo: 'LIGA' } : null; };
+scope.preparacaoTemporada.concluida = false;
+scope.diaAtual = 0;
+scope.atualizarFasePreparacao();
+assert.strictEqual(scope.preparacaoTemporada.concluida, false, 'pre-season should remain active before the first official match');
+scope.diaAtual = 1;
+scope.atualizarFasePreparacao();
+assert.strictEqual(scope.preparacaoTemporada.concluida, true, 'pre-season should close at the first official match');
+scope.preparacaoTemporada.concluida = false;
+
 scope.obterMeuJogoHoje = function() { return null; };
 scope.diaAtual = 3;
 scope.preparacaoTemporada.entrosamentoSetores.defesa = 50;
