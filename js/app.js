@@ -2586,6 +2586,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             tipo: 'transferencia',
             subtipo: 'rumor',
             confianca: confianca,
+            diaCriacao: dia,
             jogadorId: jogador.id,
             clubeDestinoId: clubeDestino.id
         };
@@ -2593,6 +2594,32 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.noticiasFeed.unshift(noticia);
         $scope.noticiasFeed = $scope.noticiasFeed.slice(0, 30);
         return [noticia];
+    };
+
+    $scope.processarRumoresMercadoDia = function() {
+        var dia = Number($scope.diaAtual) || 0;
+        var janelaAberta = !$scope.janelaTransferencias || $scope.janelaTransferencias.aberta !== false;
+        if (!janelaAberta || !$scope.noticiasFeed) return [];
+        var confirmados = [];
+        $scope.noticiasFeed.forEach(function(rumor) {
+            if (rumor.subtipo !== 'rumor' || rumor.confirmado || dia - (rumor.diaCriacao || dia) < 4) return;
+            var chance = rumor.confianca === 'alta' ? 0.55 : (rumor.confianca === 'média' ? 0.3 : 0.12);
+            if (Math.random() > chance) return;
+            var jogador = ($scope.jogadores || []).find(function(item) { return item.id === rumor.jogadorId; });
+            var destino = ($scope.clubes || []).find(function(item) { return item.id === rumor.clubeDestinoId; });
+            if (!jogador || !destino || jogador.clubeId === destino.id) return;
+            rumor.confirmado = true;
+            rumor.subtipo = 'confirmado';
+            jogador.clubeId = destino.id;
+            jogador.emNegociacao = false;
+            rumor.titulo = 'Confirmado: ' + jogador.nome + ' acerta com ' + destino.nome;
+            rumor.conteudo = 'A negociação foi concluída. ' + jogador.nome + ' deixa o ' + (($scope.clubes || []).find(function(item) { return item.id === jogador.clubeId; }) || {}).nome + ' e passa a defender o ' + destino.nome + '.';
+            confirmados.push(rumor);
+            if (!$scope.transferenciasHistorico) $scope.transferenciasHistorico = [];
+            $scope.transferenciasHistorico.unshift({ tipo: 'cpu', jogadorId: jogador.id, jogadorNome: jogador.nome, clubeDestinoId: destino.id, clubeDestinoNome: destino.nome, dia: dia, confirmadoPor: 'rumor' });
+            $scope.transferenciasHistorico = $scope.transferenciasHistorico.slice(0, 100);
+        });
+        return confirmados;
     };
 
     $scope.marcarMensagemLida = function(msg) {
@@ -5162,6 +5189,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         $scope.gerarNoticiarioDia(hoje, partida);
         $scope.gerarRumoresMercadoDia();
+        $scope.processarRumoresMercadoDia();
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
