@@ -2680,6 +2680,24 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return eventos;
     };
 
+    $scope.gerarNarrativaCompeticaoDia = function() {
+        var dia = Number($scope.diaAtual) || 0;
+        if (dia === 0 || dia % 5 !== 0 || !$scope.tabelas) return [];
+        var eventos = [];
+        ['A', 'B', 'C', 'D'].forEach(function(divisao) {
+            var tabela = $scope.tabelas[divisao] || [];
+            if (!tabela.length) return;
+            var lider = tabela[0] && tabela[0].clube;
+            var lanterna = tabela[tabela.length - 1] && tabela[tabela.length - 1].clube;
+            if (lider) eventos.push({ titulo: 'Briga pelo topo da Série ' + divisao, detalhe: lider.nome + ' assumiu protagonismo na competição e começa a ser tratado como candidato ao título.', tipo: 'imprensa' });
+            if (lanterna) eventos.push({ titulo: 'Alerta na parte de baixo da tabela', detalhe: lanterna.nome + ' precisa reagir para não terminar a rodada em situação delicada na Série ' + divisao + '.', tipo: 'torcida' });
+        });
+        eventos.slice(0, 2).forEach(function(evento, indice) {
+            $scope.adicionarMensagem(indice === 0 ? 'Imprensa' : 'Torcida', evento.titulo, evento.detalhe, true, evento.tipo);
+        });
+        return eventos;
+    };
+
     $scope.marcarMensagemLida = function(msg) {
         msg.lida = true;
     };
@@ -5250,6 +5268,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.processarRumoresMercadoDia();
         $scope.processarMudancaTreinadorCpu();
         $scope.processarDinamicaClubesCpu();
+        $scope.gerarNarrativaCompeticaoDia();
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
