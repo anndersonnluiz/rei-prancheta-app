@@ -868,6 +868,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return Math.max(salarioAtual, Math.round(baseTecnica * fator));
     }
 
+    function calcularSalarioMercadoInterno(jogador) {
+        if (!jogador) return 10000;
+        var overall = calcularOverallBaseJogador(jogador);
+        var idade = valorNumericoOuPadrao(jogador.idade, 24);
+        var clubeJogador = ($scope.clubes || []).find(function(c) { return c.id == jogador.clubeId; });
+        var divisao = jogador.divisao || (clubeJogador && clubeJogador.divisao) || '';
+        var fatorDivisao = { A: 1.18, B: 0.92, C: 0.72, D: 0.55 }[divisao] || 0.8;
+        var fatorIdade = idade <= 21 ? 0.82 : (idade <= 25 ? 1.0 : (idade <= 29 ? 1.08 : (idade >= 33 ? 0.82 : 0.98)));
+        var fatorPotencial = 1 + Math.max(0, (Number(jogador.potencial) || overall) - overall) * 0.006;
+        return Math.max(10000, Math.round((overall * overall * 18 * fatorDivisao * fatorIdade * fatorPotencial) / 100) * 100);
+    }
+
     function calcularSatisfacaoContratoJogadorInterno(jogador, salarioDesejado) {
         var salarioAtual = parseFloat(jogador && jogador.salario) || 10000;
         salarioDesejado = parseFloat(salarioDesejado) || salarioAtual;
@@ -890,13 +902,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var desejadoCalculado = calcularSalarioDesejadoJogadorInterno(jogador);
         if (jogador.salarioDesejado === undefined || jogador.salarioDesejado === null) jogador.salarioDesejado = desejadoCalculado;
         else jogador.salarioDesejado = Math.max(parseFloat(jogador.salarioDesejado) || desejadoCalculado, parseFloat(jogador.salario) || 10000);
-        if (!jogador.salarioPersonalizado && [60000, 10000, 2000].indexOf(Number(jogador.salario)) !== -1 && Number(jogador.salarioDesejado) === Number(jogador.salario)) {
-            var overallBase = calcularOverallBaseJogador(jogador);
-            var potencialBase = valorNumericoOuPadrao(jogador.potencial, overallBase);
-            var fatorPerfil = 0.55 + (overallBase / 100) * 0.85 + Math.max(0, potencialBase - overallBase) * 0.003;
-            var salarioVariavel = Math.round((Number(jogador.salario) * fatorPerfil) / 100) * 100;
+        if (!jogador.salarioPersonalizado && [60000, 10000, 2000].indexOf(Number(jogador.salario)) !== -1) {
+            var salarioVariavel = calcularSalarioMercadoInterno(jogador);
             jogador.salario = salarioVariavel;
-            jogador.salarioDesejado = Math.max(salarioVariavel, Math.round((salarioVariavel * (1 + Math.max(0, potencialBase - overallBase) * 0.01)) / 100) * 100);
+            jogador.salarioDesejado = calcularSalarioDesejadoJogadorInterno(jogador);
         }
         jogador.statusContrato = calcularStatusContratoJogadorInterno(jogador);
         jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
@@ -911,9 +920,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var overall = calcularOverallBaseJogador(jogador);
         var potencial = Math.max(overall, valorNumericoOuPadrao(jogador.potencial, overall));
         var idade = valorNumericoOuPadrao(jogador.idade, 24);
-        var idadeFator = idade <= 23 ? 1.18 : (idade >= 31 ? 0.72 : 1);
-        var qualidade = 0.55 + (overall / 100) * 0.85 + Math.max(0, potencial - overall) * 0.012;
-        return Math.max(0, Math.round(((parseFloat(jogador.salarioDesejado) || jogador.salario || 10000) * 100 * qualidade * idadeFator) / 10000) * 10000);
+        var idadeFator = idade <= 21 ? 1.25 : (idade <= 23 ? 1.18 : (idade <= 27 ? 1.05 : (idade >= 32 ? 0.7 : 0.92)));
+        var clubeJogador = ($scope.clubes || []).find(function(c) { return c.id == jogador.clubeId; });
+        var divisao = jogador.divisao || (clubeJogador && clubeJogador.divisao) || '';
+        var fatorDivisao = { A: 1.25, B: 1.0, C: 0.78, D: 0.62 }[divisao] || 0.85;
+        var fatorPotencial = 1 + Math.max(0, potencial - overall) * 0.018;
+        var fatorContrato = jogador.anosContrato >= 3 ? 1.12 : (jogador.anosContrato <= 1 ? 0.72 : 1);
+        var valorBase = Math.pow(Math.max(35, overall), 3) * 8;
+        return Math.max(0, Math.round((valorBase * idadeFator * fatorDivisao * fatorPotencial * fatorContrato) / 100000) * 100000);
     }
 
     function criarResumoContratos(jogadores) {
