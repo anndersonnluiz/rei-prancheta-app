@@ -5567,7 +5567,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var agg2 = ch.golsIda2 + ch.golsVolta2;
                 if (agg1 > agg2) ch.vencedor = ch.time1;
                 else if (agg2 > agg1) ch.vencedor = ch.time2;
-                else ch.vencedor = Math.random() > 0.5 ? ch.time1 : ch.time2; // Penaltis simulados rápido
+                else {
+                    var vencedorPenaltis = Math.random() > 0.5 ? ch.time1 : ch.time2;
+                    var golsPenaltis1 = vencedorPenaltis === ch.time1 ? 5 : 4;
+                    var golsPenaltis2 = vencedorPenaltis === ch.time2 ? 5 : 4;
+                    ch.vencedor = vencedorPenaltis;
+                    ch.metodoDesempate = 'penaltis';
+                    ch.placarPenaltis = golsPenaltis1 + ' x ' + golsPenaltis2;
+                    if (ch.time1.id === $scope.clubeAtual.id || ch.time2.id === $scope.clubeAtual.id) {
+                        $scope.adicionarMensagem('Federação', 'Copa do Brasil decidida nos pênaltis', ch.time1.nome + ' e ' + ch.time2.nome + ' empataram em ' + agg1 + ' x ' + agg2 + ' no agregado. Disputa de pênaltis: ' + ch.time1.sigla + ' ' + ch.placarPenaltis + ' ' + ch.time2.sigla + '.', false, 'competicao');
+                    }
+                }
             }
         });
 
