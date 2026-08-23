@@ -822,6 +822,7 @@
                         <span class="dashboard-eyebrow">Bastidores do confronto</span>
                         <strong style="display:block; margin:4px 0 8px;">{{preJogo.analise.narrativa.manchete}}</strong>
                         <div ng-repeat="fala in preJogo.analise.narrativa.falas track by $index" style="font-size: 13px; margin-top: 5px;"><b>{{fala.autor}}:</b> {{fala.texto}}</div>
+                        <div ng-if="preJogo.analise.narrativa.rivalidade" style="margin-top:10px; padding-top:8px; border-top:1px solid #f0dfbf; font-size:13px;"><b>Histórico:</b> {{preJogo.analise.narrativa.rivalidade.detalhe}}</div>
                     </section>
                 </section>
                 <div class="card" ng-if="preJogo.analise.analistaAtivo" style="margin-bottom: 16px; padding: 12px 16px; border-left: 4px solid var(--br-blue);">📋 Analista ativo · Confiança do relatório: <strong>{{preJogo.analise.confiancaAnalise}}%</strong></div>

@@ -2531,6 +2531,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var posicao = obterPosicaoTabelaNarrativa($scope.clubeAtual);
         var posicaoRival = obterPosicaoTabelaNarrativa(adversario);
         var falas = [];
+        var rivalidade = $scope.obterRivalidadeNarrativa ? $scope.obterRivalidadeNarrativa($scope.clubeAtual, adversario) : null;
         if (posicao && posicao <= 4) falas.push({ autor: 'Imprensa', texto: 'A campanha coloca o ' + $scope.clubeAtual.nome + ' entre os candidatos a uma temporada especial.' });
         else if (posicao && posicao >= 17) falas.push({ autor: 'Imprensa', texto: 'A pressão aumentou: o ' + $scope.clubeAtual.nome + ' precisa reagir na tabela.' });
         if (adversario && posicaoRival && posicao && Math.abs(posicaoRival - posicao) <= 3) {
@@ -2539,10 +2540,35 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             falas.push({ autor: 'Comissão técnica', texto: 'Respeitamos o ' + adversario.nome + ', mas temos condições de competir.' });
         }
         return {
-            manchete: adversario ? 'Clima esquenta antes de ' + $scope.clubeAtual.nome + ' x ' + adversario.nome : 'Expectativa para o próximo compromisso',
+            manchete: rivalidade && rivalidade.titulo ? rivalidade.titulo : (adversario ? 'Clima esquenta antes de ' + $scope.clubeAtual.nome + ' x ' + adversario.nome : 'Expectativa para o próximo compromisso'),
             falas: falas,
-            confrontoDireto: !!(posicao && posicaoRival && Math.abs(posicaoRival - posicao) <= 3)
+            confrontoDireto: !!(posicao && posicaoRival && Math.abs(posicaoRival - posicao) <= 3),
+            rivalidade: rivalidade
         };
+    };
+
+    $scope.obterRivalidadeNarrativa = function(clube, adversario) {
+        if (!clube || !adversario) return null;
+        var jogos = ($scope.historicoPartidas || []).filter(function(partida) {
+            return partida && ((partida.mandante && partida.mandante.id === clube.id && partida.visitante && partida.visitante.id === adversario.id) || (partida.mandante && partida.mandante.id === adversario.id && partida.visitante && partida.visitante.id === clube.id));
+        });
+        if (!jogos.length) return null;
+        var ultimos = jogos.slice(0, 5);
+        var vitoriasClube = ultimos.filter(function(partida) {
+            var mandanteClube = partida.mandante && partida.mandante.id === clube.id;
+            var golsClube = mandanteClube ? partida.golsMandante : partida.golsVisitante;
+            var golsRival = mandanteClube ? partida.golsVisitante : partida.golsMandante;
+            return golsClube > golsRival;
+        }).length;
+        var derrotasClube = ultimos.filter(function(partida) {
+            var mandanteClube = partida.mandante && partida.mandante.id === clube.id;
+            var golsClube = mandanteClube ? partida.golsMandante : partida.golsVisitante;
+            var golsRival = mandanteClube ? partida.golsVisitante : partida.golsMandante;
+            return golsClube < golsRival;
+        }).length;
+        if (derrotasClube >= 3) return { tipo: 'revanche', titulo: 'Jogo da revanche contra ' + adversario.nome, detalhe: 'O adversário venceu ' + derrotasClube + ' dos últimos ' + ultimos.length + ' encontros.' };
+        if (vitoriasClube >= 3) return { tipo: 'hegemonia', titulo: 'Duelo pela hegemonia contra ' + adversario.nome, detalhe: 'O ' + clube.nome + ' venceu ' + vitoriasClube + ' dos últimos ' + ultimos.length + ' confrontos.' };
+        return { tipo: 'historico', titulo: 'Confronto de histórico equilibrado', detalhe: 'Os últimos encontros entre os clubes foram marcados pelo equilíbrio.' };
     };
 
     $scope.gerarNoticiarioDia = function(diaObj, partida) {
