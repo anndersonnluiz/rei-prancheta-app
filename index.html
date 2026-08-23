@@ -449,6 +449,7 @@
                                 <div class="news-compact-meta">
                                     <span>{{noticia.remetente}}</span>
                                     <small>{{noticia.tipo}}</small>
+                                    <small ng-if="noticia.subtipo === 'rumor'">Rumor · {{noticia.confianca}}</small>
                                     <time>{{noticia.dataStr}}</time>
                                 </div>
                                 <h4>{{noticia.titulo}}</h4>

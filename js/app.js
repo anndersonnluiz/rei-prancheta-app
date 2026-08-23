@@ -2563,6 +2563,38 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return noticias;
     };
 
+    $scope.gerarRumoresMercadoDia = function() {
+        var dia = Number($scope.diaAtual) || 0;
+        if (dia === 0 || dia % 4 !== 0 || !$scope.jogadores || !$scope.clubes || !$scope.clubes.length) return [];
+        var clubesAtivos = $scope.clubes.filter(function(clube) { return !$scope.clubeAtual || clube.id !== $scope.clubeAtual.id; });
+        var jogadoresDisponiveis = $scope.jogadores.filter(function(jogador) {
+            return jogador && jogador.nome && jogador.clubeId && jogador.clubeId !== ($scope.clubeAtual && $scope.clubeAtual.id) && !jogador.emNegociacao;
+        });
+        if (!clubesAtivos.length || !jogadoresDisponiveis.length) return [];
+        var clubeDestino = clubesAtivos[dia % clubesAtivos.length];
+        var jogador = jogadoresDisponiveis[dia % jogadoresDisponiveis.length];
+        var confianca = dia % 3 === 0 ? 'alta' : (dia % 2 === 0 ? 'média' : 'baixa');
+        var id = 'rumor_' + dia + '_' + clubeDestino.id + '_' + jogador.id;
+        if (($scope.noticiasFeed || []).some(function(item) { return item.id === id; })) return [];
+        var noticia = {
+            id: id,
+            remetente: 'Mercado da Bola',
+            titulo: 'Especulação: ' + clubeDestino.nome + ' acompanha ' + jogador.nome,
+            conteudo: 'O ' + clubeDestino.nome + ' avalia uma investida por ' + jogador.nome + '. Confiabilidade do rumor: ' + confianca + '. Nada foi confirmado pelos clubes.',
+            dataStr: $scope.calendarioGeral && $scope.calendarioGeral[dia] ? $scope.calendarioGeral[dia].titulo : 'Dia ' + dia,
+            lida: true,
+            tipo: 'transferencia',
+            subtipo: 'rumor',
+            confianca: confianca,
+            jogadorId: jogador.id,
+            clubeDestinoId: clubeDestino.id
+        };
+        $scope.noticiasFeed = $scope.noticiasFeed || [];
+        $scope.noticiasFeed.unshift(noticia);
+        $scope.noticiasFeed = $scope.noticiasFeed.slice(0, 30);
+        return [noticia];
+    };
+
     $scope.marcarMensagemLida = function(msg) {
         msg.lida = true;
     };
@@ -5129,6 +5161,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.simularFaseContinentalCPU(hoje);
         }
         $scope.gerarNoticiarioDia(hoje, partida);
+        $scope.gerarRumoresMercadoDia();
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
