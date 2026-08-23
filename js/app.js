@@ -60,6 +60,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.jogadores = [];
     $scope.clubeAtual = null;
     $scope.elencoAtual = [];
+    var ordemPosicoes = { GOL: 1, LAT: 2, ZAG: 3, VOL: 4, MEI: 5, ATA: 6 };
+    $scope.ordemPosicaoJogador = function(jogador) {
+        return ordemPosicoes[jogador && jogador.posicao] || 99;
+    };
     $scope.telaAtual = 'loading'; 
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
     $scope.historicoTreinador = [];
