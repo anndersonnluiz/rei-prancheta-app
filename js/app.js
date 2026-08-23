@@ -2727,9 +2727,24 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var empatou = golsMeu === golsRival;
         var destaque = ($scope.elencoAtual || []).filter(function(jogador) { return jogador.emCampo && !jogador.lesionado; })[0];
         var texto = venceu ? 'O grupo mostrou personalidade e mereceu a vitória.' : (empatou ? 'Precisamos ajustar detalhes, mas seguimos competitivos.' : 'A derrota dói, mas vamos trabalhar para reagir no próximo compromisso.');
+        $scope.atualizarReputacaoNarrativa(venceu ? 'motivacao' : (empatou ? 'equilibrio' : 'defensivo'), 'pós-jogo');
         if (destaque) texto = destaque.nome + ' falou após o jogo: "' + texto + '"';
         $scope.adicionarMensagem(venceu ? 'Capitão do elenco' : 'Comissão Técnica', venceu ? 'Vestiário em festa' : (empatou ? 'Elenco mantém a confiança' : 'Reação no vestiário'), texto + ' O resultado foi ' + golsMeu + ' x ' + golsRival + ' contra ' + (rival ? rival.nome : 'o adversário') + '.', true, venceu ? 'torcida' : 'imprensa');
         return texto;
+    };
+
+    $scope.atualizarReputacaoNarrativa = function(efeito, origem) {
+        $scope.dados = $scope.dados || {};
+        var reputacao = $scope.dados.reputacaoNarrativa || { confianca: 50, respeito: 50, vestiario: 50, estilo: 'em construção', historico: [] };
+        var delta = efeito === 'motivacao' ? { confianca: 2, respeito: 1, vestiario: 3 } : (efeito === 'arrogante' ? { confianca: 1, respeito: -2, vestiario: -1 } : { confianca: 0, respeito: 1, vestiario: 1 });
+        reputacao.confianca = Math.max(0, Math.min(100, reputacao.confianca + delta.confianca));
+        reputacao.respeito = Math.max(0, Math.min(100, reputacao.respeito + delta.respeito));
+        reputacao.vestiario = Math.max(0, Math.min(100, reputacao.vestiario + delta.vestiario));
+        reputacao.estilo = reputacao.respeito >= 70 ? 'respeitado' : (reputacao.respeito <= 30 ? 'provocador' : 'equilibrado');
+        reputacao.historico.unshift({ dia: $scope.diaAtual || 0, origem: origem || 'declaração', efeito: efeito, confianca: reputacao.confianca, respeito: reputacao.respeito, vestiario: reputacao.vestiario });
+        reputacao.historico = reputacao.historico.slice(0, 20);
+        $scope.dados.reputacaoNarrativa = reputacao;
+        return reputacao;
     };
 
     $scope.marcarMensagemLida = function(msg) {
@@ -7354,6 +7369,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.taticas.mentalidade = 'Ofensivo';
         }
         $scope.aplicarContextoExternoColetiva(opcao);
+        $scope.atualizarReputacaoNarrativa(opcao.efeito, 'coletiva');
         $scope.adicionarMensagem('Imprensa', 'Repercussão', opcao.msg, false, 'imprensa');
         $scope.coletivaRespondida = true;
         $scope.executarPartidaPreparada($scope.obterMeuJogoHoje(), $scope.modoPartidaPendente);
