@@ -6268,6 +6268,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.dados.reputacaoTreinador === 3) repMaxima = 75;
         if ($scope.dados.reputacaoTreinador === 4) repMaxima = 85;
         if ($scope.dados.reputacaoTreinador >= 5) repMaxima = 100;
+        var narrativa = $scope.dados.reputacaoNarrativa || { respeito: 50, confianca: 50 };
+        repMaxima += Math.round(((narrativa.respeito || 50) - 50) / 10) + Math.round(((narrativa.confianca || 50) - 50) / 20);
+        repMaxima = Math.max(30, Math.min(100, repMaxima));
+        $scope.reputacaoNarrativaLabel = narrativa.respeito >= 70 ? 'Treinador respeitado' : (narrativa.respeito <= 30 ? 'Treinador polêmico' : 'Treinador equilibrado');
 
         var clubesDisponiveis = $scope.clubes.filter(function(c) {
             return c.reputacao <= repMaxima && c.id !== $scope.clubeAtual.id;
