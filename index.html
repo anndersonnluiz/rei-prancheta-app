@@ -789,6 +789,11 @@
                     <div class="pre-match-status" ng-class="'status-' + preJogo.analise.statusClasse">
                         {{preJogo.analise.statusConfronto}}
                     </div>
+                    <section class="pre-match-narrative" ng-if="preJogo.analise.narrativa" style="margin: 14px 0; padding: 14px; border-left: 4px solid var(--br-orange); background: #fff8ec; border-radius: 6px;">
+                        <span class="dashboard-eyebrow">Bastidores do confronto</span>
+                        <strong style="display:block; margin:4px 0 8px;">{{preJogo.analise.narrativa.manchete}}</strong>
+                        <div ng-repeat="fala in preJogo.analise.narrativa.falas track by $index" style="font-size: 13px; margin-top: 5px;"><b>{{fala.autor}}:</b> {{fala.texto}}</div>
+                    </section>
                 </section>
                 <div class="card" ng-if="preJogo.analise.analistaAtivo" style="margin-bottom: 16px; padding: 12px 16px; border-left: 4px solid var(--br-blue);">📋 Analista ativo · Confiança do relatório: <strong>{{preJogo.analise.confiancaAnalise}}%</strong></div>
 

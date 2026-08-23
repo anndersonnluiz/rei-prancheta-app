@@ -2512,6 +2512,57 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    // Camada narrativa do mundo: acontecimentos são gerados a partir do estado
+    // real da carreira e entram no mesmo feed das mensagens, evitando notícias
+    // desconectadas do que aconteceu em campo.
+    function obterPosicaoTabelaNarrativa(clube) {
+        if (!clube || !$scope.tabelas || !$scope.tabelas[clube.divisao]) return null;
+        var lista = $scope.tabelas[clube.divisao];
+        var item = lista.find(function(linha) { return linha.clube && linha.clube.id === clube.id; });
+        return item ? lista.indexOf(item) + 1 : null;
+    }
+
+    $scope.obterNarrativaPreJogo = function(partida) {
+        if (!partida) return { manchete: '', falas: [] };
+        var adversario = partida.mandante && partida.mandante.id === ($scope.clubeAtual && $scope.clubeAtual.id) ? partida.visitante : partida.mandante;
+        var posicao = obterPosicaoTabelaNarrativa($scope.clubeAtual);
+        var posicaoRival = obterPosicaoTabelaNarrativa(adversario);
+        var falas = [];
+        if (posicao && posicao <= 4) falas.push({ autor: 'Imprensa', texto: 'A campanha coloca o ' + $scope.clubeAtual.nome + ' entre os candidatos a uma temporada especial.' });
+        else if (posicao && posicao >= 17) falas.push({ autor: 'Imprensa', texto: 'A pressão aumentou: o ' + $scope.clubeAtual.nome + ' precisa reagir na tabela.' });
+        if (adversario && posicaoRival && posicao && Math.abs(posicaoRival - posicao) <= 3) {
+            falas.push({ autor: 'Treinador adversário', texto: 'Será um confronto direto e não vamos aceitar que o rival controle o ritmo.' });
+        } else if (adversario) {
+            falas.push({ autor: 'Comissão técnica', texto: 'Respeitamos o ' + adversario.nome + ', mas temos condições de competir.' });
+        }
+        return {
+            manchete: adversario ? 'Clima esquenta antes de ' + $scope.clubeAtual.nome + ' x ' + adversario.nome : 'Expectativa para o próximo compromisso',
+            falas: falas,
+            confrontoDireto: !!(posicao && posicaoRival && Math.abs(posicaoRival - posicao) <= 3)
+        };
+    };
+
+    $scope.gerarNoticiarioDia = function(diaObj, partida) {
+        if (!diaObj) return [];
+        var chave = 'mundo_' + ($scope.diaAtual || 0) + '_' + (diaObj.titulo || diaObj.tipo);
+        var noticias = [];
+        var rivais = ($scope.clubes || []).filter(function(clube) { return !$scope.clubeAtual || clube.id !== $scope.clubeAtual.id; });
+        if (partida && partida.golsMandante !== undefined) {
+            var adversario = partida.mandante && partida.mandante.id === ($scope.clubeAtual && $scope.clubeAtual.id) ? partida.visitante : partida.mandante;
+            var venceu = (partida.mandante.id === $scope.clubeAtual.id && partida.golsMandante > partida.golsVisitante) || (partida.visitante.id === $scope.clubeAtual.id && partida.golsVisitante > partida.golsMandante);
+            var empatou = partida.golsMandante === partida.golsVisitante;
+            noticias.push({ titulo: venceu ? 'Vitória muda o ambiente' : (empatou ? 'Empate mantém a disputa aberta' : 'Derrota aumenta a cobrança'), detalhe: $scope.clubeAtual.nome + ' ' + partida.golsMandante + ' x ' + partida.golsVisitante + ' ' + (adversario ? adversario.nome : '') + '. ' + (venceu ? 'A torcida ganhou confiança.' : 'A imprensa espera uma resposta no próximo jogo.'), tipo: venceu ? 'torcida' : 'imprensa' });
+        }
+        if (rivais.length && (($scope.diaAtual || 0) % 3 === 0)) {
+            var rival = rivais[($scope.diaAtual || 0) % rivais.length];
+            noticias.push({ titulo: 'Movimentação no mercado', detalhe: rival.nome + ' monitora reforços para a sequência da temporada e movimenta os bastidores.', tipo: 'transferencia' });
+        }
+        noticias.forEach(function(noticia, indice) {
+            $scope.adicionarMensagem(noticia.tipo === 'torcida' ? 'Torcida' : noticia.tipo === 'transferencia' ? 'Mercado da Bola' : 'Imprensa', noticia.titulo, noticia.detalhe, true, noticia.tipo);
+        });
+        return noticias;
+    };
+
     $scope.marcarMensagemLida = function(msg) {
         msg.lida = true;
     };
@@ -3711,6 +3762,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             analise: $scope.montarAnalisePreJogo(partida, modoNormalizado),
             telaAnterior: $scope.telaAtual || 'dashboard'
         };
+        $scope.preJogo.analise.narrativa = $scope.obterNarrativaPreJogo(partida);
         $scope.telaAtual = 'pre_jogo';
     };
 
@@ -5076,6 +5128,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         } else if (hoje.tipo === 'CONTINENTAL') {
             $scope.simularFaseContinentalCPU(hoje);
         }
+        $scope.gerarNoticiarioDia(hoje, partida);
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
