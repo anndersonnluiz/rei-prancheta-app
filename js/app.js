@@ -2698,6 +2698,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return eventos;
     };
 
+    $scope.aplicarPressaoNarrativaCompeticao = function() {
+        var clube = $scope.clubeAtual;
+        var posicao = obterPosicaoTabelaNarrativa(clube);
+        if (!clube || !posicao) return null;
+        var dia = Number($scope.diaAtual) || 0;
+        var emZonaBaixa = posicao >= 17;
+        var emZonaAlta = posicao <= 4;
+        if (!emZonaBaixa && !emZonaAlta) return null;
+        var chave = 'competicao_pressao|' + dia + '|' + clube.id + '|' + posicao;
+        if (emZonaAlta) {
+            $scope.registrarEventoTorcida({ id: chave + '|torcida', chave: chave + '|torcida', origem: 'competicao', impacto: 1, titulo: 'Torcida empolgada', detalhe: 'A boa posição do ' + clube.nome + ' aumenta a confiança da arquibancada.' });
+            $scope.registrarEventoAmbiente({ id: chave + '|ambiente', chave: chave + '|ambiente', tipo: 'competicao', impacto: 1, titulo: 'Elenco confiante', detalhe: 'A disputa na parte alta fortalece o ambiente do grupo.' });
+        } else {
+            $scope.registrarEventoImprensa({ id: chave + '|imprensa', chave: chave + '|imprensa', origem: 'competicao', impacto: 2, titulo: 'Pressão pela reação', detalhe: 'A posição do ' + clube.nome + ' virou assunto recorrente e exige resposta rápida.' });
+            $scope.registrarEventoAmbiente({ id: chave + '|ambiente', chave: chave + '|ambiente', tipo: 'competicao', impacto: -1, titulo: 'Elenco pressionado', detalhe: 'A luta contra o rebaixamento pesa no ambiente do grupo.' });
+        }
+        return { posicao: posicao, zona: emZonaAlta ? 'alta' : 'baixa' };
+    };
+
     $scope.marcarMensagemLida = function(msg) {
         msg.lida = true;
     };
@@ -5269,6 +5288,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.processarMudancaTreinadorCpu();
         $scope.processarDinamicaClubesCpu();
         $scope.gerarNarrativaCompeticaoDia();
+        $scope.aplicarPressaoNarrativaCompeticao();
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
