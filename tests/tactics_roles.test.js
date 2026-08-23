@@ -19,6 +19,7 @@ assert.ok(app.includes('$scope.obterSugestaoSubstituicao'));
 assert.ok(app.includes('$scope.aplicarSugestaoSubstituicao'));
 assert.ok(html.includes('obterFuncoesTaticasJogador(jogador)'));
 assert.ok(html.includes('tactical-role-select'));
+assert.ok(html.includes('selected-player-role'));
 assert.ok(html.includes('$event.stopPropagation()'));
 assert.ok(html.includes('Aplicar sugestão'));
 

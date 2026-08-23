@@ -1213,6 +1213,11 @@
 
                     <div class="pitch-container" droppable-area="campo" ng-click="colocarJogadorSelecionadoNoCampo($event)">
                         <div class="tactics-touch-hint" ng-if="jogadorTaticaSelecionado">Jogador selecionado: toque no ponto do campo para reposicionar</div>
+                        <div class="selected-player-role" ng-if="jogadorTaticaSelecionado" ng-click="$event.stopPropagation()">
+                            <strong>{{jogadorTaticaSelecionado.nome}}</strong>
+                            <label>Função individual</label>
+                            <select ng-model="jogadorTaticaSelecionado.funcaoTatica" ng-options="funcao for funcao in obterFuncoesTaticasJogador(jogadorTaticaSelecionado)" ng-change="definirFuncaoTaticaJogador(jogadorTaticaSelecionado, jogadorTaticaSelecionado.funcaoTatica)" aria-label="Função individual do jogador selecionado"></select>
+                        </div>
                         
                         <!-- FASE 7: Direção do Ataque -->
                         <div class="pitch-direction">DEFESA ◀ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ATAQUE ▶</div>
