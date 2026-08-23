@@ -2652,6 +2652,34 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return ($scope.transferenciasHistorico || []).filter(function(item) { return item.tipo === 'cpu'; }).slice(0, 20);
     };
 
+    $scope.processarDinamicaClubesCpu = function() {
+        var dia = Number($scope.diaAtual) || 0;
+        if (dia === 0 || dia % 7 !== 0) return [];
+        var eventos = [];
+        var clubesCpu = ($scope.clubes || []).filter(function(clube) { return !$scope.clubeAtual || clube.id !== $scope.clubeAtual.id; });
+        clubesCpu.forEach(function(clube, indice) {
+            if (indice % 5 !== dia % 5) return;
+            var elencoClube = ($scope.jogadores || []).filter(function(jogador) { return jogador.clubeId === clube.id; });
+            if (!elencoClube.length) return;
+            var jogador = elencoClube[(dia + indice) % elencoClube.length];
+            if ((jogador.anosContrato || 2) <= 1) {
+                jogador.anosContrato = 2;
+                jogador.salario = Math.round((Number(jogador.salario) || 10000) * 1.08 / 100) * 100;
+                eventos.push({ tipo: 'renovacao', clube: clube, jogador: jogador });
+            } else if ((Number(clube.orcamento) || 0) < 1000000) {
+                eventos.push({ tipo: 'crise', clube: clube });
+            }
+        });
+        eventos.forEach(function(evento) {
+            if (evento.tipo === 'renovacao') {
+                $scope.adicionarMensagem('Mercado do Futebol', 'Renovação importante', evento.clube.nome + ' renovou com ' + evento.jogador.nome + ' e afastou o interesse de outros clubes.', true, 'transferencia');
+            } else {
+                $scope.adicionarMensagem('Mercado do Futebol', 'Crise financeira', evento.clube.nome + ' enfrenta dificuldades financeiras e deverá reduzir investimentos no elenco.', true, 'imprensa');
+            }
+        });
+        return eventos;
+    };
+
     $scope.marcarMensagemLida = function(msg) {
         msg.lida = true;
     };
@@ -5221,6 +5249,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.gerarRumoresMercadoDia();
         $scope.processarRumoresMercadoDia();
         $scope.processarMudancaTreinadorCpu();
+        $scope.processarDinamicaClubesCpu();
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
