@@ -1879,6 +1879,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var metaCritica = metas.reduce(function(pior, meta) { return !pior || meta.progresso < pior.progresso ? meta : pior; }, null);
         if (metaCritica && dia - $scope.diretoriaStatus.ultimaReacaoMetasDia >= 16) {
             var impactoConfianca = metaCritica.progresso >= 75 ? 1 : (metaCritica.progresso < 45 ? -1 : 0);
+            var narrativa = $scope.dados && $scope.dados.reputacaoNarrativa;
+            if (narrativa && narrativa.respeito >= 70 && impactoConfianca < 0) impactoConfianca = 0;
+            if (narrativa && narrativa.respeito <= 30 && impactoConfianca > 0) impactoConfianca = 0;
             var reacao = metaCritica.progresso >= 75 ? 'A diretoria reconhece o avanço em ' + metaCritica.tipo + ' e espera consistência.' : (metaCritica.progresso >= 45 ? 'A diretoria acompanha ' + metaCritica.tipo + ' com atenção e recomenda ajustes graduais.' : 'A diretoria solicita uma reação no eixo de ' + metaCritica.tipo + ' antes da próxima avaliação.');
             $scope.diretoriaStatus.ultimaReacaoMetasDia = dia;
             $scope.diretoriaStatus.bonusConfianca = Math.max(-10, Math.min(10, ($scope.diretoriaStatus.bonusConfianca || 0) + impactoConfianca));
