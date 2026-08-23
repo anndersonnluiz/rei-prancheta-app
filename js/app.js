@@ -6791,21 +6791,48 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.processarPreContratos = function() {
         var concluidos = [];
+        var recusados = [];
         ($scope.propostasPendentes || []).forEach(function(proposta) {
             if (proposta.tipo !== 'pre_contrato' || proposta.status !== 'em_jogador') return;
             var jogador = ($scope.jogadores || []).find(function(item) { return item.id === proposta.jogadorId; });
             if (!jogador || (jogador.anosContrato || 0) > 0) return;
+            // O pré-contrato parte do salário atual como piso; a exigência desejada
+            // pode ser renegociada na virada, mas nunca aceitamos corte relevante.
+            var salarioAtual = parseFloat(jogador.salario) || 10000;
+            var salarioMinimo = Math.max(10000, Math.round(salarioAtual * 0.8));
+            if ((parseFloat(proposta.salarioOferta) || 0) < salarioMinimo) {
+                jogador.emNegociacao = false;
+                proposta.status = 'recusada';
+                proposta.diasRestantes = 0;
+                proposta.motivo = 'Salário abaixo da exigência do jogador.';
+                recusados.push({ jogador: jogador, proposta: proposta, salarioMinimo: salarioMinimo });
+                return;
+            }
             jogador.clubeId = proposta.clubeDestinoId;
             jogador.salario = proposta.salarioOferta;
+            jogador.salarioDesejado = Math.max(jogador.salario, salarioMinimo);
             jogador.anosContrato = proposta.anosContrato;
             jogador.emNegociacao = false;
             proposta.status = 'aceita';
             proposta.diasRestantes = 0;
             concluidos.push(proposta);
+            if ($scope.clubeAtual && proposta.clubeDestinoId === $scope.clubeAtual.id && !($scope.elencoAtual || []).some(function(item) { return item.id === jogador.id; })) {
+                var novoAtleta = angular.copy(jogador);
+                novoAtleta.emCampo = false;
+                novoAtleta.substituidoNaPartida = false;
+                normalizarJogadorSalvo(novoAtleta);
+                $scope.elencoAtual.push(novoAtleta);
+            }
         });
         if (concluidos.length) {
             $scope.propostasPendentes = ($scope.propostasPendentes || []).filter(function(item) { return item.status !== 'aceita' || item.tipo !== 'pre_contrato'; });
+            concluidos.forEach(function(proposta) {
+                $scope.adicionarMensagem('Diretoria', 'Pré-contrato efetivado', proposta.jogadorNome + ' assinou por ' + proposta.anosContrato + ' temporada(s) e se apresentará ao clube no início do novo ano.', false, 'transferencia');
+            });
         }
+        recusados.forEach(function(item) {
+            $scope.adicionarMensagem('Diretoria', 'Pré-contrato recusado', item.jogador.nome + ' recusou a proposta porque o salário oferecido ficou abaixo de ' + $scope.formatarMoeda(item.salarioMinimo) + '.', false, 'transferencia');
+        });
         return concluidos;
     };
 
