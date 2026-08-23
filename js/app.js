@@ -2638,6 +2638,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return true;
     };
 
+    $scope.mundoFutebolFiltro = 'todos';
+    $scope.filtrarNoticiaMundo = function(item) {
+        var filtro = $scope.mundoFutebolFiltro || 'todos';
+        if (filtro === 'todos') return true;
+        if (filtro === 'rumores') return item.subtipo === 'rumor';
+        if (filtro === 'transferencias') return item.tipo === 'transferencia';
+        if (filtro === 'imprensa') return item.tipo === 'imprensa' || item.tipo === 'torcida';
+        return true;
+    };
+
+    $scope.obterMovimentacoesMundo = function() {
+        return ($scope.transferenciasHistorico || []).filter(function(item) { return item.tipo === 'cpu'; }).slice(0, 20);
+    };
+
     $scope.marcarMensagemLida = function(msg) {
         msg.lida = true;
     };

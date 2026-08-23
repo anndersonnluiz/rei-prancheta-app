@@ -96,6 +96,7 @@
                 <li ng-if="menuGrupos.inicio" ng-class="{'active': telaAtual === 'dashboard'}" ng-click="mudarTela('dashboard')">📊 Visão Geral</li>
                 <li ng-if="menuGrupos.inicio" ng-class="{'active': telaAtual === 'mensagens'}" ng-click="mudarTela('mensagens')">✉️ Mensagens <span class="badge" style="background: var(--br-green); font-size: 10px; margin-left: 5px;" ng-if="qtdMensagensNaoLidas() > 0">{{qtdMensagensNaoLidas()}}</span></li>
                 <li ng-if="menuGrupos.inicio" ng-class="{'active': telaAtual === 'calendario'}" ng-click="mudarTela('calendario')">📅 Calendário</li>
+                <li ng-if="menuGrupos.inicio" ng-class="{'active': telaAtual === 'mundo_futebol'}" ng-click="mudarTela('mundo_futebol')">🌐 Mundo do Futebol</li>
                 <li class="nav-group-title" ng-click="alternarGrupoMenu('competicoes')">Competições <span>{{menuGrupos.competicoes ? '−' : '+'}}</span></li>
                 <li ng-if="menuGrupos.competicoes" ng-class="{'active': telaAtual === 'tabela'}" ng-click="mudarTela('tabela')">🏆 Campeonatos</li>
                 <li ng-if="menuGrupos.competicoes && libertadores" ng-class="{'active': telaAtual === 'libertadores'}" ng-click="mudarTela('libertadores')">🌎 Libertadores</li>
@@ -284,6 +285,33 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- TELA: MUNDO DO FUTEBOL -->
+            <div class="messages-screen" ng-if="telaAtual === 'mundo_futebol'">
+                <div class="card" style="margin-bottom:20px; padding:20px; background:linear-gradient(120deg,#20364d,#37556f); color:white;">
+                    <span class="dashboard-eyebrow">Radar nacional</span>
+                    <h2 style="margin:6px 0;">🌐 Mundo do Futebol</h2>
+                    <p style="opacity:.85; margin:0;">Notícias, bastidores, rumores e movimentações que mudam a temporada.</p>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+                    <button ng-click="mundoFutebolFiltro='todos'" ng-class="{'active-filter': mundoFutebolFiltro === 'todos'}">Tudo</button>
+                    <button ng-click="mundoFutebolFiltro='imprensa'" ng-class="{'active-filter': mundoFutebolFiltro === 'imprensa'}">Imprensa e torcida</button>
+                    <button ng-click="mundoFutebolFiltro='rumores'" ng-class="{'active-filter': mundoFutebolFiltro === 'rumores'}">Rumores</button>
+                    <button ng-click="mundoFutebolFiltro='transferencias'" ng-class="{'active-filter': mundoFutebolFiltro === 'transferencias'}">Transferências</button>
+                </div>
+                <div class="card" style="padding:0; overflow:hidden;">
+                    <article ng-repeat="noticia in noticiasFeed | filter:filtrarNoticiaMundo track by noticia.id" style="padding:16px 18px; border-bottom:1px solid #e8edf2;">
+                        <div style="display:flex; justify-content:space-between; gap:10px; color:var(--text-muted); font-size:12px; flex-wrap:wrap;"><strong>{{noticia.remetente}}</strong><span>{{noticia.dataStr}} · {{noticia.subtipo === 'rumor' ? 'Rumor ' + noticia.confianca : noticia.tipo}}</span></div>
+                        <h3 style="margin:6px 0; font-size:17px;">{{noticia.titulo}}</h3>
+                        <p style="margin:0; color:var(--text-main);">{{noticia.conteudo}}</p>
+                    </article>
+                    <div ng-if="(noticiasFeed | filter:filtrarNoticiaMundo).length === 0" style="padding:30px; text-align:center; color:var(--text-muted);">Nenhum acontecimento encontrado neste filtro.</div>
+                </div>
+                <div class="card" style="margin-top:16px; padding:18px;" ng-if="obterMovimentacoesMundo().length">
+                    <h3 style="margin-top:0;">Últimas movimentações da CPU</h3>
+                    <div ng-repeat="mov in obterMovimentacoesMundo() track by $index" style="padding:10px 0; border-bottom:1px solid #edf1f4;"><strong>{{mov.jogadorNome}}</strong> · {{mov.clubeDestinoNome}} <span style="color:var(--br-green);">{{formatarMoeda(mov.valor)}}</span></div>
                 </div>
             </div>
 
