@@ -4080,8 +4080,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
 
         var modo = $scope.preJogo.modo || 'completo';
+        var narrativaPreservada = $scope.preJogo.analise && $scope.preJogo.analise.narrativa;
         $scope.preJogo.partida = partidaHoje;
         $scope.preJogo.analise = $scope.montarAnalisePreJogo(partidaHoje, modo);
+        $scope.preJogo.analise.narrativa = narrativaPreservada || $scope.obterNarrativaPreJogo(partidaHoje);
         $scope.preJogo.visivel = true;
         $scope.preJogo.telaAnterior = 'dashboard';
         $scope.telaAtual = 'pre_jogo';
