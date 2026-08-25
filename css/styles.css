@@ -3101,6 +3101,26 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .squad-screen .development-report-item > div:last-child { align-items: stretch !important; flex-wrap: wrap; width: 100%; }
     .squad-screen .development-report-item button { min-height: 40px; }
     .squad-screen .tabela-classificacao th, .squad-screen .tabela-classificacao td { padding: 9px 8px; }
+    .squad-screen .tabela-classificacao { min-width: 0; width: 100%; table-layout: fixed; }
+    .squad-screen .tabela-classificacao th, .squad-screen .tabela-classificacao td { overflow-wrap: anywhere; }
+    .squad-screen .tabela-classificacao th:nth-child(3), .squad-screen .tabela-classificacao td:nth-child(3),
+    .squad-screen .tabela-classificacao th:nth-child(4), .squad-screen .tabela-classificacao td:nth-child(4),
+    .squad-screen .tabela-classificacao th:nth-child(6), .squad-screen .tabela-classificacao td:nth-child(6),
+    .squad-screen .tabela-classificacao th:nth-child(7), .squad-screen .tabela-classificacao td:nth-child(7) { display: none; }
+    .squad-screen .tabela-classificacao th:nth-child(1), .squad-screen .tabela-classificacao td:nth-child(1) { width: 15%; }
+    .squad-screen .tabela-classificacao th:nth-child(2), .squad-screen .tabela-classificacao td:nth-child(2) { width: 29%; }
+    .squad-screen .tabela-classificacao th:nth-child(5), .squad-screen .tabela-classificacao td:nth-child(5) { width: 13%; }
+    .squad-screen .tabela-classificacao th:nth-child(8), .squad-screen .tabela-classificacao td:nth-child(8) { width: 17%; }
+    .squad-screen .tabela-classificacao th:nth-child(9), .squad-screen .tabela-classificacao td:nth-child(9) { width: 13%; }
+    .squad-screen .tabela-classificacao th:nth-child(10), .squad-screen .tabela-classificacao td:nth-child(10) { width: 13%; }
+    .squad-screen .tabela-classificacao td:nth-child(8) { font-size: 11px; }
+    .squad-screen .tabela-classificacao td:nth-child(10) button { display: block; margin: 2px 0; min-height: 34px; width: 100%; }
+    .market-results-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .market-player-card { padding: 14px !important; }
+    .market-player-actions { align-items: stretch !important; flex-wrap: wrap; gap: 7px; }
+    .market-player-actions > div { flex: 1 1 100%; }
+    .market-player-actions > button { flex: 1 1 45%; margin-left: 0 !important; min-height: 44px; padding: 8px 10px !important; }
+    .market-player-actions .pre-contract-hint { flex: 1 1 100%; }
     .medical-screen { padding: 0 !important; }
     .medical-screen > div > div:last-child { padding: 12px !important; }
     .medical-screen .infrastructure-management-grid { grid-template-columns: 1fr; }
@@ -3400,4 +3420,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 }
     .messages-screen button.active-filter { background: var(--br-blue); color: #fff; border-color: var(--br-blue); }
     .messages-screen button:not(.btn) { border: 1px solid #cbd5df; background: #fff; color: var(--text-main); border-radius: 999px; padding: 8px 13px; cursor: pointer; font-weight: 600; }
-    .messages-screen button:not(.btn):hover { border-color: var(--br-blue); }
+.messages-screen button:not(.btn):hover { border-color: var(--br-blue); }
+.pre-match-narrative { color: var(--text-main); }
+.pre-match-narrative .dashboard-eyebrow,
+.pre-match-narrative strong,
+.pre-match-narrative p,
+.pre-match-narrative div { color: var(--text-main); }

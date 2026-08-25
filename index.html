@@ -1863,8 +1863,8 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding-bottom: 30px;">
-                    <div ng-repeat="jogador in resultadosBuscaMercado" style="background: white; border: 1px solid #ccc; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; padding: 20px; position: relative;">
+                <div class="market-results-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding-bottom: 30px;">
+                    <div class="market-player-card" ng-repeat="jogador in resultadosBuscaMercado" style="background: white; border: 1px solid #ccc; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; padding: 20px; position: relative;">
                         <div style="position: absolute; top: -10px; right: 10px; background: {{jogador.clubeId === 'mercado' ? '#e74c3c' : 'var(--br-blue)'}}; color: white; padding: 4px 10px; border-radius: 15px; font-size: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
                             {{jogador.clubeId === 'mercado' ? 'LIVRE NO MERCADO' : obterNomeClube(jogador.clubeId)}}
                         </div>
@@ -1885,7 +1885,7 @@
                             </div>
                         </div>
                         
-                        <div style="margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="market-player-actions" style="margin-top: auto; border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Passe (Estimado)</div>
                                 <div style="font-weight: bold; font-size: 16px; color: var(--text-dark);">{{formatarMoeda(calcularValorPasse(jogador))}}</div>
