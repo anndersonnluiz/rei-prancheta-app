@@ -3426,3 +3426,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .pre-match-narrative strong,
 .pre-match-narrative p,
 .pre-match-narrative div { color: var(--text-main); }
+.market-player-actions { flex-wrap: wrap; gap: 8px; }
+.market-player-actions > div { flex: 1 1 120px; min-width: 0; }
+.market-player-actions > button { flex: 0 1 auto; min-width: 82px; }
+.market-player-actions .pre-contract-hint { flex: 1 1 100%; text-align: right; line-height: 1.15; overflow-wrap: anywhere; }
