@@ -3085,6 +3085,19 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .competition-screen .competition-tabs button, .competition-screen .division-tabs button { flex: 0 0 auto; min-height: 42px; white-space: nowrap; }
     .competition-screen .card { max-width: 100%; overflow-x: auto; padding: 12px !important; }
     .competition-screen table { min-width: 420px; }
+    .competition-screen .standings-table { min-width: 0; table-layout: fixed; }
+    .competition-screen .standings-table th, .competition-screen .standings-table td { padding: 9px 6px !important; }
+    .competition-screen .standings-table th:nth-child(4), .competition-screen .standings-table td:nth-child(4),
+    .competition-screen .standings-table th:nth-child(5), .competition-screen .standings-table td:nth-child(5),
+    .competition-screen .standings-table th:nth-child(6), .competition-screen .standings-table td:nth-child(6),
+    .competition-screen .standings-table th:nth-child(7), .competition-screen .standings-table td:nth-child(7) { display: none; }
+    .competition-screen .standings-table th:nth-child(1), .competition-screen .standings-table td:nth-child(1) { width: 12%; }
+    .competition-screen .standings-table th:nth-child(2), .competition-screen .standings-table td:nth-child(2) { width: 54%; }
+    .competition-screen .standings-table th:nth-child(3), .competition-screen .standings-table td:nth-child(3),
+    .competition-screen .standings-table th:nth-child(8), .competition-screen .standings-table td:nth-child(8) { width: 17%; }
+    .competition-screen .standings-table .table-club-identity { gap: 6px; min-width: 0; }
+    .competition-screen .standings-table .table-club-identity > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .competition-screen .standings-table .club-crest-table { height: 22px; width: 22px; }
     .continental-screen table { min-width: 0; table-layout: fixed; width: 100%; }
     .continental-screen > .card > div[style*="grid-template-columns"] { overflow-x: auto; padding-bottom: 6px; }
     .continental-screen > .card > div[style*="grid-template-columns"] > div { min-width: 330px; }
@@ -3101,20 +3114,22 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .squad-screen .development-report-item > div:last-child { align-items: stretch !important; flex-wrap: wrap; width: 100%; }
     .squad-screen .development-report-item button { min-height: 40px; }
     .squad-screen .tabela-classificacao th, .squad-screen .tabela-classificacao td { padding: 9px 8px; }
-    .squad-screen .tabela-classificacao { min-width: 0; width: 100%; table-layout: fixed; }
+    .squad-screen > .card > div[style*="overflow-x: auto"] { margin: 0 -4px; padding: 0 4px 8px; }
+    .squad-screen .tabela-classificacao { min-width: 680px; width: 680px; table-layout: auto; }
     .squad-screen .tabela-classificacao th, .squad-screen .tabela-classificacao td { overflow-wrap: anywhere; }
+    .squad-screen .tabela-classificacao th, .squad-screen .tabela-classificacao td { white-space: nowrap; }
     .squad-screen .tabela-classificacao th:nth-child(3), .squad-screen .tabela-classificacao td:nth-child(3),
     .squad-screen .tabela-classificacao th:nth-child(4), .squad-screen .tabela-classificacao td:nth-child(4),
     .squad-screen .tabela-classificacao th:nth-child(6), .squad-screen .tabela-classificacao td:nth-child(6),
     .squad-screen .tabela-classificacao th:nth-child(7), .squad-screen .tabela-classificacao td:nth-child(7) { display: none; }
-    .squad-screen .tabela-classificacao th:nth-child(1), .squad-screen .tabela-classificacao td:nth-child(1) { width: 15%; }
-    .squad-screen .tabela-classificacao th:nth-child(2), .squad-screen .tabela-classificacao td:nth-child(2) { width: 29%; }
-    .squad-screen .tabela-classificacao th:nth-child(5), .squad-screen .tabela-classificacao td:nth-child(5) { width: 13%; }
-    .squad-screen .tabela-classificacao th:nth-child(8), .squad-screen .tabela-classificacao td:nth-child(8) { width: 17%; }
-    .squad-screen .tabela-classificacao th:nth-child(9), .squad-screen .tabela-classificacao td:nth-child(9) { width: 13%; }
-    .squad-screen .tabela-classificacao th:nth-child(10), .squad-screen .tabela-classificacao td:nth-child(10) { width: 13%; }
+    .squad-screen .tabela-classificacao th:nth-child(1), .squad-screen .tabela-classificacao td:nth-child(1) { width: 72px; }
+    .squad-screen .tabela-classificacao th:nth-child(2), .squad-screen .tabela-classificacao td:nth-child(2) { width: 190px; }
+    .squad-screen .tabela-classificacao th:nth-child(5), .squad-screen .tabela-classificacao td:nth-child(5) { width: 76px; }
+    .squad-screen .tabela-classificacao th:nth-child(8), .squad-screen .tabela-classificacao td:nth-child(8) { width: 130px; }
+    .squad-screen .tabela-classificacao th:nth-child(9), .squad-screen .tabela-classificacao td:nth-child(9) { width: 110px; }
+    .squad-screen .tabela-classificacao th:nth-child(10), .squad-screen .tabela-classificacao td:nth-child(10) { width: 110px; }
     .squad-screen .tabela-classificacao td:nth-child(8) { font-size: 11px; }
-    .squad-screen .tabela-classificacao td:nth-child(10) button { display: block; margin: 2px 0; min-height: 34px; width: 100%; }
+    .squad-screen .tabela-classificacao td:nth-child(10) button { display: inline-flex; margin: 2px 3px 2px 0; min-height: 38px; width: auto; }
     .market-results-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
     .market-player-card { padding: 14px !important; }
     .market-player-actions { align-items: stretch !important; flex-wrap: wrap; gap: 7px; }
