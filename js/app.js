@@ -2631,9 +2631,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var rivais = ($scope.clubes || []).filter(function(clube) { return !$scope.clubeAtual || clube.id !== $scope.clubeAtual.id; });
         if (partida && partida.golsMandante !== undefined) {
             var adversario = partida.mandante && partida.mandante.id === ($scope.clubeAtual && $scope.clubeAtual.id) ? partida.visitante : partida.mandante;
-            var venceu = (partida.mandante.id === $scope.clubeAtual.id && partida.golsMandante > partida.golsVisitante) || (partida.visitante.id === $scope.clubeAtual.id && partida.golsVisitante > partida.golsMandante);
-            var empatou = partida.golsMandante === partida.golsVisitante;
-            noticias.push({ titulo: venceu ? 'Vitória muda o ambiente' : (empatou ? 'Empate mantém a disputa aberta' : 'Derrota aumenta a cobrança'), detalhe: $scope.clubeAtual.nome + ' ' + partida.golsMandante + ' x ' + partida.golsVisitante + ' ' + (adversario ? adversario.nome : '') + '. ' + (venceu ? 'A torcida ganhou confiança.' : 'A imprensa espera uma resposta no próximo jogo.'), tipo: venceu ? 'torcida' : 'imprensa' });
+            var meuMandante = partida.mandante && partida.mandante.id === ($scope.clubeAtual && $scope.clubeAtual.id);
+            var golsMeu = meuMandante ? partida.golsMandante : partida.golsVisitante;
+            var golsAdversario = meuMandante ? partida.golsVisitante : partida.golsMandante;
+            var venceu = golsMeu > golsAdversario;
+            var empatou = golsMeu === golsAdversario;
+            noticias.push({ titulo: venceu ? 'Vitória muda o ambiente' : (empatou ? 'Empate mantém a disputa aberta' : 'Derrota aumenta a cobrança'), detalhe: $scope.clubeAtual.nome + ' ' + golsMeu + ' x ' + golsAdversario + ' ' + (adversario ? adversario.nome : '') + '. ' + (venceu ? 'A torcida ganhou confiança.' : 'A imprensa espera uma resposta no próximo jogo.'), tipo: venceu ? 'torcida' : 'imprensa' });
         }
         if (rivais.length && (($scope.diaAtual || 0) % 3 === 0)) {
             var rival = rivais[($scope.diaAtual || 0) % rivais.length];
