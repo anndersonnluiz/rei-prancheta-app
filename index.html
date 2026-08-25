@@ -296,10 +296,10 @@
                     <p style="opacity:.85; margin:0;">Notícias, bastidores, rumores e movimentações que mudam a temporada.</p>
                 </div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
-                    <button ng-click="mundoFutebolFiltro='todos'" ng-class="{'active-filter': mundoFutebolFiltro === 'todos'}">Tudo</button>
-                    <button ng-click="mundoFutebolFiltro='imprensa'" ng-class="{'active-filter': mundoFutebolFiltro === 'imprensa'}">Imprensa e torcida</button>
-                    <button ng-click="mundoFutebolFiltro='rumores'" ng-class="{'active-filter': mundoFutebolFiltro === 'rumores'}">Rumores</button>
-                    <button ng-click="mundoFutebolFiltro='transferencias'" ng-class="{'active-filter': mundoFutebolFiltro === 'transferencias'}">Transferências</button>
+                    <button type="button" ng-click="definirFiltroMundo('todos')" ng-class="{'active-filter': mundoFutebolFiltro === 'todos'}">Tudo</button>
+                    <button type="button" ng-click="definirFiltroMundo('imprensa')" ng-class="{'active-filter': mundoFutebolFiltro === 'imprensa'}">Imprensa e torcida</button>
+                    <button type="button" ng-click="definirFiltroMundo('rumores')" ng-class="{'active-filter': mundoFutebolFiltro === 'rumores'}">Rumores</button>
+                    <button type="button" ng-click="definirFiltroMundo('transferencias')" ng-class="{'active-filter': mundoFutebolFiltro === 'transferencias'}">Transferências</button>
                 </div>
                 <div class="card" style="padding:0; overflow:hidden;">
                     <article ng-repeat="noticia in noticiasFeed | filter:filtrarNoticiaMundo track by noticia.id" style="padding:16px 18px; border-bottom:1px solid #e8edf2;">

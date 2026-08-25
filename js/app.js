@@ -2724,6 +2724,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.mundoFutebolFiltro = 'todos';
+    $scope.definirFiltroMundo = function(filtro) {
+        var filtrosPermitidos = ['todos', 'imprensa', 'rumores', 'transferencias'];
+        $scope.mundoFutebolFiltro = filtrosPermitidos.indexOf(filtro) >= 0 ? filtro : 'todos';
+        return $scope.mundoFutebolFiltro;
+    };
     $scope.filtrarNoticiaMundo = function(item) {
         var filtro = $scope.mundoFutebolFiltro || 'todos';
         if (filtro === 'todos') return true;
