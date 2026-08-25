@@ -213,7 +213,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.adicionarMensagem) {
             var tituloMensagem = confianca.percentual >= 75 ? 'Comunicado público de apoio' : (confianca.percentual >= 50 ? 'Reunião de alinhamento' : 'Reunião emergencial da diretoria');
             var detalheMensagem = confianca.percentual >= 75 ? 'A diretoria confirmou publicamente a confiança no trabalho da comissão.' : (confianca.percentual >= 50 ? 'A diretoria quer alinhar prioridades para a sequência da temporada.' : 'A diretoria convocou uma conversa para cobrar reação imediata.');
-            $scope.adicionarMensagem('Diretoria', tituloMensagem, detalheMensagem + ' ' + avaliacao.detalhe + ' Confiança atual: ' + confianca.percentual + '%.', false, 'diretoria');
+            $scope.adicionarMensagem('Diretoria', tituloMensagem, detalheMensagem + ' ' + avaliacao.detalhe + ' Confiança atual: ' + confianca.percentual + '%.', false, 'diretoria', true);
         }
         if ($scope.registrarEventoAmbiente) {
             var impacto = confianca.percentual >= 75 ? 1 : (confianca.percentual < 50 ? -1 : 0);
@@ -1888,11 +1888,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if ($scope.registrarEventoAmbiente && impactoConfianca !== 0) {
                 $scope.registrarEventoAmbiente({ id: 'amb_meta_' + dia, chave: 'meta_diretoria|' + dia, dia: dia, tipo: 'diretoria', impacto: impactoConfianca, titulo: impactoConfianca > 0 ? 'Metas avançam' : 'Metas pressionam o elenco', detalhe: impactoConfianca > 0 ? 'O progresso reconhecido pela diretoria trouxe confiança ao grupo.' : 'A cobrança por uma meta atrasada aumentou a tensão interna.' });
             }
-            $scope.adicionarMensagem('Diretoria', 'Acompanhamento das metas', reacao + ' ' + metaCritica.progressoLabel, false, 'diretoria');
+            $scope.adicionarMensagem('Diretoria', 'Acompanhamento das metas', reacao + ' ' + metaCritica.progressoLabel, false, 'diretoria', true);
         }
 
         if (typeof $scope.adicionarMensagem === 'function') {
-            $scope.adicionarMensagem('Diretoria', 'Avaliacao parcial da temporada', avaliacao.observacao + ' ' + avaliacao.progressoLabel + '.', false, 'diretoria');
+            $scope.adicionarMensagem('Diretoria', 'Avaliacao parcial da temporada', avaliacao.observacao + ' ' + avaliacao.progressoLabel + '.', false, 'diretoria', true);
         }
         if (status.status === 'acima_do_esperado') {
             $scope.dados.reputacaoTreinador = Math.min(5, (($scope.dados.reputacaoTreinador || 3) + 0.1));
@@ -2488,7 +2488,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     // Função global de E-mails / Notícias (FASE 17)
-    $scope.adicionarMensagem = function(remetente, titulo, conteudo, lida, tipo) {
+    $scope.adicionarMensagem = function(remetente, titulo, conteudo, lida, tipo, permiteResposta) {
         if (!$scope.caixaEntrada) $scope.caixaEntrada = [];
         if (!$scope.noticiasFeed) $scope.noticiasFeed = [];
         
@@ -2503,7 +2503,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             conteudo: conteudo,
             dataStr: dataAtual,
             lida: lida || false,
-            tipo: tipo || 'geral'
+            tipo: tipo || 'geral',
+            permiteResposta: permiteResposta === true
         };
         
         if (tipo === 'imprensa' || tipo === 'torcida' || tipo === 'transferencia' || tipo === 'trofeu') {
@@ -2846,7 +2847,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.marcarMensagemLida(msg);
     };
     $scope.responderEventoDiretoria = function(msg, postura) {
-        if (!msg || msg.tipo !== 'diretoria' || msg.respondida) return false;
+        if (!msg || msg.tipo !== 'diretoria' || !msg.permiteResposta || msg.respondida) return false;
         var textos = {
             apoio: 'O treinador respondeu reforçando confiança no elenco.',
             cobranca: 'O treinador respondeu cobrando reação imediata do grupo.',
