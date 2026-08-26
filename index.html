@@ -975,7 +975,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="jogador in elencoAtual | filter:filtrarJogadorPorPosicao | orderBy:ordemPosicaoJogador">
+                                <tr ng-repeat="jogador in elencoAtual | filter:filtrarJogadorPorPosicao | orderBy:ordemPosicaoJogador track by jogador.id">
                                     <td><span class="posicao-badge pos-{{ jogador.posicao }}">{{ jogador.posicao }}</span></td>
                                     <td>
                                         <strong>{{ jogador.nome }}</strong>

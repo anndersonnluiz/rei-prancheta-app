@@ -2356,6 +2356,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (idx < 0) return null;
         var atleta = normalizarAtletaBase($scope.clubeAtual.base.atletas[idx], $scope.clubeAtual.id);
         var promovido = angular.copy(atleta);
+        var idOriginal = promovido.id;
+        var idEmUso = function(id) {
+            return ($scope.elencoAtual || []).some(function(jogador) { return String(jogador.id) === String(id); }) ||
+                ($scope.jogadores || []).some(function(jogador) { return String(jogador.id) === String(id); });
+        };
+        if (idEmUso(idOriginal)) {
+            promovido.id = 'pro_' + $scope.clubeAtual.id + '_' + String(idOriginal).replace(/[^a-zA-Z0-9_-]/g, '_') + '_' + Date.now();
+        }
         promovido.categoriaOrigem = atleta.categoriaBase || (atleta.idade <= 17 ? 'Sub-17' : 'Sub-20');
         promovido.promovidoEm = $scope.dados.anoAtual || 2024;
         promovido.emCampo = false;
