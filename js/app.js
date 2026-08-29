@@ -4172,6 +4172,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return (forcaTime / 11) * $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor) * $scope.obterFatorEntrosamento();
     };
 
+    function atualizarForcaUsuarioAoVivoInterno() {
+        if (!$scope.partidaAoVivo || !$scope.clubeAtual) return;
+        var forca = $scope.calcularForcaTime();
+        if ($scope.partidaAoVivo.mandante.id === $scope.clubeAtual.id) $scope.forcaMandanteAoVivo = forca;
+        else $scope.forcaVisitanteAoVivo = forca;
+    }
+
     $scope.calcularFatorFadiga = function(condicaoFisica) {
         condicaoFisica = (typeof condicaoFisica === 'number') ? condicaoFisica : 100;
         return Math.max(0.55, Math.min(1, condicaoFisica / 100));
@@ -4348,7 +4355,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.partidaEmAndamento) {
             $scope.partidaPausada = false;
             $scope.telaAtual = 'partida';
-            $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
+            if ($scope.partidaAoVivo && $scope.partidaAoVivo.mandante.id === $scope.clubeAtual.id) {
+                atualizarForcaUsuarioAoVivoInterno();
+            } else {
+                $scope.forcaVisitanteAoVivo = $scope.calcularForcaTime();
+            }
             $scope.rodarMinuto();
         }
     };
@@ -4394,7 +4405,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         sugestao.entra.posY = posY;
         $scope.substituicoesFeitas = ($scope.substituicoesFeitas || 0) + 1;
         $scope.narracao.unshift($scope.minutoAtual + "' - 🔄 Substituição sugerida: " + sugestao.entra.nome + " entra no lugar de " + sugestao.sai.nome + ".");
-        $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
+        atualizarForcaUsuarioAoVivoInterno();
         return true;
     };
     $scope.obterStatusTaticaJogador = function(jogador) {
@@ -4475,14 +4486,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         j.emCampo = false; 
                         $scope.narracao.unshift($scope.minutoAtual + "' - 🚑 LESÃO! " + j.nome + " sentiu e não tem condições de continuar.");
                         $scope.partidaPausada = true;
-                        $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
+                        atualizarForcaUsuarioAoVivoInterno();
                     }
                 }
             });
 
             if (!$scope.partidaPausada) {
-                $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
-                forcaUsuario = $scope.forcaMandanteAoVivo;
+                var forcaUsuarioAtualizada = $scope.calcularForcaTime();
+                if (userTeamIsMandante) {
+                    $scope.forcaMandanteAoVivo = forcaUsuarioAtualizada;
+                    forcaUsuario = $scope.forcaMandanteAoVivo;
+                } else {
+                    $scope.forcaVisitanteAoVivo = forcaUsuarioAtualizada;
+                    forcaUsuario = $scope.forcaVisitanteAoVivo;
+                }
             }
 
             // FASE 8 / FASE 11: Cartões e Suspensões
@@ -4517,7 +4534,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                             $scope.narracao.unshift($scope.minutoAtual + "' - 🟥 CARTÃO VERMELHO DIRETO! " + jogadorAlvo.nome + " foi expulso!");
                             $scope.partidaPausada = true; 
                         }
-                        $scope.forcaMandanteAoVivo = $scope.calcularForcaTime();
+                        atualizarForcaUsuarioAoVivoInterno();
                     }
                 } else {
                     timeExpulso = userTeamIsMandante ? $scope.partidaAoVivo.visitante.sigla : $scope.partidaAoVivo.mandante.sigla;
