@@ -35,4 +35,13 @@ const cruzeiro2026 = jogadores.filter((jogador) => jogador.clubeId === 9).map((j
 ['Cássio', 'Kaio Jorge', 'Matheus Pereira', 'Lucas Romero'].forEach((nome) => assert.ok(cruzeiro2026.includes(nome), `Cruzeiro should include ${nome}`));
 assert.ok(!jogadores.some((jogador) => jogador.clubeId === 1 && jogador.nome === 'Gabigol'), 'Gabigol should not remain at Flamengo in 2026');
 
+const clubesPorJogador = (nome) => new Set(jogadores.filter((jogador) => jogador.nome === nome).map((jogador) => jogador.clubeId));
+assert.deepStrictEqual([...clubesPorJogador('Gerson')], [9], 'Gerson should be exclusive to Cruzeiro');
+assert.deepStrictEqual([...clubesPorJogador('Fabrício Bruno')], [9], 'Fabrício Bruno should be exclusive to Cruzeiro');
+assert.deepStrictEqual([...clubesPorJogador('Igor Vinícius')], [18], 'Igor Vinícius should be exclusive to Santos');
+['Rafael Mota', 'Marcelo Nunes', 'João Varela', 'Mateus Ribeiro'].forEach((nome) => {
+  const jogador = jogadores.find((item) => item.nome === nome);
+  assert.ok(jogador && jogador.origem === 'ficticio', `${nome} should be explicitly fictitious`);
+});
+
 console.log('club_data_2026.test.js passed');
