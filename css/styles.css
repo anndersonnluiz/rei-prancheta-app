@@ -2402,6 +2402,7 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .selected-player-role strong { color: #173d83; font-size: 12px; white-space: nowrap; }
 .selected-player-role label { color: #60758d; font-size: 10px; white-space: nowrap; }
 .selected-player-role select { border: 1px solid #b9cbe3; border-radius: 5px; color: #173d83; font-size: 11px; min-height: 30px; padding: 3px 5px; }
+.remove-selected-player { background: #fff; border: 1px solid #d9534f; border-radius: 5px; color: #b52b27; cursor: pointer; font-size: 11px; min-height: 30px; padding: 4px 7px; }
 
 /* Direção do Ataque */
 .pitch-direction { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.3); font-size: 20px; font-weight: 800; letter-spacing: 5px; pointer-events: none; }
@@ -3148,6 +3149,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .tactics-screen select, .tactics-screen button { min-height: 42px; }
     .selected-player-role { flex-wrap: wrap; justify-content: center; top: 42px; }
     .selected-player-role select { min-height: 38px; max-width: 100%; }
+    .remove-selected-player { min-height: 38px; }
     .counteroffer-actions { flex-direction: column; }
     .counteroffer-actions button { min-height: 42px; width: 100%; }
     .tactics-screen .pitch-area [style*="grid-template-columns: 1fr 1fr 1fr"] { gap: 8px !important; grid-template-columns: 1fr !important; }

@@ -1260,6 +1260,7 @@
                             <strong>{{jogadorTaticaSelecionado.nome}}</strong>
                             <label>Função individual</label>
                             <select ng-model="jogadorTaticaSelecionado.funcaoTatica" ng-options="funcao for funcao in obterFuncoesTaticasJogador(jogadorTaticaSelecionado)" ng-change="definirFuncaoTaticaJogador(jogadorTaticaSelecionado, jogadorTaticaSelecionado.funcaoTatica)" aria-label="Função individual do jogador selecionado"></select>
+                            <button type="button" class="remove-selected-player" ng-if="jogadorTaticaSelecionado.emCampo" ng-click="retirarJogadorSelecionadoDoCampo(jogadorTaticaSelecionado); $event.stopPropagation()">Enviar para o banco</button>
                         </div>
                         
                         <!-- FASE 7: Direção do Ataque -->
