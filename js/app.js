@@ -7705,6 +7705,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     // FASE 7: FORMAÇÕES AUTOMÁTICAS
     $scope.aplicarFormacao = function(tipo) {
+        var formacoesValidas = ['4-3-3', '4-4-2', '3-5-2', '4-2-3-1', '4-1-4-1', '3-4-3', '5-3-2'];
+        if (formacoesValidas.indexOf(tipo) < 0) tipo = '4-3-3';
+        $scope.formacaoEscolhida = tipo;
         // Tira todos de campo primeiro
         $scope.elencoAtual.forEach(function(j) { j.emCampo = false; });
         
