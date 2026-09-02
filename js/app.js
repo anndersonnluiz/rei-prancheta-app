@@ -37,7 +37,7 @@ app.directive('droppableArea', function() {
             });
             element[0].addEventListener('drop', function(e) {
                 e.preventDefault();
-                var jogadorId = parseInt(e.dataTransfer.getData('jogadorId'));
+                var jogadorId = e.dataTransfer.getData('jogadorId');
                 var areaTipo = attrs.droppableArea;
                 var posX = 0, posY = 0;
                 if (areaTipo === 'campo') {
@@ -7832,7 +7832,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.moverJogador = function(jogadorId, areaTipo, posX, posY) {
-        var jogador = $scope.elencoAtual.find(function(j) { return j.id === jogadorId; });
+        var jogador = $scope.elencoAtual.find(function(j) { return String(j.id) === String(jogadorId); });
         if (jogador && !$scope.jogadorBloqueadoParaEntrar(jogador)) {
             if (areaTipo === 'campo') {
                 var jogadoresEmCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo; });
@@ -7840,7 +7840,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 // LÓGICA DE SWAP (Substituição Direta)
                 var jogadorSobreposto = null;
                 jogadoresEmCampo.forEach(function(outroJogador) {
-                    if (outroJogador.id !== jogadorId && !outroJogador.expulso) {
+                    if (String(outroJogador.id) !== String(jogadorId) && !outroJogador.expulso) {
                         var distX = Math.abs(outroJogador.posX - posX);
                         var distY = Math.abs(outroJogador.posY - posY);
                         if (distX < 5 && distY < 8) { // Raio de aproximação (5% X, 8% Y)

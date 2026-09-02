@@ -1273,7 +1273,7 @@
                         <div class="player-token pos-{{ jogador.posicao }}" 
                              ng-repeat="jogador in elencoAtual | filter:{emCampo: true}"
                              draggable-player
-                             ng-click="selecionarJogadorParaTatica(jogador)"
+                             ng-click="selecionarJogadorParaTatica(jogador); $event.stopPropagation()"
                              ng-class="{'tactile-selected': jogadorTaticaSelecionado && jogadorTaticaSelecionado.id === jogador.id}"
                              ng-style="{'left': jogador.posX + '%', 'top': jogador.posY + '%', 'border': estaImprovisado(jogador) ? '2px solid #e74c3c' : '2px solid white'}">
                              <div class="token-overall">{{ calcularOverall(jogador) }}</div>
