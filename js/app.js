@@ -7736,6 +7736,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 {x: 80, y: 35, pos: 'ATA'},
                 {x: 80, y: 65, pos: 'ATA'}
             ];
+        } else if (tipo === '4-2-3-1') {
+            posicoes = [
+                {x: 5, y: 50, pos: 'GOL'}, {x: 25, y: 20, pos: 'LAT'}, {x: 20, y: 40, pos: 'ZAG'}, {x: 20, y: 60, pos: 'ZAG'}, {x: 25, y: 80, pos: 'LAT'},
+                {x: 42, y: 38, pos: 'VOL'}, {x: 42, y: 62, pos: 'VOL'}, {x: 60, y: 20, pos: 'MEI'}, {x: 62, y: 50, pos: 'MEI'}, {x: 60, y: 80, pos: 'MEI'}, {x: 82, y: 50, pos: 'ATA'}
+            ];
+        } else if (tipo === '4-1-4-1') {
+            posicoes = [
+                {x: 5, y: 50, pos: 'GOL'}, {x: 25, y: 20, pos: 'LAT'}, {x: 20, y: 40, pos: 'ZAG'}, {x: 20, y: 60, pos: 'ZAG'}, {x: 25, y: 80, pos: 'LAT'},
+                {x: 43, y: 50, pos: 'VOL'}, {x: 58, y: 18, pos: 'MEI'}, {x: 60, y: 39, pos: 'MEI'}, {x: 60, y: 61, pos: 'MEI'}, {x: 58, y: 82, pos: 'MEI'}, {x: 82, y: 50, pos: 'ATA'}
+            ];
+        } else if (tipo === '3-4-3') {
+            posicoes = [
+                {x: 5, y: 50, pos: 'GOL'}, {x: 20, y: 30, pos: 'ZAG'}, {x: 18, y: 50, pos: 'ZAG'}, {x: 20, y: 70, pos: 'ZAG'},
+                {x: 43, y: 15, pos: 'LAT'}, {x: 45, y: 38, pos: 'VOL'}, {x: 45, y: 62, pos: 'VOL'}, {x: 43, y: 85, pos: 'LAT'},
+                {x: 75, y: 20, pos: 'ATA'}, {x: 82, y: 50, pos: 'ATA'}, {x: 75, y: 80, pos: 'ATA'}
+            ];
+        } else if (tipo === '5-3-2') {
+            posicoes = [
+                {x: 5, y: 50, pos: 'GOL'}, {x: 23, y: 12, pos: 'LAT'}, {x: 20, y: 35, pos: 'ZAG'}, {x: 18, y: 50, pos: 'ZAG'}, {x: 20, y: 65, pos: 'ZAG'}, {x: 23, y: 88, pos: 'LAT'},
+                {x: 48, y: 30, pos: 'VOL'}, {x: 50, y: 50, pos: 'MEI'}, {x: 48, y: 70, pos: 'VOL'}, {x: 78, y: 38, pos: 'ATA'}, {x: 80, y: 62, pos: 'ATA'}
+            ];
         }
 
         // Conta quantos jogadores foram expulsos nesta partida
