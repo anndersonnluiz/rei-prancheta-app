@@ -9,6 +9,8 @@ const ids = new Map();
 const nomes = new Map();
 const problemas = [];
 
+const identidadesReaisProtegidas = new Set(['gerson|9', 'fabrício bruno|9', 'igor vinícius|18']);
+
 for (const jogador of jogadores) {
   const id = String(jogador.id);
   const nome = String(jogador.nome || '').trim();
@@ -22,6 +24,30 @@ for (const jogador of jogadores) {
 }
 
 const duplicidades = [...nomes.values()].filter((grupo) => new Set(grupo.map((jogador) => String(jogador.clubeId))).size > 1);
+if (process.argv.includes('--fix')) {
+  const clubePorId = new Map(clubes.map((clube) => [String(clube.id), clube]));
+  const nomesUsados = new Set(jogadores.map((jogador) => String(jogador.nome).toLocaleLowerCase('pt-BR')));
+  for (const grupo of duplicidades) {
+    // Preserva atletas reais já conferidos; grupos gerados recebem identidade explícita.
+    const manter = grupo.filter((jogador) => identidadesReaisProtegidas.has(`${String(jogador.nome).toLocaleLowerCase('pt-BR')}|${jogador.clubeId}`));
+    let primeiro = manter[0] || grupo[0];
+    for (const jogador of grupo) {
+      if (jogador === primeiro) continue;
+      const clube = clubePorId.get(String(jogador.clubeId));
+      const sufixo = clube ? clube.nome.replace(/[^a-zA-ZÀ-ÿ0-9]+/g, ' ').trim() : `Clube ${jogador.clubeId}`;
+      const base = `${jogador.nome} (${sufixo})`;
+      let nomeNovo = base;
+      let contador = 2;
+      while (nomesUsados.has(nomeNovo.toLocaleLowerCase('pt-BR'))) nomeNovo = `${base} ${contador++}`;
+      nomesUsados.delete(String(jogador.nome).toLocaleLowerCase('pt-BR'));
+      jogador.nome = nomeNovo;
+      jogador.origem = 'ficticio';
+      nomesUsados.add(nomeNovo.toLocaleLowerCase('pt-BR'));
+    }
+  }
+  fs.writeFileSync(path.join(root, 'data', 'jogadores.json'), `${JSON.stringify(jogadores, null, 2)}\n`);
+  console.log('Correção aplicada: nomes fictícios compartilhados foram tornados únicos.');
+}
 const duplicidadesNaoFicticias = duplicidades.filter((grupo) => grupo.some((jogador) => jogador.origem !== 'ficticio'));
 for (const grupo of duplicidadesNaoFicticias) {
   problemas.push(`Nome compartilhado sem classificação fictícia: ${grupo.map((jogador) => `${jogador.nome}#${jogador.id}@${jogador.clubeId}`).join(', ')}`);
