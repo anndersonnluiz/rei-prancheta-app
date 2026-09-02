@@ -20,7 +20,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 431600,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 74,
@@ -41,7 +42,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 75,
@@ -62,7 +64,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 76,
@@ -83,7 +86,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 77,
@@ -104,7 +108,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 78,
@@ -125,7 +130,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 79,
@@ -146,7 +152,8 @@
       "cobrador": 85
     },
     "salarioDesejado": 551000,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 80,
@@ -167,7 +174,8 @@
       "cobrador": 93
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 81,
@@ -188,7 +196,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 477700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 82,
@@ -209,7 +218,8 @@
       "cobrador": 98
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 83,
@@ -230,7 +240,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 84,
@@ -253,7 +264,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 513700,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 85,
@@ -274,7 +286,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 86,
@@ -295,7 +308,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 87,
@@ -316,7 +330,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 88,
@@ -337,7 +352,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 477700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 89,
@@ -358,7 +374,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 579800,
-    "potencial": 94
+    "potencial": 94,
+    "origem": "a_revisar"
   },
   {
     "id": 90,
@@ -379,7 +396,8 @@
       "cobrador": 98
     },
     "salarioDesejado": 566500,
-    "potencial": 93
+    "potencial": 93,
+    "origem": "a_revisar"
   },
   {
     "id": 91,
@@ -402,7 +420,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 92,
@@ -423,7 +442,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 501800,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 93,
@@ -444,7 +464,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 94,
@@ -465,7 +486,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 527200,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 95,
@@ -486,7 +508,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 553200,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 96,
@@ -507,7 +530,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 538400,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 97,
@@ -528,7 +552,8 @@
       "cobrador": 90
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 98,
@@ -549,7 +574,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 501800,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 99,
@@ -570,7 +596,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 100,
@@ -591,7 +618,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 514400,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 101,
@@ -612,7 +640,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 566500,
-    "potencial": 93
+    "potencial": 93,
+    "origem": "a_revisar"
   },
   {
     "id": 102,
@@ -635,7 +664,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 489500,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 103,
@@ -790,7 +820,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 110,
@@ -811,7 +842,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 111,
@@ -832,7 +864,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 112,
@@ -853,7 +886,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 113,
@@ -874,7 +908,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 526000,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 114,
@@ -895,7 +930,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 115,
@@ -916,7 +952,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 526000,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 116,
@@ -937,7 +974,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 117,
@@ -958,7 +996,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 118,
@@ -979,7 +1018,8 @@
       "cobrador": 93
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 119,
@@ -1000,7 +1040,8 @@
       "cobrador": 97
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 120,
@@ -1023,7 +1064,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 121,
@@ -1066,7 +1108,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 576700,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 123,
@@ -1087,7 +1130,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 454400,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 124,
@@ -1108,7 +1152,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 125,
@@ -1175,7 +1220,8 @@
       "cobrador": 66
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 128,
@@ -1196,7 +1242,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 129,
@@ -1217,7 +1264,8 @@
       "cobrador": 90
     },
     "salarioDesejado": 514400,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 130,
@@ -1238,7 +1286,8 @@
       "cobrador": 85
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 131,
@@ -1259,7 +1308,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 132,
@@ -1280,7 +1330,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 551000,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 133,
@@ -1301,7 +1352,8 @@
       "cobrador": 85
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 134,
@@ -1322,7 +1374,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 135,
@@ -1343,7 +1396,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 136,
@@ -1364,7 +1418,8 @@
       "cobrador": 93
     },
     "salarioDesejado": 513700,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 137,
@@ -1385,7 +1440,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 138,
@@ -1408,7 +1464,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 139,
@@ -1429,7 +1486,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 140,
@@ -1494,7 +1552,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 431600,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 143,
@@ -1515,7 +1574,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 144,
@@ -1536,7 +1596,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 145,
@@ -1559,7 +1620,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 431600,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 146,
@@ -1580,7 +1642,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 147,
@@ -1601,7 +1664,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 540100,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 148,
@@ -1622,7 +1686,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 149,
@@ -1643,7 +1708,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 150,
@@ -1664,7 +1730,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 151,
@@ -1685,7 +1752,8 @@
       "cobrador": 93
     },
     "salarioDesejado": 563800,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 152,
@@ -1706,7 +1774,8 @@
       "cobrador": 93
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 153,
@@ -1727,7 +1796,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 154,
@@ -1748,7 +1818,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 501500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 155,
@@ -1769,7 +1840,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 566500,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 156,
@@ -1792,7 +1864,8 @@
       "cobrador": 70
     },
     "salarioDesejado": 513700,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 157,
@@ -1813,7 +1886,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 489500,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 158,
@@ -1834,7 +1908,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 159,
@@ -1855,7 +1930,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 160,
@@ -1876,7 +1952,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 161,
@@ -1897,7 +1974,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 162,
@@ -1918,7 +1996,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 501500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 163,
@@ -1941,7 +2020,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 464800,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 164,
@@ -1962,7 +2042,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 165,
@@ -1983,7 +2064,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 166,
@@ -2004,7 +2086,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 167,
@@ -2025,7 +2108,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 168,
@@ -2046,7 +2130,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 169,
@@ -2067,7 +2152,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 538400,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 170,
@@ -2088,7 +2174,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 501800,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 171,
@@ -2109,7 +2196,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 172,
@@ -2130,7 +2218,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 173,
@@ -2151,7 +2240,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 174,
@@ -2174,7 +2264,8 @@
       "cobrador": 65
     },
     "salarioDesejado": 501500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 175,
@@ -2195,7 +2286,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 176,
@@ -2216,7 +2308,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 526000,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 177,
@@ -2237,7 +2330,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 501800,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 178,
@@ -2326,7 +2420,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 182,
@@ -2347,7 +2442,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 489300,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 183,
@@ -2368,7 +2464,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 184,
@@ -2389,7 +2486,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 477700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 185,
@@ -2410,7 +2508,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 186,
@@ -2431,7 +2530,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 538400,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 187,
@@ -2452,7 +2552,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 188,
@@ -2473,7 +2574,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 189,
@@ -2494,7 +2596,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 190,
@@ -2515,7 +2618,8 @@
       "cobrador": 98
     },
     "salarioDesejado": 553200,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 191,
@@ -2536,7 +2640,8 @@
       "cobrador": 98
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 192,
@@ -2581,7 +2686,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 194,
@@ -2602,7 +2708,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 621000,
-    "potencial": 97
+    "potencial": 97,
+    "origem": "a_revisar"
   },
   {
     "id": 195,
@@ -2713,7 +2820,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 420500,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 200,
@@ -2778,7 +2886,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 203,
@@ -2799,7 +2908,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 204,
@@ -2820,7 +2930,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 205,
@@ -3109,7 +3220,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 431600,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 218,
@@ -3130,7 +3242,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 501800,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 219,
@@ -3151,7 +3264,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 553200,
-    "potencial": 92
+    "potencial": 92,
+    "origem": "a_revisar"
   },
   {
     "id": 220,
@@ -3172,7 +3286,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 221,
@@ -3193,7 +3308,8 @@
       "cobrador": 93
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 222,
@@ -3214,7 +3330,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 593400,
-    "potencial": 95
+    "potencial": 95,
+    "origem": "a_revisar"
   },
   {
     "id": 223,
@@ -3235,7 +3352,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 551000,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 224,
@@ -3256,7 +3374,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 225,
@@ -3277,7 +3396,8 @@
       "cobrador": 90
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 226,
@@ -3298,7 +3418,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 227,
@@ -3319,7 +3440,8 @@
       "cobrador": 96
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 228,
@@ -3342,7 +3464,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 540100,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 229,
@@ -3363,7 +3486,8 @@
       "cobrador": 82
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 230,
@@ -3428,7 +3552,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 477700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 233,
@@ -3449,7 +3574,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 489300,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 234,
@@ -3470,7 +3596,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 235,
@@ -3825,7 +3952,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 235900,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 251,
@@ -3846,7 +3974,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 252,
@@ -3867,7 +3996,8 @@
       "cobrador": 97
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 253,
@@ -4022,7 +4152,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 538400,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 260,
@@ -4289,7 +4420,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 272,
@@ -4310,7 +4442,8 @@
       "cobrador": 85
     },
     "salarioDesejado": 431600,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 273,
@@ -4331,7 +4464,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 274,
@@ -4352,7 +4486,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 275,
@@ -4373,7 +4508,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 276,
@@ -4394,7 +4530,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 538400,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 277,
@@ -4415,7 +4552,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 278,
@@ -4436,7 +4574,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 279,
@@ -4457,7 +4596,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 280,
@@ -4478,7 +4618,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 281,
@@ -4499,7 +4640,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 282,
@@ -4522,7 +4664,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 283,
@@ -4543,7 +4686,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 284,
@@ -4564,7 +4708,8 @@
       "cobrador": 90
     },
     "salarioDesejado": 551000,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 285,
@@ -4585,7 +4730,8 @@
       "cobrador": 93
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 286,
@@ -4918,7 +5064,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 301,
@@ -4939,7 +5086,8 @@
       "cobrador": 82
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 302,
@@ -4960,7 +5108,8 @@
       "cobrador": 89
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 303,
@@ -4981,7 +5130,8 @@
       "cobrador": 98
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 304,
@@ -5002,7 +5152,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 305,
@@ -5023,7 +5174,8 @@
       "cobrador": 90
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 306,
@@ -5044,7 +5196,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 307,
@@ -5067,7 +5220,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 454400,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 308,
@@ -5088,7 +5242,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 420500,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 309,
@@ -5109,7 +5264,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 310,
@@ -5130,7 +5286,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 311,
@@ -5151,7 +5308,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 312,
@@ -5172,7 +5330,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 313,
@@ -5193,7 +5352,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 314,
@@ -5214,7 +5374,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 315,
@@ -5235,7 +5396,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 553200,
-    "potencial": 92
+    "potencial": 92,
+    "origem": "a_revisar"
   },
   {
     "id": 316,
@@ -5256,7 +5418,8 @@
       "cobrador": 99
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 317,
@@ -5277,7 +5440,8 @@
       "cobrador": 98
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 318,
@@ -5300,7 +5464,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 319,
@@ -5321,7 +5486,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 320,
@@ -5342,7 +5508,8 @@
       "cobrador": 91
     },
     "salarioDesejado": 551000,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 321,
@@ -5363,7 +5530,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 431600,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 322,
@@ -5384,7 +5552,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 501800,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 323,
@@ -5405,7 +5574,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 324,
@@ -5426,7 +5596,8 @@
       "cobrador": 95
     },
     "salarioDesejado": 579800,
-    "potencial": 94
+    "potencial": 94,
+    "origem": "a_revisar"
   },
   {
     "id": 325,
@@ -5559,7 +5730,8 @@
       "cobrador": 92
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 331,
@@ -6248,7 +6420,8 @@
       "cobrador": 65
     },
     "salarioDesejado": 216400,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "a_revisar"
   },
   {
     "id": 362,
@@ -6269,7 +6442,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 235900,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 363,
@@ -6290,7 +6464,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 249400,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 364,
@@ -6311,7 +6486,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 365,
@@ -6332,7 +6508,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 298800,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 366,
@@ -6353,7 +6530,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 283500,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 367,
@@ -6374,7 +6552,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 314500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 368,
@@ -6395,7 +6574,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 242600,
-    "potencial": 73
+    "potencial": 73,
+    "origem": "a_revisar"
   },
   {
     "id": 369,
@@ -6416,7 +6596,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 370,
@@ -6437,7 +6618,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 249400,
-    "potencial": 74
+    "potencial": 74,
+    "origem": "a_revisar"
   },
   {
     "id": 371,
@@ -6458,7 +6640,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 372,
@@ -6481,7 +6664,8 @@
       "cobrador": 70
     },
     "salarioDesejado": 291100,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 373,
@@ -6502,7 +6686,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 277500,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 374,
@@ -6523,7 +6708,8 @@
       "cobrador": 83
     },
     "salarioDesejado": 307000,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 375,
@@ -6544,7 +6730,8 @@
       "cobrador": 81
     },
     "salarioDesejado": 235900,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "a_revisar"
   },
   {
     "id": 376,
@@ -6877,7 +7064,8 @@
       "cobrador": 61
     },
     "salarioDesejado": 249400,
-    "potencial": 74
+    "potencial": 74,
+    "origem": "a_revisar"
   },
   {
     "id": 391,
@@ -6898,7 +7086,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 270300,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 392,
@@ -6919,7 +7108,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 322600,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 393,
@@ -6940,7 +7130,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 394,
@@ -6961,7 +7152,8 @@
       "cobrador": 82
     },
     "salarioDesejado": 261300,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 395,
@@ -6982,7 +7174,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 249400,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 396,
@@ -7003,7 +7196,8 @@
       "cobrador": 81
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 397,
@@ -7026,7 +7220,8 @@
       "cobrador": 61
     },
     "salarioDesejado": 229300,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "a_revisar"
   },
   {
     "id": 398,
@@ -7047,7 +7242,8 @@
       "cobrador": 63
     },
     "salarioDesejado": 242600,
-    "potencial": 73
+    "potencial": 73,
+    "origem": "a_revisar"
   },
   {
     "id": 399,
@@ -7068,7 +7264,8 @@
       "cobrador": 59
     },
     "salarioDesejado": 283500,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 400,
@@ -7089,7 +7286,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 401,
@@ -7132,7 +7330,8 @@
       "cobrador": 66
     },
     "salarioDesejado": 284800,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 403,
@@ -7665,7 +7864,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 283500,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 427,
@@ -7686,7 +7886,8 @@
       "cobrador": 63
     },
     "salarioDesejado": 284800,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 428,
@@ -7707,7 +7908,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 314500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 429,
@@ -8618,7 +8820,8 @@
       "cobrador": 57
     },
     "salarioDesejado": 254000,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 470,
@@ -8639,7 +8842,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 261300,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 471,
@@ -8660,7 +8864,8 @@
       "cobrador": 63
     },
     "salarioDesejado": 261300,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 472,
@@ -8681,7 +8886,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 291100,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 473,
@@ -8702,7 +8908,8 @@
       "cobrador": 81
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 474,
@@ -8723,7 +8930,8 @@
       "cobrador": 85
     },
     "salarioDesejado": 284800,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 475,
@@ -8744,7 +8952,8 @@
       "cobrador": 85
     },
     "salarioDesejado": 306700,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 476,
@@ -8765,7 +8974,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 242600,
-    "potencial": 73
+    "potencial": 73,
+    "origem": "a_revisar"
   },
   {
     "id": 477,
@@ -8786,7 +8996,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 276000,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 478,
@@ -8807,7 +9018,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 291100,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 479,
@@ -8828,7 +9040,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 306700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 480,
@@ -8851,7 +9064,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 249400,
-    "potencial": 74
+    "potencial": 74,
+    "origem": "a_revisar"
   },
   {
     "id": 481,
@@ -8872,7 +9086,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 270300,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 482,
@@ -8915,7 +9130,8 @@
       "cobrador": 90
     },
     "salarioDesejado": 263200,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 484,
@@ -8936,7 +9152,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 229300,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "a_revisar"
   },
   {
     "id": 485,
@@ -9003,7 +9220,8 @@
       "cobrador": 55
     },
     "salarioDesejado": 247000,
-    "potencial": 74
+    "potencial": 74,
+    "origem": "a_revisar"
   },
   {
     "id": 488,
@@ -9024,7 +9242,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 249400,
-    "potencial": 74
+    "potencial": 74,
+    "origem": "a_revisar"
   },
   {
     "id": 489,
@@ -9045,7 +9264,8 @@
       "cobrador": 66
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 490,
@@ -9288,7 +9508,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 299500,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 501,
@@ -9309,7 +9530,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 283500,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 502,
@@ -9330,7 +9552,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 229300,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "a_revisar"
   },
   {
     "id": 503,
@@ -9351,7 +9574,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 249400,
-    "potencial": 74
+    "potencial": 74,
+    "origem": "a_revisar"
   },
   {
     "id": 504,
@@ -9372,7 +9596,8 @@
       "cobrador": 82
     },
     "salarioDesejado": 306700,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 505,
@@ -9417,7 +9642,8 @@
       "cobrador": 61
     },
     "salarioDesejado": 489300,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 507,
@@ -9438,7 +9664,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 508,
@@ -9459,7 +9686,8 @@
       "cobrador": 63
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 509,
@@ -9480,7 +9708,8 @@
       "cobrador": 70
     },
     "salarioDesejado": 566500,
-    "potencial": 93
+    "potencial": 93,
+    "origem": "a_revisar"
   },
   {
     "id": 510,
@@ -9501,7 +9730,8 @@
       "cobrador": 81
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 511,
@@ -9522,7 +9752,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 512,
@@ -9543,7 +9774,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 513,
@@ -9764,7 +9996,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 579800,
-    "potencial": 94
+    "potencial": 94,
+    "origem": "a_revisar"
   },
   {
     "id": 523,
@@ -9853,7 +10086,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 283500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 527,
@@ -9874,7 +10108,8 @@
       "cobrador": 66
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 528,
@@ -9895,7 +10130,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 322600,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 529,
@@ -9916,7 +10152,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 292000,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 530,
@@ -9937,7 +10174,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 261300,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 531,
@@ -9958,7 +10196,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 256300,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 532,
@@ -9979,7 +10218,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 533,
@@ -10000,7 +10240,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 306700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 534,
@@ -10023,7 +10264,8 @@
       "cobrador": 70
     },
     "salarioDesejado": 261300,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 535,
@@ -10044,7 +10286,8 @@
       "cobrador": 61
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 536,
@@ -10065,7 +10308,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 292000,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 537,
@@ -10086,7 +10330,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 256300,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 538,
@@ -10151,7 +10396,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 306700,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 541,
@@ -10196,7 +10442,8 @@
       "cobrador": 60
     },
     "salarioDesejado": 276000,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 543,
@@ -10217,7 +10464,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 291100,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 544,
@@ -10238,7 +10486,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 291100,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 545,
@@ -10259,7 +10508,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 268600,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 546,
@@ -10280,7 +10530,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 547,
@@ -10301,7 +10552,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 306700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 548,
@@ -10322,7 +10574,8 @@
       "cobrador": 70
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 549,
@@ -10343,7 +10596,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 550,
@@ -10364,7 +10618,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 276000,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 551,
@@ -10385,7 +10640,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 552,
@@ -10408,7 +10664,8 @@
       "cobrador": 56
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "a_revisar"
   },
   {
     "id": 553,
@@ -10429,7 +10686,8 @@
       "cobrador": 63
     },
     "salarioDesejado": 306700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 554,
@@ -10562,7 +10820,8 @@
       "cobrador": 66
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "a_revisar"
   },
   {
     "id": 560,
@@ -10805,7 +11064,8 @@
       "cobrador": 61
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 571,
@@ -10848,7 +11108,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 607200,
-    "potencial": 92
+    "potencial": 92,
+    "origem": "a_revisar"
   },
   {
     "id": 573,
@@ -11113,7 +11374,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 235900,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "a_revisar"
   },
   {
     "id": 585,
@@ -11134,7 +11396,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 586,
@@ -11155,7 +11418,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 587,
@@ -11176,7 +11440,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 277500,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 588,
@@ -11199,7 +11464,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 235900,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "a_revisar"
   },
   {
     "id": 589,
@@ -11220,7 +11486,8 @@
       "cobrador": 67
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 590,
@@ -13197,7 +13464,8 @@
       "cobrador": 56
     },
     "salarioDesejado": 276000,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 679,
@@ -13218,7 +13486,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 283500,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 680,
@@ -13905,7 +14174,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 235900,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "a_revisar"
   },
   {
     "id": 711,
@@ -13926,7 +14196,8 @@
       "cobrador": 63
     },
     "salarioDesejado": 249400,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "a_revisar"
   },
   {
     "id": 712,
@@ -13947,7 +14218,8 @@
       "cobrador": 67
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 713,
@@ -13968,7 +14240,8 @@
       "cobrador": 81
     },
     "salarioDesejado": 314500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 714,
@@ -13991,7 +14264,8 @@
       "cobrador": 57
     },
     "salarioDesejado": 306700,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 715,
@@ -14012,7 +14286,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "a_revisar"
   },
   {
     "id": 716,
@@ -14121,7 +14396,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 298800,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 721,
@@ -30144,7 +30420,8 @@
       "cobrador": 32
     },
     "salarioDesejado": 454400,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1442,
@@ -30165,7 +30442,8 @@
       "cobrador": 68
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1443,
@@ -30186,7 +30464,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 489300,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1444,
@@ -30207,7 +30486,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 514400,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 1445,
@@ -30250,7 +30530,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 538400,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 1447,
@@ -30271,7 +30552,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 576700,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "a_revisar"
   },
   {
     "id": 1448,
@@ -30292,7 +30574,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 489300,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1449,
@@ -30335,7 +30618,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 513700,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 1451,
@@ -30378,7 +30662,8 @@
       "cobrador": 84
     },
     "salarioDesejado": 540100,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 1453,
@@ -30399,7 +30684,8 @@
       "cobrador": 82
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 1454,
@@ -30420,7 +30706,8 @@
       "cobrador": 67
     },
     "salarioDesejado": 566500,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 1455,
@@ -30441,7 +30728,8 @@
       "cobrador": 72
     },
     "salarioDesejado": 465900,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 1456,
@@ -30462,7 +30750,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 553200,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 1457,
@@ -30483,7 +30772,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 1458,
@@ -30552,7 +30842,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 489300,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1461,
@@ -30573,7 +30864,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 1462,
@@ -30616,7 +30908,8 @@
       "cobrador": 67
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 1464,
@@ -30637,7 +30930,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 1465,
@@ -30658,7 +30952,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 1466,
@@ -30679,7 +30974,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 1467,
@@ -30700,7 +30996,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 1468,
@@ -30743,7 +31040,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 553200,
-    "potencial": 92
+    "potencial": 92,
+    "origem": "a_revisar"
   },
   {
     "id": 1470,
@@ -30764,7 +31062,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 1471,
@@ -30829,7 +31128,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 454400,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1474,
@@ -30850,7 +31150,8 @@
       "cobrador": 68
     },
     "salarioDesejado": 514400,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 1475,
@@ -30871,7 +31172,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 477700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 1476,
@@ -30918,7 +31220,8 @@
       "cobrador": 32
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 1478,
@@ -30939,7 +31242,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "a_revisar"
   },
   {
     "id": 1479,
@@ -30960,7 +31264,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   },
   {
     "id": 1480,
@@ -30981,7 +31286,8 @@
       "cobrador": 67
     },
     "salarioDesejado": 540100,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 1481,
@@ -31002,7 +31308,8 @@
       "cobrador": 66
     },
     "salarioDesejado": 566500,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 1482,
@@ -31023,7 +31330,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 501500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 1483,
@@ -31044,7 +31352,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 526000,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "a_revisar"
   },
   {
     "id": 1484,
@@ -31087,7 +31396,8 @@
       "cobrador": 82
     },
     "salarioDesejado": 540100,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 1486,
@@ -31108,7 +31418,8 @@
       "cobrador": 82
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 1487,
@@ -31129,7 +31440,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1488,
@@ -31194,7 +31506,8 @@
       "cobrador": 75
     },
     "salarioDesejado": 563800,
-    "potencial": 92
+    "potencial": 92,
+    "origem": "a_revisar"
   },
   {
     "id": 1491,
@@ -31215,7 +31528,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 489300,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1492,
@@ -31236,7 +31550,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 477700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "a_revisar"
   },
   {
     "id": 1493,
@@ -31281,7 +31596,8 @@
       "cobrador": 32
     },
     "salarioDesejado": 527200,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 1495,
@@ -31304,7 +31620,8 @@
       "cobrador": 33
     },
     "salarioDesejado": 431600,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "a_revisar"
   },
   {
     "id": 1496,
@@ -31325,7 +31642,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 465900,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 1497,
@@ -31412,7 +31730,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 538400,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "a_revisar"
   },
   {
     "id": 1501,
@@ -31433,7 +31752,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 551000,
-    "potencial": 88
+    "potencial": 88,
+    "origem": "a_revisar"
   },
   {
     "id": 1502,
@@ -31476,7 +31796,8 @@
       "cobrador": 77
     },
     "salarioDesejado": 477700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "a_revisar"
   },
   {
     "id": 1504,
@@ -31497,7 +31818,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "a_revisar"
   },
   {
     "id": 1505,
@@ -31540,7 +31862,8 @@
       "cobrador": 68
     },
     "salarioDesejado": 593400,
-    "potencial": 95
+    "potencial": 95,
+    "origem": "a_revisar"
   },
   {
     "id": 1507,
@@ -31561,7 +31884,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 489500,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "a_revisar"
   },
   {
     "id": 1508,
@@ -31582,7 +31906,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 607200,
-    "potencial": 96
+    "potencial": 96,
+    "origem": "a_revisar"
   },
   {
     "id": 1509,
@@ -31603,7 +31928,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 540100,
-    "potencial": 91
+    "potencial": 91,
+    "origem": "a_revisar"
   },
   {
     "id": 1510,
@@ -31624,7 +31950,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "a_revisar"
   },
   {
     "id": 1511,
@@ -31669,6 +31996,7 @@
       "cobrador": 33
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "a_revisar"
   }
 ]
