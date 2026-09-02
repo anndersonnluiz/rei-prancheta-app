@@ -3803,6 +3803,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return (typeof valor === 'number' && isFinite(valor)) ? valor : padrao;
     }
 
+    function obterFatorCompatibilidadePosicaoInterno(posicao, zona) {
+        if (!posicao || !zona || zona === 'INDEFINIDO') return 1;
+        if (posicao === zona) return 1;
+        var proximas = {
+            GOL: [], LAT: ['ZAG', 'VOL'], ZAG: ['LAT', 'VOL'], VOL: ['ZAG', 'LAT', 'MEI'],
+            MEI: ['VOL', 'ATA', 'LAT'], ATA: ['MEI']
+        };
+        return proximas[posicao] && proximas[posicao].indexOf(zona) >= 0 ? 0.9 : 0.75;
+    }
+
+    function obterFatorPosicaoJogadorInterno(jogador) {
+        if (!jogador || !jogador.emCampo) return 1;
+        return obterFatorCompatibilidadePosicaoInterno(jogador.posicao, $scope.calcularZonaTatica(jogador.posX, jogador.posY));
+    }
+
     function calcularOverallPreJogo(jogador) {
         if (!jogador || !jogador.atributos) return 70;
         var attr = jogador.atributos;
@@ -3811,14 +3826,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var posicionamento = obterNumeroPreJogo(attr.posicionamento, reflexo);
             var distribuicao = obterNumeroPreJogo(attr.distribuicao, obterNumeroPreJogo(attr.passe, 75));
             var fisicoGol = obterNumeroPreJogo(attr.fisico, 75);
-            return Math.round((reflexo * 2 + posicionamento + distribuicao + fisicoGol) / 5);
+            return Math.round(((reflexo * 2 + posicionamento + distribuicao + fisicoGol) / 5) * obterFatorPosicaoJogadorInterno(jogador));
         }
         var finalizacao = obterNumeroPreJogo(attr.finalizacao, 75);
         var passe = obterNumeroPreJogo(attr.passe, 75);
         var marcacao = obterNumeroPreJogo(attr.marcacao, 75);
         var velocidade = obterNumeroPreJogo(attr.velocidade, 75);
         var fisico = obterNumeroPreJogo(attr.fisico, 75);
-        return Math.round((finalizacao + passe + marcacao + velocidade + fisico) / 5);
+        return Math.round(((finalizacao + passe + marcacao + velocidade + fisico) / 5) * obterFatorPosicaoJogadorInterno(jogador));
     }
 
     function obterElencoPreJogo(clube) {
@@ -7972,9 +7987,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         else base = (attr.finalizacao + attr.passe + attr.marcacao + attr.velocidade + attr.fisico) / 5;
         
         // FASE 12: Penalidade por Improviso
-        if ($scope.estaImprovisado(jogador)) {
-            base = base * 0.75;
-        }
+        base = base * obterFatorPosicaoJogadorInterno(jogador);
         return Math.round(base);
     };
 
