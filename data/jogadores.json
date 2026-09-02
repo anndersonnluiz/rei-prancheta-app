@@ -640,7 +640,7 @@
   {
     "id": 103,
     "clubeId": 6,
-    "nome": "Arthur Duarte 2",
+    "nome": "Arthur Duarte (Fluminense)",
     "posicao": "ZAG",
     "idade": 30,
     "salario": 505800,
@@ -656,12 +656,13 @@
       "cobrador": 79
     },
     "salarioDesejado": 526000,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "ficticio"
   },
   {
     "id": 104,
     "clubeId": 6,
-    "nome": "Caio Duarte 2",
+    "nome": "Caio Duarte (Fluminense)",
     "posicao": "MEI",
     "idade": 19,
     "salario": 579700,
@@ -677,12 +678,13 @@
       "cobrador": 81
     },
     "salarioDesejado": 649300,
-    "potencial": 98
+    "potencial": 98,
+    "origem": "ficticio"
   },
   {
     "id": 105,
     "clubeId": 6,
-    "nome": "Davi Duarte 2",
+    "nome": "Davi Duarte (Fluminense)",
     "posicao": "ATA",
     "idade": 28,
     "salario": 436900,
@@ -698,12 +700,13 @@
       "cobrador": 85
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "ficticio"
   },
   {
     "id": 106,
     "clubeId": 6,
-    "nome": "Enzo Duarte 2",
+    "nome": "Enzo Duarte (Fluminense)",
     "posicao": "LAT",
     "idade": 19,
     "salario": 459300,
@@ -719,12 +722,13 @@
       "cobrador": 83
     },
     "salarioDesejado": 514400,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "ficticio"
   },
   {
     "id": 107,
     "clubeId": 6,
-    "nome": "Heitor Duarte 2",
+    "nome": "Heitor Duarte (Fluminense)",
     "posicao": "VOL",
     "idade": 29,
     "salario": 470700,
@@ -740,12 +744,13 @@
       "cobrador": 78
     },
     "salarioDesejado": 489500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "ficticio"
   },
   {
     "id": 108,
     "clubeId": 6,
-    "nome": "Ian Duarte 2",
+    "nome": "Ian Duarte (Fluminense)",
     "posicao": "ATA",
     "idade": 25,
     "salario": 505800,
@@ -761,7 +766,8 @@
       "cobrador": 82
     },
     "salarioDesejado": 526000,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "ficticio"
   },
   {
     "id": 109,
@@ -1022,7 +1028,7 @@
   {
     "id": 121,
     "clubeId": 7,
-    "nome": "Luan Silva 2",
+    "nome": "Luan Silva (Grêmio)",
     "posicao": "ZAG",
     "idade": 34,
     "salario": 493900,
@@ -1038,7 +1044,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 513700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "ficticio"
   },
   {
     "id": 122,
@@ -1106,7 +1113,7 @@
   {
     "id": 125,
     "clubeId": 7,
-    "nome": "Rafael Silva 2",
+    "nome": "Rafael Silva (Grêmio)",
     "posicao": "VOL",
     "idade": 21,
     "salario": 493900,
@@ -1122,12 +1129,13 @@
       "cobrador": 86
     },
     "salarioDesejado": 553200,
-    "potencial": 92
+    "potencial": 92,
+    "origem": "ficticio"
   },
   {
     "id": 126,
     "clubeId": 7,
-    "nome": "Samuel Silva 2",
+    "nome": "Samuel Silva (Grêmio)",
     "posicao": "ATA",
     "idade": 24,
     "salario": 505800,
@@ -1143,7 +1151,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 526000,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "ficticio"
   },
   {
     "id": 127,
@@ -1425,7 +1434,7 @@
   {
     "id": 140,
     "clubeId": 8,
-    "nome": "Theo Mendes 2",
+    "nome": "Theo Mendes (Internacional)",
     "posicao": "MEI",
     "idade": 31,
     "salario": 542100,
@@ -1441,12 +1450,13 @@
       "cobrador": 87
     },
     "salarioDesejado": 563800,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "ficticio"
   },
   {
     "id": 141,
     "clubeId": 8,
-    "nome": "Vitor Mendes 2",
+    "nome": "Vitor Mendes (Internacional)",
     "posicao": "ATA",
     "idade": 24,
     "salario": 482200,
@@ -1462,7 +1472,8 @@
       "cobrador": 86
     },
     "salarioDesejado": 501500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "ficticio"
   },
   {
     "id": 142,
@@ -2231,7 +2242,7 @@
   {
     "id": 178,
     "clubeId": 10,
-    "nome": "Kaique Gomes 2",
+    "nome": "Kaique Gomes (Botafogo)",
     "posicao": "LAT",
     "idade": 21,
     "salario": 470700,
@@ -2247,12 +2258,13 @@
       "cobrador": 87
     },
     "salarioDesejado": 527200,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "ficticio"
   },
   {
     "id": 179,
     "clubeId": 10,
-    "nome": "Luan Gomes 2",
+    "nome": "Luan Gomes (Botafogo)",
     "posicao": "VOL",
     "idade": 31,
     "salario": 482200,
@@ -2268,12 +2280,13 @@
       "cobrador": 90
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "ficticio"
   },
   {
     "id": 180,
     "clubeId": 10,
-    "nome": "Rafael Gomes 2",
+    "nome": "Rafael Gomes (Botafogo)",
     "posicao": "ATA",
     "idade": 22,
     "salario": 470700,
@@ -2289,7 +2302,8 @@
       "cobrador": 96
     },
     "salarioDesejado": 527200,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "ficticio"
   },
   {
     "id": 181,
@@ -2615,7 +2629,7 @@
   {
     "id": 196,
     "clubeId": 11,
-    "nome": "Rafael Pereira 2",
+    "nome": "Rafael Pereira (Athletico PR)",
     "posicao": "LAT",
     "idade": 23,
     "salario": 415000,
@@ -2631,12 +2645,13 @@
       "cobrador": 87
     },
     "salarioDesejado": 464800,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "ficticio"
   },
   {
     "id": 197,
     "clubeId": 11,
-    "nome": "Samuel Pereira 2",
+    "nome": "Samuel Pereira (Athletico PR)",
     "posicao": "VOL",
     "idade": 34,
     "salario": 436900,
@@ -2652,12 +2667,13 @@
       "cobrador": 85
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "ficticio"
   },
   {
     "id": 198,
     "clubeId": 11,
-    "nome": "Theo Pereira 2",
+    "nome": "Theo Pereira (Athletico PR)",
     "posicao": "ATA",
     "idade": 23,
     "salario": 482200,
@@ -2673,7 +2689,8 @@
       "cobrador": 97
     },
     "salarioDesejado": 540100,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "ficticio"
   },
   {
     "id": 199,
@@ -3030,7 +3047,7 @@
   {
     "id": 215,
     "clubeId": 12,
-    "nome": "Davi Silva 2",
+    "nome": "Davi Silva (Vasco) 2",
     "posicao": "VOL",
     "idade": 28,
     "salario": 436900,
@@ -3046,12 +3063,13 @@
       "cobrador": 87
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "ficticio"
   },
   {
     "id": 216,
     "clubeId": 12,
-    "nome": "Enzo Silva 2",
+    "nome": "Enzo Silva (Vasco) 2",
     "posicao": "ATA",
     "idade": 22,
     "salario": 470700,
@@ -3067,7 +3085,8 @@
       "cobrador": 99
     },
     "salarioDesejado": 527200,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "ficticio"
   },
   {
     "id": 217,
@@ -3349,7 +3368,7 @@
   {
     "id": 230,
     "clubeId": 13,
-    "nome": "Heitor Santos 2",
+    "nome": "Heitor Santos (Bahia)",
     "posicao": "MEI",
     "idade": 29,
     "salario": 517700,
@@ -3365,12 +3384,13 @@
       "cobrador": 93
     },
     "salarioDesejado": 538400,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "ficticio"
   },
   {
     "id": 231,
     "clubeId": 13,
-    "nome": "Ian Santos 2",
+    "nome": "Ian Santos (Bahia)",
     "posicao": "ATA",
     "idade": 24,
     "salario": 459300,
@@ -3386,7 +3406,8 @@
       "cobrador": 97
     },
     "salarioDesejado": 477700,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "ficticio"
   },
   {
     "id": 232,
@@ -4184,7 +4205,7 @@
   {
     "id": 268,
     "clubeId": 15,
-    "nome": "Ian Mendes 2",
+    "nome": "Ian Mendes (Red Bull Bragantino) 2",
     "posicao": "LAT",
     "idade": 22,
     "salario": 448000,
@@ -4200,12 +4221,13 @@
       "cobrador": 95
     },
     "salarioDesejado": 501800,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "ficticio"
   },
   {
     "id": 269,
     "clubeId": 15,
-    "nome": "João Mendes 2",
+    "nome": "João Mendes (Red Bull Bragantino) 2",
     "posicao": "VOL",
     "idade": 24,
     "salario": 482200,
@@ -4221,12 +4243,13 @@
       "cobrador": 86
     },
     "salarioDesejado": 501500,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "ficticio"
   },
   {
     "id": 270,
     "clubeId": 15,
-    "nome": "Nicolas Mendes 2",
+    "nome": "Nicolas Mendes (Red Bull Bragantino) 2",
     "posicao": "ATA",
     "idade": 20,
     "salario": 493900,
@@ -4242,7 +4265,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 553200,
-    "potencial": 92
+    "potencial": 92,
+    "origem": "ficticio"
   },
   {
     "id": 271,
@@ -4566,7 +4590,7 @@
   {
     "id": 286,
     "clubeId": 16,
-    "nome": "Enzo Ramos 2",
+    "nome": "Enzo Ramos (Remo)",
     "posicao": "LAT",
     "idade": 34,
     "salario": 404300,
@@ -4582,12 +4606,13 @@
       "cobrador": 90
     },
     "salarioDesejado": 420500,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "ficticio"
   },
   {
     "id": 287,
     "clubeId": 16,
-    "nome": "Heitor Ramos 2",
+    "nome": "Heitor Ramos (Remo)",
     "posicao": "VOL",
     "idade": 34,
     "salario": 436900,
@@ -4603,12 +4628,13 @@
       "cobrador": 91
     },
     "salarioDesejado": 454400,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "ficticio"
   },
   {
     "id": 288,
     "clubeId": 16,
-    "nome": "Ian Ramos 2",
+    "nome": "Ian Ramos (Remo)",
     "posicao": "ATA",
     "idade": 22,
     "salario": 482200,
@@ -4624,7 +4650,8 @@
       "cobrador": 94
     },
     "salarioDesejado": 540100,
-    "potencial": 87
+    "potencial": 87,
+    "origem": "ficticio"
   },
   {
     "id": 289,
@@ -5737,7 +5764,7 @@
   {
     "id": 340,
     "clubeId": 19,
-    "nome": "Kaique Mendes 2",
+    "nome": "Kaique Mendes (Sport) 2",
     "posicao": "LAT",
     "idade": 26,
     "salario": 233300,
@@ -5753,12 +5780,13 @@
       "cobrador": 77
     },
     "salarioDesejado": 242600,
-    "potencial": 73
+    "potencial": 73,
+    "origem": "ficticio"
   },
   {
     "id": 341,
     "clubeId": 19,
-    "nome": "Luan Mendes 2",
+    "nome": "Luan Mendes (Sport) 2",
     "posicao": "VOL",
     "idade": 34,
     "salario": 246400,
@@ -5774,7 +5802,8 @@
       "cobrador": 79
     },
     "salarioDesejado": 256300,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "ficticio"
   },
   {
     "id": 342,
@@ -6135,7 +6164,7 @@
   {
     "id": 358,
     "clubeId": 20,
-    "nome": "Heitor Silva 2",
+    "nome": "Heitor Silva (Vitória) 2",
     "posicao": "LAT",
     "idade": 32,
     "salario": 448000,
@@ -6151,12 +6180,13 @@
       "cobrador": 89
     },
     "salarioDesejado": 465900,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "ficticio"
   },
   {
     "id": 359,
     "clubeId": 20,
-    "nome": "Ian Silva 2",
+    "nome": "Ian Silva (Vitória) 2",
     "posicao": "VOL",
     "idade": 34,
     "salario": 425900,
@@ -6172,12 +6202,13 @@
       "cobrador": 79
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "ficticio"
   },
   {
     "id": 360,
     "clubeId": 20,
-    "nome": "Miguel Silva 2",
+    "nome": "Miguel Silva (Vitória) 2",
     "posicao": "ATA",
     "idade": 31,
     "salario": 482200,
@@ -6193,7 +6224,8 @@
       "cobrador": 87
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "ficticio"
   },
   {
     "id": 361,
@@ -6517,7 +6549,7 @@
   {
     "id": 376,
     "clubeId": 21,
-    "nome": "Breno Cardoso 2",
+    "nome": "Breno Cardoso (América MG)",
     "posicao": "LAT",
     "idade": 28,
     "salario": 226800,
@@ -6533,12 +6565,13 @@
       "cobrador": 73
     },
     "salarioDesejado": 235900,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 377,
     "clubeId": 21,
-    "nome": "Arthur Cardoso 2",
+    "nome": "Arthur Cardoso (América MG)",
     "posicao": "VOL",
     "idade": 20,
     "salario": 259900,
@@ -6554,12 +6587,13 @@
       "cobrador": 74
     },
     "salarioDesejado": 291100,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "ficticio"
   },
   {
     "id": 378,
     "clubeId": 21,
-    "nome": "Caio Cardoso 2",
+    "nome": "Caio Cardoso (América MG)",
     "posicao": "ATA",
     "idade": 32,
     "salario": 259900,
@@ -6575,7 +6609,8 @@
       "cobrador": 80
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "ficticio"
   },
   {
     "id": 379,
@@ -7699,7 +7734,7 @@
   {
     "id": 430,
     "clubeId": 24,
-    "nome": "Vitor Cardoso 2",
+    "nome": "Vitor Cardoso (Criciúma) 2",
     "posicao": "LAT",
     "idade": 25,
     "salario": 239800,
@@ -7715,12 +7750,13 @@
       "cobrador": 70
     },
     "salarioDesejado": 249400,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "ficticio"
   },
   {
     "id": 431,
     "clubeId": 24,
-    "nome": "Yago Cardoso 2",
+    "nome": "Yago Cardoso (Criciúma) 2",
     "posicao": "VOL",
     "idade": 18,
     "salario": 273800,
@@ -7736,7 +7772,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 306700,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "ficticio"
   },
   {
     "id": 432,
@@ -8097,7 +8134,7 @@
   {
     "id": 448,
     "clubeId": 25,
-    "nome": "Davi Silva 2 (Ponte Preta)",
+    "nome": "Davi Silva (Ponte Preta) 2",
     "posicao": "LAT",
     "idade": 29,
     "salario": 226800,
@@ -8119,7 +8156,7 @@
   {
     "id": 449,
     "clubeId": 25,
-    "nome": "Enzo Silva 2 (Ponte Preta)",
+    "nome": "Enzo Silva (Ponte Preta) 2",
     "posicao": "VOL",
     "idade": 21,
     "salario": 259900,
@@ -8141,7 +8178,7 @@
   {
     "id": 450,
     "clubeId": 25,
-    "nome": "Kaique Silva 2",
+    "nome": "Kaique Silva (Ponte Preta) 2",
     "posicao": "ATA",
     "idade": 22,
     "salario": 273800,
@@ -8157,7 +8194,8 @@
       "cobrador": 76
     },
     "salarioDesejado": 306700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "ficticio"
   },
   {
     "id": 451,
@@ -8496,7 +8534,7 @@
   {
     "id": 466,
     "clubeId": 26,
-    "nome": "Caio Silva 2",
+    "nome": "Caio Silva (Cuiabá) 2",
     "posicao": "LAT",
     "idade": 30,
     "salario": 226800,
@@ -8512,12 +8550,13 @@
       "cobrador": 81
     },
     "salarioDesejado": 235900,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 467,
     "clubeId": 26,
-    "nome": "Davi Silva 2 (Cuiabá)",
+    "nome": "Davi Silva (Cuiabá) 2",
     "posicao": "VOL",
     "idade": 25,
     "salario": 246400,
@@ -8539,7 +8578,7 @@
   {
     "id": 468,
     "clubeId": 26,
-    "nome": "Enzo Silva 2 (Cuiabá)",
+    "nome": "Enzo Silva (Cuiabá) 2",
     "posicao": "ATA",
     "idade": 22,
     "salario": 266800,
@@ -8902,7 +8941,7 @@
   {
     "id": 485,
     "clubeId": 27,
-    "nome": "Enzo Freitas 2",
+    "nome": "Enzo Freitas (Vila Nova)",
     "posicao": "VOL",
     "idade": 20,
     "salario": 253100,
@@ -8918,12 +8957,13 @@
       "cobrador": 75
     },
     "salarioDesejado": 283500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "ficticio"
   },
   {
     "id": 486,
     "clubeId": 27,
-    "nome": "Heitor Freitas 2",
+    "nome": "Heitor Freitas (Vila Nova)",
     "posicao": "ATA",
     "idade": 19,
     "salario": 273800,
@@ -8939,7 +8979,8 @@
       "cobrador": 88
     },
     "salarioDesejado": 306700,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "ficticio"
   },
   {
     "id": 487,
@@ -9663,7 +9704,7 @@
   {
     "id": 520,
     "clubeId": 29,
-    "nome": "Samuel Nogueira 2",
+    "nome": "Samuel Nogueira (Chapecoense)",
     "posicao": "LAT",
     "idade": 26,
     "salario": 425900,
@@ -9679,12 +9720,13 @@
       "cobrador": 67
     },
     "salarioDesejado": 442900,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "ficticio"
   },
   {
     "id": 521,
     "clubeId": 29,
-    "nome": "Theo Nogueira 2",
+    "nome": "Theo Nogueira (Chapecoense)",
     "posicao": "VOL",
     "idade": 22,
     "salario": 459300,
@@ -9700,7 +9742,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 514400,
-    "potencial": 85
+    "potencial": 85,
+    "origem": "ficticio"
   },
   {
     "id": 522,
@@ -10435,7 +10478,7 @@
   {
     "id": 556,
     "clubeId": 31,
-    "nome": "Heitor Lima 2",
+    "nome": "Heitor Lima (Novorizontino) 2",
     "posicao": "LAT",
     "idade": 25,
     "salario": 233300,
@@ -10451,12 +10494,13 @@
       "cobrador": 78
     },
     "salarioDesejado": 242600,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "ficticio"
   },
   {
     "id": 557,
     "clubeId": 31,
-    "nome": "Ian Lima 2",
+    "nome": "Ian Lima (Novorizontino)",
     "posicao": "VOL",
     "idade": 22,
     "salario": 253100,
@@ -10472,12 +10516,13 @@
       "cobrador": 77
     },
     "salarioDesejado": 283500,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "ficticio"
   },
   {
     "id": 558,
     "clubeId": 31,
-    "nome": "João Lima 2",
+    "nome": "João Lima (Novorizontino)",
     "posicao": "ATA",
     "idade": 23,
     "salario": 273800,
@@ -10493,7 +10538,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 306700,
-    "potencial": 82
+    "potencial": 82,
+    "origem": "ficticio"
   },
   {
     "id": 559,
@@ -10764,7 +10810,7 @@
   {
     "id": 571,
     "clubeId": 32,
-    "nome": "Vitor Gomes 2",
+    "nome": "Vitor Gomes (Mirassol)",
     "posicao": "ZAG",
     "idade": 34,
     "salario": 482200,
@@ -10780,7 +10826,8 @@
       "cobrador": 81
     },
     "salarioDesejado": 501500,
-    "potencial": 84
+    "potencial": 84,
+    "origem": "ficticio"
   },
   {
     "id": 572,
@@ -11178,7 +11225,7 @@
   {
     "id": 590,
     "clubeId": 33,
-    "nome": "Arthur Duarte 2 (Ceará)",
+    "nome": "Arthur Duarte (Ceará) 2",
     "posicao": "MEI",
     "idade": 20,
     "salario": 302600,
@@ -11200,7 +11247,7 @@
   {
     "id": 591,
     "clubeId": 33,
-    "nome": "Caio Duarte 2 (Ceará)",
+    "nome": "Caio Duarte (Ceará) 2",
     "posicao": "ATA",
     "idade": 26,
     "salario": 253100,
@@ -12022,7 +12069,7 @@
   {
     "id": 628,
     "clubeId": 35,
-    "nome": "Arthur Duarte 2 (Athletic Club)",
+    "nome": "Arthur Duarte (Athletic Club) 2",
     "posicao": "LAT",
     "idade": 34,
     "salario": 220500,
@@ -12044,7 +12091,7 @@
   {
     "id": 629,
     "clubeId": 35,
-    "nome": "Caio Duarte 2 (Athletic Club)",
+    "nome": "Caio Duarte (Athletic Club) 2",
     "posicao": "VOL",
     "idade": 33,
     "salario": 239800,
@@ -12066,7 +12113,7 @@
   {
     "id": 630,
     "clubeId": 35,
-    "nome": "Ian Duarte 2 (Athletic Club)",
+    "nome": "Ian Duarte (Athletic Club) 2",
     "posicao": "ATA",
     "idade": 30,
     "salario": 273800,
@@ -12422,7 +12469,7 @@
   {
     "id": 646,
     "clubeId": 36,
-    "nome": "Enzo Gomes 2",
+    "nome": "Enzo Gomes (Náutico) 2",
     "posicao": "LAT",
     "idade": 18,
     "salario": 253100,
@@ -12438,12 +12485,13 @@
       "cobrador": 78
     },
     "salarioDesejado": 283500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "ficticio"
   },
   {
     "id": 647,
     "clubeId": 36,
-    "nome": "Heitor Gomes 2",
+    "nome": "Heitor Gomes (Náutico) 2",
     "posicao": "VOL",
     "idade": 33,
     "salario": 253100,
@@ -12459,12 +12507,13 @@
       "cobrador": 86
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "ficticio"
   },
   {
     "id": 648,
     "clubeId": 36,
-    "nome": "Ian Gomes 2",
+    "nome": "Ian Gomes (Náutico) 2",
     "posicao": "ATA",
     "idade": 25,
     "salario": 246400,
@@ -12480,7 +12529,8 @@
       "cobrador": 78
     },
     "salarioDesejado": 256300,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "ficticio"
   },
   {
     "id": 649,
@@ -12753,7 +12803,7 @@
   {
     "id": 661,
     "clubeId": 37,
-    "nome": "Rafael Gomes 2 (Botafogo SP)",
+    "nome": "Rafael Gomes (Botafogo SP) 2",
     "posicao": "ZAG",
     "idade": 29,
     "salario": 266800,
@@ -12841,7 +12891,7 @@
   {
     "id": 665,
     "clubeId": 37,
-    "nome": "Yago Gomes 2",
+    "nome": "Yago Gomes (Botafogo SP) 2",
     "posicao": "VOL",
     "idade": 23,
     "salario": 246400,
@@ -12857,12 +12907,13 @@
       "cobrador": 80
     },
     "salarioDesejado": 276000,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "ficticio"
   },
   {
     "id": 666,
     "clubeId": 37,
-    "nome": "Breno Gomes 2",
+    "nome": "Breno Gomes (Botafogo SP) 2",
     "posicao": "ATA",
     "idade": 33,
     "salario": 259900,
@@ -12878,7 +12929,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 270300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "ficticio"
   },
   {
     "id": 667,
@@ -13171,7 +13223,7 @@
   {
     "id": 680,
     "clubeId": 38,
-    "nome": "Arthur Lima 2",
+    "nome": "Arthur Lima (São Bernardo) 2",
     "posicao": "MEI",
     "idade": 19,
     "salario": 302600,
@@ -13187,12 +13239,13 @@
       "cobrador": 69
     },
     "salarioDesejado": 338900,
-    "potencial": 90
+    "potencial": 90,
+    "origem": "ficticio"
   },
   {
     "id": 681,
     "clubeId": 38,
-    "nome": "Caio Lima 2",
+    "nome": "Caio Lima (São Bernardo) 2",
     "posicao": "ATA",
     "idade": 27,
     "salario": 253100,
@@ -13208,7 +13261,8 @@
       "cobrador": 74
     },
     "salarioDesejado": 263200,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "ficticio"
   },
   {
     "id": 682,
@@ -14007,7 +14061,7 @@
   {
     "id": 718,
     "clubeId": 40,
-    "nome": "Arthur Teixeira 2",
+    "nome": "Arthur Teixeira (Operário PR) 2",
     "posicao": "LAT",
     "idade": 18,
     "salario": 253100,
@@ -14023,12 +14077,13 @@
       "cobrador": 59
     },
     "salarioDesejado": 283500,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "ficticio"
   },
   {
     "id": 719,
     "clubeId": 40,
-    "nome": "Caio Teixeira 2",
+    "nome": "Caio Teixeira (Operário PR) 2",
     "posicao": "VOL",
     "idade": 20,
     "salario": 273800,
@@ -14044,7 +14099,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 306700,
-    "potencial": 86
+    "potencial": 86,
+    "origem": "ficticio"
   },
   {
     "id": 720,
@@ -14404,7 +14460,7 @@
   {
     "id": 736,
     "clubeId": 41,
-    "nome": "Rafael Silva 2 (Figueirense)",
+    "nome": "Rafael Silva (Figueirense) 2",
     "posicao": "LAT",
     "idade": 32,
     "salario": 114700,
@@ -14426,7 +14482,7 @@
   {
     "id": 737,
     "clubeId": 41,
-    "nome": "Samuel Silva 2 (Figueirense)",
+    "nome": "Samuel Silva (Figueirense) 2",
     "posicao": "VOL",
     "idade": 23,
     "salario": 129500,
@@ -14448,7 +14504,7 @@
   {
     "id": 738,
     "clubeId": 41,
-    "nome": "Theo Silva 2",
+    "nome": "Theo Silva (Figueirense) 2",
     "posicao": "ATA",
     "idade": 24,
     "salario": 141100,
@@ -14464,7 +14520,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 146700,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "ficticio"
   },
   {
     "id": 739,
@@ -15141,7 +15198,7 @@
   {
     "id": 770,
     "clubeId": 43,
-    "nome": "Yago Ramos 2",
+    "nome": "Yago Ramos (Itabaiana) 2",
     "posicao": "MEI",
     "idade": 32,
     "salario": 145200,
@@ -15157,12 +15214,13 @@
       "cobrador": 51
     },
     "salarioDesejado": 151000,
-    "potencial": 73
+    "potencial": 73,
+    "origem": "ficticio"
   },
   {
     "id": 771,
     "clubeId": 43,
-    "nome": "Breno Ramos 2",
+    "nome": "Breno Ramos (Itabaiana) 2",
     "posicao": "ATA",
     "idade": 33,
     "salario": 125700,
@@ -15178,7 +15236,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 130700,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 772,
@@ -17546,7 +17605,7 @@
   {
     "id": 880,
     "clubeId": 49,
-    "nome": "Vitor Mendes 2 (Maranhão)",
+    "nome": "Vitor Mendes (Maranhão) 2",
     "posicao": "LAT",
     "idade": 29,
     "salario": 114700,
@@ -17568,7 +17627,7 @@
   {
     "id": 881,
     "clubeId": 49,
-    "nome": "Yago Mendes 2",
+    "nome": "Yago Mendes (Maranhão) 2",
     "posicao": "VOL",
     "idade": 23,
     "salario": 125700,
@@ -17584,7 +17643,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 140800,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "ficticio"
   },
   {
     "id": 882,
@@ -17945,7 +18005,7 @@
   {
     "id": 898,
     "clubeId": 50,
-    "nome": "Nicolas Ramos 2",
+    "nome": "Nicolas Ramos (Brusque) 2",
     "posicao": "LAT",
     "idade": 25,
     "salario": 111100,
@@ -17961,12 +18021,13 @@
       "cobrador": 60
     },
     "salarioDesejado": 115500,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 899,
     "clubeId": 50,
-    "nome": "Otávio Ramos 2",
+    "nome": "Otávio Ramos (Brusque) 2",
     "posicao": "VOL",
     "idade": 22,
     "salario": 122000,
@@ -17982,7 +18043,8 @@
       "cobrador": 65
     },
     "salarioDesejado": 136600,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 900,
@@ -18343,7 +18405,7 @@
   {
     "id": 916,
     "clubeId": 51,
-    "nome": "Miguel Duarte 2",
+    "nome": "Miguel Duarte (Volta Redonda) 2",
     "posicao": "LAT",
     "idade": 25,
     "salario": 125700,
@@ -18359,12 +18421,13 @@
       "cobrador": 65
     },
     "salarioDesejado": 130700,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "ficticio"
   },
   {
     "id": 917,
     "clubeId": 51,
-    "nome": "Nicolas Duarte 2",
+    "nome": "Nicolas Duarte (Volta Redonda) 2",
     "posicao": "VOL",
     "idade": 30,
     "salario": 118300,
@@ -18380,12 +18443,13 @@
       "cobrador": 66
     },
     "salarioDesejado": 123000,
-    "potencial": 66
+    "potencial": 66,
+    "origem": "ficticio"
   },
   {
     "id": 918,
     "clubeId": 51,
-    "nome": "Otávio Duarte 2",
+    "nome": "Otávio Duarte (Volta Redonda) 2",
     "posicao": "ATA",
     "idade": 31,
     "salario": 129500,
@@ -18401,7 +18465,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 134700,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "ficticio"
   },
   {
     "id": 919,
@@ -18674,7 +18739,7 @@
   {
     "id": 931,
     "clubeId": 52,
-    "nome": "Theo Nogueira 2 (Maringá)",
+    "nome": "Theo Nogueira (Maringá) 2",
     "posicao": "ZAG",
     "idade": 27,
     "salario": 133300,
@@ -18761,7 +18826,7 @@
   {
     "id": 935,
     "clubeId": 52,
-    "nome": "Arthur Nogueira 2",
+    "nome": "Arthur Nogueira (Maringá) 2",
     "posicao": "VOL",
     "idade": 31,
     "salario": 122000,
@@ -18777,12 +18842,13 @@
       "cobrador": 73
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 936,
     "clubeId": 52,
-    "nome": "Caio Nogueira 2",
+    "nome": "Caio Nogueira (Maringá) 2",
     "posicao": "ATA",
     "idade": 28,
     "salario": 133300,
@@ -18798,7 +18864,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 138600,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 937,
@@ -19534,7 +19601,7 @@
   {
     "id": 970,
     "clubeId": 54,
-    "nome": "Heitor Lima 2 (Botafogo PB)",
+    "nome": "Heitor Lima (Botafogo PB) 2",
     "posicao": "LAT",
     "idade": 18,
     "salario": 133300,
@@ -19556,7 +19623,7 @@
   {
     "id": 971,
     "clubeId": 54,
-    "nome": "Ian Lima 2 (Botafogo PB)",
+    "nome": "Ian Lima (Botafogo PB) 2",
     "posicao": "VOL",
     "idade": 31,
     "salario": 118300,
@@ -19934,7 +20001,7 @@
   {
     "id": 988,
     "clubeId": 55,
-    "nome": "Vitor Gomes 2 (Confiança)",
+    "nome": "Vitor Gomes (Confiança) 2",
     "posicao": "LAT",
     "idade": 32,
     "salario": 118300,
@@ -19956,7 +20023,7 @@
   {
     "id": 989,
     "clubeId": 55,
-    "nome": "Yago Gomes 2 (Confiança)",
+    "nome": "Yago Gomes (Confiança) 2",
     "posicao": "VOL",
     "idade": 24,
     "salario": 133300,
@@ -20199,7 +20266,7 @@
   {
     "id": 1000,
     "clubeId": 56,
-    "nome": "Enzo Duarte 2 (Floresta)",
+    "nome": "Enzo Duarte (Floresta) 2",
     "posicao": "ATA",
     "idade": 31,
     "salario": 137200,
@@ -20221,7 +20288,7 @@
   {
     "id": 1001,
     "clubeId": 56,
-    "nome": "Heitor Duarte 2 (Floresta)",
+    "nome": "Heitor Duarte (Floresta) 2",
     "posicao": "ATA",
     "idade": 21,
     "salario": 133300,
@@ -20243,7 +20310,7 @@
   {
     "id": 1002,
     "clubeId": 56,
-    "nome": "Ian Duarte 2 (Floresta)",
+    "nome": "Ian Duarte (Floresta) 2",
     "posicao": "GOL",
     "idade": 34,
     "salario": 118300,
@@ -20667,7 +20734,7 @@
   {
     "id": 1021,
     "clubeId": 57,
-    "nome": "Theo Mendes 2 (Ferroviária)",
+    "nome": "Theo Mendes (Ferroviária) 2",
     "posicao": "ZAG",
     "idade": 32,
     "salario": 122000,
@@ -20755,7 +20822,7 @@
   {
     "id": 1025,
     "clubeId": 57,
-    "nome": "Arthur Mendes 2",
+    "nome": "Arthur Mendes (Ferroviária) 2",
     "posicao": "VOL",
     "idade": 21,
     "salario": 141100,
@@ -20771,12 +20838,13 @@
       "cobrador": 69
     },
     "salarioDesejado": 158000,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "ficticio"
   },
   {
     "id": 1026,
     "clubeId": 57,
-    "nome": "Caio Mendes 2",
+    "nome": "Caio Mendes (Ferroviária) 2",
     "posicao": "ATA",
     "idade": 24,
     "salario": 125700,
@@ -20792,7 +20860,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 130700,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "ficticio"
   },
   {
     "id": 1027,
@@ -21087,7 +21156,7 @@
   {
     "id": 1040,
     "clubeId": 58,
-    "nome": "Davi Cardoso 2",
+    "nome": "Davi Cardoso (Guarani) 2",
     "posicao": "MEI",
     "idade": 19,
     "salario": 149200,
@@ -21103,12 +21172,13 @@
       "cobrador": 61
     },
     "salarioDesejado": 167100,
-    "potencial": 81
+    "potencial": 81,
+    "origem": "ficticio"
   },
   {
     "id": 1041,
     "clubeId": 58,
-    "nome": "Enzo Cardoso 2",
+    "nome": "Enzo Cardoso (Guarani) 2",
     "posicao": "ATA",
     "idade": 21,
     "salario": 129500,
@@ -21124,7 +21194,8 @@
       "cobrador": 73
     },
     "salarioDesejado": 145000,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "ficticio"
   },
   {
     "id": 1042,
@@ -21529,7 +21600,7 @@
   {
     "id": 1060,
     "clubeId": 59,
-    "nome": "Breno Nogueira 2",
+    "nome": "Breno Nogueira (Ituano) 2",
     "posicao": "LAT",
     "idade": 25,
     "salario": 122000,
@@ -21545,12 +21616,13 @@
       "cobrador": 67
     },
     "salarioDesejado": 126900,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 1061,
     "clubeId": 59,
-    "nome": "Arthur Nogueira 2 (Ituano)",
+    "nome": "Arthur Nogueira (Ituano) 2",
     "posicao": "VOL",
     "idade": 27,
     "salario": 133300,
@@ -21928,7 +22000,7 @@
   {
     "id": 1078,
     "clubeId": 60,
-    "nome": "Yago Mendes 2 (Amazonas)",
+    "nome": "Yago Mendes (Amazonas) 2",
     "posicao": "LAT",
     "idade": 26,
     "salario": 118300,
@@ -21950,7 +22022,7 @@
   {
     "id": 1079,
     "clubeId": 60,
-    "nome": "Breno Mendes 2",
+    "nome": "Breno Mendes (Amazonas) 2",
     "posicao": "VOL",
     "idade": 30,
     "salario": 129500,
@@ -21966,12 +22038,13 @@
       "cobrador": 63
     },
     "salarioDesejado": 134700,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "ficticio"
   },
   {
     "id": 1080,
     "clubeId": 60,
-    "nome": "Enzo Mendes 2",
+    "nome": "Enzo Mendes (Amazonas) 2",
     "posicao": "ATA",
     "idade": 20,
     "salario": 133300,
@@ -21987,7 +22060,8 @@
       "cobrador": 54
     },
     "salarioDesejado": 149300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "ficticio"
   },
   {
     "id": 1081,
@@ -22325,7 +22399,7 @@
   {
     "id": 1096,
     "clubeId": 61,
-    "nome": "João Freitas 2",
+    "nome": "João Freitas (São José RS) 2",
     "posicao": "LAT",
     "idade": 24,
     "salario": 62700,
@@ -22341,12 +22415,13 @@
       "cobrador": 53
     },
     "salarioDesejado": 65200,
-    "potencial": 60
+    "potencial": 60,
+    "origem": "ficticio"
   },
   {
     "id": 1097,
     "clubeId": 61,
-    "nome": "Kaique Freitas 2",
+    "nome": "Kaique Freitas (São José RS) 2",
     "posicao": "VOL",
     "idade": 28,
     "salario": 69600,
@@ -22362,12 +22437,13 @@
       "cobrador": 47
     },
     "salarioDesejado": 72400,
-    "potencial": 60
+    "potencial": 60,
+    "origem": "ficticio"
   },
   {
     "id": 1098,
     "clubeId": 61,
-    "nome": "Luan Freitas 2",
+    "nome": "Luan Freitas (São José RS) 2",
     "posicao": "ATA",
     "idade": 29,
     "salario": 76900,
@@ -22383,7 +22459,8 @@
       "cobrador": 47
     },
     "salarioDesejado": 80000,
-    "potencial": 63
+    "potencial": 63,
+    "origem": "ficticio"
   },
   {
     "id": 1099,
@@ -22733,7 +22810,7 @@
   {
     "id": 1115,
     "clubeId": 62,
-    "nome": "Vitor Castro 2",
+    "nome": "Vitor Castro (Caldense) 2",
     "posicao": "VOL",
     "idade": 34,
     "salario": 72000,
@@ -22749,7 +22826,8 @@
       "cobrador": 30
     },
     "salarioDesejado": 74900,
-    "potencial": 61
+    "potencial": 61,
+    "origem": "ficticio"
   },
   {
     "id": 1116,
@@ -23506,7 +23584,7 @@
   {
     "id": 1150,
     "clubeId": 64,
-    "nome": "Ian Silva 2 (Treze)",
+    "nome": "Ian Silva (Treze) 2",
     "posicao": "LAT",
     "idade": 24,
     "salario": 69600,
@@ -23528,7 +23606,7 @@
   {
     "id": 1151,
     "clubeId": 64,
-    "nome": "João Silva 2",
+    "nome": "João Silva (Treze) 2",
     "posicao": "VOL",
     "idade": 27,
     "salario": 76900,
@@ -23544,7 +23622,8 @@
       "cobrador": 44
     },
     "salarioDesejado": 80000,
-    "potencial": 63
+    "potencial": 63,
+    "origem": "ficticio"
   },
   {
     "id": 1152,
@@ -23905,7 +23984,7 @@
   {
     "id": 1168,
     "clubeId": 65,
-    "nome": "Rafael Mendes 2",
+    "nome": "Rafael Mendes (Brasil de Pelotas) 2",
     "posicao": "LAT",
     "idade": 26,
     "salario": 67300,
@@ -23921,12 +24000,13 @@
       "cobrador": 42
     },
     "salarioDesejado": 70000,
-    "potencial": 59
+    "potencial": 59,
+    "origem": "ficticio"
   },
   {
     "id": 1169,
     "clubeId": 65,
-    "nome": "Samuel Mendes 2",
+    "nome": "Samuel Mendes (Brasil de Pelotas) 2",
     "posicao": "VOL",
     "idade": 18,
     "salario": 79400,
@@ -23942,7 +24022,8 @@
       "cobrador": 42
     },
     "salarioDesejado": 88900,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "ficticio"
   },
   {
     "id": 1170,
@@ -24303,7 +24384,7 @@
   {
     "id": 1186,
     "clubeId": 66,
-    "nome": "Caio Duarte 2 (Retrô)",
+    "nome": "Caio Duarte (Retrô) 2",
     "posicao": "LAT",
     "idade": 28,
     "salario": 62700,
@@ -24325,7 +24406,7 @@
   {
     "id": 1187,
     "clubeId": 66,
-    "nome": "Davi Duarte 2 (Retrô)",
+    "nome": "Davi Duarte (Retrô) 2",
     "posicao": "VOL",
     "idade": 20,
     "salario": 74400,
@@ -24347,7 +24428,7 @@
   {
     "id": 1188,
     "clubeId": 66,
-    "nome": "Enzo Duarte 2 (Retrô)",
+    "nome": "Enzo Duarte (Retrô) 2",
     "posicao": "ATA",
     "idade": 18,
     "salario": 81900,
@@ -25058,7 +25139,7 @@
   {
     "id": 1220,
     "clubeId": 68,
-    "nome": "Heitor Pereira 2",
+    "nome": "Heitor Pereira (Tuna Luso) 2",
     "posicao": "MEI",
     "idade": 24,
     "salario": 87100,
@@ -25074,12 +25155,13 @@
       "cobrador": 40
     },
     "salarioDesejado": 90600,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 1221,
     "clubeId": 68,
-    "nome": "Ian Pereira 2",
+    "nome": "Ian Pereira (Tuna Luso) 2",
     "posicao": "ATA",
     "idade": 31,
     "salario": 74400,
@@ -25095,7 +25177,8 @@
       "cobrador": 55
     },
     "salarioDesejado": 77400,
-    "potencial": 62
+    "potencial": 62,
+    "origem": "ficticio"
   },
   {
     "id": 1222,
@@ -25500,7 +25583,7 @@
   {
     "id": 1240,
     "clubeId": 69,
-    "nome": "Heitor Nogueira 2",
+    "nome": "Heitor Nogueira (Bangu) 2",
     "posicao": "LAT",
     "idade": 24,
     "salario": 72000,
@@ -25516,12 +25599,13 @@
       "cobrador": 40
     },
     "salarioDesejado": 74900,
-    "potencial": 64
+    "potencial": 64,
+    "origem": "ficticio"
   },
   {
     "id": 1241,
     "clubeId": 69,
-    "nome": "Ian Nogueira 2",
+    "nome": "Ian Nogueira (Bangu) 2",
     "posicao": "VOL",
     "idade": 18,
     "salario": 72000,
@@ -25537,7 +25621,8 @@
       "cobrador": 40
     },
     "salarioDesejado": 80600,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 1242,
@@ -26632,7 +26717,7 @@
   {
     "id": 1291,
     "clubeId": 72,
-    "nome": "Yago Pereira 2",
+    "nome": "Yago Pereira (Sergipe) 2",
     "posicao": "ZAG",
     "idade": 23,
     "salario": 76900,
@@ -26648,7 +26733,8 @@
       "cobrador": 43
     },
     "salarioDesejado": 86100,
-    "potencial": 66
+    "potencial": 66,
+    "origem": "ficticio"
   },
   {
     "id": 1292,
@@ -27892,7 +27978,7 @@
   {
     "id": 1348,
     "clubeId": 75,
-    "nome": "Theo Cardoso 2",
+    "nome": "Theo Cardoso (Nacional AM) 2",
     "posicao": "LAT",
     "idade": 25,
     "salario": 62700,
@@ -27908,12 +27994,13 @@
       "cobrador": 49
     },
     "salarioDesejado": 65200,
-    "potencial": 60
+    "potencial": 60,
+    "origem": "ficticio"
   },
   {
     "id": 1349,
     "clubeId": 75,
-    "nome": "Vitor Cardoso 2 (Nacional AM)",
+    "nome": "Vitor Cardoso (Nacional AM) 2",
     "posicao": "VOL",
     "idade": 27,
     "salario": 69600,
@@ -27935,7 +28022,7 @@
   {
     "id": 1350,
     "clubeId": 75,
-    "nome": "Caio Cardoso 2 (Nacional AM)",
+    "nome": "Caio Cardoso (Nacional AM) 2",
     "posicao": "ATA",
     "idade": 28,
     "salario": 79400,
@@ -28291,7 +28378,7 @@
   {
     "id": 1366,
     "clubeId": 76,
-    "nome": "Yago Silva 2",
+    "nome": "Yago Silva (Rio Branco AC) 2",
     "posicao": "LAT",
     "idade": 28,
     "salario": 65000,
@@ -28307,12 +28394,13 @@
       "cobrador": 47
     },
     "salarioDesejado": 67600,
-    "potencial": 58
+    "potencial": 58,
+    "origem": "ficticio"
   },
   {
     "id": 1367,
     "clubeId": 76,
-    "nome": "Breno Silva 2",
+    "nome": "Breno Silva (Rio Branco AC) 2",
     "posicao": "VOL",
     "idade": 32,
     "salario": 69600,
@@ -28328,12 +28416,13 @@
       "cobrador": 52
     },
     "salarioDesejado": 72400,
-    "potencial": 60
+    "potencial": 60,
+    "origem": "ficticio"
   },
   {
     "id": 1368,
     "clubeId": 76,
-    "nome": "Arthur Silva 2",
+    "nome": "Arthur Silva (Rio Branco AC) 2",
     "posicao": "ATA",
     "idade": 31,
     "salario": 79400,
@@ -28349,7 +28438,8 @@
       "cobrador": 61
     },
     "salarioDesejado": 82600,
-    "potencial": 64
+    "potencial": 64,
+    "origem": "ficticio"
   },
   {
     "id": 1369,
@@ -28617,7 +28707,7 @@
   {
     "id": 1381,
     "clubeId": 77,
-    "nome": "Vitor Almeida 2",
+    "nome": "Vitor Almeida (Atlético AC) 2",
     "posicao": "ZAG",
     "idade": 21,
     "salario": 76900,
@@ -28633,7 +28723,8 @@
       "cobrador": 51
     },
     "salarioDesejado": 86100,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 1382,
@@ -28704,7 +28795,7 @@
   {
     "id": 1385,
     "clubeId": 77,
-    "nome": "Caio Almeida 2",
+    "nome": "Caio Almeida (Atlético AC) 2",
     "posicao": "VOL",
     "idade": 34,
     "salario": 74400,
@@ -28720,12 +28811,13 @@
       "cobrador": 55
     },
     "salarioDesejado": 77400,
-    "potencial": 62
+    "potencial": 62,
+    "origem": "ficticio"
   },
   {
     "id": 1386,
     "clubeId": 77,
-    "nome": "Davi Almeida 2",
+    "nome": "Davi Almeida (Atlético AC) 2",
     "posicao": "ATA",
     "idade": 26,
     "salario": 72000,
@@ -28741,7 +28833,8 @@
       "cobrador": 46
     },
     "salarioDesejado": 74900,
-    "potencial": 61
+    "potencial": 61,
+    "origem": "ficticio"
   },
   {
     "id": 1387,
@@ -29477,7 +29570,7 @@
   {
     "id": 1420,
     "clubeId": 79,
-    "nome": "Yago Moreira 2",
+    "nome": "Yago Moreira (Santo André) 2",
     "posicao": "LAT",
     "idade": 22,
     "salario": 65000,
@@ -29493,12 +29586,13 @@
       "cobrador": 41
     },
     "salarioDesejado": 72800,
-    "potencial": 61
+    "potencial": 61,
+    "origem": "ficticio"
   },
   {
     "id": 1421,
     "clubeId": 79,
-    "nome": "Breno Moreira 2",
+    "nome": "Breno Moreira (Santo André) 2",
     "posicao": "VOL",
     "idade": 21,
     "salario": 76900,
@@ -29514,7 +29608,8 @@
       "cobrador": 41
     },
     "salarioDesejado": 86100,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 1422,
@@ -30584,7 +30679,7 @@
   {
     "id": 1471,
     "clubeId": 2,
-    "nome": "Ian Barbosa 2",
+    "nome": "Ian Barbosa (Palmeiras) 2",
     "posicao": "LAT",
     "idade": 25,
     "salario": 505800,
@@ -30600,7 +30695,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 526000,
-    "potencial": 89
+    "potencial": 89,
+    "origem": "ficticio"
   },
   {
     "id": 1472,
