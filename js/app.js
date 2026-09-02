@@ -2128,14 +2128,32 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return 'comum';
     }
 
-    function obterNomeAtletaBase(chave) {
+    function nomeJaExisteInterno(nome) {
+        var alvo = String(nome || '').toLocaleLowerCase('pt-BR');
+        return ($scope.jogadores || []).some(function(jogador) { return String(jogador.nome || '').toLocaleLowerCase('pt-BR') === alvo; }) ||
+            ($scope.elencoAtual || []).some(function(jogador) { return String(jogador.nome || '').toLocaleLowerCase('pt-BR') === alvo; });
+    }
+
+    function obterNomeUnicoGeradoInterno(nome, clubeNome) {
+        var base = String(nome || 'Atleta');
+        var sufixo = clubeNome ? ' (' + String(clubeNome).replace(/[^a-zA-ZÀ-ÿ0-9]+/g, ' ').trim() + ')' : '';
+        var candidato = base + sufixo;
+        var contador = 2;
+        while (nomeJaExisteInterno(candidato)) candidato = base + sufixo + ' ' + contador++;
+        return candidato;
+    }
+
+    function obterNomeAtletaBase(chave, clubeId) {
         var nomes = ['Joao', 'Pedro', 'Lucas', 'Matheus', 'Gabriel', 'Rafael', 'Caio', 'Bruno', 'Felipe', 'Marcos'];
         var sobrenomes = ['Silva', 'Santos', 'Oliveira', 'Souza', 'Pereira', 'Costa', 'Lima', 'Almeida', 'Rocha', 'Barbosa'];
-        return nomes[chave % nomes.length] + ' ' + sobrenomes[(chave * 3) % sobrenomes.length];
+        var nome = nomes[chave % nomes.length] + ' ' + sobrenomes[(chave * 3) % sobrenomes.length];
+        var clube = ($scope.clubes || []).find(function(item) { return String(item.id) === String(clubeId); });
+        return obterNomeUnicoGeradoInterno(nome, clube && clube.nome);
     }
 
     function normalizarAtletaBase(atleta, clubeId) {
         if (!atleta) return null;
+        atleta.origem = 'ficticio';
         if (!atleta.id) atleta.id = 'base_' + (clubeId || 'clube') + '_' + obterChaveNumericaJogador(atleta);
         atleta.clubeId = clubeId;
         atleta.idade = limitarNumero(parseInt(atleta.idade, 10) || 17, 16, 20);
@@ -2275,7 +2293,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ((chave % 11) === 0) potencial = Math.min(90, potencial + 6);
         var atleta = {
             id: 'base_' + clubeId + '_' + dia + '_' + seq + '_' + (origem || 'geracao'),
-            nome: obterNomeAtletaBase(chave),
+            nome: obterNomeAtletaBase(chave, clubeId),
             idade: idade,
             posicao: posicao,
             clubeId: clubeId,
@@ -7576,7 +7594,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var j = {
                 id: 'gen_' + Date.now() + '_' + i,
                 clubeId: 'mercado', // Fica sem clube fixo do json
-                nome: nomeRand + ' ' + sobrenomeRand,
+                nome: obterNomeUnicoGeradoInterno(nomeRand + ' ' + sobrenomeRand, 'Mercado'),
                 posicao: posRand,
                 idade: idadeRand,
                 salario: Math.floor(Math.random() * 20000) + 5000,

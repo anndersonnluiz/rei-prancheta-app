@@ -16,5 +16,8 @@ const realIdentity = (nome, clubeId) => jogadores.filter((jogador) => jogador.no
 assert.strictEqual(realIdentity('Gerson', 9).length, 1, 'Gerson should have one Cruzeiro identity');
 assert.strictEqual(realIdentity('Fabrício Bruno', 9).length, 1, 'Fabrício Bruno should have one Cruzeiro identity');
 assert.strictEqual(realIdentity('Igor Vinícius', 18).length, 1, 'Igor Vinícius should have one Santos identity');
+const app = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+assert.ok(app.includes('obterNomeUnicoGeradoInterno'), 'generated players should use a global unique-name allocator');
+assert.ok(app.includes("origem: 'ficticio'") || app.includes('origem = \'ficticio\''), 'generated identities should be classifiable as fictitious');
 
 console.log('roster_identity.test.js passed');
