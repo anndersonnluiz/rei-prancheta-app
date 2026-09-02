@@ -14544,7 +14544,8 @@
       "cobrador": 41
     },
     "salarioDesejado": 108400,
-    "potencial": 65
+    "potencial": 65,
+    "origem": "ficticio"
   },
   {
     "id": 740,
@@ -14565,7 +14566,8 @@
       "cobrador": 45
     },
     "salarioDesejado": 123000,
-    "potencial": 66
+    "potencial": 66,
+    "origem": "ficticio"
   },
   {
     "id": 741,
@@ -14586,7 +14588,8 @@
       "cobrador": 44
     },
     "salarioDesejado": 149300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "ficticio"
   },
   {
     "id": 742,
@@ -14607,7 +14610,8 @@
       "cobrador": 60
     },
     "salarioDesejado": 138600,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 743,
@@ -14628,7 +14632,8 @@
       "cobrador": 44
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 744,
@@ -14649,7 +14654,8 @@
       "cobrador": 61
     },
     "salarioDesejado": 134700,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "ficticio"
   },
   {
     "id": 745,
@@ -14670,7 +14676,8 @@
       "cobrador": 53
     },
     "salarioDesejado": 146700,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 746,
@@ -14691,7 +14698,8 @@
       "cobrador": 46
     },
     "salarioDesejado": 130700,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 747,
@@ -14712,7 +14720,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 138600,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 748,
@@ -14733,7 +14742,8 @@
       "cobrador": 55
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 749,
@@ -14754,7 +14764,8 @@
       "cobrador": 57
     },
     "salarioDesejado": 153700,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "ficticio"
   },
   {
     "id": 750,
@@ -14777,7 +14788,8 @@
       "cobrador": 39
     },
     "salarioDesejado": 145000,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 751,
@@ -14798,7 +14810,8 @@
       "cobrador": 46
     },
     "salarioDesejado": 146700,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 752,
@@ -14819,7 +14832,8 @@
       "cobrador": 46
     },
     "salarioDesejado": 153700,
-    "potencial": 74
+    "potencial": 74,
+    "origem": "ficticio"
   },
   {
     "id": 753,
@@ -14840,7 +14854,8 @@
       "cobrador": 57
     },
     "salarioDesejado": 119300,
-    "potencial": 65
+    "potencial": 65,
+    "origem": "ficticio"
   },
   {
     "id": 754,
@@ -14861,7 +14876,8 @@
       "cobrador": 49
     },
     "salarioDesejado": 132500,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "ficticio"
   },
   {
     "id": 755,
@@ -14882,7 +14898,8 @@
       "cobrador": 54
     },
     "salarioDesejado": 145000,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 756,
@@ -14903,7 +14920,8 @@
       "cobrador": 55
     },
     "salarioDesejado": 142700,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "ficticio"
   },
   {
     "id": 757,
@@ -15326,7 +15344,8 @@
       "cobrador": 46
     },
     "salarioDesejado": 115500,
-    "potencial": 64
+    "potencial": 64,
+    "origem": "ficticio"
   },
   {
     "id": 776,
@@ -15347,7 +15366,8 @@
       "cobrador": 53
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 777,
@@ -15368,7 +15388,8 @@
       "cobrador": 46
     },
     "salarioDesejado": 130700,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 778,
@@ -15389,7 +15410,8 @@
       "cobrador": 51
     },
     "salarioDesejado": 132500,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "ficticio"
   },
   {
     "id": 779,
@@ -15410,7 +15432,8 @@
       "cobrador": 59
     },
     "salarioDesejado": 130700,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "ficticio"
   },
   {
     "id": 780,
@@ -15431,7 +15454,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 146700,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "ficticio"
   },
   {
     "id": 781,
@@ -15452,7 +15476,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 176400,
-    "potencial": 83
+    "potencial": 83,
+    "origem": "ficticio"
   },
   {
     "id": 782,
@@ -15473,7 +15498,8 @@
       "cobrador": 56
     },
     "salarioDesejado": 119300,
-    "potencial": 65
+    "potencial": 65,
+    "origem": "ficticio"
   },
   {
     "id": 783,
@@ -15494,7 +15520,8 @@
       "cobrador": 65
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 784,
@@ -15515,7 +15542,8 @@
       "cobrador": 63
     },
     "salarioDesejado": 134700,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "ficticio"
   },
   {
     "id": 785,
@@ -15536,7 +15564,8 @@
       "cobrador": 66
     },
     "salarioDesejado": 162600,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "ficticio"
   },
   {
     "id": 786,
@@ -15559,7 +15588,8 @@
       "cobrador": 46
     },
     "salarioDesejado": 138600,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 787,
@@ -15580,7 +15610,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 130700,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 788,
@@ -15645,7 +15676,8 @@
       "cobrador": 48
     },
     "salarioDesejado": 149300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "ficticio"
   },
   {
     "id": 791,
@@ -15734,7 +15766,8 @@
       "cobrador": 66
     },
     "salarioDesejado": 149300,
-    "potencial": 77
+    "potencial": 77,
+    "origem": "ficticio"
   },
   {
     "id": 795,
@@ -15755,7 +15788,8 @@
       "cobrador": 56
     },
     "salarioDesejado": 115500,
-    "potencial": 64
+    "potencial": 64,
+    "origem": "ficticio"
   },
   {
     "id": 796,
@@ -16086,7 +16120,8 @@
       "cobrador": 59
     },
     "salarioDesejado": 162600,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "ficticio"
   },
   {
     "id": 811,
@@ -16307,7 +16342,8 @@
       "cobrador": 69
     },
     "salarioDesejado": 162600,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "ficticio"
   },
   {
     "id": 821,
@@ -16352,7 +16388,8 @@
       "cobrador": 52
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 823,
@@ -16507,7 +16544,8 @@
       "cobrador": 42
     },
     "salarioDesejado": 104800,
-    "potencial": 61
+    "potencial": 61,
+    "origem": "ficticio"
   },
   {
     "id": 830,
@@ -16528,7 +16566,8 @@
       "cobrador": 57
     },
     "salarioDesejado": 140800,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "ficticio"
   },
   {
     "id": 831,
@@ -16549,7 +16588,8 @@
       "cobrador": 58
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 832,
@@ -16570,7 +16610,8 @@
       "cobrador": 47
     },
     "salarioDesejado": 138600,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 833,
@@ -16591,7 +16632,8 @@
       "cobrador": 52
     },
     "salarioDesejado": 145000,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "ficticio"
   },
   {
     "id": 834,
@@ -16612,7 +16654,8 @@
       "cobrador": 57
     },
     "salarioDesejado": 138600,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 835,
@@ -16633,7 +16676,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 142700,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "ficticio"
   },
   {
     "id": 836,
@@ -16654,7 +16698,8 @@
       "cobrador": 59
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 837,
@@ -16675,7 +16720,8 @@
       "cobrador": 60
     },
     "salarioDesejado": 134700,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "ficticio"
   },
   {
     "id": 838,
@@ -16696,7 +16742,8 @@
       "cobrador": 64
     },
     "salarioDesejado": 145000,
-    "potencial": 76
+    "potencial": 76,
+    "origem": "ficticio"
   },
   {
     "id": 839,
@@ -16717,7 +16764,8 @@
       "cobrador": 50
     },
     "salarioDesejado": 134700,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 840,
@@ -16740,7 +16788,8 @@
       "cobrador": 42
     },
     "salarioDesejado": 130700,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 841,
@@ -16761,7 +16810,8 @@
       "cobrador": 58
     },
     "salarioDesejado": 158000,
-    "potencial": 75
+    "potencial": 75,
+    "origem": "ficticio"
   },
   {
     "id": 842,
@@ -16782,7 +16832,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 162600,
-    "potencial": 80
+    "potencial": 80,
+    "origem": "ficticio"
   },
   {
     "id": 843,
@@ -16803,7 +16854,8 @@
       "cobrador": 61
     },
     "salarioDesejado": 123000,
-    "potencial": 66
+    "potencial": 66,
+    "origem": "ficticio"
   },
   {
     "id": 844,
@@ -16824,7 +16876,8 @@
       "cobrador": 55
     },
     "salarioDesejado": 123000,
-    "potencial": 66
+    "potencial": 66,
+    "origem": "ficticio"
   },
   {
     "id": 845,
@@ -16845,7 +16898,8 @@
       "cobrador": 58
     },
     "salarioDesejado": 153700,
-    "potencial": 78
+    "potencial": 78,
+    "origem": "ficticio"
   },
   {
     "id": 846,
@@ -16866,7 +16920,8 @@
       "cobrador": 63
     },
     "salarioDesejado": 146700,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 847,
@@ -18799,7 +18854,8 @@
       "cobrador": 71
     },
     "salarioDesejado": 145000,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 934,
@@ -18888,7 +18944,8 @@
       "cobrador": 45
     },
     "salarioDesejado": 132500,
-    "potencial": 73
+    "potencial": 73,
+    "origem": "ficticio"
   },
   {
     "id": 938,
@@ -18909,7 +18966,8 @@
       "cobrador": 62
     },
     "salarioDesejado": 126900,
-    "potencial": 67
+    "potencial": 67,
+    "origem": "ficticio"
   },
   {
     "id": 939,
@@ -19530,7 +19588,8 @@
       "cobrador": 42
     },
     "salarioDesejado": 158000,
-    "potencial": 79
+    "potencial": 79,
+    "origem": "ficticio"
   },
   {
     "id": 967,
@@ -20085,7 +20144,8 @@
       "cobrador": 45
     },
     "salarioDesejado": 111900,
-    "potencial": 63
+    "potencial": 63,
+    "origem": "ficticio"
   },
   {
     "id": 992,
@@ -22238,7 +22298,8 @@
       "cobrador": 42
     },
     "salarioDesejado": 70000,
-    "potencial": 62
+    "potencial": 62,
+    "origem": "ficticio"
   },
   {
     "id": 1089,
@@ -22527,7 +22588,8 @@
       "cobrador": 37
     },
     "salarioDesejado": 74900,
-    "potencial": 61
+    "potencial": 61,
+    "origem": "ficticio"
   },
   {
     "id": 1102,
@@ -22548,7 +22610,8 @@
       "cobrador": 27
     },
     "salarioDesejado": 77400,
-    "potencial": 62
+    "potencial": 62,
+    "origem": "ficticio"
   },
   {
     "id": 1103,
@@ -22569,7 +22632,8 @@
       "cobrador": 26
     },
     "salarioDesejado": 72400,
-    "potencial": 63
+    "potencial": 63,
+    "origem": "ficticio"
   },
   {
     "id": 1104,
@@ -22590,7 +22654,8 @@
       "cobrador": 37
     },
     "salarioDesejado": 86100,
-    "potencial": 66
+    "potencial": 66,
+    "origem": "ficticio"
   },
   {
     "id": 1105,
@@ -22611,7 +22676,8 @@
       "cobrador": 40
     },
     "salarioDesejado": 91700,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 1106,
@@ -22632,7 +22698,8 @@
       "cobrador": 38
     },
     "salarioDesejado": 72400,
-    "potencial": 60
+    "potencial": 60,
+    "origem": "ficticio"
   },
   {
     "id": 1107,
@@ -22653,7 +22720,8 @@
       "cobrador": 39
     },
     "salarioDesejado": 77400,
-    "potencial": 62
+    "potencial": 62,
+    "origem": "ficticio"
   },
   {
     "id": 1108,
@@ -22674,7 +22742,8 @@
       "cobrador": 48
     },
     "salarioDesejado": 72400,
-    "potencial": 60
+    "potencial": 60,
+    "origem": "ficticio"
   },
   {
     "id": 1109,
@@ -22695,7 +22764,8 @@
       "cobrador": 39
     },
     "salarioDesejado": 83300,
-    "potencial": 65
+    "potencial": 65,
+    "origem": "ficticio"
   },
   {
     "id": 1110,
@@ -22718,7 +22788,8 @@
       "cobrador": 31
     },
     "salarioDesejado": 88900,
-    "potencial": 71
+    "potencial": 71,
+    "origem": "ficticio"
   },
   {
     "id": 1111,
@@ -22739,7 +22810,8 @@
       "cobrador": 36
     },
     "salarioDesejado": 85200,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 1112,
@@ -22848,7 +22920,8 @@
       "cobrador": 50
     },
     "salarioDesejado": 97600,
-    "potencial": 74
+    "potencial": 74,
+    "origem": "ficticio"
   },
   {
     "id": 1117,
@@ -22871,7 +22944,8 @@
       "cobrador": 36
     },
     "salarioDesejado": 72800,
-    "potencial": 65
+    "potencial": 65,
+    "origem": "ficticio"
   },
   {
     "id": 1118,
@@ -22892,7 +22966,8 @@
       "cobrador": 41
     },
     "salarioDesejado": 80600,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 1119,
@@ -23001,7 +23076,8 @@
       "cobrador": 53
     },
     "salarioDesejado": 87900,
-    "potencial": 69
+    "potencial": 69,
+    "origem": "ficticio"
   },
   {
     "id": 1124,
@@ -24822,7 +24898,8 @@
       "cobrador": 47
     },
     "salarioDesejado": 78000,
-    "potencial": 63
+    "potencial": 63,
+    "origem": "ficticio"
   },
   {
     "id": 1206,
@@ -27043,7 +27120,8 @@
       "cobrador": 42
     },
     "salarioDesejado": 91700,
-    "potencial": 72
+    "potencial": 72,
+    "origem": "ficticio"
   },
   {
     "id": 1306,
@@ -27064,7 +27142,8 @@
       "cobrador": 39
     },
     "salarioDesejado": 70000,
-    "potencial": 59
+    "potencial": 59,
+    "origem": "ficticio"
   },
   {
     "id": 1307,
@@ -27085,7 +27164,8 @@
       "cobrador": 47
     },
     "salarioDesejado": 83300,
-    "potencial": 65
+    "potencial": 65,
+    "origem": "ficticio"
   },
   {
     "id": 1308,
@@ -27108,7 +27188,8 @@
       "cobrador": 29
     },
     "salarioDesejado": 86100,
-    "potencial": 70
+    "potencial": 70,
+    "origem": "ficticio"
   },
   {
     "id": 1309,
@@ -27639,7 +27720,8 @@
       "cobrador": 51
     },
     "salarioDesejado": 80000,
-    "potencial": 66
+    "potencial": 66,
+    "origem": "ficticio"
   },
   {
     "id": 1333,
@@ -28528,7 +28610,8 @@
       "cobrador": 36
     },
     "salarioDesejado": 75400,
-    "potencial": 62
+    "potencial": 62,
+    "origem": "ficticio"
   },
   {
     "id": 1373,
@@ -28549,7 +28632,8 @@
       "cobrador": 40
     },
     "salarioDesejado": 80600,
-    "potencial": 64
+    "potencial": 64,
+    "origem": "ficticio"
   },
   {
     "id": 1374,
@@ -28614,7 +28698,8 @@
       "cobrador": 46
     },
     "salarioDesejado": 77400,
-    "potencial": 62
+    "potencial": 62,
+    "origem": "ficticio"
   },
   {
     "id": 1377,
@@ -28635,7 +28720,8 @@
       "cobrador": 44
     },
     "salarioDesejado": 80600,
-    "potencial": 68
+    "potencial": 68,
+    "origem": "ficticio"
   },
   {
     "id": 1378,
@@ -28656,7 +28742,8 @@
       "cobrador": 56
     },
     "salarioDesejado": 74900,
-    "potencial": 61
+    "potencial": 61,
+    "origem": "ficticio"
   },
   {
     "id": 1379,
@@ -29257,7 +29344,8 @@
       "cobrador": 38
     },
     "salarioDesejado": 70000,
-    "potencial": 59
+    "potencial": 59,
+    "origem": "ficticio"
   },
   {
     "id": 1406,
@@ -29366,7 +29454,8 @@
       "cobrador": 38
     },
     "salarioDesejado": 74900,
-    "potencial": 61
+    "potencial": 61,
+    "origem": "ficticio"
   },
   {
     "id": 1411,
@@ -29565,7 +29654,8 @@
       "cobrador": 56
     },
     "salarioDesejado": 77400,
-    "potencial": 62
+    "potencial": 62,
+    "origem": "ficticio"
   },
   {
     "id": 1420,
