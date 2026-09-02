@@ -7974,9 +7974,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.estaImprovisado = function(jogador) {
-        if (!jogador.emCampo) return false;
+        return $scope.obterStatusPosicao(jogador).nivel !== 'ideal';
+    };
+
+    // Expõe o grau de adaptação para que o campo não trate toda improvisação
+    // como igualmente ruim: uma posição vizinha é aceitável, mas deve ficar
+    // visível para o treinador.
+    $scope.obterStatusPosicao = function(jogador) {
+        if (!jogador || !jogador.emCampo) return { nivel: 'ideal', fator: 1, texto: '' };
         var zona = $scope.calcularZonaTatica(jogador.posX, jogador.posY);
-        return jogador.posicao !== zona;
+        var fator = obterFatorCompatibilidadePosicaoInterno(jogador.posicao, zona);
+        if (fator >= 1) return { nivel: 'ideal', fator: fator, texto: '' };
+        if (fator >= 0.9) return { nivel: 'adaptado', fator: fator, texto: 'Posição adaptada (-10% Overall)' };
+        return { nivel: 'improvisado', fator: fator, texto: 'Posição improvisada (-25% Overall)' };
     };
 
     $scope.calcularOverall = function(jogador) {
