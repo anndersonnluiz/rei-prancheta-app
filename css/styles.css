@@ -3143,9 +3143,16 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .medical-screen .infrastructure-management-card { padding: 12px; }
     .medical-screen .infrastructure-management-card button { min-height: 42px; width: 100%; }
     .tactics-screen .tactics-layout { gap: 12px; grid-template-columns: 1fr; }
+    .tactics-screen .tactics-layout { height: auto; }
     .tactics-screen .bench-area, .tactics-screen .pitch-area { min-width: 0; }
     .tactics-screen .bench-list { max-height: 330px; }
     .tactics-screen .pitch-area > div { border-radius: 10px !important; }
+    .tactics-screen .pitch-container { aspect-ratio: 1.25 / 1; height: auto; min-height: 0; }
+    .tactics-screen .pitch-direction { font-size: 12px; letter-spacing: 2px; white-space: nowrap; }
+    .tactics-screen .pitch-circle { height: 72px; width: 72px; }
+    .tactics-screen .pitch-info { font-size: 16px; }
+    .tactics-screen .player-token { height: 34px; width: 34px; }
+    .tactics-screen .token-name { font-size: 9px; max-width: 92px; overflow: hidden; text-overflow: ellipsis; }
     .tactics-screen select, .tactics-screen button { min-height: 42px; }
     .selected-player-role { flex-wrap: wrap; justify-content: center; top: 42px; }
     .selected-player-role select { min-height: 38px; max-width: 100%; }
