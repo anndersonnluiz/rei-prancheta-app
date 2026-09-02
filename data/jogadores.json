@@ -29120,7 +29120,8 @@
   {
     "id": 1445,
     "clubeId": 1,
-    "nome": "Fabrício Bruno",
+    "nome": "Marcelo Nunes",
+    "origem": "ficticio",
     "posicao": "ZAG",
     "idade": 28,
     "salario": 482200,
@@ -30032,7 +30033,8 @@
   {
     "id": 1488,
     "clubeId": 3,
-    "nome": "Igor Vinícius",
+    "nome": "João Varela",
+    "origem": "ficticio",
     "posicao": "LAT",
     "idade": 26,
     "salario": 470700,
