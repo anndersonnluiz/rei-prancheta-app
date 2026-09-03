@@ -77,7 +77,7 @@ function parse(file) {
       if(v) value=v[2]?.toLowerCase().startsWith('mi') ? Number(v[1].replace(',','.'))*1e6 : Number(v[1].replace(',','.'))*1e3;
       if(age!==null && value!==null) break;
     }
-    records.push({clubId:club.id,club:club.nome,nome:name,posicao:positions.get(raw),idade:age,valorMercado:value});
+    records.push({clubId:club.id,club:club.nome,divisao:club.divisao,nome:name,posicao:positions.get(raw),idade:age,valorMercado:value});
   }
   return records;
 }
