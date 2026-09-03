@@ -7840,6 +7840,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.jogadorTaticaSelecionado = null;
     $scope.selecionarJogadorParaTatica = function(jogador) {
         if (!jogador || $scope.jogadorBloqueadoParaEntrar(jogador)) return false;
+        var selecionado = $scope.jogadorTaticaSelecionado;
+        if (selecionado && selecionado.id !== jogador.id && !selecionado.emCampo && jogador.emCampo) {
+            if ($scope.partidaEmAndamento && $scope.partidaPausada && $scope.substituicoesFeitas >= 5) {
+                alert("Limite de 5 substituições atingido!");
+                return false;
+            }
+            var posX = jogador.posX;
+            var posY = jogador.posY;
+            jogador.emCampo = false;
+            selecionado.emCampo = true;
+            selecionado.posX = posX;
+            selecionado.posY = posY;
+            if ($scope.partidaEmAndamento && $scope.partidaPausada) {
+                $scope.substituicoesFeitas++;
+                $scope.marcarSubstituidoNaPartida(jogador);
+            }
+            $scope.jogadorTaticaSelecionado = null;
+            return true;
+        }
         $scope.jogadorTaticaSelecionado = jogador;
         return true;
     };
