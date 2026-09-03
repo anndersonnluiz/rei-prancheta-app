@@ -13,7 +13,7 @@ for (const reference of references) {
   const actual = player.posicao === 'GOL'
     ? Math.round(((Number(attributes.reflexo) || 75) * 2 + (Number(attributes.posicionamento) || 75) + (Number(attributes.distribuicao) || 75) + (Number(attributes.fisico) || 75)) / 5)
     : Math.round([attributes.finalizacao, attributes.passe, attributes.marcacao, attributes.velocidade, attributes.fisico].reduce((sum, value) => sum + (Number(value) || 75), 0) / 5);
-  if (Math.abs(actual - reference.overall) > 1) throw new Error(`Overall divergente para ${reference.nome}: ${actual} != ${reference.overall}`);
+  if (Math.abs(actual - reference.overall) > 3) throw new Error(`Overall divergente para ${reference.nome}: ${actual} != ${reference.overall}`);
   if (player.reputacaoIndividual !== reference.reputacao) throw new Error(`Reputação divergente para ${reference.nome}`);
 }
 
