@@ -18,6 +18,15 @@
         <h2>Carregando Base de Dados... ⚽</h2>
     </div>
 
+    <main class="welcome-screen" ng-if="telaAtual === 'apresentacao'" ng-cloak>
+        <div class="welcome-card">
+            <img src="assets/logo.png" alt="Rei da Prancheta" class="welcome-logo">
+            <h1>Rei da Prancheta</h1>
+            <p>Comande seu clube. Monte seu elenco. Escreva sua história.</p>
+            <button type="button" class="welcome-enter-button" ng-click="entrarNoJogo()">⚽ Entrar no jogo</button>
+        </div>
+    </main>
+
     <!-- Tela Menu Inicial -->
     <div class="menu-inicial" ng-if="telaAtual === 'menu_inicial'" ng-cloak>
         <div class="menu-content">
@@ -81,7 +90,7 @@
     </div>
 
     <!-- Layout Principal do Jogo -->
-    <div class="app-layout" ng-if="telaAtual !== 'loading' && telaAtual !== 'menu_inicial'" ng-cloak>
+    <div class="app-layout" ng-if="telaAtual !== 'loading' && telaAtual !== 'apresentacao' && telaAtual !== 'menu_inicial'" ng-cloak>
         <div class="mobile-menu-bar"><button ng-click="alternarMenuMobile()" aria-label="Abrir menu">☰ <span>Menu</span></button><strong>Rei da Prancheta</strong><span>Temporada {{dados.anoAtual}}</span></div>
         
         <!-- Sidebar -->

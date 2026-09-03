@@ -69,6 +69,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return !$scope.filtroPosicaoElenco || $scope.filtroPosicaoElenco === 'TODOS' || jogador.posicao === $scope.filtroPosicaoElenco;
     };
     $scope.telaAtual = 'loading'; 
+    $scope.entrarNoJogo = function() { $scope.telaAtual = 'menu_inicial'; };
     $scope.dados = { nomeTreinador: '', anoAtual: 2024 };
     $scope.historicoTreinador = [];
     $scope.historicoPartidas = [];
@@ -2984,7 +2985,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             }).then(function(response) {
                 $scope.jogadores = response.data;
                 $scope.checarSaveExistente();
-                $scope.telaAtual = 'menu_inicial';
+                $scope.telaAtual = 'apresentacao';
             }).catch(function(error) {
                 alert("Erro ao carregar dados.");
             });
