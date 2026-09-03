@@ -3,6 +3,8 @@
   {"clubeId":1,"nome":"Giorgian de Arrascaeta","overall":88,"potencial":88,"reputacao":"estrela_nacional"},
   {"clubeId":1,"nome":"Bruno Henrique","overall":84,"potencial":84,"reputacao":"estrela_nacional"},
   {"clubeId":1,"nome":"Lucas Paquetá","overall":87,"potencial":89,"reputacao":"estrela_nacional"},
+  {"clubeId":1,"nome":"Andrew","overall":73,"potencial":78,"reputacao":"profissional_consolidado","salario":180000},
+  {"clubeId":1,"nome":"Dyogo Alves","overall":68,"potencial":80,"reputacao":"promissor","salario":70000},
   {"clubeId":2,"nome":"Gustavo Gómez","overall":87,"potencial":87,"reputacao":"estrela_nacional"},
   {"clubeId":2,"nome":"Vitor Roque","overall":86,"potencial":92,"reputacao":"estrela_nacional"},
   {"clubeId":3,"nome":"Gerson","overall":85,"potencial":85,"reputacao":"estrela_nacional"},
