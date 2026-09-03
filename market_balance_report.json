@@ -1,39 +1,39 @@
 {
-  "generatedAt": "2026-08-14T17:53:27.291Z",
-  "players": 1440,
-  "salaryMedian": 60000,
-  "marketValueMedian": 6000000,
+  "generatedAt": "2026-09-03T20:05:10.537Z",
+  "players": 2297,
+  "salaryMedian": 50000,
+  "marketValueMedian": 5000000,
   "byDivision": {
-    "A": {
+    "D": {
       "players": 360,
-      "averageSalary": 311111,
-      "minSalary": 200000,
-      "maxSalary": 995769.6501612758,
-      "averageMarketValue": 31111134,
+      "averageSalary": 74135,
+      "minSalary": 56200,
+      "maxSalary": 92500,
+      "averageMarketValue": 7413500,
+      "shortContracts": 0
+    },
+    "A": {
+      "players": 658,
+      "averageSalary": 80955,
+      "minSalary": 50000,
+      "maxSalary": 517700,
+      "averageMarketValue": 8095547,
       "shortContracts": 0
     },
     "B": {
-      "players": 360,
-      "averageSalary": 60000,
-      "minSalary": 60000,
-      "maxSalary": 60000,
-      "averageMarketValue": 6000000,
+      "players": 631,
+      "averageSalary": 50000,
+      "minSalary": 50000,
+      "maxSalary": 50000,
+      "averageMarketValue": 5000000,
       "shortContracts": 0
     },
     "C": {
-      "players": 360,
-      "averageSalary": 10000,
-      "minSalary": 10000,
-      "maxSalary": 10000,
-      "averageMarketValue": 1000000,
-      "shortContracts": 0
-    },
-    "D": {
-      "players": 360,
-      "averageSalary": 2000,
-      "minSalary": 2000,
-      "maxSalary": 2000,
-      "averageMarketValue": 200000,
+      "players": 648,
+      "averageSalary": 50000,
+      "minSalary": 50000,
+      "maxSalary": 50000,
+      "averageMarketValue": 5000000,
       "shortContracts": 0
     }
   }
