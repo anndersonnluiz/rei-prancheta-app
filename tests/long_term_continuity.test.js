@@ -54,15 +54,17 @@ for (let temporada = 0; temporada < 3; temporada += 1) {
   for (let dia = 0; dia < scope.calendarioGeral.length && scope.telaAtual !== 'cerimonia'; dia += 1) {
     const jogo = scope.obterMeuJogoHoje();
     if (jogo) {
-      const chaveCompeticao = jogo.tipo || jogo.competicao || jogo.torneio || jogo.categoria || 'OUTRA';
+      const calendarioHoje = scope.calendarioGeral[scope.diaAtual] || {};
+      const chaveCompeticao = calendarioHoje.tipo || jogo.tipo || jogo.competicao || jogo.torneio || jogo.categoria || 'OUTRA';
       if (!competicoes[chaveCompeticao]) competicoes[chaveCompeticao] = { jogos: 0, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0 };
       const resumoCompeticao = competicoes[chaveCompeticao];
       resumoCompeticao.jogos += 1;
       scope.calcularResultadoRapido(jogo);
       scope.concluirPartida(jogo, 'rapido');
-      const meuResultado = jogo.mandanteId === scope.clubeAtual.id ? (jogo.golsMandante || 0) - (jogo.golsVisitante || 0) : (jogo.golsVisitante || 0) - (jogo.golsMandante || 0);
-      resumoCompeticao.golsMarcados += jogo.mandanteId === scope.clubeAtual.id ? (jogo.golsMandante || 0) : (jogo.golsVisitante || 0);
-      resumoCompeticao.golsSofridos += jogo.mandanteId === scope.clubeAtual.id ? (jogo.golsVisitante || 0) : (jogo.golsMandante || 0);
+      const souMandante = jogo.mandante && jogo.mandante.id === scope.clubeAtual.id;
+      const meuResultado = souMandante ? (jogo.golsMandante || 0) - (jogo.golsVisitante || 0) : (jogo.golsVisitante || 0) - (jogo.golsMandante || 0);
+      resumoCompeticao.golsMarcados += souMandante ? (jogo.golsMandante || 0) : (jogo.golsVisitante || 0);
+      resumoCompeticao.golsSofridos += souMandante ? (jogo.golsVisitante || 0) : (jogo.golsMandante || 0);
       if (meuResultado > 0) resumoCompeticao.vitorias += 1; else if (meuResultado < 0) resumoCompeticao.derrotas += 1; else resumoCompeticao.empates += 1;
       partidas += 1;
       gols += (jogo.golsMandante || 0) + (jogo.golsVisitante || 0);
