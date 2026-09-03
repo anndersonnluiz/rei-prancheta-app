@@ -41,12 +41,22 @@ const alerts = [...groups.values()].filter((row) => row.over90 >= 5 || (row.coun
   maiorOverall: row.max,
   acimaDe90: row.over90
 }));
+const rankings = {};
+for (const division of ['A', 'B', 'C', 'D']) {
+  rankings[division] = [...groups.values()].filter((row) => row.club.divisao === division).map((row) => ({
+    clube: row.club.nome,
+    reputacao: row.club.reputacao,
+    mediaOverall: Number((row.total / row.count).toFixed(1)),
+    maiorOverall: row.max,
+    jogadores: row.count
+  })).sort((a, b) => b.mediaOverall - a.mediaOverall);
+}
 const repeatedAttributeBlocks = [...signatures.values()].filter((list) => list.length >= 5).map((list) => ({
   quantidade: list.length,
   assinatura: ['finalizacao', 'passe', 'marcacao', 'velocidade', 'fisico'].map((key) => list[0].atributos?.[key]),
   jogadores: list.slice(0, 8).map((player) => `${player.nome}#${player.id}`)
 }));
 
-const report = { jogadores: players.length, clubesAuditados: groups.size, alertasClubes: alerts, blocosDeAtributosRepetidos: repeatedAttributeBlocks };
+const report = { jogadores: players.length, clubesAuditados: groups.size, alertasClubes: alerts, blocosDeAtributosRepetidos: repeatedAttributeBlocks, rankings };
 console.log(JSON.stringify(report, null, 2));
 if (alerts.length || repeatedAttributeBlocks.length) process.exitCode = 1;
