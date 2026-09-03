@@ -23,7 +23,9 @@ const scope = createScope();
 scope.clubes = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'clubes.json'), 'utf8'));
 scope.jogadores = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'jogadores.json'), 'utf8'));
 scope.dados.nomeTreinador = 'Stress de Continuidade';
-scope.iniciarNovoJogo(scope.clubes[0]);
+const clubeTeste = process.env.TEST_CLUB ? scope.clubes.find((clube) => clube.nome === process.env.TEST_CLUB) : scope.clubes[0];
+assert.ok(clubeTeste, 'requested simulation club should exist');
+scope.iniciarNovoJogo(clubeTeste);
 scope.assinarPatrocinio(scope.patrocinadoresDisponiveis[1]);
 scope.atualizarTaticas = function() {};
 
