@@ -1,0 +1,14 @@
+[
+  {"clubeId":1,"nome":"Pedro","overall":88,"potencial":88,"reputacao":"estrela_nacional"},
+  {"clubeId":1,"nome":"Giorgian de Arrascaeta","overall":88,"potencial":88,"reputacao":"estrela_nacional"},
+  {"clubeId":1,"nome":"Bruno Henrique","overall":84,"potencial":84,"reputacao":"estrela_nacional"},
+  {"clubeId":1,"nome":"Lucas Paquetá","overall":87,"potencial":89,"reputacao":"estrela_nacional"},
+  {"clubeId":2,"nome":"Gustavo Gómez","overall":87,"potencial":87,"reputacao":"estrela_nacional"},
+  {"clubeId":2,"nome":"Vitor Roque","overall":86,"potencial":92,"reputacao":"estrela_nacional"},
+  {"clubeId":3,"nome":"Gerson","overall":85,"potencial":85,"reputacao":"estrela_nacional"},
+  {"clubeId":4,"nome":"Neymar","overall":84,"potencial":84,"reputacao":"estrela_mundial"},
+  {"clubeId":4,"nome":"Gabriel Barbosa","overall":82,"potencial":82,"reputacao":"estrela_nacional"},
+  {"clubeId":8,"nome":"Thiago Silva","overall":83,"potencial":83,"reputacao":"estrela_nacional"},
+  {"clubeId":9,"nome":"Alan Patrick","overall":82,"potencial":82,"reputacao":"alto_nivel"},
+  {"clubeId":10,"nome":"Gustavo Scarpa","overall":82,"potencial":82,"reputacao":"alto_nivel"}
+]
