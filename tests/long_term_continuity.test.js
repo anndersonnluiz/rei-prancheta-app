@@ -60,11 +60,14 @@ for (let temporada = 0; temporada < 3; temporada += 1) {
       const resumoCompeticao = competicoes[chaveCompeticao];
       resumoCompeticao.jogos += 1;
       scope.calcularResultadoRapido(jogo);
+      const mandanteIdAntesDoEncerramento = jogo.mandante && jogo.mandante.id;
+      const golsMandanteAntesDoEncerramento = Number(jogo.golsMandante) || 0;
+      const golsVisitanteAntesDoEncerramento = Number(jogo.golsVisitante) || 0;
       scope.concluirPartida(jogo, 'rapido');
-      const souMandante = jogo.mandante && jogo.mandante.id === scope.clubeAtual.id;
-      const meuResultado = souMandante ? (jogo.golsMandante || 0) - (jogo.golsVisitante || 0) : (jogo.golsVisitante || 0) - (jogo.golsMandante || 0);
-      resumoCompeticao.golsMarcados += souMandante ? (jogo.golsMandante || 0) : (jogo.golsVisitante || 0);
-      resumoCompeticao.golsSofridos += souMandante ? (jogo.golsVisitante || 0) : (jogo.golsMandante || 0);
+      const souMandante = mandanteIdAntesDoEncerramento === scope.clubeAtual.id;
+      const meuResultado = souMandante ? golsMandanteAntesDoEncerramento - golsVisitanteAntesDoEncerramento : golsVisitanteAntesDoEncerramento - golsMandanteAntesDoEncerramento;
+      resumoCompeticao.golsMarcados += souMandante ? golsMandanteAntesDoEncerramento : golsVisitanteAntesDoEncerramento;
+      resumoCompeticao.golsSofridos += souMandante ? golsVisitanteAntesDoEncerramento : golsMandanteAntesDoEncerramento;
       if (meuResultado > 0) resumoCompeticao.vitorias += 1; else if (meuResultado < 0) resumoCompeticao.derrotas += 1; else resumoCompeticao.empates += 1;
       partidas += 1;
       gols += (jogo.golsMandante || 0) + (jogo.golsVisitante || 0);
