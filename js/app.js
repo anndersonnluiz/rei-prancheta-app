@@ -865,13 +865,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var minutos = parseInt(jogador.minutosTemporada, 10) || 0;
         var evolucao = parseInt(jogador.evolucaoTemporada, 10) || 0;
         var moral = typeof jogador.moral === 'number' ? jogador.moral : 70;
+        var reputacaoFator = { estrela_mundial: 1.25, estrela_nacional: 1.15, alto_nivel: 1.07, profissional_consolidado: 1, promissor: 1.03 }[jogador.reputacaoIndividual] || 1;
         var baseTecnica = Math.round(overall * overall * 4);
         var fator = 1;
         if (potencial >= 84) fator += 0.08;
         if (jogos >= 20 || minutos >= 1800) fator += 0.06;
         if (evolucao >= 3) fator += 0.04;
         if (moral >= 85) fator += 0.03;
-        return Math.max(salarioAtual, Math.round(baseTecnica * fator));
+        return Math.max(salarioAtual, Math.round(baseTecnica * fator * reputacaoFator));
     }
 
     function calcularSalarioMercadoInterno(jogador) {
@@ -932,8 +933,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var fatorDivisao = { A: 1.25, B: 1.0, C: 0.78, D: 0.62 }[divisao] || 0.85;
         var fatorPotencial = 1 + Math.max(0, potencial - overall) * 0.018;
         var fatorContrato = jogador.anosContrato >= 3 ? 1.12 : (jogador.anosContrato <= 1 ? 0.72 : 1);
+        var fatorReputacao = { estrela_mundial: 1.3, estrela_nacional: 1.18, alto_nivel: 1.08, profissional_consolidado: 1, promissor: 1.04 }[jogador.reputacaoIndividual] || 1;
         var valorBase = Math.pow(Math.max(35, overall), 3) * 8;
-        return Math.max(0, Math.round((valorBase * idadeFator * fatorDivisao * fatorPotencial * fatorContrato) / 100000) * 100000);
+        return Math.max(0, Math.round((valorBase * idadeFator * fatorDivisao * fatorPotencial * fatorContrato * fatorReputacao) / 100000) * 100000);
     }
 
     function criarResumoContratos(jogadores) {
