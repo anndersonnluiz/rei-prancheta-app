@@ -3106,7 +3106,13 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .competition-screen .standings-table .table-club-identity { gap: 6px; min-width: 0; }
     .competition-screen .standings-table .table-club-identity > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .competition-screen .standings-table .club-crest-table { height: 22px; width: 22px; }
-    .continental-screen table { min-width: 0; table-layout: fixed; width: 100%; }
+.continental-screen table { min-width: 0; table-layout: fixed; width: 100%; }
+.continental-screen table th:first-child, .continental-screen table td:first-child { width: 62%; }
+.continental-screen table th:not(:first-child), .continental-screen table td:not(:first-child) { width: 7.6%; white-space: nowrap; }
+.continental-screen table td:first-child { overflow: hidden; }
+.continental-screen table .table-club-identity { display: inline-flex; align-items: center; gap: 5px; min-width: 0; max-width: calc(100% - 24px); vertical-align: middle; }
+.continental-screen table .table-club-identity > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.continental-screen table .club-crest-table { width: 24px; height: 24px; padding: 1px; }
     .continental-screen > .card > div[style*="grid-template-columns"] { overflow-x: auto; padding-bottom: 6px; }
     .continental-screen > .card > div[style*="grid-template-columns"] > div { min-width: 330px; }
     .continental-screen table { min-width: 330px; table-layout: auto; width: 100%; }
