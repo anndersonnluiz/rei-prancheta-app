@@ -4,12 +4,12 @@ const amostras = Number(process.argv[2]) || 5;
 const resultados = [];
 
 for (let i = 0; i < amostras; i += 1) {
-  const execucao = spawnSync(process.execPath, ['tests/long_term_continuity.test.js'], { encoding: 'utf8' });
+  const execucao = spawnSync(process.execPath, ['tests/long_term_continuity.test.js'], { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
   if (execucao.status !== 0) {
     process.stderr.write(execucao.stderr || execucao.stdout);
     process.exit(execucao.status || 1);
   }
-  const linha = execucao.stdout.split(/\r?\n/).find((item) => item.includes('balance report:'));
+  const linha = String(execucao.stdout || '').split(/\r?\n/).find((item) => item.includes('balance report:'));
   if (!linha) throw new Error('Relatório de balanceamento não encontrado na amostra ' + (i + 1));
   resultados.push(JSON.parse(linha.split('balance report: ')[1]));
 }
