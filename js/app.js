@@ -3975,6 +3975,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             soma += (overall + ((impactoFuncao.ataque + impactoFuncao.defesa + impactoFuncao.posse) / 3)) * fatorFadiga * fatorMoral * $scope.obterFatorEntrosamentoSetor(j);
         });
         var media = soma / jogadoresBase.length;
+        // A reputação representa estrutura, tradição e contexto competitivo,
+        // mas deve ser apenas um ajuste leve sobre a qualidade real do elenco.
+        var reputacaoClube = clube && typeof clube.reputacao === 'number' ? clube.reputacao : 70;
+        media += Math.max(-3, Math.min(3, (reputacaoClube - 70) * 0.08));
         if (clube && clubeEhAtual(clube.id)) media *= $scope.calcularFatorAmbiente($scope.ambienteElenco && $scope.ambienteElenco.valor);
         return Math.round(media);
     };
