@@ -24,7 +24,7 @@ for (const jogador of jogadores) {
   nomes.get(chave).push(jogador);
 }
 
-let duplicidades = [...nomes.values()].filter((grupo) => new Set(grupo.map((jogador) => String(jogador.clubeId))).size > 1);
+let duplicidades = [...nomes.values()].filter((grupo) => new Set(grupo.map((jogador) => `${jogador.nome}|${jogador.idade}|${jogador.posicao}|${jogador.clubeId}`)).size < grupo.length);
 if (process.argv.includes('--fix')) {
   const clubePorId = new Map(clubes.map((clube) => [String(clube.id), clube]));
   const nomesUsados = new Set();

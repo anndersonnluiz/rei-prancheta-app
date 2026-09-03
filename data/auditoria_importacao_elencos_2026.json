@@ -1,0 +1,688 @@
+{
+  "fonte": 1938,
+  "atuais": 1440,
+  "unicos": 99,
+  "ambiguos": 12,
+  "naoEncontrados": 1827,
+  "exemplosAmbiguos": [
+    {
+      "fonte": "Rafael Santos",
+      "clube": "Chapecoense",
+      "registros": [
+        {
+          "id": 223,
+          "nome": "Rafael Santos",
+          "clubeId": 13,
+          "posicao": "VOL",
+          "idade": 30
+        },
+        {
+          "id": 1254,
+          "nome": "Rafael Santos (Portuguesa RJ)",
+          "clubeId": 70,
+          "posicao": "GOL",
+          "idade": 22
+        }
+      ]
+    },
+    {
+      "fonte": "João Almeida",
+      "clube": "Coritiba",
+      "registros": [
+        {
+          "id": 739,
+          "nome": "João Almeida",
+          "clubeId": 42,
+          "posicao": "GOL",
+          "idade": 25
+        },
+        {
+          "id": 1375,
+          "nome": "João Almeida (Atlético AC)",
+          "clubeId": 77,
+          "posicao": "VOL",
+          "idade": 27
+        }
+      ]
+    },
+    {
+      "fonte": "Arthur Dias",
+      "clube": "Athletico-PR",
+      "registros": [
+        {
+          "id": 836,
+          "nome": "Arthur Dias",
+          "clubeId": 47,
+          "posicao": "MEI",
+          "idade": 32
+        },
+        {
+          "id": 994,
+          "nome": "Arthur Dias (Floresta)",
+          "clubeId": 56,
+          "posicao": "ZAG",
+          "idade": 34
+        },
+        {
+          "id": 1127,
+          "nome": "Arthur Dias (Campinense)",
+          "clubeId": 63,
+          "posicao": "ATA",
+          "idade": 31
+        }
+      ]
+    },
+    {
+      "fonte": "Davi Gomes",
+      "clube": "Red Bull Bragantino",
+      "registros": [
+        {
+          "id": 173,
+          "nome": "Davi Gomes",
+          "clubeId": 10,
+          "posicao": "ATA",
+          "idade": 31
+        },
+        {
+          "id": 561,
+          "nome": "Davi Gomes (Mirassol)",
+          "clubeId": 32,
+          "posicao": "LAT",
+          "idade": 31
+        },
+        {
+          "id": 645,
+          "nome": "Davi Gomes (Náutico)",
+          "clubeId": 36,
+          "posicao": "ATA",
+          "idade": 30
+        },
+        {
+          "id": 654,
+          "nome": "Davi Gomes (Botafogo SP)",
+          "clubeId": 37,
+          "posicao": "VOL",
+          "idade": 32
+        },
+        {
+          "id": 978,
+          "nome": "Davi Gomes (Confiança)",
+          "clubeId": 55,
+          "posicao": "VOL",
+          "idade": 18
+        },
+        {
+          "id": 1436,
+          "nome": "Davi Gomes (XV de Piracicaba)",
+          "clubeId": 80,
+          "posicao": "MEI",
+          "idade": 29
+        }
+      ]
+    },
+    {
+      "fonte": "Vitor Mendes",
+      "clube": "Cuiabá",
+      "registros": [
+        {
+          "id": 129,
+          "nome": "Vitor Mendes",
+          "clubeId": 8,
+          "posicao": "LAT",
+          "idade": 18
+        },
+        {
+          "id": 141,
+          "nome": "Vitor Mendes (Internacional)",
+          "clubeId": 8,
+          "posicao": "ATA",
+          "idade": 24
+        },
+        {
+          "id": 260,
+          "nome": "Vitor Mendes (Red Bull Bragantino)",
+          "clubeId": 15,
+          "posicao": "MEI",
+          "idade": 28
+        },
+        {
+          "id": 333,
+          "nome": "Vitor Mendes (Sport)",
+          "clubeId": 19,
+          "posicao": "MEI",
+          "idade": 33
+        },
+        {
+          "id": 497,
+          "nome": "Vitor Mendes (CRB)",
+          "clubeId": 28,
+          "posicao": "ATA",
+          "idade": 28
+        },
+        {
+          "id": 697,
+          "nome": "Vitor Mendes (Londrina)",
+          "clubeId": 39,
+          "posicao": "ZAG",
+          "idade": 19
+        },
+        {
+          "id": 868,
+          "nome": "Vitor Mendes (Maranhão)",
+          "clubeId": 49,
+          "posicao": "ZAG",
+          "idade": 19
+        },
+        {
+          "id": 1022,
+          "nome": "Vitor Mendes (Ferroviária)",
+          "clubeId": 57,
+          "posicao": "MEI",
+          "idade": 25
+        },
+        {
+          "id": 1077,
+          "nome": "Vitor Mendes (Amazonas)",
+          "clubeId": 60,
+          "posicao": "ATA",
+          "idade": 21
+        },
+        {
+          "id": 1156,
+          "nome": "Vitor Mendes (Brasil de Pelotas)",
+          "clubeId": 65,
+          "posicao": "ZAG",
+          "idade": 33
+        }
+      ]
+    },
+    {
+      "fonte": "Yago Santos",
+      "clube": "Athletic Club",
+      "registros": [
+        {
+          "id": 227,
+          "nome": "Yago Santos",
+          "clubeId": 13,
+          "posicao": "ATA",
+          "idade": 26
+        },
+        {
+          "id": 851,
+          "nome": "Yago Santos (Inter de Limeira)",
+          "clubeId": 48,
+          "posicao": "ZAG",
+          "idade": 21
+        },
+        {
+          "id": 1258,
+          "nome": "Yago Santos (Portuguesa RJ)",
+          "clubeId": 70,
+          "posicao": "LAT",
+          "idade": 26
+        }
+      ]
+    },
+    {
+      "fonte": "Rafael Ramos",
+      "clube": "Ceará",
+      "registros": [
+        {
+          "id": 400,
+          "nome": "Rafael Ramos",
+          "clubeId": 23,
+          "posicao": "ZAG",
+          "idade": 27
+        },
+        {
+          "id": 769,
+          "nome": "Rafael Ramos (Itabaiana)",
+          "clubeId": 43,
+          "posicao": "ZAG",
+          "idade": 20
+        },
+        {
+          "id": 885,
+          "nome": "Rafael Ramos (Brusque)",
+          "clubeId": 50,
+          "posicao": "LAT",
+          "idade": 33
+        },
+        {
+          "id": 1196,
+          "nome": "Rafael Ramos (Moto Club)",
+          "clubeId": 67,
+          "posicao": "MEI",
+          "idade": 25
+        },
+        {
+          "id": 1391,
+          "nome": "Rafael Ramos (Joinville)",
+          "clubeId": 78,
+          "posicao": "ZAG",
+          "idade": 21
+        }
+      ]
+    },
+    {
+      "fonte": "Luan Freitas",
+      "clube": "Fortaleza",
+      "registros": [
+        {
+          "id": 475,
+          "nome": "Luan Freitas",
+          "clubeId": 27,
+          "posicao": "VOL",
+          "idade": 20
+        },
+        {
+          "id": 946,
+          "nome": "Luan Freitas (Ypiranga RS)",
+          "clubeId": 53,
+          "posicao": "ATA",
+          "idade": 24
+        },
+        {
+          "id": 1083,
+          "nome": "Luan Freitas (São José RS)",
+          "clubeId": 61,
+          "posicao": "LAT",
+          "idade": 33
+        },
+        {
+          "id": 1427,
+          "nome": "Luan Freitas (XV de Piracicaba)",
+          "clubeId": 80,
+          "posicao": "ZAG",
+          "idade": 23
+        }
+      ]
+    },
+    {
+      "fonte": "Rafael Teixeira",
+      "clube": "Maranhão",
+      "registros": [
+        {
+          "id": 712,
+          "nome": "Rafael Teixeira",
+          "clubeId": 40,
+          "posicao": "ATA",
+          "idade": 34
+        },
+        {
+          "id": 1327,
+          "nome": "Rafael Teixeira (Sousa)",
+          "clubeId": 74,
+          "posicao": "ZAG",
+          "idade": 31
+        },
+        {
+          "id": 1403,
+          "nome": "Rafael Teixeira (Joinville)",
+          "clubeId": 78,
+          "posicao": "VOL",
+          "idade": 32
+        }
+      ]
+    },
+    {
+      "fonte": "Breno Santos",
+      "clube": "Caxias",
+      "registros": [
+        {
+          "id": 228,
+          "nome": "Breno Santos",
+          "clubeId": 13,
+          "posicao": "GOL",
+          "idade": 22
+        },
+        {
+          "id": 852,
+          "nome": "Breno Santos (Inter de Limeira)",
+          "clubeId": 48,
+          "posicao": "VOL",
+          "idade": 24
+        },
+        {
+          "id": 1259,
+          "nome": "Breno Santos (Portuguesa RJ)",
+          "clubeId": 70,
+          "posicao": "VOL",
+          "idade": 26
+        }
+      ]
+    },
+    {
+      "fonte": "Heitor Silva",
+      "clube": "Volta Redonda",
+      "registros": [
+        {
+          "id": 202,
+          "nome": "Heitor Silva",
+          "clubeId": 12,
+          "posicao": "ZAG",
+          "idade": 21
+        },
+        {
+          "id": 237,
+          "nome": "Heitor Silva (Fortaleza)",
+          "clubeId": 14,
+          "posicao": "LAT",
+          "idade": 19
+        },
+        {
+          "id": 294,
+          "nome": "Heitor Silva (Coritiba)",
+          "clubeId": 17,
+          "posicao": "VOL",
+          "idade": 29
+        },
+        {
+          "id": 343,
+          "nome": "Heitor Silva (Vitória)",
+          "clubeId": 20,
+          "posicao": "GOL",
+          "idade": 21
+        },
+        {
+          "id": 381,
+          "nome": "Heitor Silva (Atlético GO)",
+          "clubeId": 22,
+          "posicao": "LAT",
+          "idade": 33
+        },
+        {
+          "id": 435,
+          "nome": "Heitor Silva (Ponte Preta)",
+          "clubeId": 25,
+          "posicao": "LAT",
+          "idade": 25
+        },
+        {
+          "id": 454,
+          "nome": "Heitor Silva (Cuiabá)",
+          "clubeId": 26,
+          "posicao": "ZAG",
+          "idade": 28
+        },
+        {
+          "id": 610,
+          "nome": "Heitor Silva (Goiás)",
+          "clubeId": 34,
+          "posicao": "LAT",
+          "idade": 23
+        },
+        {
+          "id": 1137,
+          "nome": "Heitor Silva (Treze)",
+          "clubeId": 64,
+          "posicao": "LAT",
+          "idade": 26
+        },
+        {
+          "id": 1357,
+          "nome": "Heitor Silva (Rio Branco AC)",
+          "clubeId": 76,
+          "posicao": "VOL",
+          "idade": 22
+        }
+      ]
+    },
+    {
+      "fonte": "Luan Silva",
+      "clube": "Itabaiana",
+      "registros": [
+        {
+          "id": 109,
+          "nome": "Luan Silva",
+          "clubeId": 7,
+          "posicao": "GOL",
+          "idade": 29
+        },
+        {
+          "id": 121,
+          "nome": "Luan Silva (Grêmio)",
+          "clubeId": 7,
+          "posicao": "ZAG",
+          "idade": 34
+        },
+        {
+          "id": 206,
+          "nome": "Luan Silva (Vasco)",
+          "clubeId": 12,
+          "posicao": "MEI",
+          "idade": 25
+        },
+        {
+          "id": 298,
+          "nome": "Luan Silva (Coritiba)",
+          "clubeId": 17,
+          "posicao": "ATA",
+          "idade": 27
+        },
+        {
+          "id": 347,
+          "nome": "Luan Silva (Vitória)",
+          "clubeId": 20,
+          "posicao": "ZAG",
+          "idade": 24
+        },
+        {
+          "id": 385,
+          "nome": "Luan Silva (Atlético GO)",
+          "clubeId": 22,
+          "posicao": "VOL",
+          "idade": 32
+        },
+        {
+          "id": 439,
+          "nome": "Luan Silva (Ponte Preta)",
+          "clubeId": 25,
+          "posicao": "VOL",
+          "idade": 27
+        },
+        {
+          "id": 458,
+          "nome": "Luan Silva (Cuiabá)",
+          "clubeId": 26,
+          "posicao": "MEI",
+          "idade": 24
+        },
+        {
+          "id": 732,
+          "nome": "Luan Silva (Figueirense)",
+          "clubeId": 41,
+          "posicao": "GOL",
+          "idade": 33
+        }
+      ]
+    }
+  ],
+  "exemplosNovos": [
+    {
+      "nome": "Anderson",
+      "clube": "Chapecoense",
+      "posicao": "GOL",
+      "idade": 28
+    },
+    {
+      "nome": "Gabriel Werner",
+      "clube": "Chapecoense",
+      "posicao": "GOL",
+      "idade": 23
+    },
+    {
+      "nome": "Matheus Aurélio",
+      "clube": "Chapecoense",
+      "posicao": "GOL",
+      "idade": 27
+    },
+    {
+      "nome": "Doma",
+      "clube": "Chapecoense",
+      "posicao": "ZAG",
+      "idade": 28
+    },
+    {
+      "nome": "Victor Caetano",
+      "clube": "Chapecoense",
+      "posicao": "ZAG",
+      "idade": 28
+    },
+    {
+      "nome": "Rafael Thyere",
+      "clube": "Chapecoense",
+      "posicao": "ZAG",
+      "idade": 33
+    },
+    {
+      "nome": "Kauan Faria",
+      "clube": "Chapecoense",
+      "posicao": "ZAG",
+      "idade": 23
+    },
+    {
+      "nome": "Vinicius Eduardo",
+      "clube": "Chapecoense",
+      "posicao": "ZAG",
+      "idade": 21
+    },
+    {
+      "nome": "Mancha",
+      "clube": "Chapecoense",
+      "posicao": "LAT",
+      "idade": 25
+    },
+    {
+      "nome": "Fernando",
+      "clube": "Chapecoense",
+      "posicao": "LAT",
+      "idade": 26
+    },
+    {
+      "nome": "Bruno Pacheco",
+      "clube": "Chapecoense",
+      "posicao": "LAT",
+      "idade": 34
+    },
+    {
+      "nome": "Da Silva",
+      "clube": "Chapecoense",
+      "posicao": "LAT",
+      "idade": 26
+    },
+    {
+      "nome": "Heitor",
+      "clube": "Chapecoense",
+      "posicao": "LAT",
+      "idade": 25
+    },
+    {
+      "nome": "Everton",
+      "clube": "Chapecoense",
+      "posicao": "LAT",
+      "idade": 31
+    },
+    {
+      "nome": "Gustavo Talles",
+      "clube": "Chapecoense",
+      "posicao": "LAT",
+      "idade": 23
+    },
+    {
+      "nome": "Carvalheira",
+      "clube": "Chapecoense",
+      "posicao": "VOL",
+      "idade": 27
+    },
+    {
+      "nome": "Camilo",
+      "clube": "Chapecoense",
+      "posicao": "VOL",
+      "idade": 27
+    },
+    {
+      "nome": "Vinicius Balieiro",
+      "clube": "Chapecoense",
+      "posicao": "VOL",
+      "idade": 27
+    },
+    {
+      "nome": "Yago Felipe",
+      "clube": "Chapecoense",
+      "posicao": "MEI",
+      "idade": 31
+    },
+    {
+      "nome": "Bruno Matias",
+      "clube": "Chapecoense",
+      "posicao": "MEI",
+      "idade": 27
+    },
+    {
+      "nome": "David Antunes",
+      "clube": "Chapecoense",
+      "posicao": "MEI",
+      "idade": 21
+    },
+    {
+      "nome": "Robert Santos",
+      "clube": "Chapecoense",
+      "posicao": "MEI",
+      "idade": 23
+    },
+    {
+      "nome": "Max",
+      "clube": "Chapecoense",
+      "posicao": "MEI",
+      "idade": 25
+    },
+    {
+      "nome": "Miguel Carvalho",
+      "clube": "Chapecoense",
+      "posicao": "MEI",
+      "idade": 21
+    },
+    {
+      "nome": "Giovanni Augusto",
+      "clube": "Chapecoense",
+      "posicao": "MEI",
+      "idade": 36
+    },
+    {
+      "nome": "Dylan Borrero",
+      "clube": "Chapecoense",
+      "posicao": "ATA",
+      "idade": 24
+    },
+    {
+      "nome": "Maurício Garcez",
+      "clube": "Chapecoense",
+      "posicao": "ATA",
+      "idade": 29
+    },
+    {
+      "nome": "Ênio",
+      "clube": "Chapecoense",
+      "posicao": "ATA",
+      "idade": 25
+    },
+    {
+      "nome": "Kevin Ramírez",
+      "clube": "Chapecoense",
+      "posicao": "ATA",
+      "idade": 32
+    },
+    {
+      "nome": "Marcinho",
+      "clube": "Chapecoense",
+      "posicao": "ATA",
+      "idade": 31
+    }
+  ],
+  "porDivisao": {
+    "B": 643,
+    "A": 646,
+    "C": 649
+  }
+}
