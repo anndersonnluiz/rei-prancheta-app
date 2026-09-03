@@ -814,6 +814,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (jogador.diasNoClube === undefined) jogador.diasNoClube = 0;
 
         if (jogador.potencial === undefined || jogador.potencial === null) jogador.potencial = calcularPotencialDeterministico(jogador);
+        if (jogador.overallBase === undefined || jogador.overallBase === null) jogador.overallBase = calcularOverallBaseJogador(jogador);
+        if (jogador.overallAtual === undefined || jogador.overallAtual === null) jogador.overallAtual = jogador.overallBase;
+        if (!jogador.reputacaoIndividual) jogador.reputacaoIndividual = jogador.origem === 'ficticio' ? 'ficticio' : (jogador.idade <= 23 ? 'promissor' : 'profissional_consolidado');
         if (jogador.xpTemporada === undefined) jogador.xpTemporada = 0;
         if (jogador.jogosTemporada === undefined) jogador.jogosTemporada = 0;
         if (jogador.minutosTemporada === undefined) jogador.minutosTemporada = 0;
