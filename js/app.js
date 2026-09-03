@@ -3837,6 +3837,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return obterFatorCompatibilidadePosicaoInterno(jogador.posicao, $scope.calcularZonaTatica(jogador.posX, jogador.posY));
     }
 
+    function ajustarAtributoPorIdadePreJogo(valor, jogador, atributo) {
+        var idade = Number(jogador && jogador.idade) || 25;
+        var ajuste = 0;
+        if (idade >= 30 && (atributo === 'velocidade' || atributo === 'fisico')) {
+            ajuste = atributo === 'velocidade' ? (idade - 29) * 0.7 : (idade - 29) * 0.35;
+        }
+        return Math.max(25, valor - ajuste);
+    }
+
     function calcularOverallPreJogo(jogador) {
         if (!jogador || !jogador.atributos) return 70;
         var attr = jogador.atributos;
@@ -3844,14 +3853,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var reflexo = obterNumeroPreJogo(attr.reflexo, 75);
             var posicionamento = obterNumeroPreJogo(attr.posicionamento, reflexo);
             var distribuicao = obterNumeroPreJogo(attr.distribuicao, obterNumeroPreJogo(attr.passe, 75));
-            var fisicoGol = obterNumeroPreJogo(attr.fisico, 75);
+            var fisicoGol = ajustarAtributoPorIdadePreJogo(obterNumeroPreJogo(attr.fisico, 75), jogador, 'fisico');
             return Math.round(((reflexo * 2 + posicionamento + distribuicao + fisicoGol) / 5) * obterFatorPosicaoJogadorInterno(jogador));
         }
         var finalizacao = obterNumeroPreJogo(attr.finalizacao, 75);
         var passe = obterNumeroPreJogo(attr.passe, 75);
         var marcacao = obterNumeroPreJogo(attr.marcacao, 75);
-        var velocidade = obterNumeroPreJogo(attr.velocidade, 75);
-        var fisico = obterNumeroPreJogo(attr.fisico, 75);
+        var velocidade = ajustarAtributoPorIdadePreJogo(obterNumeroPreJogo(attr.velocidade, 75), jogador, 'velocidade');
+        var fisico = ajustarAtributoPorIdadePreJogo(obterNumeroPreJogo(attr.fisico, 75), jogador, 'fisico');
         return Math.round(((finalizacao + passe + marcacao + velocidade + fisico) / 5) * obterFatorPosicaoJogadorInterno(jogador));
     }
 
