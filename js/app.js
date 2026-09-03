@@ -4191,6 +4191,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.calcularForcaTime = function() {
         var forcaTime = 0;
         var emCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo; });
+        if (emCampo.length < 11 && typeof $scope.calcularForcaElencoPreJogo === 'function') {
+            emCampo = obterJogadoresDisponiveisPreJogo($scope.elencoAtual).sort(function(a, b) {
+                return calcularOverallPreJogo(b) - calcularOverallPreJogo(a);
+            }).slice(0, 11);
+        }
         emCampo.forEach(function(j) { 
             var penalty = 1;
             if (j.moral !== undefined && j.moral < 50) {
