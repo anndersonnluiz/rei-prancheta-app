@@ -8948,7 +8948,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         'Nacional-AM': ['Serie D', 'nacional_am.png'], 'Portuguesa-RJ': ['Serie D', 'portuguesa_rj.png'], 'Retrô': ['Serie D', 'retro.png'],
         'Rio Branco-AC': ['Serie D', 'rio_branco_ac.png'], 'Santo André': ['Serie D', 'santo_andre.png'], 'São José-RS': ['Serie D', 'sao_jose_rs.png'],
         'Sergipe': ['Serie D', 'sergipe.png'], 'Sousa': ['Serie D', 'sousa.png'], 'Treze': ['Serie D', 'treze.png'], 'Tuna Luso': ['Serie D', 'tuna_luso.png'],
-        'XV de Piracicaba': ['Serie D', 'xv_piracicaba.png']
+        'XV de Piracicaba': ['Serie D', 'xv_piracicaba.png'],
+        'Boca Juniors': ['Continental', 'boca_juniors.png'], 'River Plate': ['Continental', 'river_plate.png'],
+        'Peñarol': ['Continental', 'penarol.png'], 'Nacional': ['Continental', 'nacional.png'], 'Peñarol (B)': ['Continental', 'penarol_b.png'],
+        'Colo-Colo': ['Continental', 'colo_colo.png'], 'Olimpia': ['Continental', 'olimpia.png'], 'LDU Quito': ['Continental', 'ldu_quito.png'],
+        'Atlético Nacional': ['Continental', 'atletico_nacional.png'], 'Independiente': ['Continental', 'independiente.png'], 'Racing': ['Continental', 'racing.png'],
+        'San Lorenzo': ['Continental', 'san_lorenzo.png'], 'Cerro Porteño': ['Continental', 'cerro_porteno.png'], 'Universidad Católica': ['Continental', 'universidad_catolica.png'],
+        'Universidad de Chile': ['Continental', 'universidad_de_chile.png'], 'Millonarios': ['Continental', 'millonarios.png'], 'Indep. del Valle': ['Continental', 'independiente_del_valle.png'],
+        'Estudiantes': ['Continental', 'estudiantes.png'], 'Emelec': ['Continental', 'emelec.png'], 'Barcelona SC': ['Continental', 'barcelona_sc.png'],
+        'América de Cali': ['Continental', 'america_de_cali.png'], 'Defensa y Justicia': ['Continental', 'defensa_y_justicia.png'], 'Rosario Central': ['Continental', 'rosario_central.png'],
+        'Velez Sarsfield': ['Continental', 'velez_sarsfield.png'], 'Libertad': ['Continental', 'libertad.png'], 'Deportivo Cali': ['Continental', 'deportivo_cali.png'],
+        'Junior Barranquilla': ['Continental', 'junior_barranquilla.png'], 'Alianza Lima': ['Continental', 'alianza_lima.png'], 'Universitario': ['Continental', 'universitario.png'],
+        'Sporting Cristal': ['Continental', 'sporting_cristal.png'], 'Bolívar': ['Continental', 'bolivar.png'], 'The Strongest': ['Continental', 'the_strongest.png'],
+        'Caracas': ['Continental', 'caracas.png'], 'Dep. Táchira': ['Continental', 'deportivo_tachira.png']
     };
 
     $scope.obterLogoClube = function(clubeOuId) {
