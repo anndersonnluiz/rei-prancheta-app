@@ -25,8 +25,8 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-html { min-height: 100%; }
-body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+html { min-height: 100%; width: 100%; }
+body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; width: 100%; overflow-x: hidden; }
 .skip-link { position: fixed; top: -48px; left: 12px; z-index: 1000; padding: 10px 14px; background: var(--br-yellow); color: #111; border-radius: 0 0 6px 6px; font-weight: 700; text-decoration: none; transition: top 0.15s ease; }
 .skip-link:focus { top: 0; }
 .dashboard-alert, .development-panel, [role="alert"] { border-width: 2px; }
@@ -46,7 +46,7 @@ body { background-color: var(--bg-color); color: var(--text-main); display: flex
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* 2. MENU INICIAL */
-.welcome-screen { display:flex; justify-content:center; align-items:center; min-height:100vh; padding:24px; background:radial-gradient(circle at 50% 20%, #0b8f3f 0, #123a2b 38%, #111820 100%); color:white; }
+.welcome-screen { display:flex; justify-content:center; align-items:center; width:100%; min-height:100vh; min-height:100dvh; padding:24px; background:radial-gradient(circle at 50% 20%, #0b8f3f 0, #123a2b 38%, #111820 100%); color:white; }
 .welcome-card { width:min(460px, 100%); text-align:center; padding:42px 28px; border:1px solid rgba(255,255,255,.18); border-radius:24px; background:rgba(8,22,30,.78); box-shadow:0 18px 60px rgba(0,0,0,.35); }
 .welcome-logo { width:min(220px, 62vw); height:auto; display:block; margin:0 auto 20px; }
 .welcome-card h1 { margin:0 0 10px; font-size:clamp(30px, 7vw, 48px); }
