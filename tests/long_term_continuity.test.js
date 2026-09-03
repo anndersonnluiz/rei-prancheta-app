@@ -48,13 +48,22 @@ let maiorFolha = 0;
 let menorOrcamento = Infinity;
 let cartoes = 0;
 let lesoes = 0;
+const competicoes = {};
 for (let temporada = 0; temporada < 3; temporada += 1) {
   scope.elencoAtual.slice(0, 11).forEach((jogador) => { jogador.emCampo = true; jogador.anosContrato = 3; });
   for (let dia = 0; dia < scope.calendarioGeral.length && scope.telaAtual !== 'cerimonia'; dia += 1) {
     const jogo = scope.obterMeuJogoHoje();
     if (jogo) {
+      const chaveCompeticao = jogo.tipo || jogo.competicao || jogo.torneio || jogo.categoria || 'OUTRA';
+      if (!competicoes[chaveCompeticao]) competicoes[chaveCompeticao] = { jogos: 0, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0 };
+      const resumoCompeticao = competicoes[chaveCompeticao];
+      resumoCompeticao.jogos += 1;
       scope.calcularResultadoRapido(jogo);
       scope.concluirPartida(jogo, 'rapido');
+      const meuResultado = jogo.mandanteId === scope.clubeAtual.id ? (jogo.golsMandante || 0) - (jogo.golsVisitante || 0) : (jogo.golsVisitante || 0) - (jogo.golsMandante || 0);
+      resumoCompeticao.golsMarcados += jogo.mandanteId === scope.clubeAtual.id ? (jogo.golsMandante || 0) : (jogo.golsVisitante || 0);
+      resumoCompeticao.golsSofridos += jogo.mandanteId === scope.clubeAtual.id ? (jogo.golsVisitante || 0) : (jogo.golsMandante || 0);
+      if (meuResultado > 0) resumoCompeticao.vitorias += 1; else if (meuResultado < 0) resumoCompeticao.derrotas += 1; else resumoCompeticao.empates += 1;
       partidas += 1;
       gols += (jogo.golsMandante || 0) + (jogo.golsVisitante || 0);
       if (scope.estatisticas && Number.isFinite(scope.estatisticas.posseMandante)) {
@@ -103,6 +112,7 @@ console.log('long_term_continuity.test.js balance report:', JSON.stringify({
   xgModoCompleto: telemetriaCompleta ? Number(telemetriaCompleta.reduce((total, shot) => total + (Number(shot.xg) || 0), 0).toFixed(2)) : null,
   cartoesAcumulados: cartoes,
   lesoesObservadas: lesoes,
+  competicoes: competicoes,
   maiorFolha: maiorFolha,
   menorOrcamento: menorOrcamento
 }));
