@@ -4236,8 +4236,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.gerarGols = function(forcaBase) {
         var chanceBase = forcaBase / 100; // ex: 75 de overall = 0.75
         var gols = 0;
-        for(var i=0; i<6; i++) {
-            if (Math.random() < (chanceBase * 0.42)) gols++;
+        for(var i=0; i<5; i++) {
+            if (Math.random() < (chanceBase * 0.30)) gols++;
         }
         return gols;
     };
