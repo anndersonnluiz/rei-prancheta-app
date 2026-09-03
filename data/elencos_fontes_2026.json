@@ -20,7 +20,7 @@
     "club": "Chapecoense",
     "nome": "Gabriel Werner",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -28,8 +28,8 @@
     "club": "Chapecoense",
     "nome": "Matheus Aurélio",
     "posicao": "GOL",
-    "idade": 27,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 1200000
   },
   {
     "clubId": 29,
@@ -53,7 +53,7 @@
     "nome": "Victor Caetano",
     "posicao": "ZAG",
     "idade": 28,
-    "valorMercado": null
+    "valorMercado": 700000000
   },
   {
     "clubId": 29,
@@ -68,7 +68,7 @@
     "club": "Chapecoense",
     "nome": "Kauan Faria",
     "posicao": "ZAG",
-    "idade": 23,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -76,8 +76,8 @@
     "club": "Chapecoense",
     "nome": "Vinicius Eduardo",
     "posicao": "ZAG",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 25,
+    "valorMercado": 500000000
   },
   {
     "clubId": 29,
@@ -85,7 +85,7 @@
     "nome": "Mancha",
     "posicao": "LAT",
     "idade": 25,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 29,
@@ -108,8 +108,8 @@
     "club": "Chapecoense",
     "nome": "Da Silva",
     "posicao": "LAT",
-    "idade": 26,
-    "valorMercado": null
+    "idade": 25,
+    "valorMercado": 450000000
   },
   {
     "clubId": 29,
@@ -125,15 +125,15 @@
     "nome": "Everton",
     "posicao": "LAT",
     "idade": 31,
-    "valorMercado": null
+    "valorMercado": 300000000
   },
   {
     "clubId": 29,
     "club": "Chapecoense",
     "nome": "Gustavo Talles",
     "posicao": "LAT",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 2500000
   },
   {
     "clubId": 29,
@@ -149,7 +149,7 @@
     "nome": "Camilo",
     "posicao": "VOL",
     "idade": 27,
-    "valorMercado": null
+    "valorMercado": 2000000
   },
   {
     "clubId": 29,
@@ -205,7 +205,7 @@
     "nome": "Miguel Carvalho",
     "posicao": "MEI",
     "idade": 21,
-    "valorMercado": null
+    "valorMercado": 325000000
   },
   {
     "clubId": 29,
@@ -277,7 +277,7 @@
     "nome": "Franco Rossi",
     "posicao": "ATA",
     "idade": 24,
-    "valorMercado": null
+    "valorMercado": 1500000
   },
   {
     "clubId": 29,
@@ -293,7 +293,7 @@
     "nome": "Yannick Bolasie",
     "posicao": "ATA",
     "idade": 37,
-    "valorMercado": null
+    "valorMercado": 150000000
   },
   {
     "clubId": 29,
@@ -309,7 +309,7 @@
     "nome": "Ivan",
     "posicao": "GOL",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 1000000
   },
   {
     "clubId": 16,
@@ -373,7 +373,7 @@
     "nome": "Cristian Tassano",
     "posicao": "ZAG",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 350000000
   },
   {
     "clubId": 16,
@@ -396,8 +396,8 @@
     "club": "Remo",
     "nome": "Edson Kauã",
     "posicao": "LAT",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 1500000
   },
   {
     "clubId": 16,
@@ -428,8 +428,8 @@
     "club": "Remo",
     "nome": "Caio Magalhães",
     "posicao": "LAT",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 3000000
   },
   {
     "clubId": 16,
@@ -437,7 +437,7 @@
     "nome": "Leonel Picco",
     "posicao": "VOL",
     "idade": 27,
-    "valorMercado": null
+    "valorMercado": 3000000
   },
   {
     "clubId": 16,
@@ -485,7 +485,7 @@
     "nome": "Franco Catarozzi",
     "posicao": "MEI",
     "idade": 26,
-    "valorMercado": null
+    "valorMercado": 350000000
   },
   {
     "clubId": 16,
@@ -493,7 +493,7 @@
     "nome": "Vitor Bueno",
     "posicao": "MEI",
     "idade": 31,
-    "valorMercado": null
+    "valorMercado": 1000000
   },
   {
     "clubId": 16,
@@ -540,8 +540,8 @@
     "club": "Remo",
     "nome": "Tico",
     "posicao": "ATA",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 1800000
   },
   {
     "clubId": 16,
@@ -573,7 +573,7 @@
     "nome": "Walter",
     "posicao": "GOL",
     "idade": 38,
-    "valorMercado": null
+    "valorMercado": 150000000
   },
   {
     "clubId": 32,
@@ -589,15 +589,15 @@
     "nome": "Georgemy",
     "posicao": "GOL",
     "idade": 31,
-    "valorMercado": null
+    "valorMercado": 50000000
   },
   {
     "clubId": 32,
     "club": "Mirassol",
     "nome": "Thomazella",
     "posicao": "GOL",
-    "idade": 36,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 2000000
   },
   {
     "clubId": 32,
@@ -629,7 +629,7 @@
     "nome": "Gabriel",
     "posicao": "ZAG",
     "idade": 22,
-    "valorMercado": null
+    "valorMercado": 700000000
   },
   {
     "clubId": 32,
@@ -645,7 +645,7 @@
     "nome": "Victor Luís",
     "posicao": "LAT",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 300000000
   },
   {
     "clubId": 32,
@@ -749,7 +749,7 @@
     "nome": "Chico Kim",
     "posicao": "MEI",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 150000000
   },
   {
     "clubId": 32,
@@ -845,7 +845,7 @@
     "nome": "Keiller",
     "posicao": "GOL",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 17,
@@ -869,7 +869,7 @@
     "nome": "Tiago Cóser",
     "posicao": "ZAG",
     "idade": 22,
-    "valorMercado": null
+    "valorMercado": 1500000
   },
   {
     "clubId": 17,
@@ -877,7 +877,7 @@
     "nome": "Maicon",
     "posicao": "ZAG",
     "idade": 37,
-    "valorMercado": null
+    "valorMercado": 100000000
   },
   {
     "clubId": 17,
@@ -1076,8 +1076,8 @@
     "club": "Vitória",
     "nome": "Yuri Sena",
     "posicao": "GOL",
-    "idade": 25,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 1800000
   },
   {
     "clubId": 20,
@@ -1237,7 +1237,7 @@
     "nome": "Tomás Pochettino",
     "posicao": "MEI",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 3500000
   },
   {
     "clubId": 20,
@@ -1325,7 +1325,7 @@
     "nome": "Fabri",
     "posicao": "ATA",
     "idade": 25,
-    "valorMercado": null
+    "valorMercado": 900000000
   },
   {
     "clubId": 20,
@@ -1348,8 +1348,8 @@
     "club": "Athletico-PR",
     "nome": "Matheus Soares",
     "posicao": "GOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 19,
+    "valorMercado": 3000000
   },
   {
     "clubId": 11,
@@ -1397,7 +1397,7 @@
     "nome": "Lucas Esquivel",
     "posicao": "LAT",
     "idade": 24,
-    "valorMercado": null
+    "valorMercado": 7000000
   },
   {
     "clubId": 11,
@@ -1412,8 +1412,8 @@
     "club": "Athletico-PR",
     "nome": "Claudinho",
     "posicao": "LAT",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 30,
+    "valorMercado": 3500000
   },
   {
     "clubId": 11,
@@ -1445,7 +1445,7 @@
     "nome": "Luiz Gustavo",
     "posicao": "VOL",
     "idade": 39,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 11,
@@ -1501,7 +1501,7 @@
     "nome": "Bruno Zapelli",
     "posicao": "MEI",
     "idade": 24,
-    "valorMercado": null
+    "valorMercado": 4500000
   },
   {
     "clubId": 11,
@@ -1509,7 +1509,7 @@
     "nome": "Chiqueti",
     "posicao": "MEI",
     "idade": 21,
-    "valorMercado": null
+    "valorMercado": 3000000
   },
   {
     "clubId": 11,
@@ -1597,14 +1597,14 @@
     "nome": "Sergio Rochet",
     "posicao": "GOL",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 1800000
   },
   {
     "clubId": 8,
     "club": "Internacional",
     "nome": "Kauan",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -1612,8 +1612,8 @@
     "club": "Internacional",
     "nome": "Diego Esser",
     "posicao": "GOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 22,
+    "valorMercado": 5000000
   },
   {
     "clubId": 8,
@@ -1653,7 +1653,7 @@
     "nome": "Gabriel Mercado",
     "posicao": "ZAG",
     "idade": 39,
-    "valorMercado": null
+    "valorMercado": 100000000
   },
   {
     "clubId": 8,
@@ -1661,7 +1661,7 @@
     "nome": "Alexandro Bernabei",
     "posicao": "LAT",
     "idade": 25,
-    "valorMercado": null
+    "valorMercado": 8000000
   },
   {
     "clubId": 8,
@@ -1677,7 +1677,7 @@
     "nome": "Bruno Gomes",
     "posicao": "LAT",
     "idade": 25,
-    "valorMercado": null
+    "valorMercado": 6000000
   },
   {
     "clubId": 8,
@@ -1716,8 +1716,8 @@
     "club": "Internacional",
     "nome": "Benjamin",
     "posicao": "VOL",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 1000000
   },
   {
     "clubId": 8,
@@ -1733,7 +1733,7 @@
     "nome": "Bruno Henrique",
     "posicao": "MEI",
     "idade": 36,
-    "valorMercado": null
+    "valorMercado": 300000000
   },
   {
     "clubId": 8,
@@ -1741,7 +1741,7 @@
     "nome": "Niclas Eliasson",
     "posicao": "MEI",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 3000000
   },
   {
     "clubId": 8,
@@ -1813,7 +1813,7 @@
     "nome": "Antonio Sanabria",
     "posicao": "ATA",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 1800000
   },
   {
     "clubId": 8,
@@ -1844,7 +1844,7 @@
     "club": "Grêmio",
     "nome": "Thiago Beltrame",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 17,
     "valorMercado": null
   },
   {
@@ -1852,8 +1852,8 @@
     "club": "Grêmio",
     "nome": "Gabriel Menegon",
     "posicao": "GOL",
-    "idade": 17,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 4000000
   },
   {
     "clubId": 7,
@@ -1885,7 +1885,7 @@
     "nome": "Walter Kannemann",
     "posicao": "ZAG",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 350000000
   },
   {
     "clubId": 7,
@@ -1900,8 +1900,8 @@
     "club": "Grêmio",
     "nome": "Luis Eduardo",
     "posicao": "ZAG",
-    "idade": 18,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 4000000
   },
   {
     "clubId": 7,
@@ -1997,7 +1997,7 @@
     "nome": "Juan Nardoni",
     "posicao": "MEI",
     "idade": 24,
-    "valorMercado": null
+    "valorMercado": 9000000
   },
   {
     "clubId": 7,
@@ -2021,7 +2021,7 @@
     "nome": "Francis Amuzu",
     "posicao": "ATA",
     "idade": 27,
-    "valorMercado": null
+    "valorMercado": 9000000
   },
   {
     "clubId": 7,
@@ -2029,7 +2029,7 @@
     "nome": "Jovane Cabral",
     "posicao": "ATA",
     "idade": 28,
-    "valorMercado": null
+    "valorMercado": 1000000
   },
   {
     "clubId": 7,
@@ -2053,7 +2053,7 @@
     "nome": "Cristian Pavón",
     "posicao": "ATA",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 1700000
   },
   {
     "clubId": 7,
@@ -2085,7 +2085,7 @@
     "nome": "Martin Braithwaite",
     "posicao": "ATA",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 1000000
   },
   {
     "clubId": 3,
@@ -2093,7 +2093,7 @@
     "nome": "Carlos Coronel",
     "posicao": "GOL",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 1500000
   },
   {
     "clubId": 3,
@@ -2109,7 +2109,7 @@
     "nome": "Young",
     "posicao": "GOL",
     "idade": 24,
-    "valorMercado": null
+    "valorMercado": 100000000
   },
   {
     "clubId": 3,
@@ -2124,8 +2124,8 @@
     "club": "São Paulo",
     "nome": "Felipe Preis",
     "posicao": "GOL",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 1000000
   },
   {
     "clubId": 3,
@@ -2149,7 +2149,7 @@
     "nome": "Rafael Tolói",
     "posicao": "ZAG",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 800000000
   },
   {
     "clubId": 3,
@@ -2172,7 +2172,7 @@
     "club": "São Paulo",
     "nome": "Isac",
     "posicao": "ZAG",
-    "idade": 20,
+    "idade": 19,
     "valorMercado": null
   },
   {
@@ -2180,8 +2180,8 @@
     "club": "São Paulo",
     "nome": "Luis Osorio",
     "posicao": "ZAG",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 3500000
   },
   {
     "clubId": 3,
@@ -2212,8 +2212,8 @@
     "club": "São Paulo",
     "nome": "Nicolas",
     "posicao": "LAT",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 2000000
   },
   {
     "clubId": 3,
@@ -2221,7 +2221,7 @@
     "nome": "Aurélio Buta",
     "posicao": "LAT",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 2000000
   },
   {
     "clubId": 3,
@@ -2245,15 +2245,15 @@
     "nome": "Cédric Soares",
     "posicao": "LAT",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 3,
     "club": "São Paulo",
     "nome": "Igor Felisberto",
     "posicao": "LAT",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 5000000
   },
   {
     "clubId": 3,
@@ -2317,15 +2317,15 @@
     "nome": "Cauly",
     "posicao": "MEI",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 3000000
   },
   {
     "clubId": 3,
     "club": "São Paulo",
     "nome": "Pedro Ferreira",
     "posicao": "MEI",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 4000000
   },
   {
     "clubId": 3,
@@ -2397,7 +2397,7 @@
     "nome": "Jonathan Calleri",
     "posicao": "ATA",
     "idade": 32,
-    "valorMercado": null
+    "valorMercado": 1500000
   },
   {
     "clubId": 3,
@@ -2444,8 +2444,8 @@
     "club": "Santos",
     "nome": "Rodrigo Falcão",
     "posicao": "GOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 4500000
   },
   {
     "clubId": 18,
@@ -2484,8 +2484,8 @@
     "club": "Santos",
     "nome": "João Alencar",
     "posicao": "ZAG",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 18,
+    "valorMercado": 4000000
   },
   {
     "clubId": 18,
@@ -2604,8 +2604,8 @@
     "club": "Santos",
     "nome": "Pepê Fermino",
     "posicao": "MEI",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 7000000
   },
   {
     "clubId": 18,
@@ -2652,8 +2652,8 @@
     "club": "Santos",
     "nome": "Enzo Boer",
     "posicao": "ATA",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 4500000
   },
   {
     "clubId": 18,
@@ -2700,7 +2700,7 @@
     "club": "Red Bull Bragantino",
     "nome": "Fernando Costa",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -2708,8 +2708,8 @@
     "club": "Red Bull Bragantino",
     "nome": "Gustavo Reis",
     "posicao": "GOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 5000000
   },
   {
     "clubId": 15,
@@ -2725,7 +2725,7 @@
     "nome": "Guzmán Rodríguez",
     "posicao": "ZAG",
     "idade": 26,
-    "valorMercado": null
+    "valorMercado": 3500000
   },
   {
     "clubId": 15,
@@ -2757,7 +2757,7 @@
     "nome": "Juninho Capixaba",
     "posicao": "LAT",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 8000000
   },
   {
     "clubId": 15,
@@ -2821,7 +2821,7 @@
     "nome": "Gabriel",
     "posicao": "VOL",
     "idade": 34,
-    "valorMercado": null
+    "valorMercado": 900000000
   },
   {
     "clubId": 15,
@@ -2957,7 +2957,7 @@
     "nome": "Eduardo Sasha",
     "posicao": "ATA",
     "idade": 34,
-    "valorMercado": null
+    "valorMercado": 800000000
   },
   {
     "clubId": 15,
@@ -2996,8 +2996,8 @@
     "club": "Atlético-MG",
     "nome": "Robert",
     "posicao": "GOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 4500000
   },
   {
     "clubId": 5,
@@ -3005,7 +3005,7 @@
     "nome": "Lyanco",
     "posicao": "ZAG",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 4500000
   },
   {
     "clubId": 5,
@@ -3044,8 +3044,8 @@
     "club": "Atlético-MG",
     "nome": "Vitão",
     "posicao": "ZAG",
-    "idade": 18,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 11000000
   },
   {
     "clubId": 5,
@@ -3053,7 +3053,7 @@
     "nome": "Renan Lodi",
     "posicao": "LAT",
     "idade": 28,
-    "valorMercado": null
+    "valorMercado": 11000000
   },
   {
     "clubId": 5,
@@ -3101,7 +3101,7 @@
     "nome": "Tomás Pérez",
     "posicao": "VOL",
     "idade": 21,
-    "valorMercado": null
+    "valorMercado": 3000000
   },
   {
     "clubId": 5,
@@ -3156,8 +3156,8 @@
     "club": "Atlético-MG",
     "nome": "Índio",
     "posicao": "MEI",
-    "idade": 18,
-    "valorMercado": null
+    "idade": 32,
+    "valorMercado": 4500000
   },
   {
     "clubId": 5,
@@ -3165,7 +3165,7 @@
     "nome": "Gustavo Scarpa",
     "posicao": "MEI",
     "idade": 32,
-    "valorMercado": null
+    "valorMercado": 4500000
   },
   {
     "clubId": 5,
@@ -3245,7 +3245,7 @@
     "nome": "Gabriel Batista",
     "posicao": "GOL",
     "idade": 28,
-    "valorMercado": null
+    "valorMercado": 4000000
   },
   {
     "clubId": 10,
@@ -3253,7 +3253,7 @@
     "nome": "Warleson",
     "posicao": "GOL",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 2000000
   },
   {
     "clubId": 10,
@@ -3269,7 +3269,7 @@
     "nome": "Nahuel Ferraresi",
     "posicao": "ZAG",
     "idade": 27,
-    "valorMercado": null
+    "valorMercado": 4500000
   },
   {
     "clubId": 10,
@@ -3285,7 +3285,7 @@
     "nome": "Lucas Monzón",
     "posicao": "ZAG",
     "idade": 24,
-    "valorMercado": null
+    "valorMercado": 550000000
   },
   {
     "clubId": 10,
@@ -3316,8 +3316,8 @@
     "club": "Botafogo",
     "nome": "Kawan",
     "posicao": "ZAG",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 33,
+    "valorMercado": 2800000
   },
   {
     "clubId": 10,
@@ -3325,7 +3325,7 @@
     "nome": "Alex Telles",
     "posicao": "LAT",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 2800000
   },
   {
     "clubId": 10,
@@ -3381,7 +3381,7 @@
     "nome": "Allan",
     "posicao": "VOL",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 1000000
   },
   {
     "clubId": 10,
@@ -3437,7 +3437,7 @@
     "nome": "Álvaro Montoro",
     "posicao": "ATA",
     "idade": 19,
-    "valorMercado": null
+    "valorMercado": 10000000
   },
   {
     "clubId": 10,
@@ -3461,7 +3461,7 @@
     "nome": "Lucas Villalba",
     "posicao": "ATA",
     "idade": 25,
-    "valorMercado": null
+    "valorMercado": 1500000
   },
   {
     "clubId": 10,
@@ -3493,7 +3493,7 @@
     "nome": "Tiquinho Soares",
     "posicao": "ATA",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 800000000
   },
   {
     "clubId": 6,
@@ -5269,7 +5269,7 @@
     "nome": "Gastón Guruceaga",
     "posicao": "GOL",
     "idade": 31,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 36,
@@ -5277,15 +5277,15 @@
     "nome": "Muriel",
     "posicao": "GOL",
     "idade": 39,
-    "valorMercado": null
+    "valorMercado": 50000000
   },
   {
     "clubId": 36,
     "club": "Náutico",
     "nome": "Léo",
     "posicao": "GOL",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 200000000
   },
   {
     "clubId": 36,
@@ -5308,7 +5308,7 @@
     "club": "Náutico",
     "nome": "Índio",
     "posicao": "ZAG",
-    "idade": 22,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -5316,7 +5316,7 @@
     "club": "Náutico",
     "nome": "Wanderson",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -5324,8 +5324,8 @@
     "club": "Náutico",
     "nome": "Gustavo Henrique",
     "posicao": "ZAG",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 34,
+    "valorMercado": 150000000
   },
   {
     "clubId": 36,
@@ -5340,7 +5340,7 @@
     "club": "Náutico",
     "nome": "Ryan Carlos",
     "posicao": "LAT",
-    "idade": 24,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -5348,7 +5348,7 @@
     "club": "Náutico",
     "nome": "Luiz Paulo",
     "posicao": "LAT",
-    "idade": 33,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -5356,8 +5356,8 @@
     "club": "Náutico",
     "nome": "Léo Jance",
     "posicao": "LAT",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 33,
+    "valorMercado": 200000000
   },
   {
     "clubId": 36,
@@ -5365,7 +5365,7 @@
     "nome": "Matheus Ribeiro",
     "posicao": "LAT",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 36,
@@ -5388,8 +5388,8 @@
     "club": "Náutico",
     "nome": "Arnaldo",
     "posicao": "LAT",
-    "idade": 34,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 300000000
   },
   {
     "clubId": 36,
@@ -5421,7 +5421,7 @@
     "nome": "Auremir",
     "posicao": "VOL",
     "idade": 34,
-    "valorMercado": null
+    "valorMercado": 350000000
   },
   {
     "clubId": 36,
@@ -5436,7 +5436,7 @@
     "club": "Náutico",
     "nome": "Patricio Núñez",
     "posicao": "MEI",
-    "idade": 27,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -5444,8 +5444,8 @@
     "club": "Náutico",
     "nome": "Felipe Redaelli",
     "posicao": "MEI",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 33,
+    "valorMercado": 200000000
   },
   {
     "clubId": 36,
@@ -5492,7 +5492,7 @@
     "club": "Náutico",
     "nome": "Paulo Sérgio",
     "posicao": "ATA",
-    "idade": 37,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -5516,8 +5516,8 @@
     "club": "Ponte Preta",
     "nome": "Guilherme Viana",
     "posicao": "GOL",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 1200000
   },
   {
     "clubId": 25,
@@ -5525,7 +5525,7 @@
     "nome": "Lucas Cunha",
     "posicao": "ZAG",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 1200000
   },
   {
     "clubId": 25,
@@ -5540,8 +5540,8 @@
     "club": "Ponte Preta",
     "nome": "Diego Leão",
     "posicao": "ZAG",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 22,
+    "valorMercado": 800000000
   },
   {
     "clubId": 25,
@@ -5580,8 +5580,8 @@
     "club": "Ponte Preta",
     "nome": "Kawann",
     "posicao": "LAT",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 250000000
   },
   {
     "clubId": 25,
@@ -5628,8 +5628,8 @@
     "club": "Ponte Preta",
     "nome": "Diogo Mora",
     "posicao": "MEI",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 400000000
   },
   {
     "clubId": 25,
@@ -5644,8 +5644,8 @@
     "club": "Ponte Preta",
     "nome": "Daniel Baianinho",
     "posicao": "ATA",
-    "idade": 26,
-    "valorMercado": null
+    "idade": 35,
+    "valorMercado": 50000000
   },
   {
     "clubId": 25,
@@ -5653,7 +5653,7 @@
     "nome": "Jonathan Cafu",
     "posicao": "ATA",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 50000000
   },
   {
     "clubId": 25,
@@ -5684,7 +5684,7 @@
     "club": "Londrina",
     "nome": "Luan Ribeiro",
     "posicao": "GOL",
-    "idade": 29,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -5692,8 +5692,8 @@
     "club": "Londrina",
     "nome": "Zanella",
     "posicao": "GOL",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 350000000
   },
   {
     "clubId": 39,
@@ -5716,7 +5716,7 @@
     "club": "Londrina",
     "nome": "Wallace",
     "posicao": "ZAG",
-    "idade": 38,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -5724,8 +5724,8 @@
     "club": "Londrina",
     "nome": "Caio",
     "posicao": "ZAG",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 250000000
   },
   {
     "clubId": 39,
@@ -5740,7 +5740,7 @@
     "club": "Londrina",
     "nome": "Rafael Monteiro",
     "posicao": "LAT",
-    "idade": 22,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -5748,7 +5748,7 @@
     "club": "Londrina",
     "nome": "Artur",
     "posicao": "LAT",
-    "idade": 32,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -5756,8 +5756,8 @@
     "club": "Londrina",
     "nome": "Rafael Soares",
     "posicao": "LAT",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 22,
+    "valorMercado": 600000000
   },
   {
     "clubId": 39,
@@ -5780,7 +5780,7 @@
     "club": "Londrina",
     "nome": "Nino Paraíba",
     "posicao": "LAT",
-    "idade": 40,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -5788,8 +5788,8 @@
     "club": "Londrina",
     "nome": "Kauê Leonardo",
     "posicao": "LAT",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 22,
+    "valorMercado": 200000000
   },
   {
     "clubId": 39,
@@ -5813,20 +5813,12 @@
     "nome": "Tarik",
     "posicao": "VOL",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 25000000
   },
   {
     "clubId": 39,
     "club": "Londrina",
     "nome": "João Tavares",
-    "posicao": "VOL",
-    "idade": 22,
-    "valorMercado": null
-  },
-  {
-    "clubId": 39,
-    "club": "Londrina",
-    "nome": "André Cardoso",
     "posicao": "VOL",
     "idade": 23,
     "valorMercado": null
@@ -5834,10 +5826,18 @@
   {
     "clubId": 39,
     "club": "Londrina",
-    "nome": "Murilo Chico",
+    "nome": "André Cardoso",
     "posicao": "VOL",
     "idade": 21,
     "valorMercado": null
+  },
+  {
+    "clubId": 39,
+    "club": "Londrina",
+    "nome": "Murilo Chico",
+    "posicao": "VOL",
+    "idade": 28,
+    "valorMercado": 900000000
   },
   {
     "clubId": 39,
@@ -5876,8 +5876,8 @@
     "club": "Londrina",
     "nome": "Guilherme Portuga",
     "posicao": "MEI",
-    "idade": 28,
-    "valorMercado": null
+    "idade": 32,
+    "valorMercado": 200000000
   },
   {
     "clubId": 39,
@@ -5900,7 +5900,7 @@
     "club": "Londrina",
     "nome": "Raí Nascimento",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -5916,8 +5916,8 @@
     "club": "Londrina",
     "nome": "Fabricio",
     "posicao": "ATA",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 450000000
   },
   {
     "clubId": 39,
@@ -5980,7 +5980,7 @@
     "club": "Botafogo-SP",
     "nome": "Jordan",
     "posicao": "GOL",
-    "idade": 28,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -5988,8 +5988,8 @@
     "club": "Botafogo-SP",
     "nome": "Brenno Klippel",
     "posicao": "GOL",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 350000000
   },
   {
     "clubId": 37,
@@ -6028,7 +6028,7 @@
     "club": "Botafogo-SP",
     "nome": "Darlan",
     "posicao": "ZAG",
-    "idade": 22,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -6036,8 +6036,8 @@
     "club": "Botafogo-SP",
     "nome": "Badaró",
     "posicao": "ZAG",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 450000000
   },
   {
     "clubId": 37,
@@ -6045,7 +6045,7 @@
     "nome": "Patrick Brey",
     "posicao": "LAT",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 450000000
   },
   {
     "clubId": 37,
@@ -6108,7 +6108,7 @@
     "club": "Botafogo-SP",
     "nome": "Marco Antônio",
     "posicao": "VOL",
-    "idade": 26,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -6116,7 +6116,7 @@
     "club": "Botafogo-SP",
     "nome": "Thiaguinho",
     "posicao": "VOL",
-    "idade": 28,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -6124,8 +6124,8 @@
     "club": "Botafogo-SP",
     "nome": "Erik Rebello",
     "posicao": "VOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 1000000
   },
   {
     "clubId": 37,
@@ -6148,8 +6148,8 @@
     "club": "Botafogo-SP",
     "nome": "Yuri Felipe",
     "posicao": "MEI",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 33,
+    "valorMercado": 350000000
   },
   {
     "clubId": 37,
@@ -6188,7 +6188,7 @@
     "club": "Botafogo-SP",
     "nome": "Márcio Maranhão",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -6196,8 +6196,8 @@
     "club": "Botafogo-SP",
     "nome": "Wesley Santos",
     "posicao": "ATA",
-    "idade": 26,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 500000000
   },
   {
     "clubId": 37,
@@ -6228,7 +6228,7 @@
     "club": "Botafogo-SP",
     "nome": "Guilherme Queiróz",
     "posicao": "ATA",
-    "idade": 36,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -6268,7 +6268,7 @@
     "club": "América-MG",
     "nome": "William",
     "posicao": "GOL",
-    "idade": 28,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -6276,8 +6276,8 @@
     "club": "América-MG",
     "nome": "Italo Brito",
     "posicao": "GOL",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 32,
+    "valorMercado": 600000000
   },
   {
     "clubId": 21,
@@ -6285,7 +6285,7 @@
     "nome": "Luca Sosa",
     "posicao": "ZAG",
     "idade": 32,
-    "valorMercado": null
+    "valorMercado": 600000000
   },
   {
     "clubId": 21,
@@ -6324,8 +6324,8 @@
     "club": "América-MG",
     "nome": "Thallyson",
     "posicao": "ZAG",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 250000000
   },
   {
     "clubId": 21,
@@ -6348,7 +6348,7 @@
     "club": "América-MG",
     "nome": "Fábio",
     "posicao": "LAT",
-    "idade": 25,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -6356,8 +6356,8 @@
     "club": "América-MG",
     "nome": "Heitor",
     "posicao": "LAT",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 400000000
   },
   {
     "clubId": 21,
@@ -6373,7 +6373,7 @@
     "nome": "Gustavo Barreto",
     "posicao": "VOL",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 300000000
   },
   {
     "clubId": 21,
@@ -6388,8 +6388,8 @@
     "club": "América-MG",
     "nome": "Jorge Jiménez",
     "posicao": "VOL",
-    "idade": 33,
-    "valorMercado": null
+    "idade": 23,
+    "valorMercado": 500000000
   },
   {
     "clubId": 21,
@@ -6412,7 +6412,7 @@
     "club": "América-MG",
     "nome": "Gabriel Domingos",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -6421,7 +6421,7 @@
     "nome": "Otávio Gonçalves",
     "posicao": "MEI",
     "idade": 20,
-    "valorMercado": null
+    "valorMercado": 900000000
   },
   {
     "clubId": 21,
@@ -6468,8 +6468,8 @@
     "club": "América-MG",
     "nome": "Guilherme Parede",
     "posicao": "ATA",
-    "idade": 30,
-    "valorMercado": null
+    "idade": 39,
+    "valorMercado": 100000000
   },
   {
     "clubId": 21,
@@ -6485,7 +6485,7 @@
     "nome": "Gonzalo Mastriani",
     "posicao": "ATA",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 1000000
   },
   {
     "clubId": 21,
@@ -6508,7 +6508,7 @@
     "club": "São Bernardo",
     "nome": "Júnior Oliveira",
     "posicao": "GOL",
-    "idade": 36,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -6516,8 +6516,8 @@
     "club": "São Bernardo",
     "nome": "Léo Lang",
     "posicao": "GOL",
-    "idade": 28,
-    "valorMercado": null
+    "idade": 34,
+    "valorMercado": 500000000
   },
   {
     "clubId": 38,
@@ -6525,7 +6525,7 @@
     "nome": "Jemerson",
     "posicao": "ZAG",
     "idade": 34,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 38,
@@ -6564,7 +6564,7 @@
     "club": "São Bernardo",
     "nome": "Wellington",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -6572,8 +6572,8 @@
     "club": "São Bernardo",
     "nome": "Caio Garcez",
     "posicao": "ZAG",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 300000000
   },
   {
     "clubId": 38,
@@ -6596,8 +6596,8 @@
     "club": "São Bernardo",
     "nome": "Jota",
     "posicao": "LAT",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 400000000
   },
   {
     "clubId": 38,
@@ -6612,8 +6612,8 @@
     "club": "São Bernardo",
     "nome": "Hugo Sanches",
     "posicao": "LAT",
-    "idade": 32,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 500000000
   },
   {
     "clubId": 38,
@@ -6660,8 +6660,8 @@
     "club": "São Bernardo",
     "nome": "Galdino",
     "posicao": "VOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 300000000
   },
   {
     "clubId": 38,
@@ -6692,8 +6692,8 @@
     "club": "São Bernardo",
     "nome": "Breno Melo",
     "posicao": "MEI",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 600000000
   },
   {
     "clubId": 38,
@@ -6701,7 +6701,7 @@
     "nome": "Pedrinho",
     "posicao": "ATA",
     "idade": 26,
-    "valorMercado": null
+    "valorMercado": 600000000
   },
   {
     "clubId": 38,
@@ -6724,8 +6724,8 @@
     "club": "São Bernardo",
     "nome": "Daniel Davi",
     "posicao": "ATA",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 600000000
   },
   {
     "clubId": 38,
@@ -6748,8 +6748,8 @@
     "club": "São Bernardo",
     "nome": "Léo Jabá",
     "posicao": "ATA",
-    "idade": 28,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 200000000
   },
   {
     "clubId": 38,
@@ -6764,7 +6764,7 @@
     "club": "São Bernardo",
     "nome": "Daniel Amorim",
     "posicao": "ATA",
-    "idade": 36,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -6828,7 +6828,7 @@
     "club": "Avaí",
     "nome": "Allyson",
     "posicao": "ZAG",
-    "idade": 35,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -6836,7 +6836,7 @@
     "club": "Avaí",
     "nome": "Reynaldo",
     "posicao": "ZAG",
-    "idade": 29,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -6844,8 +6844,8 @@
     "club": "Avaí",
     "nome": "Gabriel Simples",
     "posicao": "ZAG",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 30,
+    "valorMercado": 300000000
   },
   {
     "clubId": 30,
@@ -6876,8 +6876,8 @@
     "club": "Avaí",
     "nome": "João Vitor",
     "posicao": "LAT",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 22,
+    "valorMercado": 800000000
   },
   {
     "clubId": 30,
@@ -6900,8 +6900,8 @@
     "club": "Avaí",
     "nome": "Vinicius Gugel",
     "posicao": "VOL",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 800000000
   },
   {
     "clubId": 30,
@@ -6917,7 +6917,7 @@
     "nome": "Romildo Del Piage",
     "posicao": "MEI",
     "idade": 26,
-    "valorMercado": null
+    "valorMercado": 300000000
   },
   {
     "clubId": 30,
@@ -6932,8 +6932,8 @@
     "club": "Avaí",
     "nome": "Pedro Cuiabá",
     "posicao": "MEI",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 700000000
   },
   {
     "clubId": 30,
@@ -6980,7 +6980,7 @@
     "club": "Avaí",
     "nome": "Isaías",
     "posicao": "ATA",
-    "idade": 21,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -6988,8 +6988,8 @@
     "club": "Avaí",
     "nome": "Gabriel Cipriano",
     "posicao": "ATA",
-    "idade": 26,
-    "valorMercado": null
+    "idade": 20,
+    "valorMercado": 900000000
   },
   {
     "clubId": 30,
@@ -7036,7 +7036,7 @@
     "club": "Operário-PR",
     "nome": "Vagner",
     "posicao": "GOL",
-    "idade": 40,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -7045,7 +7045,7 @@
     "nome": "Diego Monteiro",
     "posicao": "GOL",
     "idade": 26,
-    "valorMercado": null
+    "valorMercado": 900000000
   },
   {
     "clubId": 40,
@@ -7084,8 +7084,8 @@
     "club": "Operário-PR",
     "nome": "Renan Gustavo",
     "posicao": "ZAG",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 25,
+    "valorMercado": 500000000
   },
   {
     "clubId": 40,
@@ -7124,8 +7124,8 @@
     "club": "Operário-PR",
     "nome": "João Gabriel",
     "posicao": "LAT",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 30,
+    "valorMercado": 400000000
   },
   {
     "clubId": 40,
@@ -7148,8 +7148,8 @@
     "club": "Operário-PR",
     "nome": "Charles Raphael",
     "posicao": "VOL",
-    "idade": 31,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 500000000
   },
   {
     "clubId": 40,
@@ -7181,7 +7181,7 @@
     "nome": "Gabriel Boschilia",
     "posicao": "MEI",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 1500000
   },
   {
     "clubId": 40,
@@ -7213,7 +7213,7 @@
     "nome": "Berto",
     "posicao": "ATA",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 40,
@@ -7268,7 +7268,7 @@
     "club": "Atlético-GO",
     "nome": "Paulo Henrique",
     "posicao": "GOL",
-    "idade": 32,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -7276,8 +7276,8 @@
     "club": "Atlético-GO",
     "nome": "Léo",
     "posicao": "GOL",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 25,
+    "valorMercado": 900000000
   },
   {
     "clubId": 22,
@@ -7316,8 +7316,8 @@
     "club": "Atlético-GO",
     "nome": "Marcão",
     "posicao": "ZAG",
-    "idade": 25,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 800000000
   },
   {
     "clubId": 22,
@@ -7364,8 +7364,8 @@
     "club": "Atlético-GO",
     "nome": "Felipe Guimarães",
     "posicao": "LAT",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 200000000
   },
   {
     "clubId": 22,
@@ -7388,7 +7388,7 @@
     "club": "Atlético-GO",
     "nome": "Daniel Peixoto",
     "posicao": "VOL",
-    "idade": 29,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -7396,7 +7396,7 @@
     "club": "Atlético-GO",
     "nome": "Netinho",
     "posicao": "VOL",
-    "idade": 28,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -7404,7 +7404,7 @@
     "club": "Atlético-GO",
     "nome": "Henrique Freitas",
     "posicao": "VOL",
-    "idade": 27,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -7412,8 +7412,8 @@
     "club": "Atlético-GO",
     "nome": "Cauã Marley",
     "posicao": "VOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 200000000
   },
   {
     "clubId": 22,
@@ -7484,7 +7484,7 @@
     "club": "Atlético-GO",
     "nome": "Léo Tocantins",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -7492,8 +7492,8 @@
     "club": "Atlético-GO",
     "nome": "Lima",
     "posicao": "ATA",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 1500000
   },
   {
     "clubId": 22,
@@ -7509,7 +7509,7 @@
     "nome": "João Pedro",
     "posicao": "ATA",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 800000000
   },
   {
     "clubId": 22,
@@ -7548,7 +7548,7 @@
     "club": "Cuiabá",
     "nome": "Gustavo Busatto",
     "posicao": "GOL",
-    "idade": 35,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -7556,7 +7556,7 @@
     "club": "Cuiabá",
     "nome": "Jean",
     "posicao": "GOL",
-    "idade": 26,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -7564,8 +7564,8 @@
     "club": "Cuiabá",
     "nome": "Pedro Mello",
     "posicao": "GOL",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 700000000
   },
   {
     "clubId": 26,
@@ -7573,7 +7573,7 @@
     "nome": "João Basso",
     "posicao": "ZAG",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 700000000
   },
   {
     "clubId": 26,
@@ -7581,7 +7581,7 @@
     "nome": "Alan Empereur",
     "posicao": "ZAG",
     "idade": 32,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 26,
@@ -7628,8 +7628,8 @@
     "club": "Cuiabá",
     "nome": "Tarcísio",
     "posicao": "LAT",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 300000000
   },
   {
     "clubId": 26,
@@ -7684,7 +7684,7 @@
     "club": "Cuiabá",
     "nome": "João Araújo",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -7692,8 +7692,8 @@
     "club": "Cuiabá",
     "nome": "Wesley Dias",
     "posicao": "VOL",
-    "idade": 31,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 1200000
   },
   {
     "clubId": 26,
@@ -7701,7 +7701,7 @@
     "nome": "Pepê",
     "posicao": "MEI",
     "idade": 28,
-    "valorMercado": null
+    "valorMercado": 1200000
   },
   {
     "clubId": 26,
@@ -7757,7 +7757,7 @@
     "nome": "Rodrigo Rodrigues",
     "posicao": "ATA",
     "idade": 26,
-    "valorMercado": null
+    "valorMercado": 700000000
   },
   {
     "clubId": 26,
@@ -7805,15 +7805,15 @@
     "nome": "Helton Leite",
     "posicao": "GOL",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 27,
     "club": "Vila Nova",
     "nome": "Dalberson",
     "posicao": "GOL",
-    "idade": 29,
-    "valorMercado": null
+    "idade": 22,
+    "valorMercado": 800000000
   },
   {
     "clubId": 27,
@@ -7837,14 +7837,14 @@
     "nome": "Tiago Pagnussat",
     "posicao": "ZAG",
     "idade": 36,
-    "valorMercado": null
+    "valorMercado": 100000000
   },
   {
     "clubId": 27,
     "club": "Vila Nova",
     "nome": "Jonathan Costa",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -7852,8 +7852,8 @@
     "club": "Vila Nova",
     "nome": "Breno Bora",
     "posicao": "ZAG",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 21,
+    "valorMercado": 400000000
   },
   {
     "clubId": 27,
@@ -7933,7 +7933,7 @@
     "nome": "Enzo",
     "posicao": "VOL",
     "idade": 23,
-    "valorMercado": null
+    "valorMercado": 150000000
   },
   {
     "clubId": 27,
@@ -8013,7 +8013,7 @@
     "nome": "Dellatorre",
     "posicao": "ATA",
     "idade": 34,
-    "valorMercado": null
+    "valorMercado": 350000000
   },
   {
     "clubId": 27,
@@ -8045,7 +8045,7 @@
     "nome": "Vitor Caetano",
     "posicao": "GOL",
     "idade": 27,
-    "valorMercado": null
+    "valorMercado": 100000000
   },
   {
     "clubId": 28,
@@ -8060,8 +8060,8 @@
     "club": "CRB",
     "nome": "Pablo",
     "posicao": "GOL",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 1000000
   },
   {
     "clubId": 28,
@@ -8093,7 +8093,7 @@
     "nome": "Bressan",
     "posicao": "ZAG",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 28,
@@ -8196,8 +8196,8 @@
     "club": "CRB",
     "nome": "Anderson Dias",
     "posicao": "MEI",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 30,
+    "valorMercado": 1200000
   },
   {
     "clubId": 28,
@@ -8212,8 +8212,8 @@
     "club": "CRB",
     "nome": "Estêvão",
     "posicao": "MEI",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 25,
+    "valorMercado": 250000000
   },
   {
     "clubId": 28,
@@ -8228,8 +8228,8 @@
     "club": "CRB",
     "nome": "Ygor Catatau",
     "posicao": "ATA",
-    "idade": 31,
-    "valorMercado": null
+    "idade": 25,
+    "valorMercado": 800000000
   },
   {
     "clubId": 28,
@@ -8357,7 +8357,7 @@
     "nome": "Nicolas",
     "posicao": "LAT",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 700000000
   },
   {
     "clubId": 34,
@@ -8372,8 +8372,8 @@
     "club": "Goiás",
     "nome": "Danilo Cunha",
     "posicao": "LAT",
-    "idade": 19,
-    "valorMercado": null
+    "idade": 33,
+    "valorMercado": 750000000
   },
   {
     "clubId": 34,
@@ -8540,7 +8540,7 @@
     "club": "Novorizontino",
     "nome": "Lucas",
     "posicao": "GOL",
-    "idade": 28,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -8548,7 +8548,7 @@
     "club": "Novorizontino",
     "nome": "João Scapin",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -8556,8 +8556,8 @@
     "club": "Novorizontino",
     "nome": "Paulo Henrique",
     "posicao": "GOL",
-    "idade": 35,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 500000000
   },
   {
     "clubId": 31,
@@ -8589,7 +8589,7 @@
     "nome": "Eduardo Brock",
     "posicao": "ZAG",
     "idade": 35,
-    "valorMercado": null
+    "valorMercado": 150000000
   },
   {
     "clubId": 31,
@@ -8661,7 +8661,7 @@
     "nome": "Luís Oyama",
     "posicao": "VOL",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 31,
@@ -8676,8 +8676,8 @@
     "club": "Novorizontino",
     "nome": "Luiz Gabriel",
     "posicao": "VOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 28,
+    "valorMercado": 700000000
   },
   {
     "clubId": 31,
@@ -8748,7 +8748,7 @@
     "club": "Novorizontino",
     "nome": "Ronald Barcellos",
     "posicao": "ATA",
-    "idade": 24,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -8756,7 +8756,7 @@
     "club": "Novorizontino",
     "nome": "Hélio Borges",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -8765,7 +8765,7 @@
     "nome": "Hector Bianchi",
     "posicao": "ATA",
     "idade": 21,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 31,
@@ -8773,7 +8773,7 @@
     "nome": "Jardiel",
     "posicao": "ATA",
     "idade": 21,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 31,
@@ -8828,8 +8828,8 @@
     "club": "Criciúma",
     "nome": "Pedro Santos",
     "posicao": "GOL",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 33,
+    "valorMercado": 400000000
   },
   {
     "clubId": 24,
@@ -8861,7 +8861,7 @@
     "nome": "Luciano Castán",
     "posicao": "ZAG",
     "idade": 36,
-    "valorMercado": null
+    "valorMercado": 100000000
   },
   {
     "clubId": 24,
@@ -8884,8 +8884,8 @@
     "club": "Criciúma",
     "nome": "Octávio Henrique",
     "posicao": "ZAG",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 1000000
   },
   {
     "clubId": 24,
@@ -8964,8 +8964,8 @@
     "club": "Criciúma",
     "nome": "Eliel Costa",
     "posicao": "VOL",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 26,
+    "valorMercado": 400000000
   },
   {
     "clubId": 24,
@@ -9069,7 +9069,7 @@
     "nome": "Luan Polli",
     "posicao": "GOL",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 400000000
   },
   {
     "clubId": 35,
@@ -9084,7 +9084,7 @@
     "club": "Athletic Club",
     "nome": "Tony Batista",
     "posicao": "GOL",
-    "idade": 33,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -9092,8 +9092,8 @@
     "club": "Athletic Club",
     "nome": "Eduardo Freire",
     "posicao": "GOL",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 23,
+    "valorMercado": 1500000
   },
   {
     "clubId": 35,
@@ -9101,7 +9101,7 @@
     "nome": "Lucas Belezi",
     "posicao": "ZAG",
     "idade": 23,
-    "valorMercado": null
+    "valorMercado": 1500000
   },
   {
     "clubId": 35,
@@ -9140,8 +9140,8 @@
     "club": "Athletic Club",
     "nome": "Felipe Vieira",
     "posicao": "ZAG",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 22,
+    "valorMercado": 300000000
   },
   {
     "clubId": 35,
@@ -9164,8 +9164,8 @@
     "club": "Athletic Club",
     "nome": "Enzo",
     "posicao": "LAT",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 32,
+    "valorMercado": 500000000
   },
   {
     "clubId": 35,
@@ -9268,7 +9268,7 @@
     "club": "Athletic Club",
     "nome": "Pedro Oliveira",
     "posicao": "MEI",
-    "idade": 28,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -9276,7 +9276,7 @@
     "club": "Athletic Club",
     "nome": "Alexandre Pena",
     "posicao": "MEI",
-    "idade": 21,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -9284,8 +9284,8 @@
     "club": "Athletic Club",
     "nome": "Assis",
     "posicao": "MEI",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 23,
+    "valorMercado": 750000000
   },
   {
     "clubId": 35,
@@ -9316,8 +9316,8 @@
     "club": "Athletic Club",
     "nome": "Bruninho",
     "posicao": "ATA",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 900000000
   },
   {
     "clubId": 35,
@@ -9333,7 +9333,7 @@
     "nome": "Ronaldo Tavares",
     "posicao": "ATA",
     "idade": 29,
-    "valorMercado": null
+    "valorMercado": 800000000
   },
   {
     "clubId": 35,
@@ -9357,20 +9357,12 @@
     "nome": "Jandrei",
     "posicao": "GOL",
     "idade": 33,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 23,
     "club": "Juventude",
     "nome": "Pedro Rocha",
-    "posicao": "GOL",
-    "idade": 28,
-    "valorMercado": null
-  },
-  {
-    "clubId": 23,
-    "club": "Juventude",
-    "nome": "Ruan Carneiro",
     "posicao": "GOL",
     "idade": 36,
     "valorMercado": null
@@ -9378,10 +9370,18 @@
   {
     "clubId": 23,
     "club": "Juventude",
-    "nome": "Zé Henrique",
+    "nome": "Ruan Carneiro",
     "posicao": "GOL",
     "idade": 21,
     "valorMercado": null
+  },
+  {
+    "clubId": 23,
+    "club": "Juventude",
+    "nome": "Zé Henrique",
+    "posicao": "GOL",
+    "idade": 31,
+    "valorMercado": 500000000
   },
   {
     "clubId": 23,
@@ -9421,7 +9421,7 @@
     "nome": "Titi",
     "posicao": "ZAG",
     "idade": 38,
-    "valorMercado": null
+    "valorMercado": 50000000
   },
   {
     "clubId": 23,
@@ -9429,7 +9429,7 @@
     "nome": "Patryck",
     "posicao": "LAT",
     "idade": 23,
-    "valorMercado": null
+    "valorMercado": 1200000
   },
   {
     "clubId": 23,
@@ -9493,7 +9493,7 @@
     "nome": "Gabriel Pires",
     "posicao": "VOL",
     "idade": 32,
-    "valorMercado": null
+    "valorMercado": 400000000
   },
   {
     "clubId": 23,
@@ -9548,8 +9548,8 @@
     "club": "Juventude",
     "nome": "Ray Breno",
     "posicao": "MEI",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 25,
+    "valorMercado": 550000000
   },
   {
     "clubId": 23,
@@ -9557,7 +9557,7 @@
     "nome": "Marcos Paulo",
     "posicao": "ATA",
     "idade": 25,
-    "valorMercado": null
+    "valorMercado": 550000000
   },
   {
     "clubId": 23,
@@ -9596,8 +9596,8 @@
     "club": "Juventude",
     "nome": "Lucas Alves",
     "posicao": "ATA",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 750000000
   },
   {
     "clubId": 23,
@@ -9684,7 +9684,7 @@
     "club": "Ceará",
     "nome": "Stanley Boateng",
     "posicao": "ZAG",
-    "idade": 21,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -9692,8 +9692,8 @@
     "club": "Ceará",
     "nome": "Pedro Gilmar",
     "posicao": "ZAG",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 350000000
   },
   {
     "clubId": 33,
@@ -9748,8 +9748,8 @@
     "club": "Ceará",
     "nome": "João Gabriel",
     "posicao": "VOL",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 350000000
   },
   {
     "clubId": 33,
@@ -9789,7 +9789,7 @@
     "nome": "Lucas Mugni",
     "posicao": "MEI",
     "idade": 34,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 33,
@@ -9797,7 +9797,7 @@
     "nome": "Lenny Lobato",
     "posicao": "ATA",
     "idade": 25,
-    "valorMercado": null
+    "valorMercado": 800000000
   },
   {
     "clubId": 33,
@@ -9812,8 +9812,8 @@
     "club": "Ceará",
     "nome": "Kauã",
     "posicao": "ATA",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 21,
+    "valorMercado": 2500000
   },
   {
     "clubId": 33,
@@ -9861,7 +9861,7 @@
     "nome": "Brenno",
     "posicao": "GOL",
     "idade": 27,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 19,
@@ -9876,8 +9876,8 @@
     "club": "Sport",
     "nome": "Adriano",
     "posicao": "GOL",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 30,
+    "valorMercado": 900000000
   },
   {
     "clubId": 19,
@@ -9916,8 +9916,8 @@
     "club": "Sport",
     "nome": "Patrick",
     "posicao": "ZAG",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 900000000
   },
   {
     "clubId": 19,
@@ -10029,7 +10029,7 @@
     "nome": "Carlos de Pena",
     "posicao": "ATA",
     "idade": 34,
-    "valorMercado": null
+    "valorMercado": 750000000
   },
   {
     "clubId": 19,
@@ -10117,7 +10117,7 @@
     "nome": "Tomás Cardona",
     "posicao": "ZAG",
     "idade": 30,
-    "valorMercado": null
+    "valorMercado": 900000000
   },
   {
     "clubId": 14,
@@ -10125,7 +10125,7 @@
     "nome": "Luan Freitas",
     "posicao": "ZAG",
     "idade": 25,
-    "valorMercado": null
+    "valorMercado": 500000000
   },
   {
     "clubId": 14,
@@ -10197,7 +10197,7 @@
     "nome": "Ronald",
     "posicao": "VOL",
     "idade": 23,
-    "valorMercado": null
+    "valorMercado": 2500000
   },
   {
     "clubId": 14,
@@ -10213,7 +10213,7 @@
     "nome": "Lucas Sasha",
     "posicao": "VOL",
     "idade": 36,
-    "valorMercado": null
+    "valorMercado": 150000000
   },
   {
     "clubId": 14,
@@ -10316,7 +10316,7 @@
     "club": "Botafogo-PB",
     "nome": "Luiz Daniel",
     "posicao": "GOL",
-    "idade": 33,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -10324,7 +10324,7 @@
     "club": "Botafogo-PB",
     "nome": "Max Walef",
     "posicao": "GOL",
-    "idade": 32,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -10332,7 +10332,7 @@
     "club": "Botafogo-PB",
     "nome": "Leandro Mathias",
     "posicao": "GOL",
-    "idade": 21,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -10340,7 +10340,7 @@
     "club": "Botafogo-PB",
     "nome": "Edilson",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -10348,7 +10348,7 @@
     "club": "Botafogo-PB",
     "nome": "Deivid Andrade",
     "posicao": "GOL",
-    "idade": 21,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -10356,7 +10356,7 @@
     "club": "Botafogo-PB",
     "nome": "Saimon",
     "posicao": "ZAG",
-    "idade": 35,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -10364,7 +10364,7 @@
     "club": "Botafogo-PB",
     "nome": "Igor Morais",
     "posicao": "ZAG",
-    "idade": 28,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -10380,7 +10380,7 @@
     "club": "Botafogo-PB",
     "nome": "Yan Souto",
     "posicao": "ZAG",
-    "idade": 24,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -10388,7 +10388,7 @@
     "club": "Botafogo-PB",
     "nome": "Júlio Vaz",
     "posicao": "ZAG",
-    "idade": 29,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -10396,7 +10396,7 @@
     "club": "Botafogo-PB",
     "nome": "PK",
     "posicao": "LAT",
-    "idade": 32,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -10404,7 +10404,7 @@
     "club": "Botafogo-PB",
     "nome": "Bull",
     "posicao": "LAT",
-    "idade": 25,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10412,8 +10412,8 @@
     "club": "Botafogo-PB",
     "nome": "Dhônata",
     "posicao": "LAT",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 35,
+    "valorMercado": 75000000
   },
   {
     "clubId": 54,
@@ -10428,7 +10428,7 @@
     "club": "Botafogo-PB",
     "nome": "Diogo Mateus",
     "posicao": "LAT",
-    "idade": 33,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -10436,7 +10436,7 @@
     "club": "Botafogo-PB",
     "nome": "Lucas Sena",
     "posicao": "LAT",
-    "idade": 25,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -10444,7 +10444,7 @@
     "club": "Botafogo-PB",
     "nome": "Léo Pereira",
     "posicao": "LAT",
-    "idade": 28,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10452,7 +10452,7 @@
     "club": "Botafogo-PB",
     "nome": "Erick",
     "posicao": "LAT",
-    "idade": 22,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -10460,7 +10460,7 @@
     "club": "Botafogo-PB",
     "nome": "Thallyson",
     "posicao": "VOL",
-    "idade": 30,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -10468,7 +10468,7 @@
     "club": "Botafogo-PB",
     "nome": "Lucas Cândido",
     "posicao": "MEI",
-    "idade": 32,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -10476,7 +10476,7 @@
     "club": "Botafogo-PB",
     "nome": "Jhonata Varela",
     "posicao": "MEI",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -10484,7 +10484,7 @@
     "club": "Botafogo-PB",
     "nome": "Ed Carlos",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -10500,7 +10500,7 @@
     "club": "Botafogo-PB",
     "nome": "Gustavo",
     "posicao": "MEI",
-    "idade": 24,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -10508,7 +10508,7 @@
     "club": "Botafogo-PB",
     "nome": "Igor Maduro",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 45,
     "valorMercado": null
   },
   {
@@ -10516,7 +10516,7 @@
     "club": "Botafogo-PB",
     "nome": "Nenê",
     "posicao": "MEI",
-    "idade": 45,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -10524,7 +10524,7 @@
     "club": "Botafogo-PB",
     "nome": "Giovanni",
     "posicao": "MEI",
-    "idade": 32,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -10540,7 +10540,7 @@
     "club": "Botafogo-PB",
     "nome": "Romário",
     "posicao": "MEI",
-    "idade": 24,
+    "idade": 39,
     "valorMercado": null
   },
   {
@@ -10548,7 +10548,7 @@
     "club": "Botafogo-PB",
     "nome": "Felipe Azevedo",
     "posicao": "ATA",
-    "idade": 39,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -10556,7 +10556,7 @@
     "club": "Botafogo-PB",
     "nome": "Jonas Toró",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -10572,7 +10572,7 @@
     "club": "Botafogo-PB",
     "nome": "Mosquito",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10580,7 +10580,7 @@
     "club": "Botafogo-PB",
     "nome": "Kayon",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -10588,7 +10588,7 @@
     "club": "Botafogo-PB",
     "nome": "Henrique Dourado",
     "posicao": "ATA",
-    "idade": 36,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -10596,7 +10596,7 @@
     "club": "Botafogo-PB",
     "nome": "Rodolfo",
     "posicao": "ATA",
-    "idade": 34,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -10612,7 +10612,7 @@
     "club": "Brusque",
     "nome": "Lucas Moura",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 40,
     "valorMercado": null
   },
   {
@@ -10620,7 +10620,7 @@
     "club": "Brusque",
     "nome": "Matheus Nogueira",
     "posicao": "GOL",
-    "idade": 40,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -10628,7 +10628,7 @@
     "club": "Brusque",
     "nome": "Paulo Gianezini",
     "posicao": "GOL",
-    "idade": 35,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -10636,8 +10636,8 @@
     "club": "Brusque",
     "nome": "José Vinicius",
     "posicao": "GOL",
-    "idade": 20,
-    "valorMercado": null
+    "idade": 23,
+    "valorMercado": 250000000
   },
   {
     "clubId": 50,
@@ -10652,7 +10652,7 @@
     "club": "Brusque",
     "nome": "João Maistro",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -10660,7 +10660,7 @@
     "club": "Brusque",
     "nome": "Alisson Cassiano",
     "posicao": "ZAG",
-    "idade": 32,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -10668,7 +10668,7 @@
     "club": "Brusque",
     "nome": "Rafael Milhorim",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10676,7 +10676,7 @@
     "club": "Brusque",
     "nome": "Ryan Santos",
     "posicao": "ZAG",
-    "idade": 22,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -10684,7 +10684,7 @@
     "club": "Brusque",
     "nome": "Raimar",
     "posicao": "LAT",
-    "idade": 24,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -10692,7 +10692,7 @@
     "club": "Brusque",
     "nome": "Davi Gabriel",
     "posicao": "LAT",
-    "idade": 28,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -10700,7 +10700,7 @@
     "club": "Brusque",
     "nome": "Jeferson",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10708,7 +10708,7 @@
     "club": "Brusque",
     "nome": "Léo Ataíde",
     "posicao": "LAT",
-    "idade": 22,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -10716,7 +10716,7 @@
     "club": "Brusque",
     "nome": "Italo Lucas",
     "posicao": "LAT",
-    "idade": 21,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -10748,7 +10748,7 @@
     "club": "Brusque",
     "nome": "Alex Paulino",
     "posicao": "VOL",
-    "idade": 24,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -10756,7 +10756,7 @@
     "club": "Brusque",
     "nome": "Jonatan Lucca",
     "posicao": "MEI",
-    "idade": 32,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -10764,7 +10764,7 @@
     "club": "Brusque",
     "nome": "Leonardo",
     "posicao": "MEI",
-    "idade": 21,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -10772,7 +10772,7 @@
     "club": "Brusque",
     "nome": "Ariel",
     "posicao": "MEI",
-    "idade": 28,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -10788,7 +10788,7 @@
     "club": "Brusque",
     "nome": "Coxa",
     "posicao": "MEI",
-    "idade": 21,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10796,7 +10796,7 @@
     "club": "Brusque",
     "nome": "Adriano Filho",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -10804,7 +10804,7 @@
     "club": "Brusque",
     "nome": "João Pedro",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10812,7 +10812,7 @@
     "club": "Brusque",
     "nome": "Petterson",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -10820,7 +10820,7 @@
     "club": "Brusque",
     "nome": "Renan Henrique",
     "posicao": "ATA",
-    "idade": 29,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -10828,7 +10828,7 @@
     "club": "Brusque",
     "nome": "Udeh Clinton",
     "posicao": "ATA",
-    "idade": 24,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -10836,7 +10836,7 @@
     "club": "Brusque",
     "nome": "Héber",
     "posicao": "ATA",
-    "idade": 35,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -10844,7 +10844,7 @@
     "club": "Brusque",
     "nome": "Marlyson",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10852,7 +10852,7 @@
     "club": "Brusque",
     "nome": "Robinho",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -10860,7 +10860,7 @@
     "club": "Brusque",
     "nome": "Álvaro",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -10876,7 +10876,7 @@
     "club": "Ferroviária",
     "nome": "Dênis Júnior",
     "posicao": "GOL",
-    "idade": 28,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -10884,8 +10884,8 @@
     "club": "Ferroviária",
     "nome": "Gustavo Jundi",
     "posicao": "GOL",
-    "idade": 22,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 200000000
   },
   {
     "clubId": 57,
@@ -10900,7 +10900,7 @@
     "club": "Ferroviária",
     "nome": "Gustavo Medina",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -10908,7 +10908,7 @@
     "club": "Ferroviária",
     "nome": "Erik Nascimento",
     "posicao": "ZAG",
-    "idade": 21,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -10924,7 +10924,7 @@
     "club": "Ferroviária",
     "nome": "Guilherme Ferreira",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -10932,7 +10932,7 @@
     "club": "Ferroviária",
     "nome": "Gadu",
     "posicao": "ZAG",
-    "idade": 21,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -10940,7 +10940,7 @@
     "club": "Ferroviária",
     "nome": "Rhuan",
     "posicao": "LAT",
-    "idade": 25,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -10948,7 +10948,7 @@
     "club": "Ferroviária",
     "nome": "Vinicius Kauê",
     "posicao": "LAT",
-    "idade": 23,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -10956,7 +10956,7 @@
     "club": "Ferroviária",
     "nome": "Felipe Rodrigues",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -10964,7 +10964,7 @@
     "club": "Ferroviária",
     "nome": "Lucas Rodrigues",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -10972,7 +10972,7 @@
     "club": "Ferroviária",
     "nome": "Fernandinho",
     "posicao": "VOL",
-    "idade": 23,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -10980,7 +10980,7 @@
     "club": "Ferroviária",
     "nome": "Rafael Carrilho",
     "posicao": "VOL",
-    "idade": 31,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -10988,7 +10988,7 @@
     "club": "Ferroviária",
     "nome": "Ricardinho",
     "posicao": "MEI",
-    "idade": 37,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -10996,8 +10996,8 @@
     "club": "Ferroviária",
     "nome": "Alencar",
     "posicao": "MEI",
-    "idade": 24,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 200000000
   },
   {
     "clubId": 57,
@@ -11012,7 +11012,7 @@
     "club": "Ferroviária",
     "nome": "Albano",
     "posicao": "MEI",
-    "idade": 29,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -11020,7 +11020,7 @@
     "club": "Ferroviária",
     "nome": "David",
     "posicao": "MEI",
-    "idade": 22,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -11028,7 +11028,7 @@
     "club": "Ferroviária",
     "nome": "Alan Stence",
     "posicao": "MEI",
-    "idade": 24,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -11036,7 +11036,7 @@
     "club": "Ferroviária",
     "nome": "Jhonatan Garcia",
     "posicao": "MEI",
-    "idade": 22,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -11044,7 +11044,7 @@
     "club": "Ferroviária",
     "nome": "Cauê Araújo",
     "posicao": "MEI",
-    "idade": 21,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11052,7 +11052,7 @@
     "club": "Ferroviária",
     "nome": "Denilson",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11060,7 +11060,7 @@
     "club": "Ferroviária",
     "nome": "Vitor Barreto",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -11068,8 +11068,8 @@
     "club": "Ferroviária",
     "nome": "Fábio Soares",
     "posicao": "ATA",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 22,
+    "valorMercado": 125000000
   },
   {
     "clubId": 57,
@@ -11084,7 +11084,7 @@
     "club": "Ferroviária",
     "nome": "Douglas Skilo",
     "posicao": "ATA",
-    "idade": 31,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11092,7 +11092,7 @@
     "club": "Ferroviária",
     "nome": "Denilson",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11100,7 +11100,7 @@
     "club": "Ferroviária",
     "nome": "Vinni Faria",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -11108,7 +11108,7 @@
     "club": "Ferroviária",
     "nome": "Pedro Lucas",
     "posicao": "ATA",
-    "idade": 20,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -11132,7 +11132,7 @@
     "club": "Maringá",
     "nome": "Neto",
     "posicao": "GOL",
-    "idade": 31,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -11140,7 +11140,7 @@
     "club": "Maringá",
     "nome": "Gabriel Affonso",
     "posicao": "GOL",
-    "idade": 27,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11148,8 +11148,8 @@
     "club": "Maringá",
     "nome": "Romário",
     "posicao": "GOL",
-    "idade": 25,
-    "valorMercado": null
+    "idade": 32,
+    "valorMercado": 350000000
   },
   {
     "clubId": 52,
@@ -11164,7 +11164,7 @@
     "club": "Maringá",
     "nome": "Wendel Lomar",
     "posicao": "ZAG",
-    "idade": 30,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11172,7 +11172,7 @@
     "club": "Maringá",
     "nome": "Ronald Carvalho",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11180,7 +11180,7 @@
     "club": "Maringá",
     "nome": "Gabriel Santos",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -11188,7 +11188,7 @@
     "club": "Maringá",
     "nome": "Wallace",
     "posicao": "ZAG",
-    "idade": 21,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11204,7 +11204,7 @@
     "club": "Maringá",
     "nome": "Keven",
     "posicao": "ZAG",
-    "idade": 23,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -11212,7 +11212,7 @@
     "club": "Maringá",
     "nome": "Felipe",
     "posicao": "ZAG",
-    "idade": 22,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -11220,7 +11220,7 @@
     "club": "Maringá",
     "nome": "Thiago Rosa",
     "posicao": "LAT",
-    "idade": 24,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11236,7 +11236,7 @@
     "club": "Maringá",
     "nome": "Kelvi Gomes",
     "posicao": "VOL",
-    "idade": 23,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11244,7 +11244,7 @@
     "club": "Maringá",
     "nome": "Paulinho",
     "posicao": "VOL",
-    "idade": 28,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11252,7 +11252,7 @@
     "club": "Maringá",
     "nome": "Lucas Bonifácio",
     "posicao": "VOL",
-    "idade": 25,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11260,7 +11260,7 @@
     "club": "Maringá",
     "nome": "Adeílson Maranhão",
     "posicao": "MEI",
-    "idade": 28,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -11268,7 +11268,7 @@
     "club": "Maringá",
     "nome": "Serginho",
     "posicao": "MEI",
-    "idade": 35,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -11276,7 +11276,7 @@
     "club": "Maringá",
     "nome": "Danielzinho",
     "posicao": "MEI",
-    "idade": 24,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11284,7 +11284,7 @@
     "club": "Maringá",
     "nome": "Iago Santana",
     "posicao": "MEI",
-    "idade": 26,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -11292,7 +11292,7 @@
     "club": "Maringá",
     "nome": "Bruno Cheron",
     "posicao": "MEI",
-    "idade": 22,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11300,7 +11300,7 @@
     "club": "Maringá",
     "nome": "Rafinha",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11308,7 +11308,7 @@
     "club": "Maringá",
     "nome": "Edison Negueba",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11324,7 +11324,7 @@
     "club": "Maringá",
     "nome": "Ronald Camarão",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11332,7 +11332,7 @@
     "club": "Maringá",
     "nome": "Pedrinho",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -11340,7 +11340,7 @@
     "club": "Maringá",
     "nome": "Giovane Gomez",
     "posicao": "ATA",
-    "idade": 31,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -11348,7 +11348,7 @@
     "club": "Maringá",
     "nome": "Raí",
     "posicao": "ATA",
-    "idade": 21,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11356,7 +11356,7 @@
     "club": "Maringá",
     "nome": "Caíque Calito",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -11372,7 +11372,7 @@
     "club": "Floresta",
     "nome": "Tiepo",
     "posicao": "GOL",
-    "idade": 28,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -11380,7 +11380,7 @@
     "club": "Floresta",
     "nome": "Jeferson Souza",
     "posicao": "GOL",
-    "idade": 32,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -11388,8 +11388,8 @@
     "club": "Floresta",
     "nome": "Dheimison",
     "posicao": "GOL",
-    "idade": 37,
-    "valorMercado": null
+    "idade": 25,
+    "valorMercado": 150000000
   },
   {
     "clubId": 56,
@@ -11412,7 +11412,7 @@
     "club": "Floresta",
     "nome": "Afonso",
     "posicao": "ZAG",
-    "idade": 32,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -11420,7 +11420,7 @@
     "club": "Floresta",
     "nome": "Valdo",
     "posicao": "ZAG",
-    "idade": 34,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -11428,7 +11428,7 @@
     "club": "Floresta",
     "nome": "João Victor",
     "posicao": "ZAG",
-    "idade": 24,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -11444,7 +11444,7 @@
     "club": "Floresta",
     "nome": "Diego Matos",
     "posicao": "LAT",
-    "idade": 29,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11460,7 +11460,7 @@
     "club": "Floresta",
     "nome": "Cedric",
     "posicao": "LAT",
-    "idade": 28,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -11468,7 +11468,7 @@
     "club": "Floresta",
     "nome": "Eliandro Carvalho",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -11476,7 +11476,7 @@
     "club": "Floresta",
     "nome": "Nonato",
     "posicao": "VOL",
-    "idade": 30,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -11484,7 +11484,7 @@
     "club": "Floresta",
     "nome": "Jhony Douglas",
     "posicao": "VOL",
-    "idade": 29,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11492,7 +11492,7 @@
     "club": "Floresta",
     "nome": "Danrley",
     "posicao": "VOL",
-    "idade": 25,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11500,7 +11500,7 @@
     "club": "Floresta",
     "nome": "Arilson",
     "posicao": "VOL",
-    "idade": 23,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11508,7 +11508,7 @@
     "club": "Floresta",
     "nome": "Guilherme Borges",
     "posicao": "MEI",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11516,7 +11516,7 @@
     "club": "Floresta",
     "nome": "Buga",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -11524,7 +11524,7 @@
     "club": "Floresta",
     "nome": "Bismark",
     "posicao": "MEI",
-    "idade": 33,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11532,7 +11532,7 @@
     "club": "Floresta",
     "nome": "Garraty",
     "posicao": "MEI",
-    "idade": 28,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11540,7 +11540,7 @@
     "club": "Floresta",
     "nome": "Thálisson",
     "posicao": "MEI",
-    "idade": 23,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -11548,7 +11548,7 @@
     "club": "Floresta",
     "nome": "Diogo Mourão",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -11556,7 +11556,7 @@
     "club": "Floresta",
     "nome": "Rafinha",
     "posicao": "ATA",
-    "idade": 34,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -11564,7 +11564,7 @@
     "club": "Floresta",
     "nome": "Gustavinho",
     "posicao": "ATA",
-    "idade": 33,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11580,7 +11580,7 @@
     "club": "Floresta",
     "nome": "Matheus Martins",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11588,7 +11588,7 @@
     "club": "Floresta",
     "nome": "Matheus Lima",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11604,7 +11604,7 @@
     "club": "Inter de Limeira",
     "nome": "Saulo",
     "posicao": "GOL",
-    "idade": 41,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11612,7 +11612,7 @@
     "club": "Inter de Limeira",
     "nome": "Emerson Junior",
     "posicao": "GOL",
-    "idade": 26,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11628,7 +11628,7 @@
     "club": "Inter de Limeira",
     "nome": "Jonathan",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -11636,7 +11636,7 @@
     "club": "Inter de Limeira",
     "nome": "Alemão",
     "posicao": "ZAG",
-    "idade": 35,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -11652,7 +11652,7 @@
     "club": "Inter de Limeira",
     "nome": "Lucas Santos",
     "posicao": "ZAG",
-    "idade": 33,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11660,7 +11660,7 @@
     "club": "Inter de Limeira",
     "nome": "Léo Paraíso",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11668,7 +11668,7 @@
     "club": "Inter de Limeira",
     "nome": "Heitor Roca",
     "posicao": "LAT",
-    "idade": 28,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -11676,7 +11676,7 @@
     "club": "Inter de Limeira",
     "nome": "Juan Tavares",
     "posicao": "LAT",
-    "idade": 24,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -11684,7 +11684,7 @@
     "club": "Inter de Limeira",
     "nome": "César Morais",
     "posicao": "LAT",
-    "idade": 29,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -11692,7 +11692,7 @@
     "club": "Inter de Limeira",
     "nome": "João Victor",
     "posicao": "LAT",
-    "idade": 24,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11700,7 +11700,7 @@
     "club": "Inter de Limeira",
     "nome": "Nassom",
     "posicao": "LAT",
-    "idade": 23,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -11708,7 +11708,7 @@
     "club": "Inter de Limeira",
     "nome": "Gabriel Dias",
     "posicao": "LAT",
-    "idade": 32,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -11716,7 +11716,7 @@
     "club": "Inter de Limeira",
     "nome": "Vidal",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -11724,7 +11724,7 @@
     "club": "Inter de Limeira",
     "nome": "Yan Silva",
     "posicao": "LAT",
-    "idade": 29,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -11732,7 +11732,7 @@
     "club": "Inter de Limeira",
     "nome": "Emerson Santos",
     "posicao": "VOL",
-    "idade": 34,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -11740,7 +11740,7 @@
     "club": "Inter de Limeira",
     "nome": "Alef",
     "posicao": "VOL",
-    "idade": 31,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -11748,7 +11748,7 @@
     "club": "Inter de Limeira",
     "nome": "Ronaldo Henrique",
     "posicao": "VOL",
-    "idade": 32,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -11756,7 +11756,7 @@
     "club": "Inter de Limeira",
     "nome": "Gustavo Bochecha",
     "posicao": "VOL",
-    "idade": 30,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11764,7 +11764,7 @@
     "club": "Inter de Limeira",
     "nome": "Lucas Buchecha",
     "posicao": "VOL",
-    "idade": 25,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -11772,7 +11772,7 @@
     "club": "Inter de Limeira",
     "nome": "Fabricio Dias",
     "posicao": "VOL",
-    "idade": 22,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -11780,7 +11780,7 @@
     "club": "Inter de Limeira",
     "nome": "Romarinho",
     "posicao": "MEI",
-    "idade": 32,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11788,7 +11788,7 @@
     "club": "Inter de Limeira",
     "nome": "Marco Antônio",
     "posicao": "MEI",
-    "idade": 28,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11796,7 +11796,7 @@
     "club": "Inter de Limeira",
     "nome": "Gabriel Santiago",
     "posicao": "MEI",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11804,7 +11804,7 @@
     "club": "Inter de Limeira",
     "nome": "Claudinho",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -11812,7 +11812,7 @@
     "club": "Inter de Limeira",
     "nome": "Luiz Guilherme",
     "posicao": "MEI",
-    "idade": 22,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11820,7 +11820,7 @@
     "club": "Inter de Limeira",
     "nome": "Vitor Leque",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -11828,7 +11828,7 @@
     "club": "Inter de Limeira",
     "nome": "Rafael Oller",
     "posicao": "ATA",
-    "idade": 31,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -11836,7 +11836,7 @@
     "club": "Inter de Limeira",
     "nome": "Felipe Saraiva",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -11844,7 +11844,7 @@
     "club": "Inter de Limeira",
     "nome": "Robinho",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -11852,7 +11852,7 @@
     "club": "Inter de Limeira",
     "nome": "Richard",
     "posicao": "ATA",
-    "idade": 24,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -11860,7 +11860,7 @@
     "club": "Inter de Limeira",
     "nome": "Miguel Bianconi",
     "posicao": "ATA",
-    "idade": 34,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -11876,7 +11876,7 @@
     "club": "Paysandu",
     "nome": "Jean Drosny",
     "posicao": "GOL",
-    "idade": 32,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -11884,7 +11884,7 @@
     "club": "Paysandu",
     "nome": "Gabriel Mesquita",
     "posicao": "GOL",
-    "idade": 27,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -11892,7 +11892,7 @@
     "club": "Paysandu",
     "nome": "Levi",
     "posicao": "GOL",
-    "idade": 20,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -11900,7 +11900,7 @@
     "club": "Paysandu",
     "nome": "Marcão",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -11908,7 +11908,7 @@
     "club": "Paysandu",
     "nome": "Gustavo Henrique",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -11916,7 +11916,7 @@
     "club": "Paysandu",
     "nome": "Pedro Carrerete",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -11924,7 +11924,7 @@
     "club": "Paysandu",
     "nome": "Bruno Bispo",
     "posicao": "ZAG",
-    "idade": 30,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -11932,7 +11932,7 @@
     "club": "Paysandu",
     "nome": "Castro",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -11940,7 +11940,7 @@
     "club": "Paysandu",
     "nome": "Lucas Rodrigues",
     "posicao": "ZAG",
-    "idade": 24,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -11956,7 +11956,7 @@
     "club": "Paysandu",
     "nome": "Libonati",
     "posicao": "ZAG",
-    "idade": 21,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -11964,7 +11964,7 @@
     "club": "Paysandu",
     "nome": "Facundo Bonifazi",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -11972,7 +11972,7 @@
     "club": "Paysandu",
     "nome": "Cauã Dias",
     "posicao": "LAT",
-    "idade": 20,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -11980,7 +11980,7 @@
     "club": "Paysandu",
     "nome": "Luciano Taboca",
     "posicao": "LAT",
-    "idade": 32,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -11988,7 +11988,7 @@
     "club": "Paysandu",
     "nome": "Edílson",
     "posicao": "LAT",
-    "idade": 31,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -11996,7 +11996,7 @@
     "club": "Paysandu",
     "nome": "Eduardo",
     "posicao": "LAT",
-    "idade": 25,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -12004,7 +12004,7 @@
     "club": "Paysandu",
     "nome": "Matheus Capixaba",
     "posicao": "LAT",
-    "idade": 20,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12012,7 +12012,7 @@
     "club": "Paysandu",
     "nome": "Caio Mello",
     "posicao": "VOL",
-    "idade": 26,
+    "idade": 18,
     "valorMercado": null
   },
   {
@@ -12020,7 +12020,7 @@
     "club": "Paysandu",
     "nome": "Pedro Henrique",
     "posicao": "VOL",
-    "idade": 18,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -12028,7 +12028,7 @@
     "club": "Paysandu",
     "nome": "Henrico",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 18,
     "valorMercado": null
   },
   {
@@ -12036,7 +12036,7 @@
     "club": "Paysandu",
     "nome": "Brian Macapá",
     "posicao": "VOL",
-    "idade": 18,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12044,7 +12044,7 @@
     "club": "Paysandu",
     "nome": "Tiago Índio",
     "posicao": "VOL",
-    "idade": 24,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -12052,7 +12052,7 @@
     "club": "Paysandu",
     "nome": "Matheus Vargas",
     "posicao": "MEI",
-    "idade": 30,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -12060,8 +12060,8 @@
     "club": "Paysandu",
     "nome": "Henrique Salomoni",
     "posicao": "MEI",
-    "idade": 21,
-    "valorMercado": null
+    "idade": 23,
+    "valorMercado": 200000000
   },
   {
     "clubId": 42,
@@ -12084,7 +12084,7 @@
     "club": "Paysandu",
     "nome": "Marcinho",
     "posicao": "MEI",
-    "idade": 31,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12092,7 +12092,7 @@
     "club": "Paysandu",
     "nome": "Lucas Cardoso",
     "posicao": "MEI",
-    "idade": 26,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -12100,7 +12100,7 @@
     "club": "Paysandu",
     "nome": "Kauã Hinkel",
     "posicao": "ATA",
-    "idade": 20,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12108,7 +12108,7 @@
     "club": "Paysandu",
     "nome": "Peu",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12116,7 +12116,7 @@
     "club": "Paysandu",
     "nome": "Thayllon",
     "posicao": "ATA",
-    "idade": 24,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -12124,7 +12124,7 @@
     "club": "Paysandu",
     "nome": "Kleiton Pego",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -12140,7 +12140,7 @@
     "club": "Paysandu",
     "nome": "Klayvert",
     "posicao": "ATA",
-    "idade": 20,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -12148,7 +12148,7 @@
     "club": "Paysandu",
     "nome": "Ítalo Carvalho",
     "posicao": "ATA",
-    "idade": 29,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -12156,7 +12156,7 @@
     "club": "Paysandu",
     "nome": "Juninho",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -12172,7 +12172,7 @@
     "club": "Santa Cruz",
     "nome": "Felipe Alves",
     "posicao": "GOL",
-    "idade": 38,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -12180,7 +12180,7 @@
     "club": "Santa Cruz",
     "nome": "Thiago Coelho",
     "posicao": "GOL",
-    "idade": 31,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -12188,7 +12188,7 @@
     "club": "Santa Cruz",
     "nome": "Gabriel Souza",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12196,7 +12196,7 @@
     "club": "Santa Cruz",
     "nome": "Rokenedy",
     "posicao": "GOL",
-    "idade": 24,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12204,7 +12204,7 @@
     "club": "Santa Cruz",
     "nome": "Thiago Henrique",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 39,
     "valorMercado": null
   },
   {
@@ -12212,7 +12212,7 @@
     "club": "Santa Cruz",
     "nome": "William Alves",
     "posicao": "ZAG",
-    "idade": 39,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -12220,7 +12220,7 @@
     "club": "Santa Cruz",
     "nome": "Eurico",
     "posicao": "ZAG",
-    "idade": 32,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -12228,7 +12228,7 @@
     "club": "Santa Cruz",
     "nome": "Jeferson Bahia",
     "posicao": "ZAG",
-    "idade": 34,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -12244,7 +12244,7 @@
     "club": "Santa Cruz",
     "nome": "Edson Miranda",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12252,7 +12252,7 @@
     "club": "Santa Cruz",
     "nome": "Ruan Robert",
     "posicao": "ZAG",
-    "idade": 23,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -12260,7 +12260,7 @@
     "club": "Santa Cruz",
     "nome": "Zé Mário",
     "posicao": "LAT",
-    "idade": 34,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -12268,7 +12268,7 @@
     "club": "Santa Cruz",
     "nome": "Alex Ruan",
     "posicao": "LAT",
-    "idade": 33,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12276,7 +12276,7 @@
     "club": "Santa Cruz",
     "nome": "Rodrigues",
     "posicao": "LAT",
-    "idade": 26,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -12284,7 +12284,7 @@
     "club": "Santa Cruz",
     "nome": "Thiago Ennes",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 39,
     "valorMercado": null
   },
   {
@@ -12292,7 +12292,7 @@
     "club": "Santa Cruz",
     "nome": "Fabinho",
     "posicao": "VOL",
-    "idade": 39,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -12300,7 +12300,7 @@
     "club": "Santa Cruz",
     "nome": "Andrey",
     "posicao": "VOL",
-    "idade": 28,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -12308,7 +12308,7 @@
     "club": "Santa Cruz",
     "nome": "Silva",
     "posicao": "VOL",
-    "idade": 30,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -12316,7 +12316,7 @@
     "club": "Santa Cruz",
     "nome": "Arilson",
     "posicao": "VOL",
-    "idade": 32,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -12324,7 +12324,7 @@
     "club": "Santa Cruz",
     "nome": "Léo Costa",
     "posicao": "VOL",
-    "idade": 30,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -12332,7 +12332,7 @@
     "club": "Santa Cruz",
     "nome": "Pedro Favela",
     "posicao": "VOL",
-    "idade": 27,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -12340,7 +12340,7 @@
     "club": "Santa Cruz",
     "nome": "Régis",
     "posicao": "MEI",
-    "idade": 33,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -12348,7 +12348,7 @@
     "club": "Santa Cruz",
     "nome": "Patrick Allan",
     "posicao": "MEI",
-    "idade": 31,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -12356,7 +12356,7 @@
     "club": "Santa Cruz",
     "nome": "João Pedro",
     "posicao": "MEI",
-    "idade": 27,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12364,7 +12364,7 @@
     "club": "Santa Cruz",
     "nome": "Nilton",
     "posicao": "MEI",
-    "idade": 23,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -12372,7 +12372,7 @@
     "club": "Santa Cruz",
     "nome": "Renato",
     "posicao": "ATA",
-    "idade": 36,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -12380,7 +12380,7 @@
     "club": "Santa Cruz",
     "nome": "Everaldo",
     "posicao": "ATA",
-    "idade": 32,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -12388,7 +12388,7 @@
     "club": "Santa Cruz",
     "nome": "Robinho",
     "posicao": "ATA",
-    "idade": 31,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -12396,7 +12396,7 @@
     "club": "Santa Cruz",
     "nome": "Ronald",
     "posicao": "ATA",
-    "idade": 29,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -12404,7 +12404,7 @@
     "club": "Santa Cruz",
     "nome": "Cassiano Bouzon",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12412,7 +12412,7 @@
     "club": "Santa Cruz",
     "nome": "Jhoninha",
     "posicao": "ATA",
-    "idade": 24,
+    "idade": 38,
     "valorMercado": null
   },
   {
@@ -12420,7 +12420,7 @@
     "club": "Santa Cruz",
     "nome": "Ariel Nahuelpán",
     "posicao": "ATA",
-    "idade": 38,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -12428,7 +12428,7 @@
     "club": "Santa Cruz",
     "nome": "Eron",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 38,
     "valorMercado": null
   },
   {
@@ -12436,7 +12436,7 @@
     "club": "Santa Cruz",
     "nome": "Tiago Marques",
     "posicao": "ATA",
-    "idade": 38,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -12452,7 +12452,7 @@
     "club": "Ypiranga-RS",
     "nome": "Zé Carlos",
     "posicao": "GOL",
-    "idade": 40,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -12460,7 +12460,7 @@
     "club": "Ypiranga-RS",
     "nome": "Lucas Maticoli",
     "posicao": "GOL",
-    "idade": 29,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12468,7 +12468,7 @@
     "club": "Ypiranga-RS",
     "nome": "Edu Araújo",
     "posicao": "GOL",
-    "idade": 24,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -12476,7 +12476,7 @@
     "club": "Ypiranga-RS",
     "nome": "Reinaldo",
     "posicao": "ZAG",
-    "idade": 37,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -12484,7 +12484,7 @@
     "club": "Ypiranga-RS",
     "nome": "Walce",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -12492,7 +12492,7 @@
     "club": "Ypiranga-RS",
     "nome": "Adilson Júnior",
     "posicao": "ZAG",
-    "idade": 22,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -12500,7 +12500,7 @@
     "club": "Ypiranga-RS",
     "nome": "Willian Gomes",
     "posicao": "ZAG",
-    "idade": 37,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -12508,7 +12508,7 @@
     "club": "Ypiranga-RS",
     "nome": "Léo Gobo",
     "posicao": "ZAG",
-    "idade": 29,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12516,7 +12516,7 @@
     "club": "Ypiranga-RS",
     "nome": "Nicolas Schulz",
     "posicao": "LAT",
-    "idade": 26,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -12524,7 +12524,7 @@
     "club": "Ypiranga-RS",
     "nome": "Cleiton",
     "posicao": "LAT",
-    "idade": 33,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12532,7 +12532,7 @@
     "club": "Ypiranga-RS",
     "nome": "Ranisson",
     "posicao": "LAT",
-    "idade": 23,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -12540,7 +12540,7 @@
     "club": "Ypiranga-RS",
     "nome": "Danielzinho",
     "posicao": "LAT",
-    "idade": 25,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12548,7 +12548,7 @@
     "club": "Ypiranga-RS",
     "nome": "Ramon Vinicius",
     "posicao": "VOL",
-    "idade": 26,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -12556,7 +12556,7 @@
     "club": "Ypiranga-RS",
     "nome": "Robson Lopes",
     "posicao": "VOL",
-    "idade": 34,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -12564,7 +12564,7 @@
     "club": "Ypiranga-RS",
     "nome": "Kauan Bruno",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -12572,7 +12572,7 @@
     "club": "Ypiranga-RS",
     "nome": "Igor Silva",
     "posicao": "VOL",
-    "idade": 30,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -12580,7 +12580,7 @@
     "club": "Ypiranga-RS",
     "nome": "Lucas Ramos",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -12588,7 +12588,7 @@
     "club": "Ypiranga-RS",
     "nome": "Dionísio",
     "posicao": "MEI",
-    "idade": 32,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -12596,7 +12596,7 @@
     "club": "Ypiranga-RS",
     "nome": "Léo Rafael",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12604,7 +12604,7 @@
     "club": "Ypiranga-RS",
     "nome": "Allison",
     "posicao": "MEI",
-    "idade": 24,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -12612,7 +12612,7 @@
     "club": "Ypiranga-RS",
     "nome": "Nathan Zamith",
     "posicao": "MEI",
-    "idade": 21,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12620,7 +12620,7 @@
     "club": "Ypiranga-RS",
     "nome": "Dudu",
     "posicao": "MEI",
-    "idade": 23,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -12628,7 +12628,7 @@
     "club": "Ypiranga-RS",
     "nome": "Henrique",
     "posicao": "ATA",
-    "idade": 33,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -12636,7 +12636,7 @@
     "club": "Ypiranga-RS",
     "nome": "Marcelinho",
     "posicao": "ATA",
-    "idade": 30,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -12644,7 +12644,7 @@
     "club": "Ypiranga-RS",
     "nome": "Felipe Ferreira",
     "posicao": "ATA",
-    "idade": 32,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -12652,7 +12652,7 @@
     "club": "Ypiranga-RS",
     "nome": "Vini Charopem",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -12660,7 +12660,7 @@
     "club": "Ypiranga-RS",
     "nome": "Bryam",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12668,7 +12668,7 @@
     "club": "Ypiranga-RS",
     "nome": "Pedro Lucas",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -12676,7 +12676,7 @@
     "club": "Ypiranga-RS",
     "nome": "Alex Gonçalves",
     "posicao": "ATA",
-    "idade": 36,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12692,7 +12692,7 @@
     "club": "Guarani",
     "nome": "Andrey Ventura",
     "posicao": "GOL",
-    "idade": 33,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -12700,7 +12700,7 @@
     "club": "Guarani",
     "nome": "Caíque França",
     "posicao": "GOL",
-    "idade": 31,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -12708,7 +12708,7 @@
     "club": "Guarani",
     "nome": "Mateus Claus",
     "posicao": "GOL",
-    "idade": 32,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12716,7 +12716,7 @@
     "club": "Guarani",
     "nome": "Fred Conte",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 19,
     "valorMercado": null
   },
   {
@@ -12724,7 +12724,7 @@
     "club": "Guarani",
     "nome": "Rafael Donato",
     "posicao": "ZAG",
-    "idade": 37,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -12732,7 +12732,7 @@
     "club": "Guarani",
     "nome": "Maurício Antônio",
     "posicao": "ZAG",
-    "idade": 34,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -12740,7 +12740,7 @@
     "club": "Guarani",
     "nome": "Raphael",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12748,7 +12748,7 @@
     "club": "Guarani",
     "nome": "Edson",
     "posicao": "ZAG",
-    "idade": 24,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -12756,7 +12756,7 @@
     "club": "Guarani",
     "nome": "Emerson Barbosa",
     "posicao": "LAT",
-    "idade": 28,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -12764,8 +12764,8 @@
     "club": "Guarani",
     "nome": "Renan Castro",
     "posicao": "LAT",
-    "idade": 30,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 700000000
   },
   {
     "clubId": 58,
@@ -12780,7 +12780,7 @@
     "club": "Guarani",
     "nome": "Ynaiã",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -12788,7 +12788,7 @@
     "club": "Guarani",
     "nome": "Yan",
     "posicao": "LAT",
-    "idade": 20,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -12796,7 +12796,7 @@
     "club": "Guarani",
     "nome": "Rian",
     "posicao": "LAT",
-    "idade": 22,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -12804,7 +12804,7 @@
     "club": "Guarani",
     "nome": "Willian Farias",
     "posicao": "VOL",
-    "idade": 37,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -12820,7 +12820,7 @@
     "club": "Guarani",
     "nome": "Carlos Eduardo",
     "posicao": "VOL",
-    "idade": 25,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12828,7 +12828,7 @@
     "club": "Guarani",
     "nome": "Luis Otávio",
     "posicao": "VOL",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -12836,7 +12836,7 @@
     "club": "Guarani",
     "nome": "Igor Pereira",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -12844,7 +12844,7 @@
     "club": "Guarani",
     "nome": "Diego Torres",
     "posicao": "MEI",
-    "idade": 35,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -12852,7 +12852,7 @@
     "club": "Guarani",
     "nome": "João Paulo",
     "posicao": "MEI",
-    "idade": 36,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -12860,7 +12860,7 @@
     "club": "Guarani",
     "nome": "Isaque",
     "posicao": "MEI",
-    "idade": 29,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -12868,7 +12868,7 @@
     "club": "Guarani",
     "nome": "Kauã Jesus",
     "posicao": "MEI",
-    "idade": 23,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -12876,7 +12876,7 @@
     "club": "Guarani",
     "nome": "Lucca",
     "posicao": "ATA",
-    "idade": 36,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -12884,7 +12884,7 @@
     "club": "Guarani",
     "nome": "Éverton Brito",
     "posicao": "ATA",
-    "idade": 31,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12892,7 +12892,7 @@
     "club": "Guarani",
     "nome": "Guilherme Cachoeira",
     "posicao": "ATA",
-    "idade": 24,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12908,8 +12908,8 @@
     "club": "Guarani",
     "nome": "Matheus Guilherme",
     "posicao": "ATA",
-    "idade": 26,
-    "valorMercado": null
+    "idade": 29,
+    "valorMercado": 150000000
   },
   {
     "clubId": 58,
@@ -12932,7 +12932,7 @@
     "club": "Figueirense",
     "nome": "Fabrício",
     "posicao": "GOL",
-    "idade": 40,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -12940,7 +12940,7 @@
     "club": "Figueirense",
     "nome": "Igo Gabriel",
     "posicao": "GOL",
-    "idade": 24,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12948,7 +12948,7 @@
     "club": "Figueirense",
     "nome": "Vavá",
     "posicao": "GOL",
-    "idade": 26,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -12956,7 +12956,7 @@
     "club": "Figueirense",
     "nome": "Júnior",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -12964,7 +12964,7 @@
     "club": "Figueirense",
     "nome": "Jhonnathan",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -12972,7 +12972,7 @@
     "club": "Figueirense",
     "nome": "Douglas",
     "posicao": "ZAG",
-    "idade": 36,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -12980,7 +12980,7 @@
     "club": "Figueirense",
     "nome": "Leonan Santos",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -12988,7 +12988,7 @@
     "club": "Figueirense",
     "nome": "Anderson Conceição",
     "posicao": "ZAG",
-    "idade": 36,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -12996,7 +12996,7 @@
     "club": "Figueirense",
     "nome": "Lucas Dias",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -13004,7 +13004,7 @@
     "club": "Figueirense",
     "nome": "Roger Fellipo",
     "posicao": "ZAG",
-    "idade": 22,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -13012,7 +13012,7 @@
     "club": "Figueirense",
     "nome": "Jhonathan Reis",
     "posicao": "ZAG",
-    "idade": 20,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13020,7 +13020,7 @@
     "club": "Figueirense",
     "nome": "Felipe Santiago",
     "posicao": "ZAG",
-    "idade": 23,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -13028,7 +13028,7 @@
     "club": "Figueirense",
     "nome": "Arthur Henrique",
     "posicao": "LAT",
-    "idade": 32,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13036,7 +13036,7 @@
     "club": "Figueirense",
     "nome": "Vitor Ricardo",
     "posicao": "LAT",
-    "idade": 26,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13044,7 +13044,7 @@
     "club": "Figueirense",
     "nome": "Léo Maia",
     "posicao": "LAT",
-    "idade": 23,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -13052,7 +13052,7 @@
     "club": "Figueirense",
     "nome": "Ezequiel",
     "posicao": "LAT",
-    "idade": 33,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -13060,7 +13060,7 @@
     "club": "Figueirense",
     "nome": "Renan Areias",
     "posicao": "VOL",
-    "idade": 28,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13076,7 +13076,7 @@
     "club": "Figueirense",
     "nome": "Flávio",
     "posicao": "VOL",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13084,7 +13084,7 @@
     "club": "Figueirense",
     "nome": "Raynan",
     "posicao": "VOL",
-    "idade": 25,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -13092,8 +13092,8 @@
     "club": "Figueirense",
     "nome": "Rafinha Potiguar",
     "posicao": "VOL",
-    "idade": 27,
-    "valorMercado": null
+    "idade": 23,
+    "valorMercado": 200000000
   },
   {
     "clubId": 41,
@@ -13108,7 +13108,7 @@
     "club": "Figueirense",
     "nome": "Jorginho",
     "posicao": "MEI",
-    "idade": 35,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -13116,7 +13116,7 @@
     "club": "Figueirense",
     "nome": "Dudu Sampaio",
     "posicao": "MEI",
-    "idade": 27,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13124,8 +13124,8 @@
     "club": "Figueirense",
     "nome": "Choco",
     "posicao": "MEI",
-    "idade": 25,
-    "valorMercado": null
+    "idade": 23,
+    "valorMercado": 200000000
   },
   {
     "clubId": 41,
@@ -13140,7 +13140,7 @@
     "club": "Figueirense",
     "nome": "Pablo",
     "posicao": "ATA",
-    "idade": 33,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13156,8 +13156,8 @@
     "club": "Figueirense",
     "nome": "Guilherme Vieira",
     "posicao": "ATA",
-    "idade": 26,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 150000000
   },
   {
     "clubId": 41,
@@ -13172,7 +13172,7 @@
     "club": "Figueirense",
     "nome": "Igor Bolt",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -13180,7 +13180,7 @@
     "club": "Figueirense",
     "nome": "Silvinho",
     "posicao": "ATA",
-    "idade": 36,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13188,7 +13188,7 @@
     "club": "Figueirense",
     "nome": "Zé Carlos",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -13196,7 +13196,7 @@
     "club": "Figueirense",
     "nome": "Hyuri",
     "posicao": "ATA",
-    "idade": 34,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -13204,7 +13204,7 @@
     "club": "Figueirense",
     "nome": "João Marcos",
     "posicao": "ATA",
-    "idade": 29,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -13220,7 +13220,7 @@
     "club": "Maranhão",
     "nome": "Jean",
     "posicao": "GOL",
-    "idade": 34,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13228,7 +13228,7 @@
     "club": "Maranhão",
     "nome": "Victor Guilherme",
     "posicao": "GOL",
-    "idade": 26,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -13236,7 +13236,7 @@
     "club": "Maranhão",
     "nome": "Cauê",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -13244,7 +13244,7 @@
     "club": "Maranhão",
     "nome": "Iran",
     "posicao": "ZAG",
-    "idade": 30,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13252,7 +13252,7 @@
     "club": "Maranhão",
     "nome": "Edson",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13260,7 +13260,7 @@
     "club": "Maranhão",
     "nome": "Tibúrcio",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -13268,7 +13268,7 @@
     "club": "Maranhão",
     "nome": "Almeida",
     "posicao": "ZAG",
-    "idade": 20,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13276,7 +13276,7 @@
     "club": "Maranhão",
     "nome": "Lucão",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -13284,7 +13284,7 @@
     "club": "Maranhão",
     "nome": "Keven",
     "posicao": "ZAG",
-    "idade": 30,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -13292,7 +13292,7 @@
     "club": "Maranhão",
     "nome": "Lucas Santos",
     "posicao": "LAT",
-    "idade": 29,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -13300,7 +13300,7 @@
     "club": "Maranhão",
     "nome": "André Radija",
     "posicao": "LAT",
-    "idade": 31,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -13316,7 +13316,7 @@
     "club": "Maranhão",
     "nome": "Rodrigo Negueba",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -13324,7 +13324,7 @@
     "club": "Maranhão",
     "nome": "Bal",
     "posicao": "LAT",
-    "idade": 28,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -13332,7 +13332,7 @@
     "club": "Maranhão",
     "nome": "Rodrigo",
     "posicao": "VOL",
-    "idade": 32,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -13340,7 +13340,7 @@
     "club": "Maranhão",
     "nome": "Vander",
     "posicao": "VOL",
-    "idade": 27,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -13348,7 +13348,7 @@
     "club": "Maranhão",
     "nome": "Peu",
     "posicao": "VOL",
-    "idade": 22,
+    "idade": 19,
     "valorMercado": null
   },
   {
@@ -13356,7 +13356,7 @@
     "club": "Maranhão",
     "nome": "Pedro Lucas",
     "posicao": "VOL",
-    "idade": 19,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -13364,7 +13364,7 @@
     "club": "Maranhão",
     "nome": "Pedro Henrique",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13380,7 +13380,7 @@
     "club": "Maranhão",
     "nome": "Rosivan",
     "posicao": "VOL",
-    "idade": 26,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -13388,7 +13388,7 @@
     "club": "Maranhão",
     "nome": "Jorge Rocha",
     "posicao": "MEI",
-    "idade": 28,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -13396,7 +13396,7 @@
     "club": "Maranhão",
     "nome": "Vagalume",
     "posicao": "MEI",
-    "idade": 27,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13404,7 +13404,7 @@
     "club": "Maranhão",
     "nome": "Luis Gustavo",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 38,
     "valorMercado": null
   },
   {
@@ -13412,7 +13412,7 @@
     "club": "Maranhão",
     "nome": "Pimentinha",
     "posicao": "ATA",
-    "idade": 38,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -13420,7 +13420,7 @@
     "club": "Maranhão",
     "nome": "Tagarela",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13428,7 +13428,7 @@
     "club": "Maranhão",
     "nome": "Kessinho",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -13436,7 +13436,7 @@
     "club": "Maranhão",
     "nome": "Will",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13444,7 +13444,7 @@
     "club": "Maranhão",
     "nome": "Felipe Sales",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13452,7 +13452,7 @@
     "club": "Maranhão",
     "nome": "Ronald Makalysten",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -13460,7 +13460,7 @@
     "club": "Maranhão",
     "nome": "Erverson",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13468,7 +13468,7 @@
     "club": "Maranhão",
     "nome": "Felipe Cruz",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13476,7 +13476,7 @@
     "club": "Maranhão",
     "nome": "Rafael Teixeira",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -13492,7 +13492,7 @@
     "club": "Amazonas",
     "nome": "João Lopes",
     "posicao": "GOL",
-    "idade": 30,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -13500,7 +13500,7 @@
     "club": "Amazonas",
     "nome": "Renan",
     "posicao": "GOL",
-    "idade": 37,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -13508,7 +13508,7 @@
     "club": "Amazonas",
     "nome": "Victor Lube",
     "posicao": "GOL",
-    "idade": 32,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13516,7 +13516,7 @@
     "club": "Amazonas",
     "nome": "Abdul Mendy",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -13524,7 +13524,7 @@
     "club": "Amazonas",
     "nome": "Axel Lopes",
     "posicao": "GOL",
-    "idade": 34,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -13532,7 +13532,7 @@
     "club": "Amazonas",
     "nome": "Joílson",
     "posicao": "ZAG",
-    "idade": 35,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -13540,7 +13540,7 @@
     "club": "Amazonas",
     "nome": "Bruno Ramires",
     "posicao": "ZAG",
-    "idade": 32,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13548,7 +13548,7 @@
     "club": "Amazonas",
     "nome": "Iverton",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -13556,7 +13556,7 @@
     "club": "Amazonas",
     "nome": "Marcondes",
     "posicao": "ZAG",
-    "idade": 33,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -13564,7 +13564,7 @@
     "club": "Amazonas",
     "nome": "Diego Ivo",
     "posicao": "ZAG",
-    "idade": 37,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -13572,7 +13572,7 @@
     "club": "Amazonas",
     "nome": "Rafael Furlan",
     "posicao": "LAT",
-    "idade": 31,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -13580,7 +13580,7 @@
     "club": "Amazonas",
     "nome": "Ítalo Silva",
     "posicao": "LAT",
-    "idade": 35,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -13588,7 +13588,7 @@
     "club": "Amazonas",
     "nome": "Alyson",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -13596,7 +13596,7 @@
     "club": "Amazonas",
     "nome": "Kaio Luciano",
     "posicao": "LAT",
-    "idade": 21,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -13604,7 +13604,7 @@
     "club": "Amazonas",
     "nome": "Cicinho",
     "posicao": "LAT",
-    "idade": 37,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -13612,7 +13612,7 @@
     "club": "Amazonas",
     "nome": "Iury",
     "posicao": "LAT",
-    "idade": 34,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -13620,7 +13620,7 @@
     "club": "Amazonas",
     "nome": "Raylison",
     "posicao": "LAT",
-    "idade": 20,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13628,7 +13628,7 @@
     "club": "Amazonas",
     "nome": "Riquelme",
     "posicao": "VOL",
-    "idade": 23,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13636,7 +13636,7 @@
     "club": "Amazonas",
     "nome": "Tonhão",
     "posicao": "VOL",
-    "idade": 25,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -13644,7 +13644,7 @@
     "club": "Amazonas",
     "nome": "Júlio Simas",
     "posicao": "VOL",
-    "idade": 24,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -13652,7 +13652,7 @@
     "club": "Amazonas",
     "nome": "Pablo",
     "posicao": "VOL",
-    "idade": 22,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -13660,7 +13660,7 @@
     "club": "Amazonas",
     "nome": "Yaider Mena",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13668,7 +13668,7 @@
     "club": "Amazonas",
     "nome": "Jhonny Lucas",
     "posicao": "MEI",
-    "idade": 26,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -13676,7 +13676,7 @@
     "club": "Amazonas",
     "nome": "Fabinho",
     "posicao": "MEI",
-    "idade": 30,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -13684,7 +13684,7 @@
     "club": "Amazonas",
     "nome": "Ignacio Panzariello",
     "posicao": "MEI",
-    "idade": 36,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -13692,7 +13692,7 @@
     "club": "Amazonas",
     "nome": "Rafael Tavares",
     "posicao": "MEI",
-    "idade": 35,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13700,7 +13700,7 @@
     "club": "Amazonas",
     "nome": "Guty",
     "posicao": "MEI",
-    "idade": 23,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -13708,7 +13708,7 @@
     "club": "Amazonas",
     "nome": "Bernardo Paias",
     "posicao": "MEI",
-    "idade": 21,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -13716,7 +13716,7 @@
     "club": "Amazonas",
     "nome": "Ronan",
     "posicao": "ATA",
-    "idade": 31,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13724,7 +13724,7 @@
     "club": "Amazonas",
     "nome": "Léo Guerra",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -13732,7 +13732,7 @@
     "club": "Amazonas",
     "nome": "Kauê Fernandes",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -13740,7 +13740,7 @@
     "club": "Amazonas",
     "nome": "Geuvânio",
     "posicao": "ATA",
-    "idade": 34,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -13748,7 +13748,7 @@
     "club": "Amazonas",
     "nome": "Vinícius Leite",
     "posicao": "ATA",
-    "idade": 32,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -13756,7 +13756,7 @@
     "club": "Amazonas",
     "nome": "Ronaldo",
     "posicao": "ATA",
-    "idade": 35,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13764,7 +13764,7 @@
     "club": "Amazonas",
     "nome": "Ezequiel",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -13788,7 +13788,7 @@
     "club": "Caxias",
     "nome": "Marcelo Dal Soler",
     "posicao": "GOL",
-    "idade": 25,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13796,8 +13796,8 @@
     "club": "Caxias",
     "nome": "Gabriel Toebe",
     "posicao": "GOL",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 27,
+    "valorMercado": 150000000
   },
   {
     "clubId": 47,
@@ -13812,7 +13812,7 @@
     "club": "Caxias",
     "nome": "Maurício",
     "posicao": "ZAG",
-    "idade": 35,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -13828,7 +13828,7 @@
     "club": "Caxias",
     "nome": "Windson",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -13836,7 +13836,7 @@
     "club": "Caxias",
     "nome": "Roberto",
     "posicao": "LAT",
-    "idade": 35,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -13844,7 +13844,7 @@
     "club": "Caxias",
     "nome": "Vitinho",
     "posicao": "LAT",
-    "idade": 24,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -13852,7 +13852,7 @@
     "club": "Caxias",
     "nome": "Felipe Albuquerque",
     "posicao": "LAT",
-    "idade": 26,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -13860,7 +13860,7 @@
     "club": "Caxias",
     "nome": "Vitor Gabriel",
     "posicao": "LAT",
-    "idade": 20,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -13868,7 +13868,7 @@
     "club": "Caxias",
     "nome": "Breno Santos",
     "posicao": "VOL",
-    "idade": 28,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -13876,7 +13876,7 @@
     "club": "Caxias",
     "nome": "Matheus Nunes",
     "posicao": "VOL",
-    "idade": 23,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -13884,7 +13884,7 @@
     "club": "Caxias",
     "nome": "Luis Fernando",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -13892,7 +13892,7 @@
     "club": "Caxias",
     "nome": "Grígor",
     "posicao": "VOL",
-    "idade": 25,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -13900,7 +13900,7 @@
     "club": "Caxias",
     "nome": "Marcelo Freitas",
     "posicao": "MEI",
-    "idade": 32,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -13908,7 +13908,7 @@
     "club": "Caxias",
     "nome": "Ravanelli",
     "posicao": "MEI",
-    "idade": 29,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -13916,8 +13916,8 @@
     "club": "Caxias",
     "nome": "Matheus Anjos",
     "posicao": "MEI",
-    "idade": 27,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 200000000
   },
   {
     "clubId": 47,
@@ -13925,20 +13925,12 @@
     "nome": "Gaspar",
     "posicao": "ATA",
     "idade": 24,
-    "valorMercado": null
+    "valorMercado": 200000000
   },
   {
     "clubId": 47,
     "club": "Caxias",
     "nome": "Calyson",
-    "posicao": "ATA",
-    "idade": 33,
-    "valorMercado": null
-  },
-  {
-    "clubId": 47,
-    "club": "Caxias",
-    "nome": "Vitor Feijão",
     "posicao": "ATA",
     "idade": 30,
     "valorMercado": null
@@ -13946,7 +13938,7 @@
   {
     "clubId": 47,
     "club": "Caxias",
-    "nome": "Dentinho",
+    "nome": "Vitor Feijão",
     "posicao": "ATA",
     "idade": 29,
     "valorMercado": null
@@ -13954,7 +13946,7 @@
   {
     "clubId": 47,
     "club": "Caxias",
-    "nome": "João Lucas",
+    "nome": "Dentinho",
     "posicao": "ATA",
     "idade": 26,
     "valorMercado": null
@@ -13962,7 +13954,7 @@
   {
     "clubId": 47,
     "club": "Caxias",
-    "nome": "Salatiel",
+    "nome": "João Lucas",
     "posicao": "ATA",
     "idade": 33,
     "valorMercado": null
@@ -13970,7 +13962,7 @@
   {
     "clubId": 47,
     "club": "Caxias",
-    "nome": "Quirino",
+    "nome": "Salatiel",
     "posicao": "ATA",
     "idade": 32,
     "valorMercado": null
@@ -13978,9 +13970,17 @@
   {
     "clubId": 47,
     "club": "Caxias",
-    "nome": "Jhonatan Ribeiro",
+    "nome": "Quirino",
     "posicao": "ATA",
     "idade": 33,
+    "valorMercado": null
+  },
+  {
+    "clubId": 47,
+    "club": "Caxias",
+    "nome": "Jhonatan Ribeiro",
+    "posicao": "ATA",
+    "idade": 19,
     "valorMercado": null
   },
   {
@@ -13996,7 +13996,7 @@
     "club": "Ituano",
     "nome": "Saulo",
     "posicao": "GOL",
-    "idade": 31,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14004,7 +14004,7 @@
     "club": "Ituano",
     "nome": "Lucas Wingert",
     "posicao": "GOL",
-    "idade": 27,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -14012,7 +14012,7 @@
     "club": "Ituano",
     "nome": "Wesley Borges",
     "posicao": "GOL",
-    "idade": 24,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -14020,7 +14020,7 @@
     "club": "Ituano",
     "nome": "Matheus Mancini",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14036,7 +14036,7 @@
     "club": "Ituano",
     "nome": "Leandro Sergipe",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14044,7 +14044,7 @@
     "club": "Ituano",
     "nome": "Richard",
     "posicao": "LAT",
-    "idade": 21,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14052,7 +14052,7 @@
     "club": "Ituano",
     "nome": "Guilherme Dal Pian",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -14060,7 +14060,7 @@
     "club": "Ituano",
     "nome": "Lucas Mota",
     "posicao": "LAT",
-    "idade": 31,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -14068,7 +14068,7 @@
     "club": "Ituano",
     "nome": "Thassio",
     "posicao": "LAT",
-    "idade": 25,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14076,7 +14076,7 @@
     "club": "Ituano",
     "nome": "Lucas Dias",
     "posicao": "LAT",
-    "idade": 21,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -14084,7 +14084,7 @@
     "club": "Ituano",
     "nome": "Guilherme Xavier",
     "posicao": "VOL",
-    "idade": 31,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -14092,7 +14092,7 @@
     "club": "Ituano",
     "nome": "Marthã",
     "posicao": "VOL",
-    "idade": 29,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14100,7 +14100,7 @@
     "club": "Ituano",
     "nome": "Lipe",
     "posicao": "MEI",
-    "idade": 22,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -14108,7 +14108,7 @@
     "club": "Ituano",
     "nome": "Nelsinho",
     "posicao": "MEI",
-    "idade": 32,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -14116,7 +14116,7 @@
     "club": "Ituano",
     "nome": "Fernando Canesin",
     "posicao": "MEI",
-    "idade": 34,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14124,7 +14124,7 @@
     "club": "Ituano",
     "nome": "Lucas Stefanello",
     "posicao": "MEI",
-    "idade": 21,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14132,7 +14132,7 @@
     "club": "Ituano",
     "nome": "Victor Silva",
     "posicao": "MEI",
-    "idade": 22,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -14140,7 +14140,7 @@
     "club": "Ituano",
     "nome": "Felipe Muranga",
     "posicao": "MEI",
-    "idade": 25,
+    "idade": 38,
     "valorMercado": null
   },
   {
@@ -14148,7 +14148,7 @@
     "club": "Ituano",
     "nome": "Neto Berola",
     "posicao": "ATA",
-    "idade": 38,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -14156,7 +14156,7 @@
     "club": "Ituano",
     "nome": "Bruno Alves",
     "posicao": "ATA",
-    "idade": 33,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14164,7 +14164,7 @@
     "club": "Ituano",
     "nome": "Marlinho",
     "posicao": "ATA",
-    "idade": 21,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14172,7 +14172,7 @@
     "club": "Ituano",
     "nome": "Alason Carioca",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 38,
     "valorMercado": null
   },
   {
@@ -14180,7 +14180,7 @@
     "club": "Ituano",
     "nome": "Bruno Mezenga",
     "posicao": "ATA",
-    "idade": 38,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14188,7 +14188,7 @@
     "club": "Ituano",
     "nome": "Léo Passos",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14196,7 +14196,7 @@
     "club": "Ituano",
     "nome": "Gabriel Razera",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -14212,7 +14212,7 @@
     "club": "Volta Redonda",
     "nome": "Deivity",
     "posicao": "GOL",
-    "idade": 35,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14220,7 +14220,7 @@
     "club": "Volta Redonda",
     "nome": "Guilherme Nunes",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -14228,7 +14228,7 @@
     "club": "Volta Redonda",
     "nome": "Antônio Carlos",
     "posicao": "GOL",
-    "idade": 20,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14244,7 +14244,7 @@
     "club": "Volta Redonda",
     "nome": "Heitor Silva",
     "posicao": "GOL",
-    "idade": 27,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -14252,7 +14252,7 @@
     "club": "Volta Redonda",
     "nome": "Lucas Adell",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -14260,7 +14260,7 @@
     "club": "Volta Redonda",
     "nome": "Fabrício",
     "posicao": "ZAG",
-    "idade": 36,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -14268,7 +14268,7 @@
     "club": "Volta Redonda",
     "nome": "Lucas Rocha",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -14276,7 +14276,7 @@
     "club": "Volta Redonda",
     "nome": "Alan Ferreira",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -14284,7 +14284,7 @@
     "club": "Volta Redonda",
     "nome": "Jean Victor",
     "posicao": "LAT",
-    "idade": 32,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14292,7 +14292,7 @@
     "club": "Volta Redonda",
     "nome": "Juninho Monteiro",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 38,
     "valorMercado": null
   },
   {
@@ -14300,7 +14300,7 @@
     "club": "Volta Redonda",
     "nome": "Wellington Silva",
     "posicao": "LAT",
-    "idade": 38,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -14308,7 +14308,7 @@
     "club": "Volta Redonda",
     "nome": "Pedro Costa",
     "posicao": "LAT",
-    "idade": 33,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -14316,7 +14316,7 @@
     "club": "Volta Redonda",
     "nome": "Fabricio Aguiar",
     "posicao": "LAT",
-    "idade": 26,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -14324,7 +14324,7 @@
     "club": "Volta Redonda",
     "nome": "Henrique Silva",
     "posicao": "VOL",
-    "idade": 32,
+    "idade": 40,
     "valorMercado": null
   },
   {
@@ -14332,7 +14332,7 @@
     "club": "Volta Redonda",
     "nome": "Bruno Barra",
     "posicao": "VOL",
-    "idade": 40,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -14340,7 +14340,7 @@
     "club": "Volta Redonda",
     "nome": "Wagninho",
     "posicao": "VOL",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -14348,7 +14348,7 @@
     "club": "Volta Redonda",
     "nome": "Du Fernandes",
     "posicao": "VOL",
-    "idade": 25,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -14356,7 +14356,7 @@
     "club": "Volta Redonda",
     "nome": "Victor Feitosa",
     "posicao": "VOL",
-    "idade": 30,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -14364,7 +14364,7 @@
     "club": "Volta Redonda",
     "nome": "Caetano",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14372,7 +14372,7 @@
     "club": "Volta Redonda",
     "nome": "Juliano Fabro",
     "posicao": "VOL",
-    "idade": 27,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -14380,7 +14380,7 @@
     "club": "Volta Redonda",
     "nome": "Juninho",
     "posicao": "VOL",
-    "idade": 24,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -14396,7 +14396,7 @@
     "club": "Volta Redonda",
     "nome": "Luciano Naninho",
     "posicao": "MEI",
-    "idade": 34,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -14404,7 +14404,7 @@
     "club": "Volta Redonda",
     "nome": "Matheus Pedro",
     "posicao": "MEI",
-    "idade": 20,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14412,7 +14412,7 @@
     "club": "Volta Redonda",
     "nome": "Matheus Régis",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -14420,7 +14420,7 @@
     "club": "Volta Redonda",
     "nome": "Marquinhos",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -14428,7 +14428,7 @@
     "club": "Volta Redonda",
     "nome": "Andrey Dias",
     "posicao": "ATA",
-    "idade": 24,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -14436,7 +14436,7 @@
     "club": "Volta Redonda",
     "nome": "Zuniga",
     "posicao": "ATA",
-    "idade": 20,
+    "idade": 19,
     "valorMercado": null
   },
   {
@@ -14444,7 +14444,7 @@
     "club": "Volta Redonda",
     "nome": "Levi",
     "posicao": "ATA",
-    "idade": 19,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -14452,7 +14452,7 @@
     "club": "Volta Redonda",
     "nome": "Romarinho",
     "posicao": "ATA",
-    "idade": 30,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -14460,7 +14460,7 @@
     "club": "Volta Redonda",
     "nome": "Wendel",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -14468,7 +14468,7 @@
     "club": "Volta Redonda",
     "nome": "Heliardo",
     "posicao": "ATA",
-    "idade": 34,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -14484,7 +14484,7 @@
     "club": "Barra-SC",
     "nome": "Matheus Kayser",
     "posicao": "GOL",
-    "idade": 31,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -14492,7 +14492,7 @@
     "club": "Barra-SC",
     "nome": "Fabian Volpi",
     "posicao": "GOL",
-    "idade": 29,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -14500,7 +14500,7 @@
     "club": "Barra-SC",
     "nome": "Jean Pierre",
     "posicao": "ZAG",
-    "idade": 32,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -14508,7 +14508,7 @@
     "club": "Barra-SC",
     "nome": "Éverton Alemão",
     "posicao": "ZAG",
-    "idade": 33,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -14516,7 +14516,7 @@
     "club": "Barra-SC",
     "nome": "Vitão",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -14524,7 +14524,7 @@
     "club": "Barra-SC",
     "nome": "Vavá",
     "posicao": "ZAG",
-    "idade": 33,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -14532,7 +14532,7 @@
     "club": "Barra-SC",
     "nome": "Gabriel Jesus",
     "posicao": "ZAG",
-    "idade": 20,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -14540,7 +14540,7 @@
     "club": "Barra-SC",
     "nome": "Guilherme Lazaroni",
     "posicao": "LAT",
-    "idade": 33,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14548,7 +14548,7 @@
     "club": "Barra-SC",
     "nome": "Da Rocha",
     "posicao": "LAT",
-    "idade": 21,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14556,7 +14556,7 @@
     "club": "Barra-SC",
     "nome": "João Vinícius",
     "posicao": "LAT",
-    "idade": 22,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14564,7 +14564,7 @@
     "club": "Barra-SC",
     "nome": "Léo Duarte",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14572,7 +14572,7 @@
     "club": "Barra-SC",
     "nome": "Kayque",
     "posicao": "LAT",
-    "idade": 22,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -14580,7 +14580,7 @@
     "club": "Barra-SC",
     "nome": "Augusto Potiguar",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -14588,7 +14588,7 @@
     "club": "Barra-SC",
     "nome": "Matheus Barbosa",
     "posicao": "VOL",
-    "idade": 32,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -14596,7 +14596,7 @@
     "club": "Barra-SC",
     "nome": "Natan Costa",
     "posicao": "VOL",
-    "idade": 31,
+    "idade": 35,
     "valorMercado": null
   },
   {
@@ -14604,7 +14604,7 @@
     "club": "Barra-SC",
     "nome": "Tetê",
     "posicao": "VOL",
-    "idade": 35,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14612,7 +14612,7 @@
     "club": "Barra-SC",
     "nome": "Caíke",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14620,7 +14620,7 @@
     "club": "Barra-SC",
     "nome": "Barba",
     "posicao": "MEI",
-    "idade": 27,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -14628,8 +14628,8 @@
     "club": "Barra-SC",
     "nome": "Gaudencio",
     "posicao": "MEI",
-    "idade": 23,
-    "valorMercado": null
+    "idade": 24,
+    "valorMercado": 350000000
   },
   {
     "clubId": 46,
@@ -14644,7 +14644,7 @@
     "club": "Barra-SC",
     "nome": "Warley",
     "posicao": "MEI",
-    "idade": 26,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -14652,7 +14652,7 @@
     "club": "Barra-SC",
     "nome": "Elvinho",
     "posicao": "MEI",
-    "idade": 34,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14660,7 +14660,7 @@
     "club": "Barra-SC",
     "nome": "Rick",
     "posicao": "MEI",
-    "idade": 21,
+    "idade": 36,
     "valorMercado": null
   },
   {
@@ -14668,7 +14668,7 @@
     "club": "Barra-SC",
     "nome": "Cléo Silva",
     "posicao": "ATA",
-    "idade": 36,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14684,7 +14684,7 @@
     "club": "Barra-SC",
     "nome": "Marcelinho",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -14692,7 +14692,7 @@
     "club": "Barra-SC",
     "nome": "Betinho",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14700,7 +14700,7 @@
     "club": "Barra-SC",
     "nome": "Saymon",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 19,
     "valorMercado": null
   },
   {
@@ -14708,7 +14708,7 @@
     "club": "Barra-SC",
     "nome": "Matheuzinho",
     "posicao": "ATA",
-    "idade": 19,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -14732,7 +14732,7 @@
     "club": "Barra-SC",
     "nome": "Giovani Albuquerque",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14740,7 +14740,7 @@
     "club": "Barra-SC",
     "nome": "Renan Bernabé",
     "posicao": "ATA",
-    "idade": 22,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14756,7 +14756,7 @@
     "club": "Anápolis",
     "nome": "Ravel Pelegrini",
     "posicao": "GOL",
-    "idade": 31,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -14764,7 +14764,7 @@
     "club": "Anápolis",
     "nome": "Victor Hugo",
     "posicao": "GOL",
-    "idade": 25,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14772,7 +14772,7 @@
     "club": "Anápolis",
     "nome": "Márcio Defendi",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14788,7 +14788,7 @@
     "club": "Anápolis",
     "nome": "Gabriel Ribeiro",
     "posicao": "GOL",
-    "idade": 21,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -14796,7 +14796,7 @@
     "club": "Anápolis",
     "nome": "Rafael Costa",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -14804,7 +14804,7 @@
     "club": "Anápolis",
     "nome": "Carioca",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -14812,7 +14812,7 @@
     "club": "Anápolis",
     "nome": "Helder",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -14820,7 +14820,7 @@
     "club": "Anápolis",
     "nome": "Igor Souza",
     "posicao": "ZAG",
-    "idade": 29,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14828,7 +14828,7 @@
     "club": "Anápolis",
     "nome": "Danilo",
     "posicao": "ZAG",
-    "idade": 22,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -14836,7 +14836,7 @@
     "club": "Anápolis",
     "nome": "Leonan",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -14844,7 +14844,7 @@
     "club": "Anápolis",
     "nome": "Vitinho",
     "posicao": "LAT",
-    "idade": 29,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -14852,7 +14852,7 @@
     "club": "Anápolis",
     "nome": "Marcos Marciliel",
     "posicao": "LAT",
-    "idade": 26,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -14860,7 +14860,7 @@
     "club": "Anápolis",
     "nome": "Rubinho",
     "posicao": "LAT",
-    "idade": 23,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14868,7 +14868,7 @@
     "club": "Anápolis",
     "nome": "Kaik Viçoza",
     "posicao": "LAT",
-    "idade": 22,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14884,7 +14884,7 @@
     "club": "Anápolis",
     "nome": "Samuel",
     "posicao": "VOL",
-    "idade": 27,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -14892,7 +14892,7 @@
     "club": "Anápolis",
     "nome": "Lucas Mila",
     "posicao": "VOL",
-    "idade": 23,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14908,7 +14908,7 @@
     "club": "Anápolis",
     "nome": "Vinícius Lucas",
     "posicao": "VOL",
-    "idade": 27,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14916,7 +14916,7 @@
     "club": "Anápolis",
     "nome": "Kauan Guilherme",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -14924,7 +14924,7 @@
     "club": "Anápolis",
     "nome": "João Borim",
     "posicao": "VOL",
-    "idade": 24,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -14932,7 +14932,7 @@
     "club": "Anápolis",
     "nome": "Juninho",
     "posicao": "MEI",
-    "idade": 27,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14940,7 +14940,7 @@
     "club": "Anápolis",
     "nome": "Luiz Felipe",
     "posicao": "MEI",
-    "idade": 22,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -14948,7 +14948,7 @@
     "club": "Anápolis",
     "nome": "Cássio Gabriel",
     "posicao": "MEI",
-    "idade": 34,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -14956,7 +14956,7 @@
     "club": "Anápolis",
     "nome": "Felipe Pará",
     "posicao": "MEI",
-    "idade": 31,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -14964,7 +14964,7 @@
     "club": "Anápolis",
     "nome": "Gabriel Batista",
     "posicao": "MEI",
-    "idade": 22,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -14972,7 +14972,7 @@
     "club": "Anápolis",
     "nome": "Fernandinho",
     "posicao": "ATA",
-    "idade": 23,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -14980,7 +14980,7 @@
     "club": "Anápolis",
     "nome": "Gustavo Henrique",
     "posicao": "ATA",
-    "idade": 27,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -14988,7 +14988,7 @@
     "club": "Anápolis",
     "nome": "Matheus Lagoa",
     "posicao": "ATA",
-    "idade": 30,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -14996,7 +14996,7 @@
     "club": "Anápolis",
     "nome": "Fernando Viana",
     "posicao": "ATA",
-    "idade": 34,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -15004,7 +15004,7 @@
     "club": "Anápolis",
     "nome": "João Vítor",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -15012,7 +15012,7 @@
     "club": "Anápolis",
     "nome": "Gonzalo Fornari",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -15028,7 +15028,7 @@
     "club": "Itabaiana",
     "nome": "Jefferson",
     "posicao": "GOL",
-    "idade": 33,
+    "idade": 37,
     "valorMercado": null
   },
   {
@@ -15036,7 +15036,7 @@
     "club": "Itabaiana",
     "nome": "Léo Souza",
     "posicao": "GOL",
-    "idade": 37,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -15044,7 +15044,7 @@
     "club": "Itabaiana",
     "nome": "Geaze",
     "posicao": "GOL",
-    "idade": 32,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -15052,7 +15052,7 @@
     "club": "Itabaiana",
     "nome": "William",
     "posicao": "GOL",
-    "idade": 20,
+    "idade": 38,
     "valorMercado": null
   },
   {
@@ -15060,7 +15060,7 @@
     "club": "Itabaiana",
     "nome": "Ligger",
     "posicao": "ZAG",
-    "idade": 38,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -15068,7 +15068,7 @@
     "club": "Itabaiana",
     "nome": "Yann Motta",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -15076,7 +15076,7 @@
     "club": "Itabaiana",
     "nome": "Lucão",
     "posicao": "ZAG",
-    "idade": 28,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -15084,7 +15084,7 @@
     "club": "Itabaiana",
     "nome": "Betão",
     "posicao": "ZAG",
-    "idade": 34,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -15092,7 +15092,7 @@
     "club": "Itabaiana",
     "nome": "Gustavo Cintra",
     "posicao": "ZAG",
-    "idade": 20,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -15100,7 +15100,7 @@
     "club": "Itabaiana",
     "nome": "Gustavo Fagundes",
     "posicao": "ZAG",
-    "idade": 25,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -15108,7 +15108,7 @@
     "club": "Itabaiana",
     "nome": "Manoel",
     "posicao": "LAT",
-    "idade": 30,
+    "idade": 29,
     "valorMercado": null
   },
   {
@@ -15116,7 +15116,7 @@
     "club": "Itabaiana",
     "nome": "Tito",
     "posicao": "LAT",
-    "idade": 29,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -15124,7 +15124,7 @@
     "club": "Itabaiana",
     "nome": "Caio Felipe",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -15140,7 +15140,7 @@
     "club": "Itabaiana",
     "nome": "Isaque",
     "posicao": "LAT",
-    "idade": 24,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -15156,7 +15156,7 @@
     "club": "Itabaiana",
     "nome": "Dyego",
     "posicao": "VOL",
-    "idade": 23,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -15164,7 +15164,7 @@
     "club": "Itabaiana",
     "nome": "Fabrício Moura",
     "posicao": "VOL",
-    "idade": 22,
+    "idade": 20,
     "valorMercado": null
   },
   {
@@ -15172,7 +15172,7 @@
     "club": "Itabaiana",
     "nome": "Victor Luis",
     "posicao": "VOL",
-    "idade": 20,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -15180,7 +15180,7 @@
     "club": "Itabaiana",
     "nome": "Gustavo Crecci",
     "posicao": "VOL",
-    "idade": 31,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -15188,7 +15188,7 @@
     "club": "Itabaiana",
     "nome": "Renatinho",
     "posicao": "MEI",
-    "idade": 34,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -15196,7 +15196,7 @@
     "club": "Itabaiana",
     "nome": "Cleiton",
     "posicao": "MEI",
-    "idade": 28,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -15204,7 +15204,7 @@
     "club": "Itabaiana",
     "nome": "Leilson",
     "posicao": "ATA",
-    "idade": 33,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -15212,7 +15212,7 @@
     "club": "Itabaiana",
     "nome": "Rodrigo Alves",
     "posicao": "ATA",
-    "idade": 30,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -15220,7 +15220,7 @@
     "club": "Itabaiana",
     "nome": "Tarcísio",
     "posicao": "ATA",
-    "idade": 33,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -15228,7 +15228,7 @@
     "club": "Itabaiana",
     "nome": "Denílson",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -15236,7 +15236,7 @@
     "club": "Itabaiana",
     "nome": "Elimar",
     "posicao": "ATA",
-    "idade": 28,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -15244,7 +15244,7 @@
     "club": "Itabaiana",
     "nome": "Luan Silva",
     "posicao": "ATA",
-    "idade": 34,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -15252,7 +15252,7 @@
     "club": "Itabaiana",
     "nome": "Everton Kanela",
     "posicao": "ATA",
-    "idade": 30,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -15268,7 +15268,7 @@
     "club": "Confiança",
     "nome": "Matheus Emiliano",
     "posicao": "GOL",
-    "idade": 25,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -15276,7 +15276,7 @@
     "club": "Confiança",
     "nome": "Cadu",
     "posicao": "GOL",
-    "idade": 21,
+    "idade": 22,
     "valorMercado": null
   },
   {
@@ -15284,7 +15284,7 @@
     "club": "Confiança",
     "nome": "João Fernandes",
     "posicao": "GOL",
-    "idade": 22,
+    "idade": 23,
     "valorMercado": null
   },
   {
@@ -15292,7 +15292,7 @@
     "club": "Confiança",
     "nome": "Marcos Paulo",
     "posicao": "GOL",
-    "idade": 23,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -15300,7 +15300,7 @@
     "club": "Confiança",
     "nome": "Ícaro",
     "posicao": "ZAG",
-    "idade": 33,
+    "idade": 32,
     "valorMercado": null
   },
   {
@@ -15308,7 +15308,7 @@
     "club": "Confiança",
     "nome": "Lucas Cunha",
     "posicao": "ZAG",
-    "idade": 32,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -15316,7 +15316,7 @@
     "club": "Confiança",
     "nome": "Eduardo Moura",
     "posicao": "ZAG",
-    "idade": 33,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -15324,7 +15324,7 @@
     "club": "Confiança",
     "nome": "Adryan",
     "posicao": "ZAG",
-    "idade": 26,
+    "idade": 31,
     "valorMercado": null
   },
   {
@@ -15332,7 +15332,7 @@
     "club": "Confiança",
     "nome": "Alisson",
     "posicao": "ZAG",
-    "idade": 31,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -15340,7 +15340,7 @@
     "club": "Confiança",
     "nome": "Renilson",
     "posicao": "ZAG",
-    "idade": 27,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -15348,7 +15348,7 @@
     "club": "Confiança",
     "nome": "João Mandovani",
     "posicao": "ZAG",
-    "idade": 21,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -15364,7 +15364,7 @@
     "club": "Confiança",
     "nome": "Marcelo",
     "posicao": "LAT",
-    "idade": 27,
+    "idade": 34,
     "valorMercado": null
   },
   {
@@ -15372,7 +15372,7 @@
     "club": "Confiança",
     "nome": "Weriton",
     "posicao": "LAT",
-    "idade": 34,
+    "idade": 26,
     "valorMercado": null
   },
   {
@@ -15380,7 +15380,7 @@
     "club": "Confiança",
     "nome": "Valdir",
     "posicao": "LAT",
-    "idade": 26,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -15388,7 +15388,7 @@
     "club": "Confiança",
     "nome": "Mateus Ludke",
     "posicao": "LAT",
-    "idade": 25,
+    "idade": 28,
     "valorMercado": null
   },
   {
@@ -15404,7 +15404,7 @@
     "club": "Confiança",
     "nome": "Madison",
     "posicao": "VOL",
-    "idade": 28,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -15412,7 +15412,7 @@
     "club": "Confiança",
     "nome": "Lorran",
     "posicao": "VOL",
-    "idade": 30,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -15420,7 +15420,7 @@
     "club": "Confiança",
     "nome": "Paulo Henrique",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 24,
     "valorMercado": null
   },
   {
@@ -15428,7 +15428,7 @@
     "club": "Confiança",
     "nome": "Gabriel Zeca",
     "posicao": "VOL",
-    "idade": 24,
+    "idade": 21,
     "valorMercado": null
   },
   {
@@ -15436,7 +15436,7 @@
     "club": "Confiança",
     "nome": "Moisés",
     "posicao": "VOL",
-    "idade": 21,
+    "idade": 27,
     "valorMercado": null
   },
   {
@@ -15452,8 +15452,8 @@
     "club": "Confiança",
     "nome": "PK",
     "posicao": "MEI",
-    "idade": 27,
-    "valorMercado": null
+    "idade": 31,
+    "valorMercado": 50000000
   },
   {
     "clubId": 55,
@@ -15468,7 +15468,7 @@
     "club": "Confiança",
     "nome": "Danielzinho",
     "posicao": "ATA",
-    "idade": 26,
+    "idade": 30,
     "valorMercado": null
   },
   {
@@ -15476,7 +15476,7 @@
     "club": "Confiança",
     "nome": "Iago",
     "posicao": "ATA",
-    "idade": 30,
+    "idade": 25,
     "valorMercado": null
   },
   {
@@ -15484,7 +15484,7 @@
     "club": "Confiança",
     "nome": "Breiner Camilo",
     "posicao": "ATA",
-    "idade": 25,
+    "idade": 33,
     "valorMercado": null
   },
   {
@@ -15492,7 +15492,7 @@
     "club": "Confiança",
     "nome": "Maikon Aquino",
     "posicao": "ATA",
-    "idade": 33,
+    "idade": 31,
     "valorMercado": null
   },
   {

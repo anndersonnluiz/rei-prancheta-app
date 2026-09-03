@@ -75,7 +75,7 @@ function parse(file) {
       const m=lines[j].match(/\((\d{2})\)/); if(m) age=Number(m[1]);
       const v=lines[j].match(/€\s*([\d.,]+)\s*(mi\.|mil)?/i);
       if(v) value=v[2]?.toLowerCase().startsWith('mi') ? Number(v[1].replace(',','.'))*1e6 : Number(v[1].replace(',','.'))*1e3;
-      if(age!==null) break;
+      if(age!==null && value!==null) break;
     }
     records.push({clubId:club.id,club:club.nome,nome:name,posicao:positions.get(raw),idade:age,valorMercado:value});
   }
