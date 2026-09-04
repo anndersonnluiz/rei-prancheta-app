@@ -7862,6 +7862,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var selecionado = $scope.jogadorTaticaSelecionado;
         // A troca por toque deve funcionar nas duas ordens:
         // titular -> banco e banco -> titular.
+        if (selecionado && selecionado.id !== jogador.id && selecionado.emCampo && jogador.emCampo) {
+            var trocaPosX = selecionado.posX;
+            var trocaPosY = selecionado.posY;
+            selecionado.posX = jogador.posX;
+            selecionado.posY = jogador.posY;
+            jogador.posX = trocaPosX;
+            jogador.posY = trocaPosY;
+            $scope.jogadorTaticaSelecionado = null;
+            return true;
+        }
         if (selecionado && selecionado.id !== jogador.id && Boolean(selecionado.emCampo) !== Boolean(jogador.emCampo)) {
             if ($scope.partidaEmAndamento && $scope.partidaPausada && $scope.substituicoesFeitas >= 5) {
                 alert("Limite de 5 substituições atingido!");
@@ -7933,6 +7943,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 });
 
                 if (jogadorSobreposto) {
+                    // Dois titulares sobrepostos trocam de posição; somente
+                    // uma reserva sobreposta a um titular é substituição.
+                    if (jogador.emCampo && jogadorSobreposto.emCampo) {
+                        var trocaPosX = jogadorSobreposto.posX;
+                        var trocaPosY = jogadorSobreposto.posY;
+                        jogadorSobreposto.posX = posX;
+                        jogadorSobreposto.posY = posY;
+                        jogador.posX = trocaPosX;
+                        jogador.posY = trocaPosY;
+                        return;
+                    }
                     // Substituição! O jogador sobreposto vai pro banco.
                     if (!jogador.emCampo && $scope.partidaEmAndamento && $scope.partidaPausada) {
                         if ($scope.substituicoesFeitas >= 5) {
