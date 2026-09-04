@@ -3523,6 +3523,41 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
         align-self: flex-start;
     }
 }
+
+/* Última camada do modo móvel: o rótulo é independente do flex do marcador. */
+@media (max-width: 560px) {
+    .tactics-screen .player-token {
+        display: block !important;
+        overflow: visible !important;
+        z-index: 30;
+    }
+
+    .tactics-screen .token-circle {
+        display: flex !important;
+        position: relative;
+        z-index: 1;
+    }
+
+    .tactics-screen .token-name {
+        display: block !important;
+        position: absolute !important;
+        left: 50% !important;
+        bottom: -27px !important;
+        transform: translateX(-50%) !important;
+        width: 82px !important;
+        max-width: 82px !important;
+        box-sizing: border-box;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        z-index: 50 !important;
+    }
+
+    .tactics-screen .token-name > div {
+        display: block !important;
+        width: 100% !important;
+    }
+}
     .messages-screen button.active-filter { background: var(--br-blue); color: #fff; border-color: var(--br-blue); }
     .messages-screen button:not(.btn) { border: 1px solid #cbd5df; background: #fff; color: var(--text-main); border-radius: 999px; padding: 8px 13px; cursor: pointer; font-weight: 600; }
 .messages-screen button:not(.btn):hover { border-color: var(--br-blue); }
