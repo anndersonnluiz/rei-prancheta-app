@@ -7860,20 +7860,24 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.selecionarJogadorParaTatica = function(jogador) {
         if (!jogador || $scope.jogadorBloqueadoParaEntrar(jogador)) return false;
         var selecionado = $scope.jogadorTaticaSelecionado;
-        if (selecionado && selecionado.id !== jogador.id && !selecionado.emCampo && jogador.emCampo) {
+        // A troca por toque deve funcionar nas duas ordens:
+        // titular -> banco e banco -> titular.
+        if (selecionado && selecionado.id !== jogador.id && Boolean(selecionado.emCampo) !== Boolean(jogador.emCampo)) {
             if ($scope.partidaEmAndamento && $scope.partidaPausada && $scope.substituicoesFeitas >= 5) {
                 alert("Limite de 5 substituições atingido!");
                 return false;
             }
-            var posX = jogador.posX;
-            var posY = jogador.posY;
-            jogador.emCampo = false;
-            selecionado.emCampo = true;
-            selecionado.posX = posX;
-            selecionado.posY = posY;
+            var titular = selecionado.emCampo ? selecionado : jogador;
+            var reserva = selecionado.emCampo ? jogador : selecionado;
+            var posX = titular.posX;
+            var posY = titular.posY;
+            titular.emCampo = false;
+            reserva.emCampo = true;
+            reserva.posX = posX;
+            reserva.posY = posY;
             if ($scope.partidaEmAndamento && $scope.partidaPausada) {
                 $scope.substituicoesFeitas++;
-                $scope.marcarSubstituidoNaPartida(jogador);
+                $scope.marcarSubstituidoNaPartida(titular);
             }
             $scope.jogadorTaticaSelecionado = null;
             return true;
