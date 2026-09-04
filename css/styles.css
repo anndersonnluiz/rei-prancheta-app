@@ -2425,6 +2425,8 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .pitch-counter { position: absolute; bottom: 10px; right: 15px; color: white; font-size: 12px; font-weight: 600; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 10px; }
 
 .player-token { position: absolute; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; cursor: grab; box-shadow: 0 4px 8px rgba(0,0,0,0.5); transform: translate(-50%, -50%); z-index: 5; border: 2px solid white; transition: transform 0.1s; }
+.player-token { border: 0; box-shadow: none; overflow: visible; }
+.token-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; background: inherit; box-shadow: 0 4px 8px rgba(0,0,0,0.5); box-sizing: border-box; }
 .player-token.tactile-selected { box-shadow: 0 0 0 4px var(--br-yellow), 0 5px 12px rgba(0,0,0,.45); z-index: 12; }
 .player-token:hover { transform: translate(-50%, -50%) scale(1.1); z-index: 10; }
 .player-token:active { cursor: grabbing; }
@@ -3244,12 +3246,15 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .tactics-screen .player-token {
         width: 34px;
         height: 34px;
+    }
+    .tactics-screen .token-circle {
+        width: 34px;
+        height: 34px;
         min-width: 34px;
         min-height: 34px;
         padding: 0;
         line-height: 1;
         font-size: 13px;
-        overflow: visible;
     }
 
     .tactics-screen .token-overall {
