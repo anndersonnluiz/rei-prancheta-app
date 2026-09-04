@@ -3232,6 +3232,68 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .card:has(> .calendar-day-row) { overflow-x: hidden; }
 }
 
+/* Escalação legível em telas estreitas: o marcador continua centralizado e
+   a identificação não disputa espaço com a bola nem com os demais jogadores. */
+@media (max-width: 560px) {
+    .tactics-screen .pitch-container {
+        aspect-ratio: 3 / 4;
+        min-height: 0;
+        height: min(122vw, 560px);
+    }
+
+    .tactics-screen .player-token {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        min-height: 34px;
+        padding: 0;
+        line-height: 1;
+        font-size: 13px;
+        overflow: visible;
+    }
+
+    .tactics-screen .token-overall {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        line-height: 1;
+        text-align: center;
+    }
+
+    .tactics-screen .token-name {
+        bottom: -24px;
+        left: 50%;
+        width: 76px;
+        max-width: 76px;
+        min-height: 15px;
+        padding: 2px 4px;
+        overflow: hidden;
+        color: #fff;
+        background: rgba(8, 25, 34, .92);
+        border: 1px solid rgba(255,255,255,.35);
+        border-radius: 4px;
+        font-size: 8px;
+        line-height: 11px;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        z-index: 14;
+    }
+
+    .tactics-screen .token-name > div {
+        height: 2px !important;
+        margin-top: 2px !important;
+    }
+
+    .tactics-screen .pitch-direction {
+        bottom: 7px;
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+}
+
 /* Partida ao vivo: o placar e o painel de eventos precisam continuar legíveis
    quando a janela fica estreita ou o jogo é aberto em um dispositivo móvel. */
 @media (max-width: 720px) {
