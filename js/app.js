@@ -6413,6 +6413,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 }
             }
         }
+        // A reputação do treinador acompanha o desfecho da temporada, mas
+        // somente muda um nível por ciclo para evitar oscilações bruscas.
+        if (!$scope._reputacaoTemporadaAplicada) {
+            if (statusDiretoria === 'Aprovado') $scope.dados.reputacaoTreinador = Math.min(5, ($scope.dados.reputacaoTreinador || 3) + 1);
+            else if (demitido) $scope.dados.reputacaoTreinador = Math.max(1, ($scope.dados.reputacaoTreinador || 3) - 1);
+            $scope._reputacaoTemporadaAplicada = true;
+        }
         if ($scope.ultimoDiaEvolucao !== $scope.diaAtual) {
             $scope.aplicarEvolucaoElenco('Fechamento da temporada');
         }
@@ -6501,6 +6508,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.executarViradaDeAno = function(trocouDeClube) {
+        $scope._reputacaoTemporadaAplicada = false;
         var mudancaClube = $scope.mudancaClubePendente;
         var clubeAntesDaVirada = trocouDeClube && mudancaClube ? $scope.clubes.find(function(clube) { return clube.id === mudancaClube.clubeAnteriorId; }) : $scope.clubeAtual;
         var temporadaEncerrada = $scope.dados.anoAtual;
