@@ -3635,7 +3635,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var multiplicador = cargaCalendario && cargaCalendario.multiplicadorLesao ? cargaCalendario.multiplicadorLesao : 1;
         var fatorTreino = $scope.clubeAtual ? Math.max(0.9, 1 - (($scope.clubeAtual.infraestrutura && $scope.clubeAtual.infraestrutura.centroTreinamento ? $scope.clubeAtual.infraestrutura.centroTreinamento.nivel : 1) - 1) * 0.04) : 1;
         var bonusMedico = ($scope.staffClube || []).some(function(item) { return item.id === 'medico' && item.contratado; }) ? 0.94 : 1;
-        return Math.min(0.05, 0.015 * multiplicador * fatorTreino * bonusMedico);
+        // A chance é avaliada individualmente para cada jogador a cada dia.
+        // Um valor-base de 1,5% fazia um elenco de 30 atletas acumular lesões
+        // demais, especialmente na pré-temporada. Mantemos o risco realista,
+        // mas deixamos carga e estrutura médica pesarem de verdade.
+        return Math.min(0.025, 0.006 * multiplicador * fatorTreino * bonusMedico);
     };
 
     $scope.obterAlertaCargaCalendario = function() {
