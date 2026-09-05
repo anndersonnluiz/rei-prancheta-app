@@ -4335,6 +4335,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         var preco = ($scope.configFinanceira && $scope.configFinanceira.precoIngresso) ? parseInt($scope.configFinanceira.precoIngresso) : 80;
         var ocupacao = 0.5 + Math.random() * 0.5;
+        // Jogos contra clubes mais tradicionais atraem mais público, enquanto
+        // partidas de menor apelo mantêm uma ocupação mais moderada.
+        var adversarioBilheteria = userIsMandante ? partida.visitante : partida.mandante;
+        var reputacaoAdversario = Number(adversarioBilheteria && adversarioBilheteria.reputacao) || 65;
+        ocupacao += Math.max(-0.08, Math.min(0.10, (reputacaoAdversario - 70) / 300));
         if (preco == 40) ocupacao = 0.85 + Math.random() * 0.15;
         else if (preco == 150) ocupacao = 0.4 + Math.random() * 0.3;
         if (partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id) {
