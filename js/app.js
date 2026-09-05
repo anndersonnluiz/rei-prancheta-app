@@ -8809,6 +8809,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    function pontuarAlvoMercadoCPU(jogador, clubeDestino, elencoDestino) {
+        if (!jogador || !clubeDestino || !elencoDestino) return -Infinity;
+        var overall = $scope.calcularOverall(jogador);
+        var mesmaPosicao = elencoDestino.filter(function(item) { return item.posicao === jogador.posicao; });
+        var mediaPosicao = mesmaPosicao.length ? mesmaPosicao.reduce(function(total, item) { return total + $scope.calcularOverall(item); }, 0) / mesmaPosicao.length : 0;
+        var necessidade = Math.max(0, 2 - mesmaPosicao.length) * 12;
+        var reforco = Math.max(0, overall - mediaPosicao) * 1.8;
+        var idade = Number(jogador.idade) || 25;
+        var desenvolvimento = idade <= 23 ? Math.min(8, Number(jogador.potencial || overall) - overall) : 0;
+        var custo = $scope.calcularValorPasse(jogador);
+        var orcamento = Number(clubeDestino.orcamento) || 0;
+        var acessibilidade = custo > orcamento ? -100 : (custo > orcamento * 0.45 ? -8 : 0);
+        var redundancia = mesmaPosicao.length >= 4 && overall <= mediaPosicao + 2 ? -18 : 0;
+        return necessidade + reforco + Math.max(0, desenvolvimento) + acessibilidade + redundancia;
+    }
+
     $scope.simularMercadoCPU = function() {
         if (!$scope.isJanelaTransferenciaAberta()) return;
 
@@ -8942,7 +8958,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 });
                 if (alvosCPU.length === 0) alvosCPU = $scope.jogadores.filter(function(j) { return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= 72 && !j.lesionado && !j.emNegociacao; });
                 if (alvosCPU.length > 0) {
-                    var atletaCPU = alvosCPU[Math.floor(Math.random() * alvosCPU.length)];
+                    var elencoComprador = $scope.jogadores.filter(function(j) { return j.clubeId === compradorCPU.id; });
+                    alvosCPU.sort(function(a, b) {
+                        return pontuarAlvoMercadoCPU(b, compradorCPU, elencoComprador) - pontuarAlvoMercadoCPU(a, compradorCPU, elencoComprador);
+                    });
+                    var melhoresAlvos = alvosCPU.slice(0, Math.min(5, alvosCPU.length));
+                    var atletaCPU = melhoresAlvos[Math.floor(Math.random() * melhoresAlvos.length)];
                     var vendedorCPU = $scope.clubes.find(function(c) { return c.id === atletaCPU.clubeId; });
                 }
                 if (vendedorCPU && compradorCPU) {
