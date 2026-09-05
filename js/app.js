@@ -6026,6 +6026,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var gM = 0, gV = 0;
         var eventos = Math.floor(Math.random() * 6) + 4; // 4..9 eventos (aumentado para gerar mais finalizações)
         for (var i = 0; i < eventos; i++) {
+            // Intervalo simulado: a CPU reage ao placar antes dos eventos
+            // finais, usando risco e proteção de resultado com moderação.
+            if (i === Math.ceil(eventos / 2)) {
+                if (gM < gV) {
+                    taticaM.mentalidade = 'Ofensivo';
+                    taticaV.mentalidade = 'Retranca';
+                } else if (gV < gM) {
+                    taticaV.mentalidade = 'Ofensivo';
+                    taticaM.mentalidade = 'Retranca';
+                }
+                ataqueM = forcaM * $scope.calcularModificadorAtaqueTatica(taticaM);
+                defesaM = forcaM * $scope.calcularModificadorDefesaTatica(taticaM);
+                ataqueV = forcaV * $scope.calcularModificadorAtaqueTatica(taticaV);
+                defesaV = forcaV * $scope.calcularModificadorDefesaTatica(taticaV);
+                bias = 0.5 + (ataqueM - ataqueV) / Math.max(1, ataqueM + ataqueV) * 0.35;
+                bias = Math.max(0.05, Math.min(0.95, bias));
+            }
             if (Math.random() < 0.9) { // chance de gerar uma finalização (mais chutes por partida)
                 var atacanteEhMandante = Math.random() < bias;
                 if (atacanteEhMandante) {
