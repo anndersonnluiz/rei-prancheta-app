@@ -8849,8 +8849,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         ($scope.clubes || []).filter(function(clube) { return clube.id !== $scope.clubeAtual.id; }).forEach(function(clube) {
             var elencoCPU = ($scope.jogadores || []).filter(function(j) { return j.clubeId === clube.id; });
             if (elencoCPU.length > 30) {
-                elencoCPU.sort(function(a, b) { return $scope.calcularOverall(a) - $scope.calcularOverall(b); });
-                var dispensadoCPU = elencoCPU[0];
+                var candidatosLiberacao = elencoCPU.filter(function(jogador) {
+                    return !jogador.emCampo && !jogador.lesionado && !jogador.emNegociacao;
+                });
+                candidatosLiberacao.sort(function(a, b) {
+                    function custoBeneficio(jogador) {
+                        var idade = Number(jogador.idade) || 25;
+                        var potencial = Number(jogador.potencial) || $scope.calcularOverall(jogador);
+                        var excesso = elencoCPU.filter(function(item) { return item.posicao === jogador.posicao; }).length > 3 ? 8 : 0;
+                        return $scope.calcularOverall(jogador) + Math.max(0, potencial - $scope.calcularOverall(jogador)) * 0.35 - (idade >= 34 ? 5 : 0) - excesso;
+                    }
+                    return custoBeneficio(a) - custoBeneficio(b);
+                });
+                var dispensadoCPU = candidatosLiberacao[0];
+                if (!dispensadoCPU) return;
                 dispensadoCPU.clubeId = 'mercado';
                 dispensadoCPU.anosContrato = 0;
                 $scope.registrarTransferenciaHistorico({ tipo: 'cpu_liberacao', jogadorId: dispensadoCPU.id, jogadorNome: dispensadoCPU.nome, clubeOrigemId: clube.id, clubeOrigemNome: clube.nome, clubeDestinoId: 'mercado', clubeDestinoNome: 'Mercado Livre', valor: 0, salario: dispensadoCPU.salario, anosContrato: 0 });
@@ -8858,8 +8870,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (elencoCPU.length > 18 && Math.random() < 0.04) {
                 var candidatosVendaCPU = elencoCPU.filter(function(jogador) {
                     var repeticaoPosicao = elencoCPU.filter(function(item) { return item.posicao === jogador.posicao; }).length;
-                    return repeticaoPosicao > 2 && !jogador.emCampo;
-                }).sort(function(a, b) { return (b.salario || 0) - (a.salario || 0); });
+                    return repeticaoPosicao > 2 && !jogador.emCampo && !jogador.lesionado && !jogador.emNegociacao;
+                }).sort(function(a, b) {
+                    function prioridadeVenda(jogador) {
+                        var overall = $scope.calcularOverall(jogador);
+                        var potencial = Number(jogador.potencial) || overall;
+                        var idade = Number(jogador.idade) || 25;
+                        var salario = Number(jogador.salario) || 0;
+                        return (salario / 100000) - overall * 0.7 - Math.max(0, potencial - overall) * 0.5 + (idade >= 34 ? 4 : 0);
+                    }
+                    return prioridadeVenda(b) - prioridadeVenda(a);
+                });
                 var vendaCPU = candidatosVendaCPU[0];
                 if (vendaCPU) {
                     var receitaVendaCPU = Math.floor($scope.calcularValorPasse(vendaCPU) * 0.75);
