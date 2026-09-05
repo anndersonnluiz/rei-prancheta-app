@@ -5207,7 +5207,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             gestao: {
                 substituicoes: origem === 'rapido' ? 0 : ($scope.substituicoesFeitas || 0),
                 pausasTaticas: origem === 'rapido' ? 0 : ($scope.pausasTaticasFeitas || 0),
-                resumo: origem === 'rapido' ? 'Partida resolvida pelo resultado rápido.' : (($scope.substituicoesFeitas || 0) > 0 ? 'As substituições foram registradas na gestão da partida.' : 'Nenhuma substituição foi registrada.')
+                resumo: origem === 'rapido' ? 'Partida resolvida pelo resultado rápido.' : (($scope.substituicoesFeitas || 0) > 0 ? (($scope.substituicoesFeitas || 0) + ' substituição(ões) foram registradas e a formação foi atualizada durante a partida.') : 'Nenhuma substituição foi registrada; a formação inicial permaneceu até o fim.')
             },
             manchete: null
         };
