@@ -5986,6 +5986,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var forcaV = visitante.reputacao;
         var taticaM = $scope.sortearTaticaCPU();
         var taticaV = $scope.sortearTaticaCPU();
+        // A CPU mais forte tende a assumir o jogo; a mais fraca protege-se,
+        // mas a aleatoriedade continua permitindo estratégias diferentes.
+        if (forcaM - forcaV >= 8 && Math.random() < 0.65) taticaM.mentalidade = 'Ofensivo';
+        if (forcaV - forcaM >= 8 && Math.random() < 0.65) taticaV.mentalidade = 'Ofensivo';
+        if (forcaM - forcaV <= -8 && Math.random() < 0.65) taticaM.mentalidade = 'Retranca';
+        if (forcaV - forcaM <= -8 && Math.random() < 0.65) taticaV.mentalidade = 'Retranca';
         var ataqueM = forcaM * $scope.calcularModificadorAtaqueTatica(taticaM);
         var defesaM = forcaM * $scope.calcularModificadorDefesaTatica(taticaM);
         var ataqueV = forcaV * $scope.calcularModificadorAtaqueTatica(taticaV);
