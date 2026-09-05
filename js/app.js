@@ -8892,6 +8892,35 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             }
         });
 
+        // 0. Empréstimos de desenvolvimento: jovens sem espaço recebem
+        // minutos em um clube compatível, sem serem vendidos.
+        if (Math.random() < 0.06 && $scope.jogadores && Array.isArray($scope.emprestimosAtivos)) {
+            var candidatosEmprestimo = $scope.jogadores.filter(function(jogador) {
+                var clubeOrigem = ($scope.clubes || []).find(function(clube) { return clube.id === jogador.clubeId; });
+                var noBanco = !jogador.emCampo;
+                var jovem = (Number(jogador.idade) || 25) <= 23;
+                var temEspaco = $scope.jogadores.filter(function(item) { return item.clubeId === jogador.clubeId && item.posicao === jogador.posicao; }).length > 2;
+                var jaEmprestado = $scope.emprestimosAtivos.some(function(item) { return item.jogadorId === jogador.id && item.status === 'ativo'; });
+                return clubeOrigem && clubeOrigem.id !== $scope.clubeAtual.id && jovem && noBanco && temEspaco && !jaEmprestado && !jogador.lesionado;
+            });
+            if (candidatosEmprestimo.length) {
+                var jovemEmprestimo = candidatosEmprestimo[Math.floor(Math.random() * candidatosEmprestimo.length)];
+                var origemEmprestimo = jovemEmprestimo.clubeId;
+                var destinosEmprestimo = ($scope.clubes || []).filter(function(clube) {
+                    return clube.id !== origemEmprestimo && clube.id !== $scope.clubeAtual.id && clube.divisao && clube.divisao !== 'A' &&
+                        $scope.jogadores.filter(function(item) { return item.clubeId === clube.id && item.posicao === jovemEmprestimo.posicao; }).length < 3;
+                });
+                if (destinosEmprestimo.length) {
+                    var destinoEmprestimo = destinosEmprestimo[Math.floor(Math.random() * destinosEmprestimo.length)];
+                    jovemEmprestimo.clubeId = destinoEmprestimo.id;
+                    jovemEmprestimo.emCampo = false;
+                    var registroEmprestimo = { id: 'cpu_emprestimo_' + jovemEmprestimo.id + '_' + ($scope.diaAtual || 0), jogadorId: jovemEmprestimo.id, clubeOrigemId: origemEmprestimo, clubeDestinoId: destinoEmprestimo.id, clubeDestinoNome: destinoEmprestimo.nome, diasRestantes: 90, jogos: 0, minutos: 0, gols: 0, evolucao: 0, status: 'ativo', cpu: true };
+                    $scope.emprestimosAtivos.push(registroEmprestimo);
+                    $scope.registrarTransferenciaHistorico({ tipo: 'cpu_emprestimo', jogadorId: jovemEmprestimo.id, jogadorNome: jovemEmprestimo.nome, clubeOrigemId: origemEmprestimo, clubeDestinoId: destinoEmprestimo.id, clubeDestinoNome: destinoEmprestimo.nome, valor: 0, salario: jovemEmprestimo.salario, anosContrato: jovemEmprestimo.anosContrato });
+                }
+            }
+        }
+
         // 1. Propostas pelo seu jogador (Apenas 5% de chance agora por dia de janela)
         if (Math.random() < 0.05 && $scope.elencoAtual.length > 15) { 
             var jAlvo = $scope.elencoAtual[Math.floor(Math.random() * $scope.elencoAtual.length)];
