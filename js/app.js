@@ -2657,6 +2657,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return eventos;
     };
 
+    $scope.processarEventosDinamicosTemporada = function() {
+        var dia = Number($scope.diaAtual) || 0;
+        if (dia === 0 || dia % 14 !== 0 || !$scope.elencoAtual || !$scope.elencoAtual.length) return [];
+        var eventos = [];
+        var insatisfeito = $scope.elencoAtual.filter(function(jogador) {
+            return !jogador.lesionado && !jogador.suspenso && (Number(jogador.moral) || 70) < 48 && (Number(jogador.minutosTemporada) || 0) < 360;
+        }).sort(function(a, b) { return (a.moral || 70) - (b.moral || 70); })[0];
+        if (insatisfeito) {
+            insatisfeito.satisfacaoContrato = Math.max(0, (Number(insatisfeito.satisfacaoContrato) || 70) - 2);
+            eventos.push({ tipo: 'vestiario', titulo: 'Jogador pede mais espaço', detalhe: insatisfeito.nome + ' está insatisfeito com a sequência de minutos e espera uma oportunidade na próxima partida.' });
+        }
+        var destaque = $scope.elencoAtual.filter(function(jogador) {
+            return !jogador.lesionado && (Number(jogador.moral) || 70) >= 88 && (Number(jogador.jogosTemporada) || 0) >= 5;
+        }).sort(function(a, b) { return $scope.calcularOverall(b) - $scope.calcularOverall(a); })[0];
+        if (destaque && !insatisfeito) eventos.push({ tipo: 'torcida', titulo: 'Destaque ganha confiança', detalhe: destaque.nome + ' vive boa fase e virou referência positiva no vestiário.' });
+        eventos.forEach(function(evento, indice) {
+            if ($scope.registrarEventoAmbiente) $scope.registrarEventoAmbiente({ id: 'amb_evento_' + dia + '_' + indice, chave: 'evento_temporada|' + dia + '|' + indice, dia: dia, tipo: evento.tipo, impacto: evento.tipo === 'torcida' ? 1 : -1, titulo: evento.titulo, detalhe: evento.detalhe });
+            $scope.adicionarMensagem(evento.tipo === 'torcida' ? 'Torcida' : 'Vestiário', evento.titulo, evento.detalhe, true, evento.tipo);
+        });
+        return eventos;
+    };
+
     $scope.gerarNoticiarioDia = function(diaObj, partida) {
         if (!diaObj) return [];
         var chave = 'mundo_' + ($scope.diaAtual || 0) + '_' + (diaObj.titulo || diaObj.tipo);
@@ -5524,6 +5546,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.gerarNarrativaCompeticaoDia();
         $scope.aplicarPressaoNarrativaCompeticao();
         $scope.processarPromessasEAgentes();
+        $scope.processarEventosDinamicosTemporada();
         
         var cargaCalendarioRecuperacao = $scope.calcularCargaCalendario($scope.diaAtual + 1);
         var recuperacaoFisicaDia = $scope.calcularRecuperacaoFisicaDiaria(!!partida, $scope.diaAtual + 1);
