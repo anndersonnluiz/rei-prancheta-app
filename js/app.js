@@ -5325,6 +5325,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             xpFinal *= (1 + ($scope.calcularBonusDesenvolvimentoInfraestrutura() / 100));
             var impactoFuncao = $scope.obterImpactoFuncaoTatica ? $scope.obterImpactoFuncaoTatica(jogador) : null;
             if (impactoFuncao && (impactoFuncao.ataque || impactoFuncao.defesa || impactoFuncao.posse)) xpFinal += 1;
+            // Moral e sequência recente modulam o desenvolvimento sem criar
+            // saltos artificiais: confiança alta acelera pouco, enquanto uma
+            // fase ruim reduz o aproveitamento do treino e dos jogos.
+            if (Number(jogador.moral) >= 85) xpFinal += 1;
+            else if (Number(jogador.moral) > 0 && Number(jogador.moral) < 45) xpFinal -= 1;
+            if (Number(jogador.jogosTemporada) >= 8 && Number(jogador.evolucaoTemporada) > 0) xpFinal += 1;
             if (jogador.acabouDeSerLesionado || jogador.lesionado) xpFinal *= 0.5;
             xpFinal = Math.min(8, Math.max(0, Math.round(xpFinal)));
             jogador.xpTemporada = (jogador.xpTemporada || 0) + xpFinal;
