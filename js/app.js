@@ -2784,11 +2784,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (indice % 5 !== dia % 5) return;
             var elencoClube = ($scope.jogadores || []).filter(function(jogador) { return jogador.clubeId === clube.id; });
             if (!elencoClube.length) return;
-            var jogador = elencoClube[(dia + indice) % elencoClube.length];
+            // Renovações da CPU priorizam titulares, jovens promissores e
+            // jogadores importantes; a escolha não é mais aleatória.
+            var jogador = elencoClube.slice().sort(function(a, b) {
+                function prioridade(item) {
+                    var overall = $scope.calcularOverall(item);
+                    var idade = Number(item.idade) || 25;
+                    var titular = item.emCampo ? 10 : 0;
+                    var juventude = idade <= 25 ? 7 : (idade >= 34 ? -Math.min(8, idade - 33) : 0);
+                    var contrato = (item.anosContrato || 2) <= 1 ? 8 : 0;
+                    return overall + titular + juventude + contrato;
+                }
+                return prioridade(b) - prioridade(a);
+            })[0];
             if ((jogador.anosContrato || 2) <= 1) {
-                jogador.anosContrato = 2;
-                jogador.salario = Math.round((Number(jogador.salario) || 10000) * 1.08 / 100) * 100;
-                eventos.push({ tipo: 'renovacao', clube: clube, jogador: jogador });
+                var salarioRenovacao = Math.round((Number(jogador.salario) || 10000) * 1.08 / 100) * 100;
+                var custoAnualRenovacao = salarioRenovacao * 12;
+                if ((Number(clube.orcamento) || 0) >= custoAnualRenovacao * 0.35 || $scope.calcularOverall(jogador) >= 78) {
+                    jogador.anosContrato = 2;
+                    jogador.salario = salarioRenovacao;
+                    clube.orcamento = Math.max(0, (Number(clube.orcamento) || 0) - Math.round(custoAnualRenovacao * 0.05));
+                    eventos.push({ tipo: 'renovacao', clube: clube, jogador: jogador });
+                }
             } else if ((Number(clube.orcamento) || 0) < 1000000) {
                 eventos.push({ tipo: 'crise', clube: clube });
             }
