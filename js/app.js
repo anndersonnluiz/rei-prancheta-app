@@ -7906,8 +7906,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
 
         // Conta quantos jogadores foram expulsos nesta partida
-        var qtdExpulsos = $scope.elencoAtual.filter(function(j) { return j.expulso; }).length;
-        var vagasNoCampo = 11 - qtdExpulsos;
+        var qtdExpulsos = $scope.elencoAtual.filter(function(j) { return j.expulso === true; }).length;
+        var vagasNoCampo = Math.max(0, 11 - qtdExpulsos);
 
         // Se houver expulsos, removemos posições de atacantes/meias (as últimas do array)
         if (qtdExpulsos > 0) {
@@ -7922,7 +7922,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return valorB - valorA;
         });
         
-        posicoes.forEach(function(slot) {
+        posicoes.slice(0, vagasNoCampo).forEach(function(slot) {
             // Procura o melhor da posição que não esteja machucado/suspenso e nem expulso
             var jogador = banco.find(function(j) { return !j.emCampo && j.posicao === slot.pos && !$scope.jogadorBloqueadoParaEntrar(j); });
             if (!jogador) {
@@ -7935,6 +7935,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 jogador.posY = slot.y;
             }
         });
+
+        // Regra inegociável durante uma partida: expulsões não podem ser
+        // revertidas ao reaplicar uma formação. Isso também protege contra
+        // estados antigos/importados que tenham mais atletas marcados em campo.
+        if ($scope.partidaEmAndamento && qtdExpulsos > 0) {
+            var limiteCampo = 11 - qtdExpulsos;
+            var jogadoresEmCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo; });
+            if (jogadoresEmCampo.length > limiteCampo) {
+                jogadoresEmCampo.slice(limiteCampo).forEach(function(j) { j.emCampo = false; j.posX = 0; j.posY = 0; });
+            }
+            $scope.elencoAtual.filter(function(j) { return j.expulso === true; }).forEach(function(j) {
+                j.emCampo = false;
+                j.posX = 0;
+                j.posY = 0;
+            });
+        }
     };
 
     $scope.jogadorBloqueadoParaEntrar = function(jogador) {
