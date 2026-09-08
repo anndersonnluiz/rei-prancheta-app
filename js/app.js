@@ -4104,10 +4104,6 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             recomendacoes: [],
             jogadoresChaveAdversario: $scope.obterJogadoresChavePreJogo(adversario)
         };
-        analise.jogadoresChaveAdversario.forEach(function(jogador, indice) {
-            jogador.overall = Math.round($scope.calcularOverall(jogador));
-            jogador.ordem = indice + 1;
-        });
         var analista = ($scope.staffClube || []).find(function(item) { return item.id === 'analista' && item.contratado; });
         analise.analistaAtivo = !!analista;
         analise.confiancaAnalise = analista ? Math.min(95, 70 + (analista.nivel || 1) * 8) : 60;
