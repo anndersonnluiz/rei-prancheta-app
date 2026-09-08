@@ -7836,6 +7836,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var formacoesValidas = ['4-3-3', '4-4-2', '3-5-2', '4-2-3-1', '4-1-4-1', '3-4-3', '5-3-2'];
         if (formacoesValidas.indexOf(tipo) < 0) tipo = '4-3-3';
         $scope.formacaoEscolhida = tipo;
+        // Durante a partida, aplicar uma formação é apenas uma reorganização
+        // tática. Não pode promover atletas do banco silenciosamente, pois
+        // isso contornaria o limite de substituições e as expulsões.
+        var elencoElegivelParaReorganizacao = $scope.partidaEmAndamento
+            ? $scope.elencoAtual.filter(function(j) { return j.emCampo && !j.expulso; })
+            : null;
         // Tira todos de campo primeiro
         $scope.elencoAtual.forEach(function(j) { j.emCampo = false; });
         
@@ -7915,7 +7921,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
 
         // Ordena o banco do melhor pro pior para escalar os melhores
-        var banco = $scope.elencoAtual.slice().sort(function(a, b) {
+        var banco = ($scope.partidaEmAndamento ? elencoElegivelParaReorganizacao : $scope.elencoAtual).slice().sort(function(a, b) {
             var auxiliar = ($scope.staffClube || []).find(function(item) { return item.id === 'auxiliar' && item.contratado; });
             var valorA = $scope.calcularOverall(a) + (auxiliar ? (a.moral || 100) * 0.015 : 0);
             var valorB = $scope.calcularOverall(b) + (auxiliar ? (b.moral || 100) * 0.015 : 0);
