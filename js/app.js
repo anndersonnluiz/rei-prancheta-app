@@ -6028,17 +6028,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var avgCobradorV = mediaAtributoTime(visitante.id, 'cobrador', ['ATA','MEI','VOL','LAT']);
 
         var gM = 0, gV = 0;
+        var substituicoesM = 0, substituicoesV = 0;
         var eventos = Math.floor(Math.random() * 6) + 4; // 4..9 eventos (aumentado para gerar mais finalizações)
         for (var i = 0; i < eventos; i++) {
             // Intervalo simulado: a CPU reage ao placar antes dos eventos
             // finais, usando risco e proteção de resultado com moderação.
             if (i === Math.ceil(eventos / 2)) {
+                // A CPU faz ajustes no intervalo: troca a postura e simula
+                // substituições coerentes com o placar, sem criar vantagem
+                // fixa nem ultrapassar o limite regulamentar de cinco.
                 if (gM < gV) {
                     taticaM.mentalidade = 'Ofensivo';
                     taticaV.mentalidade = 'Retranca';
+                    substituicoesM = Math.min(3, 1 + Math.floor(Math.random() * 2));
                 } else if (gV < gM) {
                     taticaV.mentalidade = 'Ofensivo';
                     taticaM.mentalidade = 'Retranca';
+                    substituicoesV = Math.min(3, 1 + Math.floor(Math.random() * 2));
+                } else {
+                    // Em empate, a CPU troca no máximo um atleta por lado,
+                    // representando ajustes de desgaste sem exagero.
+                    substituicoesM = Math.random() < 0.35 ? 1 : 0;
+                    substituicoesV = Math.random() < 0.35 ? 1 : 0;
                 }
                 ataqueM = forcaM * $scope.calcularModificadorAtaqueTatica(taticaM);
                 defesaM = forcaM * $scope.calcularModificadorDefesaTatica(taticaM);
@@ -6069,7 +6080,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         $scope.registrarGolsNaDB(mandante.id, gM, null);
         $scope.registrarGolsNaDB(visitante.id, gV, null);
-        return { golsMandante: gM, golsVisitante: gV };
+        return { golsMandante: gM, golsVisitante: gV, substituicoesMandante: substituicoesM, substituicoesVisitante: substituicoesV };
     };
 
     $scope.simularJogosCPU = function(jogosDaRodada) {
@@ -6077,6 +6088,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var res = $scope.calcularPlacarAleatorioCPU(jogo.mandante, jogo.visitante, true);
             jogo.golsMandante = res.golsMandante;
             jogo.golsVisitante = res.golsVisitante;
+            jogo.substituicoesMandante = res.substituicoesMandante || 0;
+            jogo.substituicoesVisitante = res.substituicoesVisitante || 0;
             jogo.jogado = true;
             $scope.atualizarTabela(jogo, jogo.divisao);
         });
