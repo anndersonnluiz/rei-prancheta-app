@@ -3999,11 +3999,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             recomendacoes.push({ tipo: 'elenco', texto: 'Existe indisponivel no elenco: confirme se o banco cobre a posicao.' });
         }
 
+        var destaque = analiseBase.jogadoresChaveAdversario && analiseBase.jogadoresChaveAdversario[0];
+        if (destaque && destaque.overall >= 85) {
+            recomendacoes.push({ tipo: 'adversario', texto: 'Atenção ao destaque ' + destaque.nome + ' (' + destaque.overall + ' OVR): evite deixá-lo receber livre entre as linhas.' });
+        }
+        if (analiseBase.mando === 'Visitante' && analiseBase.diferencaForca > -3) {
+            recomendacoes.push({ tipo: 'tatica', texto: 'Como visitante, comece equilibrado e aumente o risco apenas se controlar o meio-campo.' });
+        }
+
         if (recomendacoes.length < 2) {
             recomendacoes.push({ tipo: 'jogo', texto: 'Use o pre-jogo para confirmar plano, mando e encaixes principais.' });
         }
 
-        return recomendacoes.slice(0, 4);
+        return recomendacoes.slice(0, 5);
     }
 
     $scope.calcularForcaElencoPreJogo = function(clube, preferirEscalacao) {
@@ -4096,6 +4104,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             recomendacoes: [],
             jogadoresChaveAdversario: $scope.obterJogadoresChavePreJogo(adversario)
         };
+        analise.jogadoresChaveAdversario.forEach(function(jogador, indice) {
+            jogador.overall = Math.round($scope.calcularOverall(jogador));
+            jogador.ordem = indice + 1;
+        });
         var analista = ($scope.staffClube || []).find(function(item) { return item.id === 'analista' && item.contratado; });
         analise.analistaAtivo = !!analista;
         analise.confiancaAnalise = analista ? Math.min(95, 70 + (analista.nivel || 1) * 8) : 60;
