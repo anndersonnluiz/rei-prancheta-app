@@ -4011,7 +4011,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             recomendacoes.push({ tipo: 'jogo', texto: 'Use o pre-jogo para confirmar plano, mando e encaixes principais.' });
         }
 
-        return recomendacoes.slice(0, 5);
+        return recomendacoes.slice(0, 4);
     }
 
     $scope.calcularForcaElencoPreJogo = function(clube, preferirEscalacao) {
