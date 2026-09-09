@@ -280,6 +280,18 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
 .ceremony-director-card { background: linear-gradient(135deg, #fff, #f8fafc); }
 .ceremony-director-card > div { gap: 24px; }
 .ceremony-continue-button { border: 0; min-width: 250px; }
+.match-stats-panel { border: 1px solid #dce7ee; background: linear-gradient(145deg, #ffffff, #f6fafc) !important; }
+.match-stats-panel h4 { font-size: 16px; letter-spacing: .02em; }
+.scoreboard { border: 1px solid rgba(255,255,255,.12); border-radius: 16px; box-shadow: 0 14px 28px rgba(18,47,64,.18); overflow: hidden; }
+.score-display .score { font-variant-numeric: tabular-nums; text-shadow: 0 2px 8px rgba(0,0,0,.2); }
+.match-time-bar { background: #dce7ee; border-radius: 999px; height: 28px; margin: 14px 0 20px; overflow: hidden; position: relative; }
+.match-time-bar .time-progress { background: linear-gradient(90deg, var(--br-green), #f1c40f); height: 100%; transition: width .35s ease; }
+.match-time-bar .time-text { align-items: center; color: #173042; display: flex; font-size: 12px; font-weight: 800; inset: 0; justify-content: center; position: absolute; }
+.commentary-box { background: linear-gradient(145deg, #10242f, #183846); border: 1px solid #2c5667; border-radius: 14px; box-shadow: 0 10px 22px rgba(18,47,64,.14); color: #fff; padding: 16px; }
+.commentary-box h3 { color: #fff; font-size: 16px; margin-bottom: 10px; }
+.commentary-item { border-left: 3px solid rgba(255,255,255,.25); color: #dcebf0; font-size: 13px; line-height: 1.45; padding: 8px 10px; }
+.commentary-item.goal { background: rgba(0,170,70,.2); border-left-color: #53db86; color: #fff; font-weight: 800; }
+.commentary-item.end { background: rgba(255,255,255,.1); border-left-color: #f1c40f; color: #fff; font-weight: 800; }
 @media (max-width: 760px) {
     .ceremony-hero { align-items: flex-start; border-radius: 12px; gap: 12px; padding: 24px 18px; }
     .ceremony-hero-icon { flex-basis: 52px; font-size: 26px; height: 52px; }
@@ -289,6 +301,15 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
     .ceremony-summary-grid > .card { min-height: 0; }
     .ceremony-director-card > div { align-items: stretch !important; flex-direction: column; }
     .ceremony-continue-button { min-width: 0; width: 100%; }
+    .match-stats-panel { border-radius: 12px !important; padding: 12px !important; }
+    .match-stats-panel > div:first-child { align-items: flex-start !important; flex-direction: column; gap: 6px; }
+    .scoreboard { border-radius: 12px; gap: 8px; padding: 12px 8px; }
+    .scoreboard .team h3 { font-size: 12px; line-height: 1.2; max-width: 105px; overflow-wrap: anywhere; }
+    .score-display .score { font-size: 30px; }
+    .match-time-bar { margin: 10px 0 14px; }
+    .commentary-box { border-radius: 12px; padding: 12px; }
+    .commentary-list { max-height: 280px; overflow-y: auto; }
+    .commentary-item { font-size: 12px; }
 }
 .club-strategy-briefing { background: #fffaf0; border-left: 3px solid #f2a93b; border-radius: 6px; margin-top: 10px; padding: 9px 11px; }
 .club-strategy-briefing span { color: #a56a12; display: block; font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
