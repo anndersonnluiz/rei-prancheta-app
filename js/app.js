@@ -2572,6 +2572,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         } else if (adversario) {
             falas.push({ autor: 'Comissão técnica', texto: 'Respeitamos o ' + adversario.nome + ', mas temos condições de competir.' });
         }
+        var humorTorcida = $scope.contextoExterno && $scope.contextoExterno.torcida ? Number($scope.contextoExterno.torcida.humor) : 65;
+        var pressaoImprensa = $scope.contextoExterno && $scope.contextoExterno.imprensa ? Number($scope.contextoExterno.imprensa.pressao) : 40;
+        if (humorTorcida >= 80) falas.push({ autor: 'Torcida', texto: 'A arquibancada chega confiante e espera uma atuação à altura do momento.' });
+        else if (humorTorcida <= 35) falas.push({ autor: 'Torcida', texto: 'O ambiente está impaciente; o time será cobrado desde o primeiro minuto.' });
+        if (pressaoImprensa >= 75) falas.push({ autor: 'Imprensa', texto: 'A pressão externa aumentou e o resultado de hoje ganhou peso extra.' });
         return {
             manchete: rivalidade && rivalidade.titulo ? rivalidade.titulo : (adversario ? 'Clima esquenta antes de ' + $scope.clubeAtual.nome + ' x ' + adversario.nome : 'Expectativa para o próximo compromisso'),
             falas: falas,
