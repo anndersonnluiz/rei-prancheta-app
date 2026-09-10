@@ -1070,7 +1070,7 @@
                                             <div class="player-history-grid">
                                                 <div class="player-history-season" ng-repeat="temporada in jogador.historicoTemporadas | limitTo:10 track by $index">
                                                     <strong>{{temporada.temporada}}</strong>
-                                                    <span>{{temporada.jogos || 0}} jogos · {{temporada.minutos || 0}} min</span>
+                                                    <span>{{obterNomeClube(temporada.clubeId) || 'Clube não identificado'}} · {{temporada.jogos || 0}} jogos · {{temporada.minutos || 0}} min</span>
                                                     <span>{{temporada.gols || 0}} gols · evolução {{temporada.evolucao > 0 ? '+' : ''}}{{temporada.evolucao || 0}}</span>
                                                 </div>
                                             </div>
