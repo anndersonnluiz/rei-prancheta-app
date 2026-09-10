@@ -361,6 +361,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.mudancaClubePendente = null;
     $scope.staffClube = [];
     $scope.emprestimosAtivos = [];
+    $scope.compromissosTransferencias = [];
     $scope.historicoFinanceiroMensal = {};
 
     function criarStaffPadrao() {
@@ -2881,10 +2882,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogador.clubeId = destino.id;
             jogador.emNegociacao = false;
             var valorTransferencia = $scope.calcularValorMercadoJogadorInterno ? $scope.calcularValorMercadoJogadorInterno(jogador) : Math.max(250000, (Number(jogador.overall) || 70) * 50000);
-            destino.orcamento = Math.max(0, (Number(destino.orcamento) || 0) - valorTransferencia);
+            var entradaCPU = Math.round(valorTransferencia * 0.25);
+            destino.orcamento = Math.max(0, (Number(destino.orcamento) || 0) - entradaCPU);
+            $scope.criarParcelamentoTransferencia({ valor: valorTransferencia, entrada: entradaCPU, parcelas: 4, intervaloDias: 30, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: clubeOrigemId, clubeDevedorId: destino.id });
             rumor.valorTransferencia = valorTransferencia;
             rumor.titulo = 'Confirmado: ' + jogador.nome + ' acerta com ' + destino.nome;
-            rumor.conteudo = 'A negociação foi concluída. ' + jogador.nome + ' deixa o ' + (($scope.clubes || []).find(function(item) { return item.id === jogador.clubeId; }) || {}).nome + ' e passa a defender o ' + destino.nome + '.';
+            rumor.conteudo = 'A negociação foi concluída. ' + jogador.nome + ' deixa o ' + (($scope.clubes || []).find(function(item) { return item.id === clubeOrigemId; }) || {}).nome + ' e passa a defender o ' + destino.nome + ', com pagamento parcelado e impacto no caixa futuro.';
             confirmados.push(rumor);
             if (!$scope.transferenciasHistorico) $scope.transferenciasHistorico = [];
             $scope.transferenciasHistorico.unshift({ tipo: 'cpu', jogadorId: jogador.id, jogadorNome: jogador.nome, clubeOrigemId: clubeOrigemId, clubeDestinoId: destino.id, clubeDestinoNome: destino.nome, valor: valorTransferencia, dia: dia, confirmadoPor: 'rumor' });
@@ -5755,6 +5758,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.diaAtual++;
         $scope.atualizarFasePreparacao();
         $scope.processarEmprestimosDia();
+        $scope.processarParcelasTransferenciasDia();
         $scope.atualizarPropostasPendentes();
         $scope.atualizarResumoJanelaMercado();
         $scope.elencoAtual.forEach(function(j) { 
@@ -7440,6 +7444,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             historicoFinanceiroMensal: $scope.historicoFinanceiroMensal || {},
             staffClube: normalizarStaff($scope.staffClube),
             emprestimosAtivos: $scope.emprestimosAtivos || [],
+            compromissosTransferencias: $scope.compromissosTransferencias || [],
             anoAtual: $scope.dados.anoAtual || 2024,
             caixaEntrada: $scope.caixaEntrada || [],
             noticiasFeed: $scope.noticiasFeed || [],
@@ -7583,6 +7588,66 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.adicionarMensagem('Diretoria', 'Comissão técnica qualificada', vaga.nome + ' concluiu uma qualificação e agora atua no nível ' + vaga.nivel + '.', false, 'ambiente');
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
         return true;
+    };
+
+    // Compromissos de transferência usam dias do calendário, inclusive para a IA.
+    $scope.obterCompromissoTransferenciasClube = function(clubeId) {
+        return ($scope.compromissosTransferencias || []).filter(function(item) {
+            return item.status === 'ativo' && item.clubeDevedorId === clubeId;
+        });
+    };
+    $scope.obterExposicaoTransferencias = function(clubeId) {
+        return $scope.obterCompromissoTransferenciasClube(clubeId).reduce(function(total, item) {
+            return total + Math.max(0, Number(item.valorRestante) || 0);
+        }, 0);
+    };
+    $scope.criarParcelamentoTransferencia = function(dados) {
+        var total = Math.max(0, Number(dados && dados.valor) || 0);
+        var parcelas = Math.max(1, Math.min(12, parseInt(dados && dados.parcelas, 10) || 1));
+        var intervalo = Math.max(7, parseInt(dados && dados.intervaloDias, 10) || 30);
+        var entrada = Math.min(total, Math.max(0, Number(dados && dados.entrada) || 0));
+        var restante = Math.max(0, total - entrada);
+        var compromisso = {
+            id: 'parcela_' + (dados.jogadorId || 'jogador') + '_' + Date.now(),
+            tipo: 'transferencia', jogadorId: dados.jogadorId, jogadorNome: dados.jogadorNome,
+            clubeCredorId: dados.clubeCredorId, clubeDevedorId: dados.clubeDevedorId,
+            valorTotal: total, valorEntrada: entrada, valorRestante: restante,
+            valorParcela: parcelas ? Math.ceil(restante / parcelas) : restante,
+            parcelasRestantes: parcelas, intervaloDias: intervalo,
+            proximoVencimento: (Number($scope.diaAtual) || 0) + intervalo,
+            status: restante > 0 ? 'ativo' : 'quitado'
+        };
+        if (compromisso.status === 'ativo') {
+            $scope.compromissosTransferencias = $scope.compromissosTransferencias || [];
+            $scope.compromissosTransferencias.push(compromisso);
+        }
+        return compromisso;
+    };
+    $scope.processarParcelasTransferenciasDia = function() {
+        var dia = Number($scope.diaAtual) || 0;
+        var eventos = [];
+        ($scope.compromissosTransferencias || []).forEach(function(item) {
+            if (item.status !== 'ativo' || dia < Number(item.proximoVencimento || 0)) return;
+            var devedor = ($scope.clubes || []).find(function(c) { return c.id === item.clubeDevedorId; });
+            var valor = Math.min(Number(item.valorParcela) || 0, Number(item.valorRestante) || 0);
+            if (!devedor || (Number(devedor.orcamento) || 0) < valor) {
+                item.atrasos = (Number(item.atrasos) || 0) + 1;
+                item.proximoVencimento = dia + 7;
+                eventos.push({ tipo: 'atraso_transferencia', item: item, clube: devedor });
+                return;
+            }
+            devedor.orcamento -= valor;
+            item.valorRestante = Math.max(0, item.valorRestante - valor);
+            item.parcelasRestantes = Math.max(0, (Number(item.parcelasRestantes) || 1) - 1);
+            item.ultimaParcelaDia = dia;
+            item.proximoVencimento = dia + item.intervaloDias;
+            if (item.valorRestante <= 0 || item.parcelasRestantes <= 0) item.status = 'quitado';
+            eventos.push({ tipo: 'parcela_transferencia', item: item, clube: devedor, valor: valor });
+            if (devedor.id === ($scope.clubeAtual && $scope.clubeAtual.id)) {
+                $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Parcela de transferência: ' + item.jogadorNome, valor: valor, data: 'Dia ' + dia });
+            }
+        });
+        return eventos;
     };
 
     $scope.emprestarJogador = function(jogador, clubeDestinoId, duracaoDias, valorOpcaoCompra) {
@@ -7872,6 +7937,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.historicoFinanceiroMensal = $scope.saveInfo.historicoFinanceiroMensal || {};
         $scope.staffClube = normalizarStaff($scope.saveInfo.staffClube);
         $scope.emprestimosAtivos = Array.isArray($scope.saveInfo.emprestimosAtivos) ? $scope.saveInfo.emprestimosAtivos : [];
+        $scope.compromissosTransferencias = Array.isArray($scope.saveInfo.compromissosTransferencias) ? $scope.saveInfo.compromissosTransferencias : [];
         $scope.dados.anoAtual = $scope.saveInfo.anoAtual || 2024;
         $scope.caixaEntrada = $scope.saveInfo.caixaEntrada || [];
         $scope.noticiasFeed = $scope.saveInfo.noticiasFeed || [];
@@ -8966,6 +9032,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             clube: propostaAberta && propostaAberta.valorOferta ? propostaAberta.valorOferta : $scope.calcularValorPasse(jogador),
             salario: propostaAberta && propostaAberta.salarioOferta ? propostaAberta.salarioOferta : jogador.salarioDesejado || jogador.salario || 10000,
             anos: String((propostaAberta && propostaAberta.anosContrato) || 1),
+            entrada: propostaAberta && propostaAberta.entrada !== undefined ? propostaAberta.entrada : $scope.calcularValorPasse(jogador),
+            parcelas: propostaAberta && propostaAberta.parcelas ? propostaAberta.parcelas : 1,
+            intervaloDias: propostaAberta && propostaAberta.intervaloDias ? propostaAberta.intervaloDias : 30,
             clubeAceita: propostaAberta && propostaAberta.status === 'clube_aceitou' ? propostaAberta.valorOferta : 0
         };
 
@@ -9007,7 +9076,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogadorNome: $scope.jogadorNegociacao.nome,
             clubeOrigemId: $scope.jogadorNegociacao.clubeId,
             clubeDestinoId: $scope.clubeAtual.id,
-            valorOferta: oferta
+            valorOferta: oferta,
+            entrada: Number($scope.ofertaValores && $scope.ofertaValores.entrada) || oferta,
+            parcelas: parseInt($scope.ofertaValores && $scope.ofertaValores.parcelas, 10) || 1,
+            intervaloDias: parseInt($scope.ofertaValores && $scope.ofertaValores.intervaloDias, 10) || 30
         });
         $scope.propostaNegociacaoAtualId = proposta ? proposta.id : null;
 
@@ -9023,7 +9095,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 jogadorNome: $scope.jogadorNegociacao.nome,
                 clubeOrigemId: $scope.jogadorNegociacao.clubeId,
                 clubeDestinoId: $scope.clubeAtual.id,
-                valorOferta: oferta
+                valorOferta: oferta,
+                entrada: Number($scope.ofertaValores && $scope.ofertaValores.entrada) || oferta,
+                parcelas: parseInt($scope.ofertaValores && $scope.ofertaValores.parcelas, 10) || 1,
+                intervaloDias: parseInt($scope.ofertaValores && $scope.ofertaValores.intervaloDias, 10) || 30
             });
             var concorrentes = ($scope.clubes || []).filter(function(clube) {
                 return clube.id !== $scope.clubeAtual.id && clube.id !== $scope.jogadorNegociacao.clubeId;
@@ -9191,13 +9266,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             }
 
             if (valorPagoClube > 0) {
-                $scope.clubeAtual.orcamento -= valorPagoClube;
+                var entrada = Math.min(valorPagoClube, Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.entrada) || valorPagoClube));
+                var parcelas = Math.max(1, Math.min(12, parseInt($scope.ofertaValores && $scope.ofertaValores.parcelas, 10) || 1));
+                var intervaloDias = Math.max(7, parseInt($scope.ofertaValores && $scope.ofertaValores.intervaloDias, 10) || 30);
+                if (($scope.clubeAtual.orcamento || 0) < entrada) {
+                    $scope.estadoNegociacao = 'rejeitado';
+                    $scope.motivoRejeicao = "Orçamento insuficiente para pagar a entrada desta contratação.";
+                    return;
+                }
+                $scope.clubeAtual.orcamento -= entrada;
+                $scope.criarParcelamentoTransferencia({ valor: valorPagoClube, entrada: entrada, parcelas: parcelas, intervaloDias: intervaloDias, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: clubeOrigemId, clubeDevedorId: $scope.clubeAtual.id });
                 $scope.financasHistorico = $scope.financasHistorico || [];
                 $scope.financasHistorico.unshift({
                     data: new Date().toLocaleDateString('pt-BR'),
                     tipo: 'despesa',
                     descricao: "Compra do passe: " + jogador.nome,
-                    valor: parseFloat(valorPagoClube) || 0
+                    valor: entrada
                 });
             }
             
