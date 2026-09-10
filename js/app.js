@@ -2780,7 +2780,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var personalidadeInsatisfeito = insatisfeito.personalidade || 'profissional';
             var pedeSaida = (personalidadeInsatisfeito === 'ambicioso' || personalidadeInsatisfeito === 'inconstante') && (Number(insatisfeito.moral) || 70) <= 32 && (Number(insatisfeito.satisfacaoContrato) || 70) <= 48;
             insatisfeito.satisfacaoContrato = Math.max(0, (Number(insatisfeito.satisfacaoContrato) || 70) - (pedeSaida ? 4 : 2));
-            eventos.push({ tipo: 'vestiario', titulo: pedeSaida ? 'Jogador pede para ser negociado' : 'Jogador pede mais espaço', detalhe: pedeSaida ? insatisfeito.nome + ' está frustrado com a falta de minutos e pediu para ouvir propostas de outros clubes.' : insatisfeito.nome + ' está insatisfeito com a sequência de minutos e espera uma oportunidade na próxima partida.', pedidoTransferencia: pedeSaida });
+            eventos.push({ tipo: 'vestiario', titulo: pedeSaida ? 'Jogador pede para ser negociado' : 'Jogador pede mais espaço', detalhe: pedeSaida ? insatisfeito.nome + ' está frustrado com a falta de minutos e pediu para ouvir propostas de outros clubes.' : insatisfeito.nome + ' está insatisfeito com a sequência de minutos e espera uma oportunidade na próxima partida.', pedidoTransferencia: pedeSaida, jogador: insatisfeito });
         }
         var destaque = $scope.elencoAtual.filter(function(jogador) {
             return !jogador.lesionado && (Number(jogador.moral) || 70) >= 88 && (Number(jogador.jogosTemporada) || 0) >= 5;
