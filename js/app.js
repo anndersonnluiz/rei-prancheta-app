@@ -9267,7 +9267,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var orcamento = Number(clubeDestino.orcamento) || 0;
         var acessibilidade = custo > orcamento ? -100 : (custo > orcamento * 0.45 ? -8 : 0);
         var redundancia = mesmaPosicao.length >= 4 && overall <= mediaPosicao + 2 ? -18 : 0;
-        return necessidade + reforco + Math.max(0, desenvolvimento) + acessibilidade + redundancia;
+        var historicoTreino = Array.isArray(clubeDestino.historicoTreinoCPU) ? clubeDestino.historicoTreinoCPU : [];
+        var ultimoTreino = historicoTreino[0];
+        var pressaoDesempenho = ultimoTreino && (ultimoTreino.condicaoMedia < 65 || ultimoTreino.moralMedia < 52) ? (overall >= 75 ? 7 : 0) : 0;
+        return necessidade + reforco + Math.max(0, desenvolvimento) + acessibilidade + redundancia + pressaoDesempenho;
     }
 
     $scope.simularMercadoCPU = function() {
