@@ -6655,7 +6655,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return Object.keys(grupos).map(function(chave) { return grupos[chave]; }).sort(function(a, b) { return b.temporadas - a.temporadas || b.vitorias - a.vitorias; });
     };
     $scope.obterPlanoProximaTemporada = function(resumo, posicao, divisao) {
+        var projecao = $scope.obterProjecaoFinanceiraTemporada ? $scope.obterProjecaoFinanceiraTemporada() : null;
         if (posicao >= 17 && divisao !== 'D') return { prioridade: 'planejamento', titulo: 'Reagir no resultado esportivo', detalhe: 'Reforce a comissão e estabilize o desempenho antes de assumir novos compromissos.' };
+        if (projecao && projecao.margem < 0) return { prioridade: 'financas', titulo: 'Recuperar a sustentabilidade', detalhe: 'A folha anual supera o orçamento disponível. Priorize receitas, liberações e contratos sustentáveis antes de investir.' };
+        if (projecao && projecao.sustentabilidade === 'Atenção' && (!resumo || resumo.aproveitamento < 60)) return { prioridade: 'financas', titulo: 'Crescer com disciplina', detalhe: 'A margem é apertada e o desempenho ainda pede evolução. Evite comprometer o caixa com contratações de alto custo.' };
         if (resumo && resumo.golsSofridos > resumo.golsMarcados) return { prioridade: 'mercado', titulo: 'Corrigir o equilíbrio do elenco', detalhe: 'A defesa sofreu mais do que o ataque produziu. Mapeie reforços e soluções internas para a próxima janela.' };
         if (resumo && resumo.aproveitamento < 50) return { prioridade: 'planejamento', titulo: 'Revisar o plano de jogo', detalhe: 'O aproveitamento pede ajustes de escalação, treinamento e gestão do elenco.' };
         if (resumo && resumo.evolucoes < 3) return { prioridade: 'base', titulo: 'Acelerar o desenvolvimento', detalhe: 'A próxima temporada pode aproveitar melhor a base e criar uma rotação de jovens.' };
