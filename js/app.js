@@ -908,6 +908,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (status === 'monitorar') satisfacao -= 6;
         if (status === 'urgente') satisfacao -= 18;
         if (status === 'pre-contrato') satisfacao -= 32;
+        var clubeJogador = ($scope.clubes || []).find(function(clube) { return clube.id == (jogador && jogador.clubeId); });
+        if (clubeJogador) {
+            // A reputação melhora a atratividade, mas não compensa salário ruim
+            // nem contrato vencendo: o bônus máximo é deliberadamente pequeno.
+            satisfacao += Math.max(-4, Math.min(4, Math.round(((Number(clubeJogador.reputacao) || 50) - 65) / 5)));
+        }
         return limitarNumero(Math.round(satisfacao), 0, 100);
     }
 
