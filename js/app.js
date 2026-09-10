@@ -7046,6 +7046,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             aproveitamento: $scope.relatorioFimAno && $scope.relatorioFimAno.resumoGerencial && $scope.relatorioFimAno.resumoGerencial.aproveitamento,
             descricao: trocouDeClube ? 'Mudança de clube após a temporada ' + temporadaEncerrada : 'Temporada ' + temporadaEncerrada + ' concluída'
         };
+        eventoHistorico.pontosForma = eventoHistorico.forma.reduce(function(total, resultado) { return total + (resultado === 'V' ? 3 : (resultado === 'E' ? 1 : 0)); }, 0);
         if (trocouDeClube && mudancaClube) {
             eventoHistorico.clubeAnteriorId = mudancaClube.clubeAnteriorId;
             eventoHistorico.clubeAnteriorNome = mudancaClube.clubeAnteriorNome;
