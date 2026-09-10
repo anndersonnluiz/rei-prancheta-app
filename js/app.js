@@ -2864,6 +2864,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     jogador.salario = salarioRenovacao;
                     clube.orcamento = Math.max(0, (Number(clube.orcamento) || 0) - Math.round(custoAnualRenovacao * 0.05));
                     eventos.push({ tipo: 'renovacao', clube: clube, jogador: jogador });
+                } else if ((Number(jogador.idade) || 25) >= 34 && $scope.calcularOverall(jogador) < 68 && !jogador.emCampo && !jogador.lesionado) {
+                    // A CPU não mantém vínculos inviáveis indefinidamente:
+                    // atletas veteranos fora do plano são liberados ao mercado.
+                    jogador.clubeId = 'mercado';
+                    jogador.anosContrato = 0;
+                    jogador.emNegociacao = false;
+                    eventos.push({ tipo: 'saida_contrato', clube: clube, jogador: jogador });
                 }
             } else if ((Number(clube.orcamento) || 0) < 1000000) {
                 eventos.push({ tipo: 'crise', clube: clube });
@@ -2872,8 +2879,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         eventos.forEach(function(evento) {
             if (evento.tipo === 'renovacao') {
                 $scope.adicionarMensagem('Mercado do Futebol', 'Renovação importante', evento.clube.nome + ' renovou com ' + evento.jogador.nome + ' e afastou o interesse de outros clubes.', true, 'transferencia');
-            } else {
+            } else if (evento.tipo === 'crise') {
                 $scope.adicionarMensagem('Mercado do Futebol', 'Crise financeira', evento.clube.nome + ' enfrenta dificuldades financeiras e deverá reduzir investimentos no elenco.', true, 'imprensa');
+            } else {
+                $scope.adicionarMensagem('Mercado do Futebol', 'Fim de ciclo no elenco', evento.jogador.nome + ' não teve o contrato renovado pelo ' + evento.clube.nome + ' e agora está disponível no mercado.', true, 'transferencia');
             }
         });
         return eventos;
