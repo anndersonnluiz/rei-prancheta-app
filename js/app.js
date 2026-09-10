@@ -6157,8 +6157,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.calcularPlacarAleatorioCPU = function(mandante, visitante, aplicaCasa) {
         // Usa xG por finalização em vez de "chanceM" direta e incorpora média de atributos dos jogadores
-        var forcaM = mandante.reputacao + (aplicaCasa ? 10 : 0);
-        var forcaV = visitante.reputacao;
+        function formaRecente(clube) {
+            var historico = clube && Array.isArray(clube.historicoTreinoCPU) ? clube.historicoTreinoCPU[0] : null;
+            if (!historico) return 0;
+            var ajusteFisico = ((Number(historico.condicaoMedia) || 100) - 75) * 0.06;
+            var ajusteMoral = ((Number(historico.moralMedia) || 70) - 65) * 0.04;
+            return Math.max(-3, Math.min(3, ajusteFisico + ajusteMoral));
+        }
+        var forcaM = mandante.reputacao + formaRecente(mandante) + (aplicaCasa ? 10 : 0);
+        var forcaV = visitante.reputacao + formaRecente(visitante);
         var taticaM = $scope.sortearTaticaCPU();
         var taticaV = $scope.sortearTaticaCPU();
         // A CPU mais forte tende a assumir o jogo; a mais fraca protege-se,
