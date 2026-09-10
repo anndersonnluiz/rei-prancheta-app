@@ -943,8 +943,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var fatorPotencial = 1 + Math.max(0, potencial - overall) * 0.018;
         var fatorContrato = jogador.anosContrato >= 3 ? 1.12 : (jogador.anosContrato <= 1 ? 0.72 : 1);
         var fatorReputacao = { estrela_mundial: 1.3, estrela_nacional: 1.18, alto_nivel: 1.08, profissional_consolidado: 1, promissor: 1.04 }[jogador.reputacaoIndividual] || 1;
+        // O clube influencia exposição e demanda, mas de forma limitada:
+        // reputação não transforma um jogador comum em estrela.
+        var reputacaoClube = clubeJogador ? (Number(clubeJogador.reputacao) || 50) : 50;
+        var fatorClube = 1 + Math.max(-0.08, Math.min(0.08, (reputacaoClube - 65) * 0.002));
         var valorBase = Math.pow(Math.max(35, overall), 3) * 8;
-        return Math.max(0, Math.round((valorBase * idadeFator * fatorDivisao * fatorPotencial * fatorContrato * fatorReputacao) / 100000) * 100000);
+        return Math.max(0, Math.round((valorBase * idadeFator * fatorDivisao * fatorPotencial * fatorContrato * fatorReputacao * fatorClube) / 100000) * 100000);
     }
 
     function criarResumoContratos(jogadores) {
