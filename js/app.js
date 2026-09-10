@@ -6642,6 +6642,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 }
             }
         }
+        function resumirCampanhaContinental(competicao, nome) {
+            if (!competicao) return null;
+            var jogos = [];
+            (competicao.grupos || []).forEach(function(grupo) {
+                (grupo.jogos || []).forEach(function(jogo) { if (jogo.time1 && jogo.time2 && (jogo.time1.id === $scope.clubeAtual.id || jogo.time2.id === $scope.clubeAtual.id)) jogos.push(jogo); });
+            });
+            (competicao.chaves || []).forEach(function(fase) { (fase || []).forEach(function(jogo) { if (jogo.time1 && jogo.time2 && (jogo.time1.id === $scope.clubeAtual.id || jogo.time2.id === $scope.clubeAtual.id)) jogos.push(jogo); }); });
+            var realizados = jogos.filter(function(jogo) { return jogo.jogado || jogo.jogadoIda || jogo.jogadoVolta; });
+            var vitorias = 0, empates = 0, derrotas = 0;
+            realizados.forEach(function(jogo) {
+                var meuTime1 = jogo.time1.id === $scope.clubeAtual.id;
+                var meu = meuTime1 ? (Number(jogo.golsIda1) || 0) : (Number(jogo.golsIda2) || 0);
+                var rival = meuTime1 ? (Number(jogo.golsIda2) || 0) : (Number(jogo.golsIda1) || 0);
+                if (meu > rival) vitorias++; else if (meu === rival) empates++; else derrotas++;
+            });
+            if (!realizados.length) return null;
+            return { nome: nome, jogos: realizados.length, vitorias: vitorias, empates: empates, derrotas: derrotas, fase: realizados.length >= 7 ? 'Mata-mata avançado' : 'Fase de grupos / início do mata-mata' };
+        }
+        var campanhaContinental = resumirCampanhaContinental($scope.libertadores, 'Libertadores') || resumirCampanhaContinental($scope.sulAmericana, 'Sul-Americana');
 
         var metaTabela = 10;
         if ($scope.clubeAtual.reputacao >= 85) metaTabela = 4;
@@ -6697,6 +6716,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             demitido: demitido,
             meuDesempenhoLiga: posicaoTabela + "º Lugar (Série " + $scope.clubeAtual.divisao + ")",
             meuDesempenhoCopa: copaFaseAlcance,
+            meuDesempenhoContinental: campanhaContinental ? campanhaContinental.nome + ': ' + campanhaContinental.jogos + ' jogos (' + campanhaContinental.vitorias + 'V ' + campanhaContinental.empates + 'E ' + campanhaContinental.derrotas + 'D)' : 'Não disputada',
+            campanhaContinental: campanhaContinental,
             resumoGerencial: resumoGerencial,
             planoProximaTemporada: planoProximaTemporada,
             confiancaDiretoria: confiancaFinal ? confiancaFinal.percentual : null,
