@@ -2286,7 +2286,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var minutos = jogador.minutosTemporada || 0;
             var recomendacao = minutos < 450 ? 'Receber mais minutos' : (minutos >= 1200 ? 'Permanecer no elenco' : 'Monitorar adaptação');
             if (minutos < 180 && (jogador.moral || 0) < 60) recomendacao = 'Considerar empréstimo';
-            return { jogador: jogador, minutos: minutos, jogos: jogador.jogosTemporada || 0, xp: jogador.xpTemporada || 0, evolucao: jogador.evolucaoTemporada || 0, moral: jogador.moral || 0, recomendacao: recomendacao };
+            var historico = Array.isArray(jogador.historicoTemporadas) ? jogador.historicoTemporadas : [];
+            var mediaMinutos = historico.length ? Math.round(historico.reduce(function(total, item) { return total + (Number(item.minutos) || 0); }, 0) / historico.length) : 0;
+            var mediaGols = historico.length ? (historico.reduce(function(total, item) { return total + (Number(item.gols) || 0); }, 0) / historico.length).toFixed(1) : '0.0';
+            var tendencia = historico.length === 0 ? 'estreia' : ((Number(jogador.evolucaoTemporada) || 0) > 0 ? 'em alta' : ((Number(jogador.evolucaoTemporada) || 0) < 0 ? 'em queda' : 'estável'));
+            return { jogador: jogador, minutos: minutos, jogos: jogador.jogosTemporada || 0, xp: jogador.xpTemporada || 0, evolucao: jogador.evolucaoTemporada || 0, moral: jogador.moral || 0, recomendacao: recomendacao, mediaMinutos: mediaMinutos, mediaGols: mediaGols, tendencia: tendencia };
         });
     };
 
