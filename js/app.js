@@ -2649,12 +2649,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var eventos = [];
         ($scope.elencoAtual || []).forEach(function(jogador) {
             if (jogador.promessaMinutosDia !== undefined && dia - jogador.promessaMinutosDia >= 14 && (jogador.minutosTemporada || 0) < 90) {
-                jogador.satisfacaoContrato = Math.max(0, (Number(jogador.satisfacaoContrato) || 70) - 6);
-                jogador.moral = Math.max(0, (Number(jogador.moral) || 70) - 4);
+                var personalidadePromessa = jogador.personalidade || 'profissional';
+                var impactoPromessa = personalidadePromessa === 'ambicioso' ? 1.35 : (personalidadePromessa === 'paciente' ? 0.65 : (personalidadePromessa === 'lider' ? 0.85 : 1));
+                jogador.satisfacaoContrato = Math.max(0, (Number(jogador.satisfacaoContrato) || 70) - Math.round(6 * impactoPromessa));
+                jogador.moral = Math.max(0, (Number(jogador.moral) || 70) - Math.round(4 * impactoPromessa));
                 delete jogador.promessaMinutosDia;
                 eventos.push({ tipo: 'promessa', jogador: jogador });
             } else if ((jogador.anosContrato || 2) <= 1 && dia % 14 === 0) {
-                jogador.satisfacaoContrato = Math.max(0, (Number(jogador.satisfacaoContrato) || 70) - 2);
+                var personalidadeContrato = jogador.personalidade || 'profissional';
+                var impactoContrato = personalidadeContrato === 'ambicioso' ? 1.3 : (personalidadeContrato === 'paciente' ? 0.7 : 1);
+                jogador.satisfacaoContrato = Math.max(0, (Number(jogador.satisfacaoContrato) || 70) - Math.round(2 * impactoContrato));
                 eventos.push({ tipo: 'agente', jogador: jogador });
             }
         });
