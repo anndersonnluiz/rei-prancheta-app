@@ -6496,7 +6496,41 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     // FASE 16: Balanço da Diretoria e Cerimônia
+    $scope.atualizarReputacaoClubesTemporada = function() {
+        if ($scope._reputacaoClubesTemporadaAplicada === $scope.dados.anoAtual) return false;
+        var alteracoes = [];
+        ['A', 'B', 'C', 'D'].forEach(function(divisao) {
+            var tabela = $scope.ordenarTabela(divisao) || [];
+            var total = tabela.length;
+            tabela.forEach(function(linha, indice) {
+                var clube = linha && linha.clube;
+                if (!clube) return;
+                var posicao = indice + 1;
+                var delta = 0;
+                if (posicao === 1) delta += 4;
+                else if (posicao <= 4) delta += 2;
+                else if (posicao >= Math.max(1, total - 3)) delta -= 2;
+                if (posicao === total) delta -= 1;
+                var aproveitamento = Number(linha.pontos || 0) / Math.max(1, (Number(linha.jogos || linha.jogosRealizados || 0) * 3));
+                if (aproveitamento >= 0.7) delta += 1;
+                if (aproveitamento > 0 && aproveitamento < 0.35) delta -= 1;
+                var anterior = Number(clube.reputacao) || 50;
+                var nova = Math.max(25, Math.min(95, anterior + delta));
+                if (nova !== anterior) {
+                    clube.reputacao = nova;
+                    alteracoes.push({ clubeId: clube.id, clubeNome: clube.nome, antes: anterior, depois: nova, delta: nova - anterior });
+                }
+            });
+        });
+        $scope.historicoReputacaoClubes = Array.isArray($scope.historicoReputacaoClubes) ? $scope.historicoReputacaoClubes : [];
+        $scope.historicoReputacaoClubes.unshift({ temporada: $scope.dados.anoAtual, alteracoes: alteracoes });
+        $scope.historicoReputacaoClubes = $scope.historicoReputacaoClubes.slice(0, 5);
+        $scope._reputacaoClubesTemporadaAplicada = $scope.dados.anoAtual;
+        return alteracoes;
+    };
+
     $scope.prepararCerimonia = function() {
+        $scope.atualizarReputacaoClubesTemporada();
         var classificadosA = $scope.ordenarTabela("A");
         var campeaoSerieA = classificadosA[0].clube;
         var rebaixadosA = classificadosA.slice(16, 20).map(function(t) { return t.clube; });
@@ -7087,6 +7121,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (!Array.isArray(saveInfo.historicoTreinador)) saveInfo.historicoTreinador = [];
         if (!Array.isArray(saveInfo.historicoPartidas)) saveInfo.historicoPartidas = [];
         if (!Array.isArray(saveInfo.historicoDecisoesGestao)) saveInfo.historicoDecisoesGestao = [];
+        if (!Array.isArray(saveInfo.historicoReputacaoClubes)) saveInfo.historicoReputacaoClubes = [];
         if (!saveInfo.estadosOperacionaisClubes || typeof saveInfo.estadosOperacionaisClubes !== 'object') saveInfo.estadosOperacionaisClubes = {};
         if (!saveInfo.historicoFinanceiroMensal || typeof saveInfo.historicoFinanceiroMensal !== 'object') saveInfo.historicoFinanceiroMensal = {};
         saveInfo.staffClube = normalizarStaff(saveInfo.staffClube);
@@ -7143,6 +7178,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             historicoTreinador: $scope.historicoTreinador || [],
             historicoPartidas: $scope.historicoPartidas || [],
             historicoDecisoesGestao: $scope.historicoDecisoesGestao || [],
+            historicoReputacaoClubes: $scope.historicoReputacaoClubes || [],
             estadosOperacionaisClubes: $scope.estadosOperacionaisClubes || {},
             preparacaoTemporada: $scope.preparacaoTemporada,
             historicoFinanceiroMensal: $scope.historicoFinanceiroMensal || {},
@@ -7574,6 +7610,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.historicoTreinador = Array.isArray($scope.saveInfo.historicoTreinador) ? $scope.saveInfo.historicoTreinador : [];
         $scope.historicoPartidas = Array.isArray($scope.saveInfo.historicoPartidas) ? $scope.saveInfo.historicoPartidas : [];
         $scope.historicoDecisoesGestao = Array.isArray($scope.saveInfo.historicoDecisoesGestao) ? $scope.saveInfo.historicoDecisoesGestao : [];
+        $scope.historicoReputacaoClubes = Array.isArray($scope.saveInfo.historicoReputacaoClubes) ? $scope.saveInfo.historicoReputacaoClubes : [];
         $scope.estadosOperacionaisClubes = $scope.saveInfo.estadosOperacionaisClubes || {};
         $scope.historicoPartidasFiltro = 'TODAS';
         $scope.historicoFinanceiroMensal = $scope.saveInfo.historicoFinanceiroMensal || {};
