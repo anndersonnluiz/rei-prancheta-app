@@ -6586,6 +6586,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var artilheirosTemporada = $scope.jogadores.filter(function(j) { return (j.golsTemporada || 0) > 0; }).sort(function(a, b) {
             return (b.golsTemporada || 0) - (a.golsTemporada || 0) || $scope.calcularOverall(b) - $scope.calcularOverall(a);
         }).slice(0, 5);
+        var jogadoresTemporada = $scope.jogadores.filter(function(j) { return (j.jogosTemporada || 0) > 0 || (j.minutosTemporada || 0) > 0; });
+        var jogadorDoAno = jogadoresTemporada.slice().sort(function(a, b) {
+            var nota = function(j) { return (j.golsTemporada || 0) * 3 + (j.jogosTemporada || 0) + (j.minutosTemporada || 0) / 180 + $scope.calcularOverall(j) / 10 + (j.evolucaoTemporada || 0); };
+            return nota(b) - nota(a);
+        })[0] || null;
+        var revelacao = jogadoresTemporada.filter(function(j) { return (Number(j.idade) || 30) <= 23; }).sort(function(a, b) { return (b.evolucaoTemporada || 0) - (a.evolucaoTemporada || 0) || $scope.calcularOverall(b) - $scope.calcularOverall(a); })[0] || null;
+        var destaquesPosicao = {};
+        ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'].forEach(function(posicao) {
+            destaquesPosicao[posicao] = jogadoresTemporada.filter(function(j) { return j.posicao === posicao; }).sort(function(a, b) { return $scope.calcularOverall(b) - $scope.calcularOverall(a) || (b.jogosTemporada || 0) - (a.jogosTemporada || 0); })[0] || null;
+        });
         
         var msgDiretoria = "";
         var statusDiretoria = "";
@@ -6658,6 +6668,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             campeaoCopa: campeaoCopa,
             artilheiro: artilheiro,
             artilheirosTemporada: artilheirosTemporada,
+            premiosTemporada: { jogadorDoAno: jogadorDoAno, revelacao: revelacao, destaquesPosicao: destaquesPosicao },
             msgDiretoria: msgDiretoria,
             statusDiretoria: statusDiretoria,
             demitido: demitido,

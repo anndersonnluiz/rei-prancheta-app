@@ -2372,6 +2372,14 @@
                         <strong>Ranking de artilharia da temporada</strong>
                         <div ng-repeat="jogador in relatorioFimAno.artilheirosTemporada track by jogador.id" style="display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid #edf0f2;"><span>{{$index + 1}}º {{jogador.nome}}</span><b>{{jogador.golsTemporada}} gol(s)</b></div>
                     </div>
+                    <div class="card" ng-if="relatorioFimAno.premiosTemporada" style="margin-top:16px; padding:16px;">
+                        <strong>Prêmios da temporada</strong>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:12px;">
+                            <div ng-if="relatorioFimAno.premiosTemporada.jogadorDoAno" style="padding:12px; background:#fff8df; border-radius:8px;"><small>🏆 JOGADOR DO ANO</small><br><b>{{relatorioFimAno.premiosTemporada.jogadorDoAno.nome}}</b></div>
+                            <div ng-if="relatorioFimAno.premiosTemporada.revelacao" style="padding:12px; background:#eef9f1; border-radius:8px;"><small>🌟 REVELAÇÃO</small><br><b>{{relatorioFimAno.premiosTemporada.revelacao.nome}}</b></div>
+                        </div>
+                        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;"><span ng-repeat="(posicao, jogador) in relatorioFimAno.premiosTemporada.destaquesPosicao" ng-if="jogador" style="font-size:12px; padding:6px 9px; background:#f4f6f8; border-radius:999px;">{{posicao}}: <b>{{jogador.nome}}</b></span></div>
+                    </div>
                 </div>
             </div>
 
