@@ -2526,7 +2526,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     // Função global de E-mails / Notícias (FASE 17)
-    $scope.adicionarMensagem = function(remetente, titulo, conteudo, lida, tipo, permiteResposta) {
+    $scope.adicionarMensagem = function(remetente, titulo, conteudo, lida, tipo, permiteResposta, metadados) {
         if (!$scope.caixaEntrada) $scope.caixaEntrada = [];
         if (!$scope.noticiasFeed) $scope.noticiasFeed = [];
         
@@ -2544,6 +2544,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             tipo: tipo || 'geral',
             permiteResposta: permiteResposta === true
         };
+        if (metadados && typeof metadados === 'object') {
+            Object.keys(metadados).forEach(function(chave) { msgObj[chave] = metadados[chave]; });
+        }
         
         if (tipo === 'imprensa' || tipo === 'torcida' || tipo === 'transferencia' || tipo === 'trofeu') {
             msgObj.lida = true; // Notícias não apitam notificação
@@ -2695,7 +2698,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (destaque && !insatisfeito) eventos.push({ tipo: 'torcida', titulo: 'Destaque ganha confiança', detalhe: destaque.nome + ' vive boa fase e virou referência positiva no vestiário.' });
         eventos.forEach(function(evento, indice) {
             if ($scope.registrarEventoAmbiente) $scope.registrarEventoAmbiente({ id: 'amb_evento_' + dia + '_' + indice, chave: 'evento_temporada|' + dia + '|' + indice, dia: dia, tipo: evento.tipo, impacto: evento.tipo === 'torcida' ? 1 : -1, titulo: evento.titulo, detalhe: evento.detalhe });
-            $scope.adicionarMensagem(evento.tipo === 'torcida' ? 'Torcida' : 'Vestiário', evento.titulo, evento.detalhe, true, evento.pedidoTransferencia ? 'transferencia' : evento.tipo);
+            if (evento.pedidoTransferencia) {
+                $scope.adicionarMensagem('Vestiário', evento.titulo, evento.detalhe, false, 'ambiente', true, {
+                    pedidoTransferencia: true,
+                    jogadorId: evento.jogador.id,
+                    jogadorNome: evento.jogador.nome,
+                    respondida: false
+                });
+            } else {
+                $scope.adicionarMensagem(evento.tipo === 'torcida' ? 'Torcida' : 'Vestiário', evento.titulo, evento.detalhe, true, evento.tipo);
+            }
         });
         return eventos;
     };
@@ -2958,6 +2970,36 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var impacto = postura === 'apoio' ? 1 : (postura === 'cobranca' ? -1 : 0);
             if (impacto !== 0) $scope.registrarEventoAmbiente({ id: 'amb_resposta_' + msg.id, chave: 'resposta_diretoria|' + msg.id, dia: $scope.diaAtual || 0, tipo: 'diretoria', impacto: impacto, titulo: postura === 'apoio' ? 'Treinador protege o elenco' : 'Treinador aumenta a cobrança', detalhe: msg.respostaTreinador });
         }
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return true;
+    };
+
+    $scope.responderPedidoTransferencia = function(msg, decisao) {
+        if (!msg || !msg.pedidoTransferencia || msg.respondida) return false;
+        var jogador = ($scope.elencoAtual || []).find(function(item) { return item.id === msg.jogadorId; });
+        if (!jogador) return false;
+        var respostas = {
+            recuperar: 'O treinador conversou com o jogador e assumiu o compromisso de recuperar sua confiança gradualmente.',
+            prometer: 'O treinador prometeu mais minutos ao jogador na sequência da temporada.',
+            negociar: 'A diretoria autorizou o departamento de futebol a ouvir propostas pelo jogador, sem transferência automática.',
+            recusar: 'O treinador recusou o pedido e reforçou que o jogador deverá reconquistar espaço no trabalho diário.'
+        };
+        var efeitos = {
+            recuperar: { moral: 7, satisfacao: 5, ambiente: 1 },
+            prometer: { moral: 9, satisfacao: 7, ambiente: 1 },
+            negociar: { moral: -1, satisfacao: -1, ambiente: 0 },
+            recusar: { moral: -4, satisfacao: -4, ambiente: -1 }
+        };
+        var efeito = efeitos[decisao] || efeitos.recuperar;
+        jogador.moral = Math.max(0, Math.min(100, (Number(jogador.moral) || 70) + efeito.moral));
+        jogador.satisfacaoContrato = Math.max(0, Math.min(100, (Number(jogador.satisfacaoContrato) || 70) + efeito.satisfacao));
+        if (decisao === 'prometer' || decisao === 'recuperar') jogador.promessaMinutosDia = Number($scope.diaAtual) || 0;
+        if (decisao === 'negociar') jogador.disponivelTransferencia = true;
+        msg.respondida = true;
+        msg.respostaTreinador = respostas[decisao] || respostas.recuperar;
+        $scope.registrarDecisaoGestao('vestiario', msg.respostaTreinador);
+        if ($scope.registrarEventoAmbiente && efeito.ambiente) $scope.registrarEventoAmbiente({ id: 'amb_resposta_transferencia_' + msg.id, chave: 'resposta_transferencia|' + msg.id, dia: $scope.diaAtual || 0, tipo: 'vestiario', impacto: efeito.ambiente, titulo: decisao === 'negociar' ? 'Mercado autorizado' : 'Treinador responde ao pedido', detalhe: msg.respostaTreinador });
+        if ($scope.adicionarMensagem) $scope.adicionarMensagem('Comissão Técnica', 'Decisão registrada', jogador.nome + ': ' + msg.respostaTreinador, true, 'ambiente');
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
         return true;
     };
