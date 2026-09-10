@@ -3657,6 +3657,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .club-form-indicator.form-E { background: #e7a51b; }
 .club-form-indicator.form-D { background: #d9534f; }
 .club-form-empty { color: var(--text-muted); }
+.season-trend { padding: 2px 6px; border-radius: 999px; font-size: 10px; }
+.season-trend-alta { color: #087f3e; background: #dff6e8; }
+.season-trend-estavel { color: #8a5a00; background: #fff3cd; }
+.season-trend-baixa { color: #a52b28; background: #fde2e1; }
 @media (max-width: 700px) {
   .player-history-title { align-items: flex-start; flex-direction: column; gap: 2px; }
   .player-history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

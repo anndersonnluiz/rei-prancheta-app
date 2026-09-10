@@ -156,6 +156,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (delta <= -0.08 || deltaXg <= -0.25) return { classe: 'baixa', titulo: 'Desempenho em queda', detalhe: 'A campanha recente pede atenção e revisão das decisões.' };
         return { classe: 'estavel', titulo: 'Desempenho estável', detalhe: 'Os indicadores permanecem próximos da temporada anterior.' };
     };
+    $scope.obterTendenciaTemporada = function(evento) {
+        if (!evento || evento.tipo === 'inicio') return { classe: 'base', titulo: 'Base inicial' };
+        var forma = Array.isArray(evento.forma) ? evento.forma : [];
+        var pontosForma = forma.reduce(function(total, resultado) { return total + (resultado === 'V' ? 3 : (resultado === 'E' ? 1 : 0)); }, 0);
+        var aproveitamento = Number(evento.aproveitamento) || 0;
+        if (pontosForma >= 10 || aproveitamento >= 65 || (Number(evento.saldo) || 0) >= 12) return { classe: 'alta', titulo: 'Em ascensão' };
+        if (pontosForma <= 3 || aproveitamento < 40 || (Number(evento.saldo) || 0) <= -12) return { classe: 'baixa', titulo: 'Em queda' };
+        return { classe: 'estavel', titulo: 'Estável' };
+    };
     $scope.obterRecomendacoesCarreira = function() {
         var resumo = $scope.obterResumoHistoricoPartidas();
         var tendencia = $scope.obterTendenciaCarreira();
