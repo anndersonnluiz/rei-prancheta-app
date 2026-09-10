@@ -1397,6 +1397,7 @@
                                 <th style="padding: 10px; text-align: center;">E</th>
                                 <th style="padding: 10px; text-align: center;">D</th>
                                 <th style="padding: 10px; text-align: center;">SG</th>
+                                <th style="padding: 10px; text-align: center;">Forma</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1414,6 +1415,7 @@
                                 <td style="padding: 10px; text-align: center; color: var(--text-muted);">{{time.empates}}</td>
                                 <td style="padding: 10px; text-align: center; color: var(--text-muted);">{{time.derrotas}}</td>
                                 <td style="padding: 10px; text-align: center; font-weight: bold;" ng-style="{'color': time.saldo > 0 ? 'var(--br-green)' : (time.saldo < 0 ? '#e74c3c' : 'inherit')}">{{time.saldo}}</td>
+                                <td style="padding: 10px; text-align: center; white-space: nowrap;"><span class="club-form-indicator" ng-repeat="resultado in obterFormaClube(time.clube).resultados track by $index" ng-class="'form-' + resultado">{{resultado}}</span><span ng-if="!obterFormaClube(time.clube).resultados.length" class="club-form-empty">—</span></td>
                             </tr>
                         </tbody>
                     </table>
