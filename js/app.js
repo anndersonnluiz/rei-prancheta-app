@@ -6858,6 +6858,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         
         if ($scope.jogadores) {
             $scope.jogadores.forEach(function(j) { 
+                if (!Array.isArray(j.historicoTemporadas)) j.historicoTemporadas = [];
+                if ((j.jogosTemporada || 0) > 0 || (j.golsTemporada || 0) > 0) {
+                    j.historicoTemporadas.unshift({ temporada: temporadaEncerrada, clubeId: j.clubeId, gols: j.golsTemporada || 0, jogos: j.jogosTemporada || 0, minutos: j.minutosTemporada || 0, evolucao: j.evolucaoTemporada || 0 });
+                    j.historicoTemporadas = j.historicoTemporadas.slice(0, 10);
+                }
                 j.idade++; 
                 j.golsTemporada = 0;
                 j.partidasJogadas = 0; // Reset
