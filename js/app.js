@@ -165,6 +165,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (pontosForma <= 3 || aproveitamento < 40 || (Number(evento.saldo) || 0) <= -12) return { classe: 'baixa', titulo: 'Em queda' };
         return { classe: 'estavel', titulo: 'Estável' };
     };
+    $scope.obterComparativoTemporadas = function() {
+        var temporadas = ($scope.historicoTreinador || []).filter(function(item) { return item.tipo === 'temporada'; });
+        if (temporadas.length < 2) return null;
+        var atual = temporadas[0], anterior = temporadas[1];
+        var pontosFormaAtual = Number(atual.pontosForma) || 0, pontosFormaAnterior = Number(anterior.pontosForma) || 0;
+        return { atual: atual.temporada, anterior: anterior.temporada, deltaPosicao: (Number(anterior.posicao) || 0) - (Number(atual.posicao) || 0), deltaPontos: (Number(atual.pontos) || 0) - (Number(anterior.pontos) || 0), deltaSaldo: (Number(atual.saldo) || 0) - (Number(anterior.saldo) || 0), deltaForma: pontosFormaAtual - pontosFormaAnterior, tendencia: $scope.obterTendenciaTemporada(atual) };
+    };
     $scope.obterRecomendacoesCarreira = function() {
         var resumo = $scope.obterResumoHistoricoPartidas();
         var tendencia = $scope.obterTendenciaCarreira();

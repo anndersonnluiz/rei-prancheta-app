@@ -3668,6 +3668,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .season-trend-estavel { color: #8a5a00; background: #fff3cd; }
 .season-trend-baixa { color: #a52b28; background: #fde2e1; }
 .career-board-history em { display: block; margin-top: 3px; color: var(--text-muted); font-size: 10px; font-style: normal; }
+.career-season-comparison { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; padding: 10px 12px; border-left: 3px solid var(--br-blue); background: #f5f8fb; border-radius: 0 6px 6px 0; font-size: 12px; }
+.career-season-comparison span, .career-season-comparison small { color: var(--text-muted); }
 @media (max-width: 700px) {
   .player-history-title { align-items: flex-start; flex-direction: column; gap: 2px; }
   .player-history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
