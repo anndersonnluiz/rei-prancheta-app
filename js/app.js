@@ -6486,6 +6486,24 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         resumo.ambienteMedio = ambientes.length ? Math.round(ambientes.reduce(function(a, b) { return a + b; }, 0) / ambientes.length) : null;
         return resumo;
     };
+    $scope.obterRecordesCarreira = function() {
+        var partidas = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
+        var maiorVitoria = null;
+        var gols = 0;
+        partidas.forEach(function(partida) {
+            var mandante = Number(partida.placar && partida.placar.mandante) || 0;
+            var visitante = Number(partida.placar && partida.placar.visitante) || 0;
+            var meuTime = partida.clubeId || partida.clubeAtualId;
+            var meuMandante = partida.mandante && String(partida.mandante.id) === String(meuTime);
+            var marcados = meuMandante ? mandante : visitante;
+            var sofridos = meuMandante ? visitante : mandante;
+            if (marcados > sofridos && (!maiorVitoria || (marcados - sofridos) > maiorVitoria.margem)) maiorVitoria = { placar: marcados + ' x ' + sofridos, adversario: meuMandante && partida.visitante ? partida.visitante.nome : (partida.mandante ? partida.mandante.nome : 'adversário'), margem: marcados - sofridos };
+            gols += marcados;
+        });
+        var temporadas = (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; });
+        var melhorTemporada = temporadas.slice().sort(function(a, b) { return ((b.vitorias || 0) * 3 + (b.empates || 0)) - ((a.vitorias || 0) * 3 + (a.empates || 0)); })[0] || null;
+        return { partidas: partidas.length, gols: gols, maiorVitoria: maiorVitoria, melhorTemporada: melhorTemporada ? { temporada: melhorTemporada.temporada, vitorias: melhorTemporada.vitorias || 0, aproveitamento: melhorTemporada.aproveitamento || 0 } : null };
+    };
     $scope.obterResumoCarreiraPorClube = function() {
         var grupos = {};
         (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; }).forEach(function(item) {
