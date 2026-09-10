@@ -2332,6 +2332,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }).sort(function(a, b) { return a.ordem - b.ordem || a.setor.localeCompare(b.setor); });
     };
 
+    $scope.aplicarPrioridadeColetivaTreino = function(prioridade) {
+        if (!prioridade || typeof $scope.aplicarTreinamento !== 'function') return false;
+        var tipo = prioridade.ordem === 1 ? 'recuperacao' : (prioridade.ordem === 2 ? 'tecnico' : (prioridade.ordem === 3 ? 'tatico' : 'equilibrio'));
+        var aplicado = $scope.aplicarTreinamento(tipo);
+        if (aplicado && typeof $scope.adicionarMensagem === 'function') $scope.adicionarMensagem('Comissão Técnica', 'Prioridade aplicada', 'O treino de ' + prioridade.setor.toLowerCase() + ' foi ajustado para ' + prioridade.prioridade.toLowerCase() + '.', false, 'ambiente');
+        return aplicado;
+    };
+
     $scope.normalizarBaseClube = function(clube) {
         return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
     };

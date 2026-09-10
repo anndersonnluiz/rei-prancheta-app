@@ -967,7 +967,7 @@
                         <div class="development-panel-header"><div><span class="dashboard-eyebrow">Leitura da comissão</span><h4>Prioridades coletivas de treino</h4></div></div>
                         <div class="collective-training-grid">
                             <div class="collective-training-item" ng-repeat="prioridade in obterPrioridadesColetivasTreino() track by prioridade.setor" ng-class="'priority-' + prioridade.ordem">
-                                <strong>{{prioridade.setor}}</strong><b>{{prioridade.prioridade}}</b><span>{{prioridade.detalhe}}</span><small>Físico {{prioridade.fisicoMedio}}% · Moral {{prioridade.moralMedia}}% · {{prioridade.minutosMedios}} min/jogador</small>
+                                <strong>{{prioridade.setor}}</strong><b>{{prioridade.prioridade}}</b><span>{{prioridade.detalhe}}</span><small>Físico {{prioridade.fisicoMedio}}% · Moral {{prioridade.moralMedia}}% · {{prioridade.minutosMedios}} min/jogador</small><button class="collective-training-apply" ng-click="aplicarPrioridadeColetivaTreino(prioridade)" ng-disabled="preparacaoTemporada.ultimoTreinoDia === diaAtual || obterMeuJogoHoje()">Aplicar recomendação</button>
                             </div>
                         </div>
                     </div>
