@@ -2877,6 +2877,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var destino = ($scope.clubes || []).find(function(item) { return item.id === rumor.clubeDestinoId; });
             if (!jogador || !destino || jogador.clubeId === destino.id) return;
             var clubeOrigemId = jogador.clubeId;
+            var valorTransferenciaEstimado = $scope.calcularValorMercadoJogadorInterno ? $scope.calcularValorMercadoJogadorInterno(jogador) : Math.max(250000, (Number(jogador.overall) || 70) * 50000);
+            var entradaEstimada = Math.round(valorTransferenciaEstimado * 0.25);
+            var exposicaoAtual = $scope.obterExposicaoTransferencias ? $scope.obterExposicaoTransferencias(destino.id) : 0;
+            if ((Number(destino.orcamento) || 0) < entradaEstimada || exposicaoAtual + valorTransferenciaEstimado > Math.max(1000000, (Number(destino.orcamento) || 0) * 1.5)) return;
             rumor.confirmado = true;
             rumor.subtipo = 'confirmado';
             jogador.clubeId = destino.id;
