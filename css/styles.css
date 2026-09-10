@@ -216,6 +216,26 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
 .season-awards { border-top: 4px solid #f1c40f; box-shadow: 0 8px 20px rgba(31,78,121,.08); }
 .season-award-highlight { border: 1px solid rgba(31,78,121,.08); transition: transform .18s ease, box-shadow .18s ease; }
 .season-award-highlight:hover { box-shadow: 0 5px 14px rgba(31,78,121,.12); transform: translateY(-2px); }
+.competition-screen .standings-table tbody tr,
+.continental-screen table tbody tr { transition: background-color .18s ease, box-shadow .18s ease; }
+.competition-screen .standings-table tbody tr:hover,
+.continental-screen table tbody tr:hover { background: #f4faf7 !important; }
+.competition-screen .standings-table .table-club-identity,
+.continental-screen .table-club-identity { align-items: center; display: inline-flex; gap: 8px; min-width: 0; }
+.competition-screen .standings-table .table-club-identity > span,
+.continental-screen .table-club-identity > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.competition-screen .standings-table small,
+.continental-screen .table-club-identity small { color: var(--text-muted); font-size: 10px; font-weight: 700; margin-left: 3px; }
+.competition-screen .club-crest-table { background: #fff; border: 1px solid #e1e8ed; border-radius: 7px; height: 26px; object-fit: contain; padding: 2px; width: 26px; }
+@media (max-width: 560px) {
+    .competition-screen .card { border-radius: 12px; }
+    .competition-screen h3 { font-size: 17px; }
+    .competition-screen .division-tabs { gap: 7px !important; }
+    .competition-screen .division-tabs button { flex: 1 0 auto; padding: 9px 12px !important; }
+    .continental-screen > .card { padding: 14px !important; }
+    .continental-screen > .card > div[style*="grid"] { gap: 10px !important; grid-template-columns: 1fr !important; }
+    .continental-screen table { min-width: 360px; }
+}
 .career-total-card > strong { color: var(--text-main); display: block; font-size: 13px; margin-bottom: 8px; }
 .career-total-grid { display: grid; gap: 7px; grid-template-columns: repeat(3, 1fr); }
 .career-total-grid span { color: var(--text-muted); font-size: 10px; }
