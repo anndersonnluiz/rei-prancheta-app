@@ -874,6 +874,7 @@
                             <div class="pre-match-crest"><img ng-if="obterLogoClube(preJogo.analise.adversario)" ng-src="{{obterLogoClube(preJogo.analise.adversario)}}" class="club-crest" alt="Escudo do {{preJogo.analise.adversario.nome}}"><span ng-if="!obterLogoClube(preJogo.analise.adversario)">{{preJogo.analise.adversario.sigla}}</span></div>
                             <div>
                                 <strong>Forca estimada {{preJogo.analise.forcaAdversario}}</strong>
+                                <small class="pre-match-form">Forma: {{preJogo.analise.formaAdversario.label}}</small>
                                 <span>{{preJogo.analise.statusConfronto}}</span>
                             </div>
                         </div>
@@ -901,6 +902,7 @@
                             <div class="pre-match-kpi">
                                 <span>Forca</span>
                                 <strong>{{preJogo.analise.forcaMeuTime}}</strong>
+                                <small class="pre-match-form">Forma: {{preJogo.analise.formaMeuTime.label}}</small>
                             </div>
                             <div class="pre-match-kpi">
                                 <span>Condicao media</span>

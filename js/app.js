@@ -4250,6 +4250,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             forcaMeuTime: forcaMeuTime,
             forcaAdversario: forcaAdversario,
             diferencaForca: diferencaForca,
+            formaMeuTime: $scope.obterFormaClube(clubeAtual),
+            formaAdversario: $scope.obterFormaClube(adversario),
             riscoFisico: calcularRiscoFisicoPreJogo(condicaoMedia, indisponiveis, carga),
             condicaoMedia: condicaoMedia,
             indisponiveis: indisponiveis,
@@ -6155,6 +6157,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return Math.max(0.005, Math.min(0.6, xg));
     };
 
+    $scope.obterFormaClube = function(clube) {
+        var forma = clube && Array.isArray(clube.formaRecente) ? clube.formaRecente.slice(0, 5) : [];
+        var pontos = forma.reduce(function(total, resultado) { return total + (resultado === 'V' ? 3 : (resultado === 'E' ? 1 : 0)); }, 0);
+        return { resultados: forma, pontos: pontos, label: forma.length ? forma.join(' ') : '—' };
+    };
+
+    function registrarFormaClube(clube, golsPro, golsContra) {
+        if (!clube) return;
+        clube.formaRecente = Array.isArray(clube.formaRecente) ? clube.formaRecente : [];
+        clube.formaRecente.unshift(golsPro > golsContra ? 'V' : (golsPro === golsContra ? 'E' : 'D'));
+        clube.formaRecente = clube.formaRecente.slice(0, 5);
+    }
+
     $scope.calcularPlacarAleatorioCPU = function(mandante, visitante, aplicaCasa) {
         // Usa xG por finalização em vez de "chanceM" direta e incorpora média de atributos dos jogadores
         function formaRecente(clube) {
@@ -6258,6 +6273,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         $scope.registrarGolsNaDB(mandante.id, gM, null);
         $scope.registrarGolsNaDB(visitante.id, gV, null);
+        registrarFormaClube(mandante, gM, gV);
+        registrarFormaClube(visitante, gV, gM);
         return { golsMandante: gM, golsVisitante: gV, substituicoesMandante: substituicoesM, substituicoesVisitante: substituicoesV };
     };
 
