@@ -2634,8 +2634,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.responderEntrevistaJogador = function(opcao) {
         if (!$scope.entrevistaJogador || !opcao) return false;
         var jogador = $scope.entrevistaJogador.jogador;
-        jogador.moral = Math.max(0, Math.min(100, (Number(jogador.moral) || 70) + (opcao.efeito === 'oportunidade' ? 4 : (opcao.efeito === 'competicao' ? 1 : -1))));
-        jogador.satisfacaoContrato = Math.max(0, Math.min(100, (Number(jogador.satisfacaoContrato) || 70) + (opcao.efeito === 'oportunidade' ? 2 : 0)));
+        var personalidade = jogador.personalidade || 'profissional';
+        var respostaBase = opcao.efeito === 'oportunidade' ? 4 : (opcao.efeito === 'competicao' ? 1 : -1);
+        var fatorResposta = personalidade === 'ambicioso' ? (opcao.efeito === 'oportunidade' ? 1.35 : 1.15) : (personalidade === 'paciente' ? 0.7 : (personalidade === 'lider' ? 0.85 : 1));
+        jogador.moral = Math.max(0, Math.min(100, (Number(jogador.moral) || 70) + Math.round(respostaBase * fatorResposta)));
+        var ganhoContrato = opcao.efeito === 'oportunidade' ? (personalidade === 'ambicioso' ? 3 : 2) : (opcao.efeito === 'competicao' && personalidade === 'paciente' ? 1 : 0);
+        jogador.satisfacaoContrato = Math.max(0, Math.min(100, (Number(jogador.satisfacaoContrato) || 70) + ganhoContrato));
         if (opcao.efeito === 'oportunidade') jogador.promessaMinutosDia = $scope.diaAtual || 0;
         $scope.registrarEventoAmbiente({ id: 'entrevista_' + ($scope.diaAtual || 0) + '_' + jogador.id, chave: 'entrevista|' + ($scope.diaAtual || 0) + '|' + jogador.id, tipo: 'vestiario', impacto: opcao.efeito === 'paciencia' ? -1 : 1, titulo: 'Conversa com ' + jogador.nome, detalhe: 'A comissão técnica conversou sobre espaço e expectativas para a sequência.' });
         $scope.adicionarMensagem('Comissão Técnica', 'Conversa com jogador', jogador.nome + ' recebeu uma resposta sobre suas oportunidades no elenco.', true, 'ambiente');
