@@ -6661,6 +6661,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return { nome: nome, jogos: realizados.length, vitorias: vitorias, empates: empates, derrotas: derrotas, fase: realizados.length >= 7 ? 'Mata-mata avançado' : 'Fase de grupos / início do mata-mata' };
         }
         var campanhaContinental = resumirCampanhaContinental($scope.libertadores, 'Libertadores') || resumirCampanhaContinental($scope.sulAmericana, 'Sul-Americana');
+        var statusCampanha = {
+            liga: posicaoTabela === 1 ? 'Campeão' : (subiu ? 'Acesso' : (desceu ? 'Rebaixamento' : posicaoTabela + 'º lugar')),
+            copaBrasil: copaFaseAlcance,
+            continental: campanhaContinental ? campanhaContinental.nome + ' · ' + campanhaContinental.fase : 'Não disputada'
+        };
 
         var metaTabela = 10;
         if ($scope.clubeAtual.reputacao >= 85) metaTabela = 4;
@@ -6718,6 +6723,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             meuDesempenhoCopa: copaFaseAlcance,
             meuDesempenhoContinental: campanhaContinental ? campanhaContinental.nome + ': ' + campanhaContinental.jogos + ' jogos (' + campanhaContinental.vitorias + 'V ' + campanhaContinental.empates + 'E ' + campanhaContinental.derrotas + 'D)' : 'Não disputada',
             campanhaContinental: campanhaContinental,
+            statusCampanha: statusCampanha,
             resumoGerencial: resumoGerencial,
             planoProximaTemporada: planoProximaTemporada,
             confiancaDiretoria: confiancaFinal ? confiancaFinal.percentual : null,
@@ -6897,9 +6903,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             saldo: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.saldo : 0,
             conquistas: conquistasTemporada,
             competicoes: {
-                liga: posicaoTemporada + 'º lugar na Série ' + (clubeAntesDaVirada && clubeAntesDaVirada.divisao || ''),
+                liga: $scope.relatorioFimAno && $scope.relatorioFimAno.statusCampanha ? $scope.relatorioFimAno.statusCampanha.liga : posicaoTemporada + 'º lugar na Série ' + (clubeAntesDaVirada && clubeAntesDaVirada.divisao || ''),
                 copaBrasil: $scope.relatorioFimAno && $scope.relatorioFimAno.meuDesempenhoCopa || 'Não disputada',
-                continental: $scope.relatorioFimAno && $scope.relatorioFimAno.meuDesempenhoContinental || 'Não disputada'
+                continental: $scope.relatorioFimAno && $scope.relatorioFimAno.statusCampanha ? $scope.relatorioFimAno.statusCampanha.continental : ($scope.relatorioFimAno && $scope.relatorioFimAno.meuDesempenhoContinental || 'Não disputada')
             },
             confiancaDiretoria: $scope.relatorioFimAno && $scope.relatorioFimAno.confiancaDiretoria,
             ambienteElenco: $scope.relatorioFimAno && $scope.relatorioFimAno.ambienteElenco,
