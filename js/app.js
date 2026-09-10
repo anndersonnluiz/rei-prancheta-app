@@ -6508,6 +6508,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var melhorTemporada = temporadas.slice().sort(function(a, b) { return ((b.vitorias || 0) * 3 + (b.empates || 0)) - ((a.vitorias || 0) * 3 + (a.empates || 0)); })[0] || null;
         return { partidas: partidas.length, gols: gols, maiorVitoria: maiorVitoria, melhorTemporada: melhorTemporada ? { temporada: melhorTemporada.temporada, vitorias: melhorTemporada.vitorias || 0, aproveitamento: melhorTemporada.aproveitamento || 0 } : null };
     };
+    $scope.obterConquistasCarreiraDetalhadas = function() {
+        var resultado = { titulos: 0, acessos: 0, rebaixamentos: 0, copaBrasil: 0, continentais: 0, lista: [] };
+        (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; }).forEach(function(item) {
+            var conquistas = Array.isArray(item.conquistas) ? item.conquistas : [];
+            conquistas.forEach(function(conquista) {
+                var texto = String(conquista);
+                if (/campe[aã]o|t[ií]tulo/i.test(texto)) resultado.titulos++;
+                if (/Copa do Brasil/i.test(texto)) resultado.copaBrasil++;
+                if (/Libertadores|Sul-Americana|continental/i.test(texto)) resultado.continentais++;
+                if (/acesso|promovido/i.test(texto)) resultado.acessos++;
+                if (/rebaix|caiu/i.test(texto)) resultado.rebaixamentos++;
+                resultado.lista.push({ temporada: item.temporada, texto: texto });
+            });
+            if (item.posicao && item.divisao !== 'A' && item.posicao <= 4) resultado.acessos++;
+            if (item.posicao && item.divisao !== 'D' && item.posicao >= 17) resultado.rebaixamentos++;
+        });
+        resultado.lista = resultado.lista.slice(0, 20);
+        return resultado;
+    };
     $scope.obterResumoCarreiraPorClube = function() {
         var grupos = {};
         (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; }).forEach(function(item) {
