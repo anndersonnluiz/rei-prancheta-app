@@ -2290,7 +2290,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var mediaMinutos = historico.length ? Math.round(historico.reduce(function(total, item) { return total + (Number(item.minutos) || 0); }, 0) / historico.length) : 0;
             var mediaGols = historico.length ? (historico.reduce(function(total, item) { return total + (Number(item.gols) || 0); }, 0) / historico.length).toFixed(1) : '0.0';
             var tendencia = historico.length === 0 ? 'estreia' : ((Number(jogador.evolucaoTemporada) || 0) > 0 ? 'em alta' : ((Number(jogador.evolucaoTemporada) || 0) < 0 ? 'em queda' : 'estável'));
-            return { jogador: jogador, minutos: minutos, jogos: jogador.jogosTemporada || 0, xp: jogador.xpTemporada || 0, evolucao: jogador.evolucaoTemporada || 0, moral: jogador.moral || 0, recomendacao: recomendacao, mediaMinutos: mediaMinutos, mediaGols: mediaGols, tendencia: tendencia };
+            var aproveitamentoMinutos = mediaMinutos > 0 ? Math.round((minutos / mediaMinutos) * 100) : null;
+            if (historico.length >= 2 && minutos < mediaMinutos * 0.65 && (jogador.moral || 0) < 70) recomendacao = 'Recuperar espaço ou emprestar';
+            else if (historico.length >= 2 && minutos >= mediaMinutos * 1.25 && tendencia === 'em alta') recomendacao = 'Consolidar no elenco';
+            return { jogador: jogador, minutos: minutos, jogos: jogador.jogosTemporada || 0, xp: jogador.xpTemporada || 0, evolucao: jogador.evolucaoTemporada || 0, moral: jogador.moral || 0, recomendacao: recomendacao, mediaMinutos: mediaMinutos, mediaGols: mediaGols, tendencia: tendencia, aproveitamentoMinutos: aproveitamentoMinutos };
         });
     };
 
