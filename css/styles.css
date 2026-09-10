@@ -3635,6 +3635,15 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .player-history-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 8px; }
 .player-history-season { display: flex; flex-direction: column; gap: 3px; padding: 8px; border: 1px solid #e1e8ed; border-radius: 6px; font-size: 11px; color: var(--text-muted); }
 .player-history-season strong { color: var(--br-blue); font-size: 12px; }
+.collective-training-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+.collective-training-item { display: flex; flex-direction: column; gap: 4px; padding: 10px; border-left: 3px solid var(--br-green); background: #f8fbfd; border-radius: 0 6px 6px 0; }
+.collective-training-item strong { color: var(--text-main); }
+.collective-training-item b { color: var(--br-green); font-size: 12px; }
+.collective-training-item span, .collective-training-item small { color: var(--text-muted); font-size: 11px; line-height: 1.3; }
+.collective-training-item.priority-1 { border-left-color: #e74c3c; }
+.collective-training-item.priority-1 b { color: #e74c3c; }
+.collective-training-item.priority-2 { border-left-color: #f39c12; }
+.collective-training-item.priority-2 b { color: #bd7200; }
 @media (max-width: 700px) {
   .player-history-title { align-items: flex-start; flex-direction: column; gap: 2px; }
   .player-history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

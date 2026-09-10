@@ -2308,6 +2308,30 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return 'equilibrado';
     };
 
+    $scope.obterPrioridadesColetivasTreino = function() {
+        var grupos = {};
+        ($scope.elencoAtual || []).forEach(function(jogador) {
+            if (!jogador || !jogador.posicao) return;
+            var setor = jogador.posicao === 'GOL' ? 'Goleiros' : (jogador.posicao === 'ZAG' || jogador.posicao === 'LAT' ? 'Defesa' : (jogador.posicao === 'VOL' || jogador.posicao === 'MEI' ? 'Meio-campo' : 'Ataque'));
+            if (!grupos[setor]) grupos[setor] = { setor: setor, jogadores: 0, fisico: 0, moral: 0, minutos: 0 };
+            grupos[setor].jogadores++;
+            grupos[setor].fisico += Number(jogador.condicaoFisica) || 100;
+            grupos[setor].moral += Number(jogador.moral) || 70;
+            grupos[setor].minutos += Number(jogador.minutosTemporada) || 0;
+        });
+        return Object.keys(grupos).map(function(chave) {
+            var grupo = grupos[chave];
+            grupo.fisicoMedio = Math.round(grupo.fisico / grupo.jogadores);
+            grupo.moralMedia = Math.round(grupo.moral / grupo.jogadores);
+            grupo.minutosMedios = Math.round(grupo.minutos / grupo.jogadores);
+            if (grupo.fisicoMedio < 70) { grupo.prioridade = 'Recuperação física'; grupo.detalhe = 'Reduza a carga e priorize recuperação antes de novo treino intenso.'; grupo.ordem = 1; }
+            else if (grupo.moralMedia < 58) { grupo.prioridade = 'Gestão de moral'; grupo.detalhe = 'Reveja minutos e conversas individuais para recuperar confiança.'; grupo.ordem = 2; }
+            else if (grupo.minutosMedios < 450) { grupo.prioridade = 'Mais utilização'; grupo.detalhe = 'O setor tem pouca participação; avalie rodízio, formação ou empréstimos.'; grupo.ordem = 3; }
+            else { grupo.prioridade = 'Manter evolução'; grupo.detalhe = 'Indicadores equilibrados; mantenha o plano atual.'; grupo.ordem = 4; }
+            return grupo;
+        }).sort(function(a, b) { return a.ordem - b.ordem || a.setor.localeCompare(b.setor); });
+    };
+
     $scope.normalizarBaseClube = function(clube) {
         return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
     };

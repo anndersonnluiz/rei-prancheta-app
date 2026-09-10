@@ -963,6 +963,15 @@
                         </div>
                     </div>
 
+                    <div class="development-panel collective-training-panel" ng-if="obterPrioridadesColetivasTreino().length > 0">
+                        <div class="development-panel-header"><div><span class="dashboard-eyebrow">Leitura da comissão</span><h4>Prioridades coletivas de treino</h4></div></div>
+                        <div class="collective-training-grid">
+                            <div class="collective-training-item" ng-repeat="prioridade in obterPrioridadesColetivasTreino() track by prioridade.setor" ng-class="'priority-' + prioridade.ordem">
+                                <strong>{{prioridade.setor}}</strong><b>{{prioridade.prioridade}}</b><span>{{prioridade.detalhe}}</span><small>Físico {{prioridade.fisicoMedio}}% · Moral {{prioridade.moralMedia}}% · {{prioridade.minutosMedios}} min/jogador</small>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="development-panel" ng-if="relatorioEvolucaoVisivel.length > 0">
                         <div class="development-panel-header">
                             <div>
