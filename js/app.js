@@ -2696,7 +2696,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var golsAdversario = meuMandante ? partida.golsVisitante : partida.golsMandante;
             var venceu = golsMeu > golsAdversario;
             var empatou = golsMeu === golsAdversario;
-            noticias.push({ titulo: venceu ? 'Vitória muda o ambiente' : (empatou ? 'Empate mantém a disputa aberta' : 'Derrota aumenta a cobrança'), detalhe: $scope.clubeAtual.nome + ' ' + golsMeu + ' x ' + golsAdversario + ' ' + (adversario ? adversario.nome : '') + '. ' + (venceu ? 'A torcida ganhou confiança.' : 'A imprensa espera uma resposta no próximo jogo.'), tipo: venceu ? 'torcida' : 'imprensa' });
+            var rivalidade = adversario && $scope.obterRivalidadeNarrativa ? $scope.obterRivalidadeNarrativa($scope.clubeAtual, adversario) : null;
+            var tituloResultado = venceu ? 'Vitória muda o ambiente' : (empatou ? 'Empate mantém a disputa aberta' : 'Derrota aumenta a cobrança');
+            if (rivalidade && rivalidade.tipo === 'revanche') tituloResultado = venceu ? 'Revanche confirmada' : 'A revanche fica para o próximo encontro';
+            noticias.push({ titulo: tituloResultado, detalhe: $scope.clubeAtual.nome + ' ' + golsMeu + ' x ' + golsAdversario + ' ' + (adversario ? adversario.nome : '') + '. ' + (venceu ? 'A torcida ganhou confiança.' : (empatou ? 'O resultado mantém a disputa em aberto.' : 'A imprensa espera uma resposta no próximo jogo.')), tipo: venceu ? 'torcida' : 'imprensa' });
+            if (rivalidade) noticias.push({ titulo: 'Histórico reacende o confronto', detalhe: rivalidade.detalhe, tipo: 'imprensa' });
         }
         if (rivais.length && (($scope.diaAtual || 0) % 3 === 0)) {
             var rival = rivais[($scope.diaAtual || 0) % rivais.length];
