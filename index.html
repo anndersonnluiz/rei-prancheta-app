@@ -803,6 +803,10 @@
                             <strong>Conquistas acumuladas</strong>
                             <div class="career-total-grid"><span><b>{{obterConquistasCarreiraDetalhadas().titulos}}</b> títulos</span><span><b>{{obterConquistasCarreiraDetalhadas().copaBrasil}}</b> Copa(s) do Brasil</span><span><b>{{obterConquistasCarreiraDetalhadas().continentais}}</b> título(s) continentais</span><span><b>{{obterConquistasCarreiraDetalhadas().acessos}}</b> acessos</span><span><b>{{obterConquistasCarreiraDetalhadas().rebaixamentos}}</b> rebaixamentos</span></div>
                         </div>
+                        <div class="career-total-card career-career-dashboard" ng-if="obterPainelCarreiraCompleto().resumo.temporadas > 0">
+                            <strong>Resumo geral da trajetória</strong>
+                            <div class="career-total-grid"><span><b>{{obterPainelCarreiraCompleto().aproveitamento}}%</b> aproveitamento</span><span><b>{{obterPainelCarreiraCompleto().recordes.maiorVitoria ? obterPainelCarreiraCompleto().recordes.maiorVitoria.placar : '—'}}</b> maior vitória</span><span><b>{{obterPainelCarreiraCompleto().conquistas.titulos}}</b> títulos acumulados</span></div>
+                        </div>
                         <div class="career-total-card" ng-if="filtroCarreira !== 'temporadas' && obterRecordesCarreira().partidas > 0">
                             <strong>Recordes da carreira</strong>
                             <div class="career-total-grid"><span><b>{{obterRecordesCarreira().partidas}}</b> partidas registradas</span><span><b>{{obterRecordesCarreira().gols}}</b> gols marcados</span><span ng-if="obterRecordesCarreira().maiorVitoria"><b>{{obterRecordesCarreira().maiorVitoria.placar}}</b> maior vitória</span><span ng-if="obterRecordesCarreira().melhorTemporada"><b>{{obterRecordesCarreira().melhorTemporada.temporada}}</b> melhor temporada</span></div>

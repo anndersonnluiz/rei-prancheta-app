@@ -6527,6 +6527,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         resultado.lista = resultado.lista.slice(0, 20);
         return resultado;
     };
+    $scope.obterPainelCarreiraCompleto = function() {
+        var resumo = $scope.obterResumoCarreira();
+        var recordes = $scope.obterRecordesCarreira();
+        var conquistas = $scope.obterConquistasCarreiraDetalhadas();
+        return { resumo: resumo, recordes: recordes, conquistas: conquistas, aproveitamento: resumo.partidas ? Math.round(((resumo.vitorias * 3 + resumo.empates) / (resumo.partidas * 3)) * 100) : 0 };
+    };
     $scope.obterResumoCarreiraPorClube = function() {
         var grupos = {};
         (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; }).forEach(function(item) {
