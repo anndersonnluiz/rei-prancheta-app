@@ -213,6 +213,9 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
 .career-evolution-card strong { color: #218c4b; font-size: 13px; }
 .career-evolution-card span, .career-evolution-card small { color: var(--text-muted); font-size: 11px; margin-top: 4px; }
 .career-total-card { background: #f8fafc; border: 1px solid #dfe7ee; border-radius: 8px; margin-top: 12px; padding: 11px 13px; }
+.season-awards { border-top: 4px solid #f1c40f; box-shadow: 0 8px 20px rgba(31,78,121,.08); }
+.season-award-highlight { border: 1px solid rgba(31,78,121,.08); transition: transform .18s ease, box-shadow .18s ease; }
+.season-award-highlight:hover { box-shadow: 0 5px 14px rgba(31,78,121,.12); transform: translateY(-2px); }
 .career-total-card > strong { color: var(--text-main); display: block; font-size: 13px; margin-bottom: 8px; }
 .career-total-grid { display: grid; gap: 7px; grid-template-columns: repeat(3, 1fr); }
 .career-total-grid span { color: var(--text-muted); font-size: 10px; }
