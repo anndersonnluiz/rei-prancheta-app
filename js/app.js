@@ -7011,6 +7011,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             },
             confiancaDiretoria: $scope.relatorioFimAno && $scope.relatorioFimAno.confiancaDiretoria,
             ambienteElenco: $scope.relatorioFimAno && $scope.relatorioFimAno.ambienteElenco,
+            forma: clubeAntesDaVirada && Array.isArray(clubeAntesDaVirada.formaRecente) ? clubeAntesDaVirada.formaRecente.slice(0, 5) : [],
             aproveitamento: $scope.relatorioFimAno && $scope.relatorioFimAno.resumoGerencial && $scope.relatorioFimAno.resumoGerencial.aproveitamento,
             descricao: trocouDeClube ? 'Mudança de clube após a temporada ' + temporadaEncerrada : 'Temporada ' + temporadaEncerrada + ' concluída'
         };
