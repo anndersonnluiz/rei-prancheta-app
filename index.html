@@ -972,6 +972,11 @@
                         </div>
                     </div>
 
+                    <div class="development-panel training-history-panel" ng-if="preparacaoTemporada.historico && preparacaoTemporada.historico.length > 0">
+                        <div class="development-panel-header"><div><span class="dashboard-eyebrow">Acompanhamento</span><h4>Últimos treinos da comissão</h4></div></div>
+                        <div class="training-history-list"><div class="training-history-item" ng-repeat="treino in preparacaoTemporada.historico | limitTo:5 track by $index"><strong>Dia {{treino.dia}}</strong><span>{{treino.nome}}</span><small>Foco: {{treino.foco || 'equilíbrio'}}</small></div></div>
+                    </div>
+
                     <div class="development-panel" ng-if="relatorioEvolucaoVisivel.length > 0">
                         <div class="development-panel-header">
                             <div>
