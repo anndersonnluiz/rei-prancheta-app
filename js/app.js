@@ -1905,6 +1905,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             progressoLabel: status.progressoLabel,
             observacao: status.ultimaObservacao
         };
+        var ultimaTemporada = ($scope.historicoTreinador || []).find(function(item) { return item.tipo === 'temporada'; });
+        if (ultimaTemporada && typeof $scope.obterTendenciaTemporada === 'function') {
+            var tendenciaAnterior = $scope.obterTendenciaTemporada(ultimaTemporada);
+            avaliacao.observacao += ' A última temporada terminou ' + tendenciaAnterior.titulo.toLowerCase() + '.';
+            avaliacao.tendenciaAnterior = tendenciaAnterior.classe;
+        }
 
         $scope.diretoriaStatus.ultimaAvaliacaoDia = dia;
         $scope.diretoriaStatus.historicoAvaliacoes.unshift(avaliacao);

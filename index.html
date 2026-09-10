@@ -761,7 +761,7 @@
                     <div class="career-board-history" ng-if="diretoriaStatus.historicoAvaliacoes && diretoriaStatus.historicoAvaliacoes.length > 0">
                         <strong>Histórico de avaliações</strong>
                         <div ng-repeat="avaliacao in diretoriaStatus.historicoAvaliacoes | filter:{origem:'carreira'} track by $index">
-                            <span>Temporada {{avaliacao.temporada}} · {{avaliacao.percentual}}%</span><small>{{avaliacao.resultado}} · {{avaliacao.objetivo}}</small>
+                            <span>Temporada {{avaliacao.temporada}} · {{avaliacao.percentual}}%</span><small>{{avaliacao.resultado}} · {{avaliacao.objetivo}}</small><em ng-if="avaliacao.tendenciaAnterior">Trajetória anterior: {{avaliacao.tendenciaAnterior === 'alta' ? 'em ascensão' : (avaliacao.tendenciaAnterior === 'baixa' ? 'em queda' : 'estável')}}</em>
                         </div>
                     </div>
                     <div class="career-decision-history" ng-if="historicoDecisoesGestao && historicoDecisoesGestao.length > 0">
