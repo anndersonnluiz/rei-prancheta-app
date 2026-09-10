@@ -3655,6 +3655,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .training-history-item span { color: var(--text-main); font-size: 12px; font-weight: 700; }
 .training-history-item small { color: var(--text-muted); font-size: 10px; }
 .contract-finance-alert { color: #a52b28; font-size: 11px; font-weight: 700; }
+.negotiation-finance-preview { margin-top: 9px; padding: 8px 10px; border-radius: 6px; background: #f5f8fb; color: var(--text-muted); font-size: 11px; text-align: center; }
+.negotiation-finance-preview strong { color: var(--br-green); }
 .pre-match-form { display: block; margin-top: 3px; color: var(--text-muted); font-size: 11px; letter-spacing: .04em; }
 .club-form-indicator { display: inline-flex; align-items: center; justify-content: center; width: 19px; height: 19px; margin: 1px; border-radius: 50%; color: #fff; font-size: 10px; font-weight: 800; }
 .club-form-indicator.form-V { background: var(--br-green); }

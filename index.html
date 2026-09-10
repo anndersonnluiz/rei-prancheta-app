@@ -2522,6 +2522,7 @@
                     <label style="display: block; font-weight: bold; margin-bottom: 5px;">Sua Oferta de Compra (R$):</label>
                     <input type="range" min="{{calcularValorPasse(jogadorNegociacao) * 0.5}}" max="{{clubeAtual.orcamento}}" step="100000" ng-model="ofertaValores.clube" style="width: 100%;">
                     <div style="font-size: 24px; font-weight: bold; color: var(--br-blue); text-align: center; margin-top: 10px;">{{formatarMoeda(ofertaValores.clube)}}</div>
+                    <div class="negotiation-finance-preview">Após a contratação: <strong>{{obterImpactoFinanceiroNegociacao().sustentabilidade}}</strong> · margem estimada {{formatarMoeda(obterImpactoFinanceiroNegociacao().margemDepois)}} · {{obterImpactoFinanceiroNegociacao().percentualOrcamento}}% do orçamento</div>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button style="flex: 1; padding: 12px; background: var(--br-green); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="enviarPropostaClube(ofertaValores.clube)">Enviar Proposta</button>

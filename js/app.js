@@ -8963,6 +8963,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    $scope.obterImpactoFinanceiroNegociacao = function() {
+        var valorPasse = Number($scope.ofertaValores && $scope.ofertaValores.clube) || 0;
+        var salario = Number($scope.ofertaValores && $scope.ofertaValores.salario) || 0;
+        var orcamento = Number($scope.clubeAtual && $scope.clubeAtual.orcamento) || 0;
+        var folha = typeof $scope.calcularFolhaSalarial === 'function' ? Number($scope.calcularFolhaSalarial()) || 0 : 0;
+        var margemDepois = orcamento - valorPasse - ((folha + salario) * 12);
+        return { margemDepois: margemDepois, percentualOrcamento: orcamento ? Math.round((valorPasse / orcamento) * 100) : 0, sustentabilidade: margemDepois < 0 ? 'Crítica' : (margemDepois < folha * 6 ? 'Atenção' : 'Viável') };
+    };
+
     $scope.fecharNegociacao = function() {
         $scope.negociacaoAtiva = false;
         $scope.jogadorNegociacao = null;
