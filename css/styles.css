@@ -274,6 +274,13 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
 .season-financial-projection { align-items: center; background: #f5fbf7; border-left: 5px solid var(--br-green); display: flex; margin-bottom: 20px; }
 .season-financial-projection h3 { margin: 4px 0; }
 .season-financial-projection p { color: var(--text-muted); margin: 0; font-size: 12px; }
+.season-planning-dashboard { border-top: 3px solid var(--br-blue); }
+.season-planning-heading h3 { margin: 4px 0 12px; }
+.season-planning-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 8px; }
+.season-planning-grid div { padding: 9px; border: 1px solid #e1e8ed; border-radius: 6px; background: #f8fbfd; }
+.season-planning-grid small, .season-planning-grid strong { display: block; }
+.season-planning-grid small { color: var(--text-muted); font-size: 10px; margin-bottom: 4px; }
+.season-planning-grid strong { color: var(--text-main); font-size: 12px; }
 .ceremony-empty-state { align-items: center; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px; padding: 25px 12px; }
 .ceremony-empty-state span { font-size: 30px; filter: grayscale(1); opacity: .6; }
 .ceremony-empty-state strong { color: var(--text-main); font-size: 16px; }

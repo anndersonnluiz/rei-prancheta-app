@@ -2452,6 +2452,10 @@
             <div class="card season-financial-projection" ng-if="relatorioFimAno.projecaoFinanceira">
                 <div><span class="season-plan-label">PROJEÇÃO FINANCEIRA</span><h3>{{relatorioFimAno.projecaoFinanceira.sustentabilidade}}</h3><p>Orçamento {{formatarMoeda(relatorioFimAno.projecaoFinanceira.orcamento)}} · Folha anual {{formatarMoeda(relatorioFimAno.projecaoFinanceira.folhaAnual)}} · Margem {{formatarMoeda(relatorioFimAno.projecaoFinanceira.margem)}}</p></div>
             </div>
+            <div class="card season-planning-dashboard" ng-if="relatorioFimAno.resumoGerencial">
+                <div class="season-planning-heading"><span class="season-plan-label">PAINEL DE PLANEJAMENTO</span><h3>Leitura integrada da temporada</h3></div>
+                <div class="season-planning-grid"><div><small>Desempenho</small><strong>{{obterPainelPlanejamentoTemporada().aproveitamento}}% · {{obterPainelPlanejamentoTemporada().tendencia}}</strong></div><div><small>Produção</small><strong>{{obterPainelPlanejamentoTemporada().golsMarcados}} gols marcados · {{obterPainelPlanejamentoTemporada().golsSofridos}} sofridos</strong></div><div><small>Forma recente</small><strong>{{obterPainelPlanejamentoTemporada().forma}}</strong></div><div><small>Diretoria</small><strong>{{obterPainelPlanejamentoTemporada().confianca || '—'}}%</strong></div><div><small>Finanças</small><strong>{{obterPainelPlanejamentoTemporada().sustentabilidade}} · {{formatarMoeda(obterPainelPlanejamentoTemporada().margem)}}</strong></div></div>
+            </div>
 
             <!-- Balanço da Diretoria -->
             <div class="card ceremony-director-card" style="margin-bottom: 20px; border-left: 8px solid {{relatorioFimAno.demitido ? '#e74c3c' : (relatorioFimAno.statusDiretoria === 'Aprovado' ? 'var(--br-green)' : '#f39c12')}}; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">

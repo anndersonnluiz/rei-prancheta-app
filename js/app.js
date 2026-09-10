@@ -6686,6 +6686,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var margem = orcamento - folhaAnual;
         return { orcamento: orcamento, folhaAnual: folhaAnual, margem: margem, sustentabilidade: margem >= folhaAnual * 0.5 ? 'Confortável' : (margem >= 0 ? 'Atenção' : 'Crítica') };
     };
+    $scope.obterPainelPlanejamentoTemporada = function() {
+        var relatorio = $scope.relatorioFimAno || {};
+        var projecao = relatorio.projecaoFinanceira || $scope.obterProjecaoFinanceiraTemporada();
+        var resumo = relatorio.resumoGerencial || {};
+        var tendencia = $scope.obterTendenciaCarreira ? $scope.obterTendenciaCarreira() : null;
+        return { aproveitamento: Number(resumo.aproveitamento) || 0, golsMarcados: Number(resumo.golsMarcados) || 0, golsSofridos: Number(resumo.golsSofridos) || 0, tendencia: tendencia ? tendencia.titulo : 'Base inicial', confianca: relatorio.confiancaDiretoria, forma: $scope.clubeAtual && $scope.obterFormaClube ? $scope.obterFormaClube($scope.clubeAtual).label : '—', sustentabilidade: projecao.sustentabilidade, margem: projecao.margem };
+    };
 
     // FASE 16: Balanço da Diretoria e Cerimônia
     $scope.atualizarReputacaoClubesTemporada = function() {
