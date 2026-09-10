@@ -2907,6 +2907,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (indice % 5 !== dia % 5) return;
             var elencoClube = ($scope.jogadores || []).filter(function(jogador) { return jogador.clubeId === clube.id; });
             if (!elencoClube.length) return;
+            var condicaoMediaCPU = elencoClube.reduce(function(total, item) { return total + (Number(item.condicaoFisica) || 100); }, 0) / elencoClube.length;
+            var moralMediaCPU = elencoClube.reduce(function(total, item) { return total + (Number(item.moral) || 70); }, 0) / elencoClube.length;
+            var focoCPU = condicaoMediaCPU < 72 ? 'recuperacao' : (moralMediaCPU < 60 ? 'equilibrio' : 'tatico');
+            elencoClube.forEach(function(atleta) {
+                atleta.condicaoFisica = Math.min(100, (Number(atleta.condicaoFisica) || 100) + (focoCPU === 'recuperacao' ? 8 : 2));
+                atleta.moral = Math.min(100, (Number(atleta.moral) || 70) + (focoCPU === 'equilibrio' ? 2 : 1));
+                atleta.xpTemporada = Math.min(100, (Number(atleta.xpTemporada) || 0) + (focoCPU === 'tatico' ? 1 : 0));
+            });
+            clube.historicoTreinoCPU = Array.isArray(clube.historicoTreinoCPU) ? clube.historicoTreinoCPU : [];
+            clube.historicoTreinoCPU.unshift({ dia: dia, foco: focoCPU, condicaoMedia: Math.round(condicaoMediaCPU), moralMedia: Math.round(moralMediaCPU) });
+            clube.historicoTreinoCPU = clube.historicoTreinoCPU.slice(0, 10);
+            eventos.push({ tipo: 'treino_cpu', clube: clube, foco: focoCPU });
             // Renovações da CPU priorizam titulares, jovens promissores e
             // jogadores importantes; a escolha não é mais aleatória.
             var jogador = elencoClube.slice().sort(function(a, b) {
@@ -2945,7 +2957,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 $scope.adicionarMensagem('Mercado do Futebol', 'Renovação importante', evento.clube.nome + ' renovou com ' + evento.jogador.nome + ' e afastou o interesse de outros clubes.', true, 'transferencia');
             } else if (evento.tipo === 'crise') {
                 $scope.adicionarMensagem('Mercado do Futebol', 'Crise financeira', evento.clube.nome + ' enfrenta dificuldades financeiras e deverá reduzir investimentos no elenco.', true, 'imprensa');
-            } else {
+            } else if (evento.tipo === 'saida_contrato') {
                 $scope.adicionarMensagem('Mercado do Futebol', 'Fim de ciclo no elenco', evento.jogador.nome + ' não teve o contrato renovado pelo ' + evento.clube.nome + ' e agora está disponível no mercado.', true, 'transferencia');
             }
         });
