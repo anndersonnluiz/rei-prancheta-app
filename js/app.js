@@ -2684,8 +2684,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return !jogador.lesionado && !jogador.suspenso && (Number(jogador.moral) || 70) < 48 && (Number(jogador.minutosTemporada) || 0) < 360;
         }).sort(function(a, b) { return (a.moral || 70) - (b.moral || 70); })[0];
         if (insatisfeito) {
-            insatisfeito.satisfacaoContrato = Math.max(0, (Number(insatisfeito.satisfacaoContrato) || 70) - 2);
-            eventos.push({ tipo: 'vestiario', titulo: 'Jogador pede mais espaço', detalhe: insatisfeito.nome + ' está insatisfeito com a sequência de minutos e espera uma oportunidade na próxima partida.' });
+            var personalidadeInsatisfeito = insatisfeito.personalidade || 'profissional';
+            var pedeSaida = (personalidadeInsatisfeito === 'ambicioso' || personalidadeInsatisfeito === 'inconstante') && (Number(insatisfeito.moral) || 70) <= 32 && (Number(insatisfeito.satisfacaoContrato) || 70) <= 48;
+            insatisfeito.satisfacaoContrato = Math.max(0, (Number(insatisfeito.satisfacaoContrato) || 70) - (pedeSaida ? 4 : 2));
+            eventos.push({ tipo: 'vestiario', titulo: pedeSaida ? 'Jogador pede para ser negociado' : 'Jogador pede mais espaço', detalhe: pedeSaida ? insatisfeito.nome + ' está frustrado com a falta de minutos e pediu para ouvir propostas de outros clubes.' : insatisfeito.nome + ' está insatisfeito com a sequência de minutos e espera uma oportunidade na próxima partida.', pedidoTransferencia: pedeSaida });
         }
         var destaque = $scope.elencoAtual.filter(function(jogador) {
             return !jogador.lesionado && (Number(jogador.moral) || 70) >= 88 && (Number(jogador.jogosTemporada) || 0) >= 5;
@@ -2693,7 +2695,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (destaque && !insatisfeito) eventos.push({ tipo: 'torcida', titulo: 'Destaque ganha confiança', detalhe: destaque.nome + ' vive boa fase e virou referência positiva no vestiário.' });
         eventos.forEach(function(evento, indice) {
             if ($scope.registrarEventoAmbiente) $scope.registrarEventoAmbiente({ id: 'amb_evento_' + dia + '_' + indice, chave: 'evento_temporada|' + dia + '|' + indice, dia: dia, tipo: evento.tipo, impacto: evento.tipo === 'torcida' ? 1 : -1, titulo: evento.titulo, detalhe: evento.detalhe });
-            $scope.adicionarMensagem(evento.tipo === 'torcida' ? 'Torcida' : 'Vestiário', evento.titulo, evento.detalhe, true, evento.tipo);
+            $scope.adicionarMensagem(evento.tipo === 'torcida' ? 'Torcida' : 'Vestiário', evento.titulo, evento.detalhe, true, evento.pedidoTransferencia ? 'transferencia' : evento.tipo);
         });
         return eventos;
     };
