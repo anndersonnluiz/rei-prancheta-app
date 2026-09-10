@@ -4460,6 +4460,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var adversarioBilheteria = userIsMandante ? partida.visitante : partida.mandante;
         var reputacaoAdversario = Number(adversarioBilheteria && adversarioBilheteria.reputacao) || 65;
         ocupacao += Math.max(-0.08, Math.min(0.10, (reputacaoAdversario - 70) / 300));
+        var reputacaoMandante = Number(partida.mandante && partida.mandante.reputacao) || 50;
+        ocupacao += Math.max(-0.06, Math.min(0.08, (reputacaoMandante - 65) / 300));
+        var ambienteTorcida = $scope.ambienteElencoResumo && Number($scope.ambienteElencoResumo.valor);
+        if (userIsMandante && !isNaN(ambienteTorcida)) ocupacao += Math.max(-0.04, Math.min(0.04, (ambienteTorcida - 50) / 500));
         if (preco == 40) ocupacao = 0.85 + Math.random() * 0.15;
         else if (preco == 150) ocupacao = 0.4 + Math.random() * 0.3;
         if (partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id) {
