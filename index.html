@@ -2368,6 +2368,10 @@
                         <strong>Nenhum artilheiro definido</strong>
                         <small>Não houve gols registrados nesta temporada.</small>
                     </div>
+                    <div class="card" ng-if="relatorioFimAno.artilheirosTemporada && relatorioFimAno.artilheirosTemporada.length > 0" style="margin-top:16px; padding:16px;">
+                        <strong>Ranking de artilharia da temporada</strong>
+                        <div ng-repeat="jogador in relatorioFimAno.artilheirosTemporada track by jogador.id" style="display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid #edf0f2;"><span>{{$index + 1}}º {{jogador.nome}}</span><b>{{jogador.golsTemporada}} gol(s)</b></div>
+                    </div>
                 </div>
             </div>
 

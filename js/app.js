@@ -6583,6 +6583,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 artilheiro = j;
             }
         });
+        var artilheirosTemporada = $scope.jogadores.filter(function(j) { return (j.golsTemporada || 0) > 0; }).sort(function(a, b) {
+            return (b.golsTemporada || 0) - (a.golsTemporada || 0) || $scope.calcularOverall(b) - $scope.calcularOverall(a);
+        }).slice(0, 5);
         
         var msgDiretoria = "";
         var statusDiretoria = "";
@@ -6654,6 +6657,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             promovidosB: promovidosB,
             campeaoCopa: campeaoCopa,
             artilheiro: artilheiro,
+            artilheirosTemporada: artilheirosTemporada,
             msgDiretoria: msgDiretoria,
             statusDiretoria: statusDiretoria,
             demitido: demitido,
