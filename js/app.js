@@ -4104,6 +4104,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var recomendacoes = [];
         var nivelCarga = normalizarNivelCargaPreJogo(carga);
         var indiceCarga = carga && typeof carga.indiceCarga === 'number' ? carga.indiceCarga : 0;
+        var prioridades = typeof $scope.obterPrioridadesColetivasTreino === 'function' ? $scope.obterPrioridadesColetivasTreino() : [];
+        var prioridadeUrgente = prioridades.find(function(item) { return item.ordem <= 2; });
+        if (prioridadeUrgente) {
+            recomendacoes.push({ tipo: prioridadeUrgente.ordem === 1 ? 'fisico' : 'elenco', texto: 'Comissão: priorize ' + prioridadeUrgente.setor.toLowerCase() + ' — ' + prioridadeUrgente.prioridade.toLowerCase() + ' antes da partida.' });
+        }
 
         if (analiseBase.condicaoMedia < 70) {
             recomendacoes.push({ tipo: 'fisico', texto: 'Elenco cansado: considere rotacao e poupar titulares abaixo de 70%.' });
