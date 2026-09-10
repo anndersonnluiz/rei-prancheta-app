@@ -9163,7 +9163,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (Math.random() < 0.20 && $scope.jogadores) { // 20% de chance de rolar uma transação da CPU no dia
             var clubesComGrana = $scope.clubes.filter(function(c) { return c.id !== $scope.clubeAtual.id && (c.divisao === 'A' || c.divisao === 'B'); });
             if (clubesComGrana.length === 0) return;
-            var cComprador = clubesComGrana[Math.floor(Math.random() * clubesComGrana.length)];
+            var cComprador = clubesComGrana.slice().sort(function(a, b) {
+                function urgencia(clube) {
+                    var elenco = $scope.jogadores.filter(function(j) { return j.clubeId === clube.id; });
+                    var porPosicao = {};
+                    elenco.forEach(function(j) { porPosicao[j.posicao] = (porPosicao[j.posicao] || 0) + 1; });
+                    var menorProfundidade = Math.min.apply(null, ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'].map(function(p) { return porPosicao[p] || 0; }));
+                    return (30 - elenco.length) + (menorProfundidade < 2 ? 8 : 0) + Math.max(0, 70 - (Number(clube.reputacao) || 70)) * 0.05;
+                }
+                return urgencia(b) - urgencia(a);
+            })[0];
 
             // Escolher um jogador Livre no Mercado e bom (> 70)
             var livresBons = $scope.jogadores.filter(function(j) {
@@ -9172,7 +9181,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 return $scope.calcularOverall(j) >= Math.max(70, mediaPosicao + 1);
             });
             if (livresBons.length > 0) {
-                var contratacao = livresBons[Math.floor(Math.random() * livresBons.length)];
+                var contratacao = livresBons.slice().sort(function(a, b) {
+                    return pontuarAlvoMercadoCPU(b, cComprador, $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id; })) - pontuarAlvoMercadoCPU(a, cComprador, $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id; }));
+                })[0];
                 var tamanhoElencoComprador = $scope.jogadores.filter(function(j) { return j.clubeId === cComprador.id; }).length;
                 if (tamanhoElencoComprador >= 30) return;
                 var clubeOrigemCPU = contratacao.clubeId;
