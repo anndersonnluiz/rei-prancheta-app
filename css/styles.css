@@ -3626,3 +3626,16 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .market-player-actions > div { flex: 1 1 120px; min-width: 0; }
 .market-player-actions > button { flex: 0 1 auto; min-width: 82px; }
 .market-player-actions .pre-contract-hint { flex: 1 1 100%; text-align: right; line-height: 1.15; overflow-wrap: anywhere; }
+
+.player-history-toggle { border: 1px solid var(--br-blue); background: #eef4ff; color: var(--br-blue); border-radius: 4px; padding: 6px 10px; cursor: pointer; font-size: 11px; font-weight: 700; }
+.player-history-cell { padding: 0 !important; background: #f7fafd; }
+.player-history-inline { margin: 0 12px 12px; padding: 12px; border-left: 3px solid var(--br-blue); border-radius: 0 8px 8px 0; background: #fff; box-shadow: 0 2px 8px rgba(20, 55, 90, .08); }
+.player-history-title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; color: var(--text-main); }
+.player-history-title span { color: var(--text-muted); font-size: 12px; }
+.player-history-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 8px; }
+.player-history-season { display: flex; flex-direction: column; gap: 3px; padding: 8px; border: 1px solid #e1e8ed; border-radius: 6px; font-size: 11px; color: var(--text-muted); }
+.player-history-season strong { color: var(--br-blue); font-size: 12px; }
+@media (max-width: 700px) {
+  .player-history-title { align-items: flex-start; flex-direction: column; gap: 2px; }
+  .player-history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

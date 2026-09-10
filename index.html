@@ -1060,6 +1060,21 @@
                                         <button class="btn btn-primary" style="background: var(--br-blue); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;" ng-click="iniciarNegociacao(jogador, true)">Renovar</button>
                                         <button class="individual-training-button" ng-disabled="preparacaoTemporada.ultimoTreinoIndividualDia === diaAtual || jogador.lesionado || obterMeuJogoHoje()" ng-click="aplicarTreinoIndividual(jogador)">Treinar foco</button>
                                         <button ng-disabled="jogador.emCampo" class="btn btn-danger" style="background: {{jogador.emCampo ? '#ccc' : '#e74c3c'}}; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: {{jogador.emCampo ? 'not-allowed' : 'pointer'}}; font-size: 11px; font-weight: bold;" ng-click="venderJogador(jogador)">Vender</button>
+                                        <button ng-if="jogador.historicoTemporadas && jogador.historicoTemporadas.length" class="player-history-toggle" ng-click="jogador.historicoAberto = !jogador.historicoAberto; $event.stopPropagation()">{{jogador.historicoAberto ? 'Ocultar' : 'Histórico'}}</button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="jogador.historicoAberto" ng-repeat="jogador in elencoAtual | filter:filtrarJogadorPorPosicao | orderBy:ordemPosicaoJogador track by ('historico-' + jogador.id)">
+                                    <td colspan="10" class="player-history-cell">
+                                        <div class="player-history-inline">
+                                            <div class="player-history-title"><strong>Histórico de {{jogador.nome}}</strong><span>Últimas temporadas registradas</span></div>
+                                            <div class="player-history-grid">
+                                                <div class="player-history-season" ng-repeat="temporada in jogador.historicoTemporadas | limitTo:10 track by $index">
+                                                    <strong>{{temporada.temporada}}</strong>
+                                                    <span>{{temporada.jogos || 0}} jogos · {{temporada.minutos || 0}} min</span>
+                                                    <span>{{temporada.gols || 0}} gols · evolução {{temporada.evolucao > 0 ? '+' : ''}}{{temporada.evolucao || 0}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
