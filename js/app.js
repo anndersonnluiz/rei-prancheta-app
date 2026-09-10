@@ -7065,7 +7065,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.gerarPatrocinadores = function() {
         if (!$scope.clubeAtual) return;
         normalizarInfraestruturaClubeInterno($scope.clubeAtual);
-        var base = $scope.clubeAtual.reputacao * 500000 * $scope.calcularMultiplicadorComercialInfraestrutura();
+        var reputacao = Math.max(25, Math.min(95, Number($scope.clubeAtual.reputacao) || 50));
+        var fatorDivisaoPatrocinio = { A: 1.25, B: 0.82, C: 0.62, D: 0.45 }[$scope.clubeAtual.divisao] || 0.55;
+        var base = reputacao * 500000 * fatorDivisaoPatrocinio * $scope.calcularMultiplicadorComercialInfraestrutura();
         $scope.patrocinadoresDisponiveis = [
             { 
                 id: 1, 
