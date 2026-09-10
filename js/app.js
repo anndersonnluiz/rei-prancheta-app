@@ -5544,7 +5544,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogador.jogosTemporada = (jogador.jogosTemporada || 0) + 1;
             jogador.minutosTemporada = (jogador.minutosTemporada || 0) + 90;
         });
-        if ($scope.processarBonusContratualPartida) $scope.processarBonusContratualPartida(jogadoresEmCampo, resultado);
+        if ($scope.processarBonusContratualPartida) $scope.processarBonusContratualPartida(jogadoresEmCampo, resultado, partida);
 
         (partida.telemetriaShots || []).forEach(function(chute) {
             if (chute.time !== meuLado || chute.shooterId === undefined || chute.shooterId === null) return;
@@ -5576,11 +5576,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
     };
 
-    $scope.processarBonusContratualPartida = function(jogadores, resultado) {
+    $scope.processarBonusContratualPartida = function(jogadores, resultado, partida) {
         var total = 0;
         (jogadores || []).forEach(function(jogador) {
             var bonus = Math.max(0, Number(jogador.bonusPorJogo) || 0);
             if (resultado === 'Vitoria') bonus += Math.max(0, Number(jogador.bonusVitoria) || 0);
+            var gols = (partida && partida.telemetriaShots || []).filter(function(chute) { return chute.shooterId === jogador.id && chute.result === 'GOL'; }).length;
+            bonus += gols * Math.max(0, Number(jogador.bonusPorGol) || 0);
             if (!bonus) return;
             total += bonus;
             jogador.bonusRecebidosTemporada = (Number(jogador.bonusRecebidosTemporada) || 0) + bonus;
@@ -9059,6 +9061,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             papel: propostaAberta && propostaAberta.papel ? propostaAberta.papel : 'rotacao',
             luvas: propostaAberta && propostaAberta.luvas ? propostaAberta.luvas : 0,
             bonusJogo: propostaAberta && propostaAberta.bonusJogo ? propostaAberta.bonusJogo : 0,
+            bonusGol: propostaAberta && propostaAberta.bonusGol ? propostaAberta.bonusGol : 0,
             clubeAceita: propostaAberta && propostaAberta.status === 'clube_aceitou' ? propostaAberta.valorOferta : 0
         };
 
@@ -9359,6 +9362,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             novoJogador.papelElenco = $scope.ofertaValores && $scope.ofertaValores.papel || 'rotacao';
             novoJogador.luvasContrato = Number($scope.ofertaValores && $scope.ofertaValores.luvas) || 0;
             novoJogador.bonusPorJogo = Number($scope.ofertaValores && $scope.ofertaValores.bonusJogo) || 0;
+            novoJogador.bonusPorGol = Number($scope.ofertaValores && $scope.ofertaValores.bonusGol) || 0;
             novoJogador.emNegociacao = false;
             $scope.aplicarRenovacaoContratoJogador(novoJogador, salario, anos);
             
@@ -9380,6 +9384,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 papel: novoJogador.papelElenco,
                 luvas: novoJogador.luvasContrato,
                 bonusJogo: novoJogador.bonusPorJogo
+                , bonusGol: novoJogador.bonusPorGol
             });
 
             $scope.resultadosBuscaMercado = ($scope.resultadosBuscaMercado || []).filter(function(j) { return j.id !== novoJogador.id; });
