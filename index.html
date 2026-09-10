@@ -789,6 +789,7 @@
                             <strong>Temporada {{temporada.temporada}}</strong>
                             <span>{{temporada.jogos}} jogos · {{temporada.vitorias}}V {{temporada.empates}}E {{temporada.derrotas}}D</span>
                             <span>{{temporada.gols}} gols marcados · {{temporada.sofridos}} sofridos · xG médio {{temporada.mediaXg}}</span>
+                            <small ng-if="temporada.competicoes">Liga: {{temporada.competicoes.liga}} · Copa: {{temporada.competicoes.copaBrasil}}</small>
                         </div></div>
                         <div class="career-evolution-card" ng-if="filtroCarreira !== 'clubes' && obterEvolucaoCarreira().disponivel">
                             <strong>Evolução recente: {{obterEvolucaoCarreira().tendencia}}</strong>

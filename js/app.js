@@ -133,6 +133,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (partida.placar) { grupo.gols += Number(mandante ? partida.placar.mandante : partida.placar.visitante) || 0; grupo.sofridos += Number(mandante ? partida.placar.visitante : partida.placar.mandante) || 0; }
             if (partida.xg) { grupo.xgTotal += (Number(partida.xg.mandante) || 0) + (Number(partida.xg.visitante) || 0); grupo.xgPartidas++; }
         });
+        (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).forEach(function(registro) {
+            if (registro.tipo !== 'temporada' || !grupos[registro.temporada] || !registro.competicoes) return;
+            grupos[registro.temporada].competicoes = registro.competicoes;
+        });
         return Object.keys(grupos).sort().reverse().map(function(chave) {
             var grupo = grupos[chave];
             grupo.mediaXg = grupo.xgPartidas ? (grupo.xgTotal / grupo.xgPartidas).toFixed(2) : '0.00';
@@ -6852,6 +6856,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             derrotas: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.derrotas : 0,
             saldo: tabelaClubeAntesDaVirada ? tabelaClubeAntesDaVirada.saldo : 0,
             conquistas: conquistasTemporada,
+            competicoes: {
+                liga: posicaoTemporada + 'º lugar na Série ' + (clubeAntesDaVirada && clubeAntesDaVirada.divisao || ''),
+                copaBrasil: $scope.relatorioFimAno && $scope.relatorioFimAno.meuDesempenhoCopa || 'Não disputada',
+                continental: $scope.relatorioFimAno && $scope.relatorioFimAno.meuDesempenhoContinental || 'Não disputada'
+            },
             confiancaDiretoria: $scope.relatorioFimAno && $scope.relatorioFimAno.confiancaDiretoria,
             ambienteElenco: $scope.relatorioFimAno && $scope.relatorioFimAno.ambienteElenco,
             aproveitamento: $scope.relatorioFimAno && $scope.relatorioFimAno.resumoGerencial && $scope.relatorioFimAno.resumoGerencial.aproveitamento,
