@@ -5544,6 +5544,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogador.jogosTemporada = (jogador.jogosTemporada || 0) + 1;
             jogador.minutosTemporada = (jogador.minutosTemporada || 0) + 90;
         });
+        if ($scope.processarBonusContratualPartida) $scope.processarBonusContratualPartida(jogadoresEmCampo, resultado);
 
         (partida.telemetriaShots || []).forEach(function(chute) {
             if (chute.time !== meuLado || chute.shooterId === undefined || chute.shooterId === null) return;
@@ -5573,6 +5574,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogador.diasNoClube = (jogador.diasNoClube || 0) + 1;
             sincronizarJogadorBaseDesenvolvimento(jogador);
         });
+    };
+
+    $scope.processarBonusContratualPartida = function(jogadores, resultado) {
+        var total = 0;
+        (jogadores || []).forEach(function(jogador) {
+            var bonus = Math.max(0, Number(jogador.bonusPorJogo) || 0);
+            if (resultado === 'Vitoria') bonus += Math.max(0, Number(jogador.bonusVitoria) || 0);
+            if (!bonus) return;
+            total += bonus;
+            jogador.bonusRecebidosTemporada = (Number(jogador.bonusRecebidosTemporada) || 0) + bonus;
+        });
+        if (total && $scope.clubeAtual) {
+            $scope.clubeAtual.orcamento = Math.max(0, (Number($scope.clubeAtual.orcamento) || 0) - total);
+            $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Bônus contratuais da partida', valor: total, data: 'Dia ' + ($scope.diaAtual || 0) });
+        }
+        return total;
     };
 
     $scope.aplicarEvolucaoElenco = function(motivo) {
@@ -9283,9 +9300,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var entrada = Math.min(valorPagoClube, Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.entrada) || valorPagoClube));
                 var parcelas = Math.max(1, Math.min(12, parseInt($scope.ofertaValores && $scope.ofertaValores.parcelas, 10) || 1));
                 var intervaloDias = Math.max(7, parseInt($scope.ofertaValores && $scope.ofertaValores.intervaloDias, 10) || 30);
-                if (($scope.clubeAtual.orcamento || 0) < entrada) {
+                var luvasPrevias = Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.luvas) || 0);
+                if (($scope.clubeAtual.orcamento || 0) < entrada + luvasPrevias) {
                     $scope.estadoNegociacao = 'rejeitado';
-                    $scope.motivoRejeicao = "Orçamento insuficiente para pagar a entrada desta contratação.";
+                    $scope.motivoRejeicao = "Orçamento insuficiente para pagar a entrada e as luvas desta contratação.";
                     return;
                 }
                 $scope.clubeAtual.orcamento -= entrada;
@@ -9297,6 +9315,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     descricao: "Compra do passe: " + jogador.nome,
                     valor: entrada
                 });
+            }
+            var luvasContratacao = Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.luvas) || 0);
+            if (luvasContratacao > 0) {
+                if (($scope.clubeAtual.orcamento || 0) < luvasContratacao) {
+                    $scope.estadoNegociacao = 'rejeitado';
+                    $scope.motivoRejeicao = 'Orçamento insuficiente para pagar as luvas do jogador.';
+                    return;
+                }
+                $scope.clubeAtual.orcamento -= luvasContratacao;
+                $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Luvas de assinatura: ' + jogador.nome, valor: luvasContratacao, data: new Date().toLocaleDateString('pt-BR') });
             }
             
             var jogadorBase = ($scope.jogadores || []).find(function(j) { return j.id === jogador.id; });
