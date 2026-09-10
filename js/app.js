@@ -7265,6 +7265,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
     };
 
+    $scope.evoluirStaff = function(vaga) {
+        if (!vaga || !vaga.contratado || !$scope.clubeAtual) return false;
+        var nivelAtual = Math.max(1, Math.min(3, parseInt(vaga.nivel, 10) || 1));
+        if (nivelAtual >= 3) return false;
+        var custo = 60000 * nivelAtual;
+        if (($scope.clubeAtual.orcamento || 0) < custo) {
+            alert('Orçamento insuficiente para qualificar este profissional.');
+            return false;
+        }
+        vaga.nivel = nivelAtual + 1;
+        vaga.salario = 25000 * vaga.nivel;
+        $scope.clubeAtual.orcamento -= custo;
+        $scope.financasHistorico = Array.isArray($scope.financasHistorico) ? $scope.financasHistorico : [];
+        $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Qualificação da comissão: ' + vaga.cargo + ' nível ' + vaga.nivel, valor: custo, data: new Date().toLocaleDateString('pt-BR') });
+        $scope.adicionarMensagem('Diretoria', 'Comissão técnica qualificada', vaga.nome + ' concluiu uma qualificação e agora atua no nível ' + vaga.nivel + '.', false, 'ambiente');
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return true;
+    };
+
     $scope.emprestarJogador = function(jogador, clubeDestinoId, duracaoDias, valorOpcaoCompra) {
         if (!jogador || !$scope.clubeAtual || jogador.clubeId !== $scope.clubeAtual.id) return null;
         if (!clubeDestinoId || clubeDestinoId === $scope.clubeAtual.id) return null;
