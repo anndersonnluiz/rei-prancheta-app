@@ -1033,11 +1033,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var salarioProposto = Math.max(salarioAtual, Math.ceil((calcularSalarioDesejadoJogadorInterno(jogador) || salarioAtual) / 100) * 100);
             return { jogador: jogador, salarioAtual: salarioAtual, salarioProposto: salarioProposto, anos: 2, aumento: salarioProposto - salarioAtual };
         });
+        var projecao = $scope.obterProjecaoFinanceiraTemporada ? $scope.obterProjecaoFinanceiraTemporada() : null;
+        var aumentoMensal = elegiveis.reduce(function(total, item) { return total + item.aumento; }, 0);
         $scope.renovacaoGeral = {
             aberta: true,
             itens: elegiveis,
             custoAtual: elegiveis.reduce(function(total, item) { return total + item.salarioAtual; }, 0),
-            custoNovo: elegiveis.reduce(function(total, item) { return total + item.salarioProposto; }, 0)
+            custoNovo: elegiveis.reduce(function(total, item) { return total + item.salarioProposto; }, 0),
+            aumentoMensal: aumentoMensal,
+            alertaFinanceiro: projecao && aumentoMensal > Math.max(0, projecao.margem) / 12 ? 'A renovação consumirá mais que a margem mensal disponível.' : null
         };
     };
 

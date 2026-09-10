@@ -961,7 +961,7 @@
                         <div ng-if="renovacaoGeral.itens.length === 0" class="bulk-contract-empty">Nenhum jogador elegível para renovação em lote.</div>
                         <div ng-if="renovacaoGeral.itens.length > 0">
                             <div class="bulk-contract-list"><div ng-repeat="item in renovacaoGeral.itens track by item.jogador.id"><strong>{{item.jogador.nome}}</strong><span>{{item.jogador.posicao}} · {{item.anos}} anos</span><b>{{formatarMoeda(item.salarioProposto)}}/mês <em ng-if="item.aumento > 0">(+{{formatarMoeda(item.aumento)}})</em></b></div></div>
-                            <div class="bulk-contract-summary"><span>{{renovacaoGeral.itens.length}} contratos</span><span>Folha atual: <strong>{{formatarMoeda(renovacaoGeral.custoAtual)}}</strong></span><span>Nova folha: <strong>{{formatarMoeda(renovacaoGeral.custoNovo)}}</strong></span><button class="bulk-contract-confirm" ng-click="confirmarRenovacaoGeral()">Confirmar renovação geral</button></div>
+                            <div class="bulk-contract-summary"><span>{{renovacaoGeral.itens.length}} contratos</span><span>Folha atual: <strong>{{formatarMoeda(renovacaoGeral.custoAtual)}}</strong></span><span>Nova folha: <strong>{{formatarMoeda(renovacaoGeral.custoNovo)}}</strong></span><span ng-if="renovacaoGeral.alertaFinanceiro" class="contract-finance-alert">⚠ {{renovacaoGeral.alertaFinanceiro}}</span><button class="bulk-contract-confirm" ng-click="confirmarRenovacaoGeral()">Confirmar renovação geral</button></div>
                         </div>
                     </div>
 
