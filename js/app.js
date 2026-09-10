@@ -792,6 +792,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return Math.max(10, Math.min(99, overall + bonus));
     }
 
+    function obterPersonalidadeDeterministica(jogador) {
+        var perfis = ['lider', 'ambicioso', 'profissional', 'paciente', 'inconstante'];
+        return perfis[obterChaveNumericaJogador(jogador) % perfis.length];
+    }
+
     function normalizarJogadorSalvo(jogador) {
         if (!jogador) return;
         if (!jogador.atributos) jogador.atributos = {};
@@ -817,6 +822,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (jogador.overallBase === undefined || jogador.overallBase === null) jogador.overallBase = calcularOverallBaseJogador(jogador);
         if (jogador.overallAtual === undefined || jogador.overallAtual === null) jogador.overallAtual = jogador.overallBase;
         if (!jogador.reputacaoIndividual) jogador.reputacaoIndividual = jogador.origem === 'ficticio' ? 'ficticio' : (jogador.idade <= 23 ? 'promissor' : 'profissional_consolidado');
+        if (!jogador.personalidade) jogador.personalidade = obterPersonalidadeDeterministica(jogador);
         if (jogador.xpTemporada === undefined) jogador.xpTemporada = 0;
         if (jogador.jogosTemporada === undefined) jogador.jogosTemporada = 0;
         if (jogador.minutosTemporada === undefined) jogador.minutosTemporada = 0;
@@ -5588,12 +5594,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             } else if (partida && !j.emCampo && !j.lesionado) {
                 j.rodadasNoBanco = (j.rodadasNoBanco || 0) + 1;
                 var ov = $scope.calcularOverall(j);
+                var personalidadeBanco = j.personalidade || 'profissional';
+                var fatorBanco = personalidadeBanco === 'ambicioso' ? 1.25 : (personalidadeBanco === 'paciente' ? 0.65 : (personalidadeBanco === 'lider' ? 0.85 : 1));
                 if (ov > 75 && j.rodadasNoBanco > 3) {
                     // Craque insatisfeito no banco
-                    j.moral = Math.max(0, j.moral - 10);
+                    j.moral = Math.max(0, j.moral - Math.round(10 * fatorBanco));
                 } else if (j.rodadasNoBanco > 5) {
                     // Jogador normal no banco
-                    j.moral = Math.max(0, j.moral - 5);
+                    j.moral = Math.max(0, j.moral - Math.round(5 * fatorBanco));
                 }
             }
             atualizarStatusHumorJogador(j);
