@@ -271,6 +271,9 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
 @media (max-width: 760px) { .season-next-plan { align-items: stretch; flex-direction: column; } }
 .season-next-plan .btn-secondary { background: var(--br-blue); border: 0; border-radius: 8px; color: #fff; cursor: pointer; font-size: 14px; font-weight: 700; min-height: 42px; padding: 10px 16px; transition: transform .2s, background .2s; white-space: nowrap; }
 .season-next-plan .btn-secondary:hover { background: #001f5c; transform: translateY(-1px); }
+.season-financial-projection { align-items: center; background: #f5fbf7; border-left: 5px solid var(--br-green); display: flex; margin-bottom: 20px; }
+.season-financial-projection h3 { margin: 4px 0; }
+.season-financial-projection p { color: var(--text-muted); margin: 0; font-size: 12px; }
 .ceremony-empty-state { align-items: center; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px; padding: 25px 12px; }
 .ceremony-empty-state span { font-size: 30px; filter: grayscale(1); opacity: .6; }
 .ceremony-empty-state strong { color: var(--text-main); font-size: 16px; }

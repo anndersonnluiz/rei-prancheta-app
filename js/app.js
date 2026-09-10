@@ -6661,6 +6661,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (resumo && resumo.evolucoes < 3) return { prioridade: 'base', titulo: 'Acelerar o desenvolvimento', detalhe: 'A próxima temporada pode aproveitar melhor a base e criar uma rotação de jovens.' };
         return { prioridade: 'financas', titulo: 'Consolidar o crescimento', detalhe: 'Mantenha o desempenho e use o orçamento com disciplina para sustentar a evolução.' };
     };
+    $scope.obterProjecaoFinanceiraTemporada = function() {
+        var clube = $scope.clubeAtual || {};
+        var folhaMensal = typeof $scope.calcularFolhaSalarial === 'function' ? Number($scope.calcularFolhaSalarial()) || 0 : 0;
+        var folhaAnual = folhaMensal * 12;
+        var orcamento = Number(clube.orcamento) || 0;
+        var margem = orcamento - folhaAnual;
+        return { orcamento: orcamento, folhaAnual: folhaAnual, margem: margem, sustentabilidade: margem >= folhaAnual * 0.5 ? 'Confortável' : (margem >= 0 ? 'Atenção' : 'Crítica') };
+    };
 
     // FASE 16: Balanço da Diretoria e Cerimônia
     $scope.atualizarReputacaoClubesTemporada = function() {
@@ -6838,6 +6846,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             statusCampanha: statusCampanha,
             resumoGerencial: resumoGerencial,
             planoProximaTemporada: planoProximaTemporada,
+            projecaoFinanceira: $scope.obterProjecaoFinanceiraTemporada(),
             confiancaDiretoria: confiancaFinal ? confiancaFinal.percentual : null,
             margemPlanejamento: $scope.obterMargemPlanejamentoDiretoria ? $scope.obterMargemPlanejamentoDiretoria().percentual : null,
             ambienteElenco: ambienteFinal ? ambienteFinal.valor : null,
