@@ -2297,6 +2297,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
     };
 
+    $scope.obterSugestaoFocoDesenvolvimento = function(jogador) {
+        if (!jogador) return 'equilibrado';
+        var historico = Array.isArray(jogador.historicoTemporadas) ? jogador.historicoTemporadas : [];
+        if ((Number(jogador.condicaoFisica) || 100) < 62) return 'fisico';
+        if ((Number(jogador.evolucaoTemporada) || 0) < 0) return 'tatico';
+        if (jogador.posicao === 'GOL' || jogador.posicao === 'ZAG' || jogador.posicao === 'LAT') return 'defensivo';
+        if (historico.length >= 2 && (Number(jogador.minutosTemporada) || 0) < 450) return 'tatico';
+        if (jogador.posicao === 'ATA' || jogador.posicao === 'MEI') return 'tecnico';
+        return 'equilibrado';
+    };
+
     $scope.normalizarBaseClube = function(clube) {
         return normalizarBaseClubeInterno(clube || $scope.clubeAtual);
     };
