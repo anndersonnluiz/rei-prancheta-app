@@ -6849,6 +6849,24 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (posicaoTabela <= 4 && $scope.clubeAtual.divisao !== 'A') subiu = true;
         if (posicaoTabela >= 17 && $scope.clubeAtual.divisao !== 'D') desceu = true;
 
+        function processarBonusMetaClube(clube, posicao, foiCampeao, acesso, rebaixamento) {
+            var atletas = ($scope.jogadores || []).filter(function(j) { return j.clubeId === clube.id; });
+            var total = 0;
+            atletas.forEach(function(atleta) {
+                var bonus = 0;
+                if (foiCampeao) bonus += Number(atleta.bonusTitulo) || 0;
+                if (acesso) bonus += Number(atleta.bonusAcesso) || 0;
+                if (!rebaixamento) bonus += Number(atleta.bonusPermanencia) || 0;
+                if (posicao <= 4) bonus += Number(atleta.bonusClassificacao) || 0;
+                if (!bonus) return;
+                atleta.bonusRecebidosTemporada = (Number(atleta.bonusRecebidosTemporada) || 0) + bonus;
+                total += bonus;
+            });
+            clube.orcamento = Math.max(0, (Number(clube.orcamento) || 0) - total);
+            return total;
+        }
+        var bonusMetasTemporada = processarBonusMetaClube($scope.clubeAtual, posicaoTabela, campeaoSerieA && campeaoSerieA.id === $scope.clubeAtual.id, subiu, desceu);
+
         if (desceu) {
             statusDiretoria = "Demitido"; msgDiretoria = "O rebaixamento é inaceitável. Você está demitido."; demitido = true;
         } else if (subiu) {
@@ -6902,6 +6920,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             margemPlanejamento: $scope.obterMargemPlanejamentoDiretoria ? $scope.obterMargemPlanejamentoDiretoria().percentual : null,
             ambienteElenco: ambienteFinal ? ambienteFinal.valor : null,
             metasTemporada: angular.copy(($scope.diretoriaStatus && $scope.diretoriaStatus.metasTemporada) || [])
+            , bonusMetasTemporada: bonusMetasTemporada
         };
         
         $scope.telaAtual = 'cerimonia';
@@ -9062,6 +9081,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             luvas: propostaAberta && propostaAberta.luvas ? propostaAberta.luvas : 0,
             bonusJogo: propostaAberta && propostaAberta.bonusJogo ? propostaAberta.bonusJogo : 0,
             bonusGol: propostaAberta && propostaAberta.bonusGol ? propostaAberta.bonusGol : 0,
+            bonusTitulo: propostaAberta && propostaAberta.bonusTitulo ? propostaAberta.bonusTitulo : 0,
+            bonusAcesso: propostaAberta && propostaAberta.bonusAcesso ? propostaAberta.bonusAcesso : 0,
+            bonusPermanencia: propostaAberta && propostaAberta.bonusPermanencia ? propostaAberta.bonusPermanencia : 0,
+            bonusClassificacao: propostaAberta && propostaAberta.bonusClassificacao ? propostaAberta.bonusClassificacao : 0,
             clubeAceita: propostaAberta && propostaAberta.status === 'clube_aceitou' ? propostaAberta.valorOferta : 0
         };
 
@@ -9363,6 +9386,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             novoJogador.luvasContrato = Number($scope.ofertaValores && $scope.ofertaValores.luvas) || 0;
             novoJogador.bonusPorJogo = Number($scope.ofertaValores && $scope.ofertaValores.bonusJogo) || 0;
             novoJogador.bonusPorGol = Number($scope.ofertaValores && $scope.ofertaValores.bonusGol) || 0;
+            novoJogador.bonusTitulo = Number($scope.ofertaValores && $scope.ofertaValores.bonusTitulo) || 0;
+            novoJogador.bonusAcesso = Number($scope.ofertaValores && $scope.ofertaValores.bonusAcesso) || 0;
+            novoJogador.bonusPermanencia = Number($scope.ofertaValores && $scope.ofertaValores.bonusPermanencia) || 0;
+            novoJogador.bonusClassificacao = Number($scope.ofertaValores && $scope.ofertaValores.bonusClassificacao) || 0;
             novoJogador.emNegociacao = false;
             $scope.aplicarRenovacaoContratoJogador(novoJogador, salario, anos);
             

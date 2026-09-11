@@ -2579,6 +2579,12 @@
                     <label>Luvas (R$)<input type="number" min="0" step="10000" ng-model="ofertaValores.luvas" style="width:100%; padding:7px;"></label>
                     <label>Bônus por gol<input type="number" min="0" step="1000" ng-model="ofertaValores.bonusGol" style="width:100%; padding:7px;"></label>
                 </div>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; font-size:12px;">
+                    <label>Bônus por gol<input type="number" min="0" step="1000" ng-model="ofertaValores.bonusGol" style="width:100%; padding:7px;"></label>
+                    <label>Bônus por título<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusTitulo" style="width:100%; padding:7px;"></label>
+                    <label>Bônus por acesso<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusAcesso" style="width:100%; padding:7px;"></label>
+                    <label>Bônus por permanência<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusPermanencia" style="width:100%; padding:7px;"></label>
+                </div>
                 <div style="display: flex; gap: 10px;">
                     <button style="flex: 1; padding: 12px; background: var(--br-green); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="enviarPropostaJogador(ofertaValores.salario, ofertaValores.anos)">Fazer Oferta</button>
                     <button style="padding: 12px; background: #ccc; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="fecharNegociacao()">Desistir</button>
