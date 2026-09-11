@@ -7703,6 +7703,24 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Parcela de transferência: ' + item.jogadorNome, valor: valor, data: 'Dia ' + dia });
             }
         });
+        ($scope.compromissosTransferencias || []).forEach(function(item) {
+            if (item.status !== 'ativo') return;
+            var dias = Number(item.proximoVencimento || 0) - dia;
+            if (dias !== 7 || item.ultimoAvisoDia === dia) return;
+            item.ultimoAvisoDia = dia;
+            if (item.clubeDevedorId === ($scope.clubeAtual && $scope.clubeAtual.id)) {
+                $scope.adicionarMensagem('Financeiro', 'Parcela se aproxima', 'A parcela de ' + $scope.formatarMoeda(item.valorParcela) + ' de ' + item.jogadorNome + ' vence em 7 dias.', true, 'transferencia');
+            }
+        });
+        eventos.forEach(function(evento) {
+            if (evento.tipo !== 'atraso_transferencia') return;
+            var item = evento.item;
+            var devedor = evento.clube;
+            devedor.reputacao = Math.max(1, (Number(devedor.reputacao) || 50) - 1);
+            if (devedor.id === ($scope.clubeAtual && $scope.clubeAtual.id)) {
+                $scope.adicionarMensagem('Financeiro', 'Parcela atrasada', 'O clube não conseguiu pagar a parcela de ' + $scope.formatarMoeda(item.valorParcela) + ' por ' + item.jogadorNome + '. A reputação financeira foi afetada.', false, 'transferencia');
+            }
+        });
         return eventos;
     };
 
