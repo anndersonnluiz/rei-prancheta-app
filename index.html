@@ -2014,6 +2014,14 @@
                     </div>
                 </div>
 
+                <div class="mercado-panel" ng-if="compromissosTransferencias.length > 0">
+                    <div class="mercado-panel-header"><div><h4>Compromissos de transferências</h4><p>Parcelas futuras e situação financeira do clube.</p></div></div>
+                    <div class="mercado-list"><div class="mercado-list-item" ng-repeat="item in compromissosTransferencias | filter:{clubeDevedorId: clubeAtual.id, status:'ativo'} track by item.id">
+                        <div class="mercado-list-main"><div class="mercado-list-title">{{item.jogadorNome}}</div><div class="mercado-list-meta">Restante: {{formatarMoeda(item.valorRestante)}} · {{item.parcelasRestantes}} parcela(s) · vencimento dia {{item.proximoVencimento}}</div></div>
+                        <div class="mercado-list-side"><span class="mercado-status" ng-class="item.atrasos ? 'alerta' : 'neutro'">{{item.atrasos ? item.atrasos + ' atraso(s)' : 'Em dia'}}</span><button ng-if="item.atrasos" class="mercado-secondary-btn" ng-click="renegociarCompromissoTransferencia(item)">Renegociar</button></div>
+                    </div></div>
+                </div>
+
                 <div ng-if="isAbaMercado('historico')" class="mercado-panel">
                     <div class="mercado-panel-header">
                         <div>

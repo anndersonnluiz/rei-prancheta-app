@@ -7723,6 +7723,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
         return eventos;
     };
+    $scope.renegociarCompromissoTransferencia = function(item) {
+        if (!item || item.status !== 'ativo' || !$scope.clubeAtual || item.clubeDevedorId !== $scope.clubeAtual.id) return false;
+        if ((Number(item.atrasos) || 0) < 1) return false;
+        var multa = Math.ceil((Number(item.valorRestante) || 0) * 0.05);
+        item.valorRestante = (Number(item.valorRestante) || 0) + multa;
+        item.valorParcela = Math.ceil(item.valorRestante / Math.max(1, Number(item.parcelasRestantes) || 1));
+        item.atrasos = 0;
+        item.proximoVencimento = (Number($scope.diaAtual) || 0) + 30;
+        item.renegociacoes = (Number(item.renegociacoes) || 0) + 1;
+        $scope.clubeAtual.reputacao = Math.max(1, (Number($scope.clubeAtual.reputacao) || 50) - 1);
+        $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Multa de renegociação: ' + item.jogadorNome, valor: multa, data: 'Dia ' + ($scope.diaAtual || 0) });
+        $scope.adicionarMensagem('Financeiro', 'Parcela renegociada', 'O compromisso por ' + item.jogadorNome + ' foi renegociado com multa de ' + $scope.formatarMoeda(multa) + '.', false, 'transferencia');
+        if ($scope.salvarJogoSilencioso) $scope.salvarJogoSilencioso();
+        return true;
+    };
 
     $scope.emprestarJogador = function(jogador, clubeDestinoId, duracaoDias, valorOpcaoCompra) {
         if (!jogador || !$scope.clubeAtual || jogador.clubeId !== $scope.clubeAtual.id) return null;
