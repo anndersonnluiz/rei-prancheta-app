@@ -6866,6 +6866,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return total;
         }
         var bonusMetasTemporada = processarBonusMetaClube($scope.clubeAtual, posicaoTabela, campeaoSerieA && campeaoSerieA.id === $scope.clubeAtual.id, subiu, desceu);
+        // A IA também liquida metas coletivas dos contratos ao fechar o ciclo.
+        var bonusMetasCpu = 0;
+        ['A', 'B', 'C', 'D'].forEach(function(divisao) {
+            var tabelaDivisao = $scope.ordenarTabela(divisao) || [];
+            tabelaDivisao.forEach(function(linha, indice) {
+                var clubeCpu = linha.clube;
+                if (!clubeCpu || clubeCpu.id === $scope.clubeAtual.id) return;
+                var posicaoCpu = indice + 1;
+                var acessoCpu = divisao !== 'A' && posicaoCpu <= 4;
+                var rebaixamentoCpu = divisao !== 'D' && posicaoCpu >= Math.max(1, tabelaDivisao.length - 3);
+                bonusMetasCpu += processarBonusMetaClube(clubeCpu, posicaoCpu, posicaoCpu === 1, acessoCpu, rebaixamentoCpu);
+            });
+        });
 
         if (desceu) {
             statusDiretoria = "Demitido"; msgDiretoria = "O rebaixamento é inaceitável. Você está demitido."; demitido = true;
@@ -6921,6 +6934,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             ambienteElenco: ambienteFinal ? ambienteFinal.valor : null,
             metasTemporada: angular.copy(($scope.diretoriaStatus && $scope.diretoriaStatus.metasTemporada) || [])
             , bonusMetasTemporada: bonusMetasTemporada
+            , bonusMetasCpu: bonusMetasCpu
         };
         
         $scope.telaAtual = 'cerimonia';
