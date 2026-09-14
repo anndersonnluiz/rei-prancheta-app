@@ -7717,6 +7717,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var item = evento.item;
             var devedor = evento.clube;
             devedor.reputacao = Math.max(1, (Number(devedor.reputacao) || 50) - 1);
+            if ((Number(item.atrasos) || 0) >= 2) {
+                devedor.bloqueioMercadoAteDia = Math.max(Number(devedor.bloqueioMercadoAteDia) || 0, dia + 15);
+            }
             if (devedor.id === ($scope.clubeAtual && $scope.clubeAtual.id)) {
                 $scope.adicionarMensagem('Financeiro', 'Parcela atrasada', 'O clube não conseguiu pagar a parcela de ' + $scope.formatarMoeda(item.valorParcela) + ' por ' + item.jogadorNome + '. A reputação financeira foi afetada.', false, 'transferencia');
             }
@@ -8771,6 +8774,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     // FASE 10: MERCADO DA BOLA
     $scope.isJanelaTransferenciaAberta = function() {
         if (!$scope.calendarioGeral || !$scope.calendarioGeral[$scope.diaAtual]) return false;
+        if ($scope.clubeAtual && Number($scope.clubeAtual.bloqueioMercadoAteDia) > (Number($scope.diaAtual) || 0)) return false;
         return !!$scope.obterJanelaTransferenciaAtual($scope.diaAtual);
     };
 
@@ -8843,6 +8847,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.atualizarResumoJanelaMercado = function() {
         var diaAtual = (typeof $scope.diaAtual === 'number') ? $scope.diaAtual : 0;
+        var bloqueioAte = Number($scope.clubeAtual && $scope.clubeAtual.bloqueioMercadoAteDia) || 0;
+        if (bloqueioAte > diaAtual) {
+            $scope.resumoJanelaMercado = {
+                aberta: false,
+                titulo: 'Mercado bloqueado',
+                detalhe: 'O clube precisa regularizar compromissos financeiros antes de voltar a negociar.',
+                diasRestantes: 0,
+                proxima: 'Liberação prevista em ' + (bloqueioAte - diaAtual) + ' dia(s).'
+            };
+            return;
+        }
         var janelaAtual = $scope.obterJanelaTransferenciaAtual(diaAtual);
         var janelas = $scope.obterJanelasTransferencia ? $scope.obterJanelasTransferencia() : [];
 
