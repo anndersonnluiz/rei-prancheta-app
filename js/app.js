@@ -7505,6 +7505,15 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             staffClube: normalizarStaff($scope.staffClube),
             emprestimosAtivos: $scope.emprestimosAtivos || [],
             compromissosTransferencias: $scope.compromissosTransferencias || [],
+            estadosFinanceirosClubes: ($scope.clubes || []).reduce(function(acumulado, clube) {
+                if (!clube || clube.id === undefined) return acumulado;
+                acumulado[clube.id] = {
+                    orcamento: Number(clube.orcamento) || 0,
+                    reputacao: Number(clube.reputacao) || 0,
+                    bloqueioMercadoAteDia: Number(clube.bloqueioMercadoAteDia) || 0
+                };
+                return acumulado;
+            }, {}),
             anoAtual: $scope.dados.anoAtual || 2024,
             caixaEntrada: $scope.caixaEntrada || [],
             noticiasFeed: $scope.noticiasFeed || [],
@@ -8046,6 +8055,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.noticiasFeed = $scope.saveInfo.noticiasFeed || [];
         $scope.patrocinioAtual = $scope.saveInfo.patrocinioAtual || null;
         $scope.clubeAtual = $scope.clubes.find(function(c) { return c.id === $scope.saveInfo.clubeAtualId; });
+        if ($scope.saveInfo.estadosFinanceirosClubes && typeof $scope.saveInfo.estadosFinanceirosClubes === 'object') {
+            Object.keys($scope.saveInfo.estadosFinanceirosClubes).forEach(function(clubeId) {
+                var estadoFinanceiro = $scope.saveInfo.estadosFinanceirosClubes[clubeId];
+                var clubeFinanceiro = ($scope.clubes || []).find(function(clube) { return String(clube.id) === String(clubeId); });
+                if (!clubeFinanceiro || !estadoFinanceiro) return;
+                if (estadoFinanceiro.orcamento !== undefined) clubeFinanceiro.orcamento = Number(estadoFinanceiro.orcamento) || 0;
+                if (estadoFinanceiro.reputacao !== undefined) clubeFinanceiro.reputacao = Number(estadoFinanceiro.reputacao) || 0;
+                if (estadoFinanceiro.bloqueioMercadoAteDia !== undefined) clubeFinanceiro.bloqueioMercadoAteDia = Number(estadoFinanceiro.bloqueioMercadoAteDia) || 0;
+            });
+        }
         if (!$scope.patrocinioAtual) $scope.gerarPatrocinadores();
         $scope.elencoAtual = $scope.saveInfo.elencoAtual;
         if ($scope.elencoAtual && $scope.jogadores) {
@@ -9389,12 +9408,6 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             valorPagoClube = parseFloat(valorPagoClube) || 0;
             salario = parseFloat(salario) || jogador.salario || 10000;
             anos = parseInt(anos, 10) || 1;
-
-            if (valorPagoClube > 0 && $scope.clubeAtual.orcamento < valorPagoClube) {
-                $scope.estadoNegociacao = 'rejeitado';
-                $scope.motivoRejeicao = "Orçamento insuficiente para concluir a contratação.";
-                return;
-            }
 
             if (valorPagoClube > 0) {
                 var entrada = Math.min(valorPagoClube, Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.entrada) || valorPagoClube));
