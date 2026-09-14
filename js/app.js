@@ -7729,6 +7729,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (evento.tipo !== 'atraso_transferencia') return;
             var item = evento.item;
             var devedor = evento.clube;
+            if (!devedor) return;
             devedor.reputacao = Math.max(1, (Number(devedor.reputacao) || 50) - 1);
             if ((Number(item.atrasos) || 0) >= 2) {
                 devedor.bloqueioMercadoAteDia = Math.max(Number(devedor.bloqueioMercadoAteDia) || 0, dia + 15);
@@ -9075,6 +9076,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             clube: proposta.valorOferta || $scope.calcularValorPasse(jogador),
             salario: proposta.salarioOferta || jogador.salario || 10000,
             anos: String(proposta.anosContrato || jogador.anosContrato || 1),
+            entrada: proposta.entrada !== undefined ? proposta.entrada : (proposta.valorOferta || $scope.calcularValorPasse(jogador)),
+            parcelas: proposta.parcelas || 1,
+            intervaloDias: proposta.intervaloDias || 30,
+            papel: proposta.papel || 'rotacao',
+            luvas: proposta.luvas || 0,
+            bonusJogo: proposta.bonusJogo || 0,
+            bonusGol: proposta.bonusGol || 0,
+            bonusVitoria: proposta.bonusVitoria || 0,
+            bonusTitulo: proposta.bonusTitulo || 0,
+            bonusAcesso: proposta.bonusAcesso || 0,
+            bonusPermanencia: proposta.bonusPermanencia || 0,
+            bonusClassificacao: proposta.bonusClassificacao || 0,
+            clausulaRescisao: proposta.clausulaRescisao || Math.round($scope.calcularValorPasse(jogador) * 1.5),
             clubeAceita: proposta.status === 'clube_aceitou' ? (proposta.valorOferta || 0) : 0
         };
         $scope.estadoNegociacao = proposta.status === 'clube_aceitou' || proposta.status === 'em_jogador' ? 'proposta_jogador' : 'proposta_clube';
@@ -9198,8 +9212,35 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var salario = Number($scope.ofertaValores && $scope.ofertaValores.salario) || 0;
         var orcamento = Number($scope.clubeAtual && $scope.clubeAtual.orcamento) || 0;
         var folha = typeof $scope.calcularFolhaSalarial === 'function' ? Number($scope.calcularFolhaSalarial()) || 0 : 0;
-        var margemDepois = orcamento - valorPasse - ((folha + salario) * 12);
-        return { margemDepois: margemDepois, percentualOrcamento: orcamento ? Math.round((valorPasse / orcamento) * 100) : 0, sustentabilidade: margemDepois < 0 ? 'Crítica' : (margemDepois < folha * 6 ? 'Atenção' : 'Viável') };
+        var entrada = valorPasse > 0 ? Math.min(valorPasse, Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.entrada) || valorPasse)) : 0;
+        var parcelas = valorPasse > entrada ? Math.max(1, Math.min(12, parseInt($scope.ofertaValores && $scope.ofertaValores.parcelas, 10) || 1)) : 0;
+        var intervaloDias = Math.max(7, parseInt($scope.ofertaValores && $scope.ofertaValores.intervaloDias, 10) || 30);
+        var compromissoRestante = Math.max(0, valorPasse - entrada);
+        var parcelaMedia = parcelas ? Math.ceil(compromissoRestante / parcelas) : 0;
+        var luvas = Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.luvas) || 0);
+        var desembolsoImediato = entrada + luvas;
+        var margemCaixa = orcamento - desembolsoImediato;
+        var margemDepois = margemCaixa - ((folha + salario) * 12) - compromissoRestante;
+        var comprometimentoImediato = orcamento ? Math.round((desembolsoImediato / orcamento) * 100) : 0;
+        return {
+            margemDepois: margemDepois,
+            margemCaixa: margemCaixa,
+            percentualOrcamento: orcamento ? Math.round((valorPasse / orcamento) * 100) : 0,
+            comprometimentoImediato: comprometimentoImediato,
+            entrada: entrada,
+            luvas: luvas,
+            compromissoRestante: compromissoRestante,
+            parcelaMedia: parcelaMedia,
+            parcelas: parcelas,
+            intervaloDias: intervaloDias,
+            sustentabilidade: margemCaixa < 0 || margemDepois < 0 ? 'Crítica' : (margemCaixa < folha * 6 || margemDepois < folha * 3 ? 'Atenção' : 'Viável')
+        };
+    };
+
+    $scope.obterTetoOfertaTransferencia = function(jogador) {
+        var valorPasse = jogador ? Number($scope.calcularValorPasse(jogador)) || 0 : 0;
+        var orcamento = Number($scope.clubeAtual && $scope.clubeAtual.orcamento) || 0;
+        return Math.max(orcamento, Math.ceil((valorPasse * 1.5) / 100000) * 100000, 100000);
     };
 
     $scope.fecharNegociacao = function() {
@@ -9312,7 +9353,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         else if (reputacaoClube < 65) fatorExigencia += 0.04;
         var margemAceitacao = salarioBase * fatorExigencia;
         var origemId = $scope.tipoNegociacao === 'renovacao' ? $scope.clubeAtual.id : $scope.jogadorNegociacao.clubeId;
-        var proposta = $scope.registrarOuAtualizarProposta({
+        var proposta = $scope.registrarOuAtualizarProposta(Object.assign({
             id: $scope.propostaNegociacaoAtualId,
             tipo: $scope.tipoNegociacao,
             status: 'em_jogador',
@@ -9328,7 +9369,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 anosMinimos: 1,
                 fatorDivisao: fatorExigencia
             }
-        });
+        }, obterTermosOfertaContrato()));
         $scope.propostaNegociacaoAtualId = proposta ? proposta.id : null;
 
         var salarioMinimoComConcorrencia = margemAceitacao;
@@ -9342,10 +9383,27 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var papelMinimo = overallNegociacao >= 88 ? 'importante' : (overallNegociacao >= 82 ? 'titular' : 'rotacao');
         var ordemPapel = { reserva: 0, rotacao: 1, titular: 2, importante: 3, crucial: 4 };
         var papelAdequado = (ordemPapel[$scope.ofertaValores.papel || 'rotacao'] || 0) >= (ordemPapel[papelMinimo] || 0);
+        function obterTermosOfertaContrato() {
+            return {
+                entrada: Number($scope.ofertaValores && $scope.ofertaValores.entrada) || 0,
+                parcelas: parseInt($scope.ofertaValores && $scope.ofertaValores.parcelas, 10) || 1,
+                intervaloDias: parseInt($scope.ofertaValores && $scope.ofertaValores.intervaloDias, 10) || 30,
+                papel: $scope.ofertaValores && $scope.ofertaValores.papel || 'rotacao',
+                luvas: Number($scope.ofertaValores && $scope.ofertaValores.luvas) || 0,
+                bonusJogo: Number($scope.ofertaValores && $scope.ofertaValores.bonusJogo) || 0,
+                bonusGol: Number($scope.ofertaValores && $scope.ofertaValores.bonusGol) || 0,
+                bonusVitoria: Number($scope.ofertaValores && $scope.ofertaValores.bonusVitoria) || 0,
+                bonusTitulo: Number($scope.ofertaValores && $scope.ofertaValores.bonusTitulo) || 0,
+                bonusAcesso: Number($scope.ofertaValores && $scope.ofertaValores.bonusAcesso) || 0,
+                bonusPermanencia: Number($scope.ofertaValores && $scope.ofertaValores.bonusPermanencia) || 0,
+                bonusClassificacao: Number($scope.ofertaValores && $scope.ofertaValores.bonusClassificacao) || 0,
+                clausulaRescisao: Number($scope.ofertaValores && $scope.ofertaValores.clausulaRescisao) || 0
+            };
+        }
         if (salario >= salarioMinimoComConcorrencia && contratoAdequado && papelAdequado) {
             $scope.estadoNegociacao = 'sucesso';
             $scope.motivoRejeicao = $scope.tipoNegociacao === 'compra' ? "O jogador aceitou sua oferta de salário e assinou o contrato!" : "Renovação concluída com sucesso!";
-            $scope.registrarOuAtualizarProposta({
+            $scope.registrarOuAtualizarProposta(Object.assign({
                 id: $scope.propostaNegociacaoAtualId,
                 tipo: $scope.tipoNegociacao,
                 status: 'aceita',
@@ -9357,9 +9415,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 salarioOferta: salario,
                 anosContrato: anos,
                 papel: $scope.ofertaValores.papel,
-                luvas: Number($scope.ofertaValores.luvas) || 0,
-                bonusJogo: Number($scope.ofertaValores.bonusJogo) || 0
-            });
+            }, obterTermosOfertaContrato()));
             $scope.concluirTransferencia($scope.jogadorNegociacao, salario, anos, $scope.ofertaValores.clubeAceita);
         } else {
             $scope.estadoNegociacao = 'rejeitado';

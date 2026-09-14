@@ -43,6 +43,15 @@ assert.strictEqual(compromisso.valorRestante, 800000);
 assert.strictEqual(compromisso.parcelasRestantes, 4);
 assert.strictEqual(scope.obterExposicaoTransferencias(clubeHumano.id), 800000);
 
+scope.tipoNegociacao = 'compra';
+scope.ofertaValores = { clube: 900000, entrada: 100000, parcelas: 4, intervaloDias: 7, luvas: 50000, salario: 10000 };
+const impacto = scope.obterImpactoFinanceiroNegociacao();
+assert.strictEqual(impacto.entrada, 100000, 'preview should use only the negotiated entry as immediate transfer cost');
+assert.strictEqual(impacto.luvas, 50000, 'preview should include signing bonuses in immediate cost');
+assert.strictEqual(impacto.compromissoRestante, 800000, 'preview should expose the future transfer commitment');
+assert.strictEqual(impacto.parcelaMedia, 200000, 'preview should calculate the average installment');
+assert.ok(scope.obterTetoOfertaTransferencia(scope.elencoAtual[0]) >= 900000, 'offer slider should allow values above current cash when using installments');
+
 clubeCpu.reputacao = 41;
 clubeCpu.bloqueioMercadoAteDia = 20;
 scope.salvarJogoSilencioso();

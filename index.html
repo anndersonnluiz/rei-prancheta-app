@@ -2540,9 +2540,9 @@
                 <p style="font-size: 14px; margin-bottom: 15px;">Este jogador tem contrato com o <strong>{{obterNomeClube(jogadorNegociacao.clubeId)}}</strong>. O passe está avaliado em <strong style="color: var(--br-green-dark);">{{formatarMoeda(calcularValorPasse(jogadorNegociacao))}}</strong>.</p>
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: bold; margin-bottom: 5px;">Sua Oferta de Compra (R$):</label>
-                    <input type="range" min="{{calcularValorPasse(jogadorNegociacao) * 0.5}}" max="{{clubeAtual.orcamento}}" step="100000" ng-model="ofertaValores.clube" style="width: 100%;">
+                    <input type="range" min="{{calcularValorPasse(jogadorNegociacao) * 0.5}}" max="{{obterTetoOfertaTransferencia(jogadorNegociacao)}}" step="100000" ng-model="ofertaValores.clube" style="width: 100%;">
                     <div style="font-size: 24px; font-weight: bold; color: var(--br-blue); text-align: center; margin-top: 10px;">{{formatarMoeda(ofertaValores.clube)}}</div>
-                    <div class="negotiation-finance-preview">Após a contratação: <strong>{{obterImpactoFinanceiroNegociacao().sustentabilidade}}</strong> · margem estimada {{formatarMoeda(obterImpactoFinanceiroNegociacao().margemDepois)}} · {{obterImpactoFinanceiroNegociacao().percentualOrcamento}}% do orçamento</div>
+                <div class="negotiation-finance-preview">Após a contratação: <strong>{{obterImpactoFinanceiroNegociacao().sustentabilidade}}</strong> · saída imediata {{formatarMoeda(obterImpactoFinanceiroNegociacao().entrada + obterImpactoFinanceiroNegociacao().luvas)}} · {{obterImpactoFinanceiroNegociacao().parcelas ? formatarMoeda(obterImpactoFinanceiroNegociacao().parcelaMedia) + ' por parcela' : 'à vista'}} · margem final {{formatarMoeda(obterImpactoFinanceiroNegociacao().margemDepois)}}</div>
                     <div ng-if="tipoNegociacao === 'compra'" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; font-size:12px;">
                         <label>Entrada (R$)<input type="number" min="0" step="100000" ng-model="ofertaValores.entrada" style="width:100%; padding:6px;"></label>
                         <label>Parcelas<input type="number" min="1" max="12" ng-model="ofertaValores.parcelas" style="width:100%; padding:6px;"></label>
@@ -2596,9 +2596,11 @@
                 </div>
                 <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; font-size:12px;">
                     <label>Bônus por gol<input type="number" min="0" step="1000" ng-model="ofertaValores.bonusGol" style="width:100%; padding:7px;"></label>
+                    <label>Bônus por vitória<input type="number" min="0" step="1000" ng-model="ofertaValores.bonusVitoria" style="width:100%; padding:7px;"></label>
                     <label>Bônus por título<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusTitulo" style="width:100%; padding:7px;"></label>
                     <label>Bônus por acesso<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusAcesso" style="width:100%; padding:7px;"></label>
                     <label>Bônus por permanência<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusPermanencia" style="width:100%; padding:7px;"></label>
+                    <label>Bônus Top 4<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusClassificacao" style="width:100%; padding:7px;"></label>
                     <label>Cláusula de rescisão<input type="number" min="0" step="100000" ng-model="ofertaValores.clausulaRescisao" style="width:100%; padding:7px;"></label>
                 </div>
                 <div style="display: flex; gap: 10px;">
