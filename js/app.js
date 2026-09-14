@@ -9923,17 +9923,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 dispensadoCPU.anosContrato = 0;
                 $scope.registrarTransferenciaHistorico({ tipo: 'cpu_liberacao', jogadorId: dispensadoCPU.id, jogadorNome: dispensadoCPU.nome, clubeOrigemId: clube.id, clubeOrigemNome: clube.nome, clubeDestinoId: 'mercado', clubeDestinoNome: 'Mercado Livre', valor: 0, salario: dispensadoCPU.salario, anosContrato: 0 });
             }
-            if (elencoCPU.length > 18 && Math.random() < 0.04) {
+            var folhaCPU = elencoCPU.reduce(function(total, jogador) { return total + (Number(jogador.salario) || Number(jogador.salarioDesejado) || 0); }, 0);
+            var caixaCPU = Number(clube.orcamento) || 0;
+            var vendaPorPressaoFinanceira = caixaCPU < Math.max(1000000, folhaCPU * 8);
+            if (elencoCPU.length > 18 && (Math.random() < 0.04 || vendaPorPressaoFinanceira)) {
                 var candidatosVendaCPU = elencoCPU.filter(function(jogador) {
                     var repeticaoPosicao = elencoCPU.filter(function(item) { return item.posicao === jogador.posicao; }).length;
-                    return repeticaoPosicao > 2 && !jogador.emCampo && !jogador.lesionado && !jogador.emNegociacao;
+                    var overall = $scope.calcularOverall(jogador);
+                    var papel = jogador.papelElenco || '';
+                    return repeticaoPosicao > 2 && !jogador.emCampo && !jogador.lesionado && !jogador.emNegociacao && papel !== 'importante' && overall < 88;
                 }).sort(function(a, b) {
                     function prioridadeVenda(jogador) {
                         var overall = $scope.calcularOverall(jogador);
                         var potencial = Number(jogador.potencial) || overall;
                         var idade = Number(jogador.idade) || 25;
                         var salario = Number(jogador.salario) || 0;
-                        return (salario / 100000) - overall * 0.7 - Math.max(0, potencial - overall) * 0.5 + (idade >= 34 ? 4 : 0);
+                        var pesoCaixa = vendaPorPressaoFinanceira ? 1.35 : 1;
+                        return (salario / 100000) * pesoCaixa - overall * 0.7 - Math.max(0, potencial - overall) * 0.5 + (idade >= 34 ? 4 : 0);
                     }
                     return prioridadeVenda(b) - prioridadeVenda(a);
                 });
