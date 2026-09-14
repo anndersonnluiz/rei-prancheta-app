@@ -7738,6 +7738,24 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return total + Math.max(0, Number(item.valorRestante) || 0);
         }, 0);
     };
+    $scope.obterResumoCompromissosFinanceiros = function(clubeId) {
+        var clube = ($scope.clubes || []).find(function(item) { return String(item.id) === String(clubeId || ($scope.clubeAtual && $scope.clubeAtual.id)); });
+        var compromissos = clube ? $scope.obterCompromissoTransferenciasClube(clube.id) : [];
+        var parcelas = compromissos.reduce(function(total, item) { return total + Math.max(0, Number(item.valorParcela) || 0); }, 0);
+        var proximo = compromissos.reduce(function(menor, item) {
+            var dia = Number(item.proximoVencimento);
+            return Number.isFinite(dia) && (menor === null || dia < menor) ? dia : menor;
+        }, null);
+        var bonusPendentes = clube ? Math.max(0, Number(clube.bonusContratuaisPendentes) || 0) : 0;
+        return {
+            compromissos: compromissos.length,
+            saldoParcelado: $scope.obterExposicaoTransferencias(clube ? clube.id : clubeId),
+            parcelasAtuais: parcelas,
+            proximoVencimento: proximo,
+            bonusPendentes: bonusPendentes,
+            totalPendente: ($scope.obterExposicaoTransferencias(clube ? clube.id : clubeId) + bonusPendentes)
+        };
+    };
     $scope.criarParcelamentoTransferencia = function(dados) {
         var total = Math.max(0, Number(dados && dados.valor) || 0);
         var parcelas = Math.max(1, Math.min(12, parseInt(dados && dados.parcelas, 10) || 1));

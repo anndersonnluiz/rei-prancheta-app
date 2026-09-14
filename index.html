@@ -2335,6 +2335,17 @@
                         <p style="margin: 12px 0 0; color: var(--text-muted); font-size: 12px;">A projeção considera transmissão, merchandising, folha salarial e manutenção.</p>
                     </div>
 
+                    <div class="card" style="margin-bottom: 25px; border-left: 4px solid var(--br-blue); background: #f8fbff;">
+                        <h3 style="margin: 0 0 12px;">Compromissos futuros</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+                            <div><small>Parcelas ativas</small><strong style="display:block;">{{obterResumoCompromissosFinanceiros().compromissos}}</strong></div>
+                            <div><small>Saldo de transferências</small><strong style="display:block; color:#e74c3c;">{{formatarMoeda(obterResumoCompromissosFinanceiros().saldoParcelado)}}</strong></div>
+                            <div><small>Bônus pendentes</small><strong style="display:block; color:#e74c3c;">{{formatarMoeda(obterResumoCompromissosFinanceiros().bonusPendentes)}}</strong></div>
+                            <div><small>Próximo vencimento</small><strong style="display:block;">{{obterResumoCompromissosFinanceiros().proximoVencimento === null ? 'Nenhum' : 'Dia ' + obterResumoCompromissosFinanceiros().proximoVencimento}}</strong></div>
+                        </div>
+                        <p style="margin: 12px 0 0; color: var(--text-muted); font-size: 12px;">Esses valores já comprometem o planejamento, mesmo quando ainda não saíram do caixa.</p>
+                    </div>
+
                     <div ng-if="obterAlertasFinanceiros().length > 0" style="margin-bottom: 25px;">
                         <div ng-repeat="alerta in obterAlertasFinanceiros()" style="padding: 12px 15px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid;" ng-style="{'border-color': alerta.nivel === 'critico' ? '#e74c3c' : '#f39c12', 'background': alerta.nivel === 'critico' ? '#fdecea' : '#fff4df'}">
                             <strong>{{alerta.titulo}}</strong>

@@ -59,6 +59,10 @@ const bonusPagoHumano = scope.processarBonusContratualPartida([bonusJogadorHuman
 assert.strictEqual(bonusPagoHumano, 1000, 'human club should pay only the available cash when a bonus is due');
 assert.strictEqual(bonusJogadorHumano.bonusRecebidosTemporada, 1000, 'player should record only the paid bonus amount');
 assert.strictEqual(bonusJogadorHumano.bonusContratuaisPendentes, 1000, 'unpaid human bonus should remain pending');
+const resumoCompromissos = scope.obterResumoCompromissosFinanceiros(clubeHumano.id);
+assert.strictEqual(resumoCompromissos.compromissos, 1, 'financial summary should count active transfer commitments');
+assert.strictEqual(resumoCompromissos.saldoParcelado, 800000, 'financial summary should expose the remaining transfer balance');
+assert.strictEqual(resumoCompromissos.bonusPendentes, 1000, 'financial summary should expose pending contractual bonuses');
 
 clubeCpu.reputacao = 41;
 clubeCpu.bloqueioMercadoAteDia = 20;
