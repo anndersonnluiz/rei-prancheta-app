@@ -3662,8 +3662,18 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .training-history-item span { color: var(--text-main); font-size: 12px; font-weight: 700; }
 .training-history-item small { color: var(--text-muted); font-size: 10px; }
 .contract-finance-alert { color: #a52b28; font-size: 11px; font-weight: 700; }
-.negotiation-finance-preview { margin-top: 9px; padding: 8px 10px; border-radius: 6px; background: #f5f8fb; color: var(--text-muted); font-size: 11px; text-align: center; }
-.negotiation-finance-preview strong { color: var(--br-green); }
+.negotiation-finance-preview { margin-top: 12px; padding: 12px; border: 1px solid #dbe5ee; border-radius: 10px; background: linear-gradient(135deg, #f8fbfd, #eef5f8); color: var(--text-muted); font-size: 11px; text-align: left; }
+.negotiation-finance-preview.risk-crítica { border-color: #f1b4ae; background: #fff5f4; }
+.negotiation-finance-preview.risk-atencao { border-color: #efd08a; background: #fffaf0; }
+.negotiation-finance-preview.risk-viavel { border-color: #a9dec0; background: #f3fbf6; }
+.negotiation-risk-line { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px; color:var(--text-main); }
+.negotiation-risk-line strong { color: var(--br-green-dark); font-size: 13px; }
+.risk-crítica .negotiation-risk-line strong { color:#c0392b; }
+.risk-atencao .negotiation-risk-line strong { color:#b9770e; }
+.negotiation-finance-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.negotiation-finance-grid span { padding:8px; border-radius:7px; background:rgba(255,255,255,.72); }
+.negotiation-finance-grid b { display:block; margin-top:3px; color:var(--text-main); font-size:12px; }
+@media (max-width: 600px) { .negotiation-finance-grid { grid-template-columns:1fr; } }
 .pre-match-form { display: block; margin-top: 3px; color: var(--text-muted); font-size: 11px; letter-spacing: .04em; }
 .club-form-indicator { display: inline-flex; align-items: center; justify-content: center; width: 19px; height: 19px; margin: 1px; border-radius: 50%; color: #fff; font-size: 10px; font-weight: 800; }
 .club-form-indicator.form-V { background: var(--br-green); }

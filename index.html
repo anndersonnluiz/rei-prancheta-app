@@ -2553,7 +2553,15 @@
                     <label style="display: block; font-weight: bold; margin-bottom: 5px;">Sua Oferta de Compra (R$):</label>
                     <input type="range" min="{{calcularValorPasse(jogadorNegociacao) * 0.5}}" max="{{obterTetoOfertaTransferencia(jogadorNegociacao)}}" step="100000" ng-model="ofertaValores.clube" style="width: 100%;">
                     <div style="font-size: 24px; font-weight: bold; color: var(--br-blue); text-align: center; margin-top: 10px;">{{formatarMoeda(ofertaValores.clube)}}</div>
-                <div class="negotiation-finance-preview">Após a contratação: <strong>{{obterImpactoFinanceiroNegociacao().sustentabilidade}}</strong> · saída imediata {{formatarMoeda(obterImpactoFinanceiroNegociacao().entrada + obterImpactoFinanceiroNegociacao().luvas)}} · {{obterImpactoFinanceiroNegociacao().parcelas ? formatarMoeda(obterImpactoFinanceiroNegociacao().parcelaMedia) + ' por parcela' : 'à vista'}} · margem final {{formatarMoeda(obterImpactoFinanceiroNegociacao().margemDepois)}}</div>
+                <div class="negotiation-finance-preview" ng-class="'risk-' + obterImpactoFinanceiroNegociacao().sustentabilidade.toLowerCase().replace('ã','a')">
+                    <div class="negotiation-risk-line"><span>Saúde financeira da proposta</span><strong>{{obterImpactoFinanceiroNegociacao().sustentabilidade}}</strong></div>
+                    <div class="negotiation-finance-grid">
+                        <span>Saída imediata <b>{{formatarMoeda(obterImpactoFinanceiroNegociacao().entrada + obterImpactoFinanceiroNegociacao().luvas)}}</b></span>
+                        <span>{{obterImpactoFinanceiroNegociacao().parcelas ? 'Parcela média' : 'Pagamento à vista'}} <b>{{obterImpactoFinanceiroNegociacao().parcelas ? formatarMoeda(obterImpactoFinanceiroNegociacao().parcelaMedia) : formatarMoeda(obterImpactoFinanceiroNegociacao().compromissoRestante)}}</b></span>
+                        <span>Obrigações já assumidas <b>{{formatarMoeda((obterResumoCompromissosFinanceiros().saldoParcelado || 0) + (obterResumoCompromissosFinanceiros().bonusPendentes || 0))}}</b></span>
+                        <span>Caixa após compromissos <b>{{formatarMoeda(obterImpactoFinanceiroNegociacao().caixaProjetadoCompromissos)}}</b></span>
+                    </div>
+                </div>
                     <div ng-if="tipoNegociacao === 'compra'" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; font-size:12px;">
                         <label>Entrada (R$)<input type="number" min="0" step="100000" ng-model="ofertaValores.entrada" style="width:100%; padding:6px;"></label>
                         <label>Parcelas<input type="number" min="1" max="12" ng-model="ofertaValores.parcelas" style="width:100%; padding:6px;"></label>
