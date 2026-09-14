@@ -9430,7 +9430,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.enviarPropostaClube = function(oferta) {
         var valorPasse = $scope.calcularValorPasse($scope.jogadorNegociacao);
-        var margemAceitacao = valorPasse * 0.85;
+        var clubeVendedor = ($scope.clubes || []).find(function(clube) { return clube.id === $scope.jogadorNegociacao.clubeId; });
+        var reputacaoVendedor = Number(clubeVendedor && clubeVendedor.reputacao) || 50;
+        var reputacaoComprador = Number($scope.clubeAtual && $scope.clubeAtual.reputacao) || 50;
+        var papelJogador = $scope.jogadorNegociacao.papelElenco || '';
+        var pressaoCaixa = clubeVendedor && (Number(clubeVendedor.orcamento) || 0) < 30000000 ? 0.82 : 0.9;
+        var premioImportancia = papelJogador === 'importante' ? 0.08 : (papelJogador === 'titular' ? 0.04 : 0);
+        var premioReputacao = Math.max(0, reputacaoVendedor - reputacaoComprador) * 0.0015;
+        var margemAceitacao = valorPasse * Math.min(1.08, Math.max(0.7, pressaoCaixa + premioImportancia + premioReputacao));
         var proposta = $scope.registrarOuAtualizarProposta({
             id: $scope.propostaNegociacaoAtualId,
             tipo: 'compra',
@@ -9477,7 +9484,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 $scope.motivoRejeicao = 'Outro clube entrou na disputa: ' + concorrente.nome + '. O jogador vai comparar as propostas.';
             }
         } else if (oferta >= valorPasse * 0.65) {
-            var contraproposta = Math.ceil(Math.max(margemAceitacao, valorPasse * 0.95) / 100000) * 100000;
+            var contraproposta = Math.ceil(Math.max(margemAceitacao, oferta * 1.08) / 100000) * 100000;
             proposta.status = 'clube_contraproposta';
             proposta.valorContraproposta = contraproposta;
             proposta.valorOferta = oferta;
