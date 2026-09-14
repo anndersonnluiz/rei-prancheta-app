@@ -10056,6 +10056,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     clubeDestinoId: cComprador.id,
                     clubeDestinoNome: cComprador.nome,
                     valor: 0,
+                    entrada: 0,
+                    parcelas: 0,
+                    intervaloDias: 0,
                     salario: termosLivreCPU.salario,
                     luvas: termosLivreCPU.luvas,
                     papel: termosLivreCPU.papel,
@@ -10111,7 +10114,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     if (termosCPU) {
                         vendedorCPU.orcamento = (vendedorCPU.orcamento || 0) + termosCPU.entrada;
                         atletaCPU.clubeId = compradorCPU.id;
-                        $scope.registrarTransferenciaHistorico({ tipo: 'cpu', jogadorId: atletaCPU.id, jogadorNome: atletaCPU.nome, clubeOrigemId: vendedorCPU.id, clubeOrigemNome: vendedorCPU.nome, clubeDestinoId: compradorCPU.id, clubeDestinoNome: compradorCPU.nome, valor: valorCPU, salario: termosCPU.salario, luvas: termosCPU.luvas, papel: termosCPU.papel, anosContrato: 2 });
+                        $scope.registrarTransferenciaHistorico({ tipo: 'cpu', jogadorId: atletaCPU.id, jogadorNome: atletaCPU.nome, clubeOrigemId: vendedorCPU.id, clubeOrigemNome: vendedorCPU.nome, clubeDestinoId: compradorCPU.id, clubeDestinoNome: compradorCPU.nome, valor: valorCPU, entrada: termosCPU.entrada, parcelas: 4, intervaloDias: 30, salario: termosCPU.salario, luvas: termosCPU.luvas, papel: termosCPU.papel, anosContrato: 2 });
                     }
                 }
             }
