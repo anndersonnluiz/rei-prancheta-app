@@ -125,6 +125,11 @@ const transferencia = {
   clubeOrigemId: 2,
   clubeDestinoId: 1,
   valor: 500000,
+  entrada: 100000,
+  parcelas: 4,
+  intervaloDias: 30,
+  luvas: 25000,
+  opcaoCompra: 600000,
   salario: 30000,
   anosContrato: 3
 };
@@ -134,6 +139,9 @@ const segundoRegistro = scope.registrarTransferenciaHistorico(transferencia);
 assert.strictEqual(primeiroRegistro, segundoRegistro, 'same transfer should reuse existing history item');
 assert.strictEqual(scope.transferenciasHistorico.length, 1, 'same transfer should not be duplicated');
 assert.strictEqual(scope.transferenciasHistoricoVisivel.length, 1, 'visible transfer history should be stable');
+assert.strictEqual(primeiroRegistro.entrada, 100000, 'transfer history should preserve entry value');
+assert.strictEqual(primeiroRegistro.parcelas, 4, 'transfer history should preserve installments');
+assert.strictEqual(primeiroRegistro.luvas, 25000, 'transfer history should preserve signing bonus');
 
 const proposta = scope.registrarOuAtualizarProposta({
   tipo: 'compra',

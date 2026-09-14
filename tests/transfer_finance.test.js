@@ -69,6 +69,10 @@ const bonusAmortizado = scope.processarPendenciasBonusContratual();
 assert.strictEqual(bonusAmortizado, 1000, 'financial closing should amortize pending bonuses when cash is available');
 assert.strictEqual(bonusJogadorHumano.bonusContratuaisPendentes, 0, 'monthly amortization should clear the player pending balance');
 assert.strictEqual(clubeHumano.bonusContratuaisPendentes, 0, 'monthly amortization should clear the club pending balance');
+clubeHumano.orcamento = 1000;
+clubeHumano.bonusContratuaisPendentes = 9000;
+const alertasCompromissos = scope.obterAlertasFinanceiros();
+assert.ok(alertasCompromissos.some((alerta) => alerta.titulo === 'Compromissos elevados'), 'financial alerts should flag commitments above available cash');
 
 clubeCpu.reputacao = 41;
 clubeCpu.bloqueioMercadoAteDia = 20;
