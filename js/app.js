@@ -9110,6 +9110,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             clubeDestinoId: dados.clubeDestinoId || null,
             clubeDestinoNome: dados.clubeDestinoNome || obterNomeClubeMercado(dados.clubeDestinoId),
             valor: parseFloat(dados.valor) || 0,
+            entrada: parseFloat(dados.entrada) || 0,
+            parcelas: parseInt(dados.parcelas, 10) || 0,
+            intervaloDias: parseInt(dados.intervaloDias, 10) || 0,
+            luvas: parseFloat(dados.luvas) || 0,
+            bonusContrato: parseFloat(dados.bonusContrato) || 0,
+            opcaoCompra: parseFloat(dados.opcaoCompra) || 0,
+            statusFinanceiro: dados.statusFinanceiro || 'registrada',
             salario: parseFloat(dados.salario) || 0,
             anosContrato: parseInt(dados.anosContrato, 10) || null,
             dataStr: dados.dataStr || obterDataStrMercado()

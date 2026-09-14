@@ -2050,6 +2050,12 @@
                                     {{transferencia.tipo | uppercase}} • {{transferencia.clubeOrigemNome}} → {{transferencia.clubeDestinoNome}}
                                 </div>
                                 <div class="mercado-list-meta">{{transferencia.dataStr}} • Temporada {{transferencia.temporada}}</div>
+                                <div class="mercado-list-meta transfer-history-terms" ng-if="transferencia.entrada || transferencia.parcelas || transferencia.luvas || transferencia.opcaoCompra">
+                                    <span ng-if="transferencia.entrada">Entrada {{formatarMoeda(transferencia.entrada)}}</span>
+                                    <span ng-if="transferencia.parcelas">{{transferencia.parcelas}}x {{transferencia.intervaloDias ? '(' + transferencia.intervaloDias + ' dias)' : ''}}</span>
+                                    <span ng-if="transferencia.luvas">Luvas {{formatarMoeda(transferencia.luvas)}}</span>
+                                    <span ng-if="transferencia.opcaoCompra">Opção {{formatarMoeda(transferencia.opcaoCompra)}}</span>
+                                </div>
                             </div>
                             <div class="mercado-list-side">
                                 <span class="mercado-status sucesso" ng-if="transferencia.tipo === 'compra' || transferencia.tipo === 'venda'">{{formatarMoeda(transferencia.valor || 0)}}</span>
