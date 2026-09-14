@@ -9158,6 +9158,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             bonusAcesso: propostaAberta && propostaAberta.bonusAcesso ? propostaAberta.bonusAcesso : 0,
             bonusPermanencia: propostaAberta && propostaAberta.bonusPermanencia ? propostaAberta.bonusPermanencia : 0,
             bonusClassificacao: propostaAberta && propostaAberta.bonusClassificacao ? propostaAberta.bonusClassificacao : 0,
+            clausulaRescisao: propostaAberta && propostaAberta.clausulaRescisao ? propostaAberta.clausulaRescisao : Math.round($scope.calcularValorPasse(jogador) * 1.5),
             clubeAceita: propostaAberta && propostaAberta.status === 'clube_aceitou' ? propostaAberta.valorOferta : 0
         };
 
@@ -9463,6 +9464,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             novoJogador.bonusAcesso = Number($scope.ofertaValores && $scope.ofertaValores.bonusAcesso) || 0;
             novoJogador.bonusPermanencia = Number($scope.ofertaValores && $scope.ofertaValores.bonusPermanencia) || 0;
             novoJogador.bonusClassificacao = Number($scope.ofertaValores && $scope.ofertaValores.bonusClassificacao) || 0;
+            novoJogador.clausulaRescisao = Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.clausulaRescisao) || 0);
             novoJogador.emNegociacao = false;
             $scope.aplicarRenovacaoContratoJogador(novoJogador, salario, anos);
             
@@ -9494,12 +9496,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         } else {
             jogador.salario = parseFloat(salario) || jogador.salario;
             jogador.anosContrato = parseInt(anos, 10) || jogador.anosContrato || 1;
+            jogador.clausulaRescisao = Math.max(0, Number($scope.ofertaValores && $scope.ofertaValores.clausulaRescisao) || Number(jogador.clausulaRescisao) || 0);
             jogador.emNegociacao = false;
             $scope.aplicarRenovacaoContratoJogador(jogador, jogador.salario, jogador.anosContrato);
             var jogadorRenovadoBase = ($scope.jogadores || []).find(function(j) { return j.id === jogador.id; });
             if (jogadorRenovadoBase) {
                 jogadorRenovadoBase.salario = jogador.salario;
                 jogadorRenovadoBase.anosContrato = jogador.anosContrato;
+                jogadorRenovadoBase.clausulaRescisao = jogador.clausulaRescisao;
                 jogadorRenovadoBase.emNegociacao = false;
                 $scope.aplicarRenovacaoContratoJogador(jogadorRenovadoBase, jogador.salario, jogador.anosContrato);
             }
@@ -9572,6 +9576,28 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.atualizarMercado();
             $scope.salvarJogoSilencioso();
         }
+    };
+
+    $scope.exercerClausulaRescisao = function(jogador) {
+        if (!jogador || jogador.clubeId === 'mercado' || jogador.clubeId === ($scope.clubeAtual && $scope.clubeAtual.id) || !$scope.isJanelaTransferenciaAberta()) return false;
+        var valor = Math.max(0, Number(jogador.clausulaRescisao) || 0);
+        var origem = ($scope.clubes || []).find(function(clube) { return clube.id === jogador.clubeId; });
+        if (!valor || !origem || ($scope.clubeAtual.orcamento || 0) < valor) {
+            alert('Orçamento insuficiente para exercer esta cláusula de rescisão.');
+            return false;
+        }
+        if (!confirm('Pagar ' + $scope.formatarMoeda(valor) + ' pela cláusula de rescisão de ' + jogador.nome + '?')) return false;
+        $scope.clubeAtual.orcamento -= valor;
+        origem.orcamento = (Number(origem.orcamento) || 0) + valor;
+        jogador.clubeId = $scope.clubeAtual.id;
+        jogador.emNegociacao = false;
+        $scope.elencoAtual = $scope.elencoAtual || [];
+        if (!$scope.elencoAtual.some(function(item) { return item.id === jogador.id; })) $scope.elencoAtual.push(angular.copy(jogador));
+        $scope.registrarTransferenciaHistorico({ tipo: 'compra_clausula', jogadorId: jogador.id, jogadorNome: jogador.nome, clubeOrigemId: origem.id, clubeOrigemNome: origem.nome, clubeDestinoId: $scope.clubeAtual.id, clubeDestinoNome: $scope.clubeAtual.nome, valor: valor, salario: jogador.salario, anosContrato: jogador.anosContrato });
+        $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Cláusula de rescisão: ' + jogador.nome, valor: valor, data: new Date().toLocaleDateString('pt-BR') });
+        $scope.atualizarMercado();
+        $scope.salvarJogoSilencioso();
+        return true;
     };
 
     function pontuarAlvoMercadoCPU(jogador, clubeDestino, elencoDestino) {
