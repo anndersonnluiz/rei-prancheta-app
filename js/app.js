@@ -9535,6 +9535,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var reputacaoClube = parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 70;
         var bonusDivisao = { A: 0.96, B: 1, C: 1.04, D: 1.08 };
         var fatorExigencia = bonusDivisao[$scope.clubeAtual && $scope.clubeAtual.divisao] || 1;
+        var overallJogador = $scope.calcularOverall($scope.jogadorNegociacao);
+        var idadeJogador = Number($scope.jogadorNegociacao.idade) || 25;
+        if (overallJogador >= 88) fatorExigencia += 0.12;
+        else if (overallJogador >= 82) fatorExigencia += 0.06;
+        if (idadeJogador <= 23 && overallJogador >= 75) fatorExigencia += 0.04;
+        if (idadeJogador >= 34) fatorExigencia -= 0.05;
         if (reputacaoClube >= 85) fatorExigencia -= 0.04;
         else if (reputacaoClube < 65) fatorExigencia += 0.04;
         var margemAceitacao = salarioBase * fatorExigencia;
@@ -9630,6 +9636,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var reputacaoClube = parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 70;
         var bonusDivisao = { A: 0.96, B: 1, C: 1.04, D: 1.08 };
         var fator = bonusDivisao[$scope.clubeAtual && $scope.clubeAtual.divisao] || 1;
+        var overallResumo = $scope.calcularOverall(jogador);
+        var idadeResumo = Number(jogador.idade) || 25;
+        if (overallResumo >= 88) fator += 0.12;
+        else if (overallResumo >= 82) fator += 0.06;
+        if (idadeResumo <= 23 && overallResumo >= 75) fator += 0.04;
+        if (idadeResumo >= 34) fator -= 0.05;
         if (reputacaoClube >= 85) fator -= 0.04;
         else if (reputacaoClube < 65) fator += 0.04;
         var proposta = ($scope.propostasPendentes || []).find(function(item) { return item.id === $scope.propostaNegociacaoAtualId; });
