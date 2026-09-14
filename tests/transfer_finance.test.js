@@ -54,12 +54,22 @@ assert.ok(scope.obterTetoOfertaTransferencia(scope.elencoAtual[0]) >= 900000, 'o
 
 clubeCpu.reputacao = 41;
 clubeCpu.bloqueioMercadoAteDia = 20;
+const cpuElenco = scope.jogadores.filter((jogador) => jogador.clubeId === clubeCpu.id);
+cpuElenco.forEach((jogador) => { jogador.bonusPorJogo = 1000; jogador.bonusVitoria = 500; });
+const cpuAntes = clubeCpu.orcamento;
+const cpuPago = scope.processarBonusContratualCPU(clubeCpu, 'Vitoria', 1);
+assert.ok(cpuPago >= 16500, 'CPU match should settle appearance and win bonuses');
+assert.strictEqual(clubeCpu.orcamento, cpuAntes - cpuPago, 'CPU contract bonuses should debit its budget');
+assert.strictEqual(clubeCpu.bonusContratuaisTemporada, cpuPago, 'CPU bonus ledger should record settled payments');
+clubeCpu.bonusContratuaisPendentes = 2500;
 scope.salvarJogoSilencioso();
 const save = JSON.parse(scope.__storage.reiDaPranchetaSave);
 assert.ok(Array.isArray(save.compromissosTransferencias), 'save should preserve transfer commitments');
 assert.strictEqual(save.compromissosTransferencias[0].valorRestante, 800000);
 assert.strictEqual(save.estadosFinanceirosClubes[clubeCpu.id].reputacao, 41);
 assert.strictEqual(save.estadosFinanceirosClubes[clubeCpu.id].bloqueioMercadoAteDia, 20);
+assert.strictEqual(save.estadosFinanceirosClubes[clubeCpu.id].bonusContratuaisTemporada, cpuPago);
+assert.strictEqual(save.estadosFinanceirosClubes[clubeCpu.id].bonusContratuaisPendentes, 2500);
 
 scope.diaAtual = 7;
 clubeHumano.orcamento = antes;

@@ -5598,6 +5598,41 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return total;
     };
 
+    // A CPU também honra (ou acumula) os bônus de contrato. A escalação
+    // simulada usa os 11 atletas de maior overall do clube, mantendo o
+    // impacto financeiro sem alterar a escalação visual do usuário.
+    $scope.processarBonusContratualCPU = function(clube, resultado, golsMarcados) {
+        if (!clube) return 0;
+        var elenco = ($scope.jogadores || []).filter(function(jogador) {
+            return jogador && jogador.clubeId === clube.id && !jogador.lesionado;
+        }).sort(function(a, b) {
+            return $scope.calcularOverall(b) - $scope.calcularOverall(a);
+        });
+        var titulares = elenco.slice(0, 11);
+        var total = 0;
+        titulares.forEach(function(jogador) {
+            var bonus = Math.max(0, Number(jogador.bonusPorJogo) || 0);
+            if (resultado === 'Vitoria') bonus += Math.max(0, Number(jogador.bonusVitoria) || 0);
+            total += bonus;
+        });
+        var atacantes = elenco.filter(function(jogador) { return jogador.posicao === 'ATA'; });
+        var gols = Math.max(0, Number(golsMarcados) || 0);
+        for (var i = 0; i < gols; i++) {
+            var marcador = atacantes[i % Math.max(1, atacantes.length)];
+            if (marcador) total += Math.max(0, Number(marcador.bonusPorGol) || 0);
+        }
+        if (!total) return 0;
+        var caixaDisponivel = Math.max(0, Number(clube.orcamento) || 0);
+        var pago = Math.min(caixaDisponivel, total);
+        clube.orcamento = caixaDisponivel - pago;
+        clube.bonusContratuaisTemporada = (Number(clube.bonusContratuaisTemporada) || 0) + pago;
+        if (pago < total) {
+            clube.bonusContratuaisPendentes = (Number(clube.bonusContratuaisPendentes) || 0) + (total - pago);
+            clube.reputacao = Math.max(1, (Number(clube.reputacao) || 50) - 0.05);
+        }
+        return pago;
+    };
+
     $scope.aplicarEvolucaoElenco = function(motivo) {
         $scope.relatorioEvolucao = Array.isArray($scope.relatorioEvolucao) ? $scope.relatorioEvolucao : [];
         var novosRelatorios = [];
@@ -6343,6 +6378,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogo.substituicoesMandante = res.substituicoesMandante || 0;
             jogo.substituicoesVisitante = res.substituicoesVisitante || 0;
             jogo.jogado = true;
+            $scope.processarBonusContratualCPU(jogo.mandante, res.golsMandante > res.golsVisitante ? 'Vitoria' : (res.golsMandante === res.golsVisitante ? 'Empate' : 'Derrota'), res.golsMandante);
+            $scope.processarBonusContratualCPU(jogo.visitante, res.golsVisitante > res.golsMandante ? 'Vitoria' : (res.golsVisitante === res.golsMandante ? 'Empate' : 'Derrota'), res.golsVisitante);
             $scope.atualizarTabela(jogo, jogo.divisao);
         });
     };
@@ -6360,6 +6397,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     ch.golsIda1 = res.golsMandante;
                     ch.golsIda2 = res.golsVisitante;
                     ch.jogadoIda = true;
+                    $scope.processarBonusContratualCPU(ch.time1, res.golsMandante > res.golsVisitante ? 'Vitoria' : (res.golsMandante === res.golsVisitante ? 'Empate' : 'Derrota'), res.golsMandante);
+                    $scope.processarBonusContratualCPU(ch.time2, res.golsVisitante > res.golsMandante ? 'Vitoria' : (res.golsVisitante === res.golsMandante ? 'Empate' : 'Derrota'), res.golsVisitante);
                 }
             } else {
                 if (!ehDoPlayer) {
@@ -6367,6 +6406,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     ch.golsVolta2 = res.golsMandante;
                     ch.golsVolta1 = res.golsVisitante;
                     ch.jogadoVolta = true;
+                    $scope.processarBonusContratualCPU(ch.time2, res.golsMandante > res.golsVisitante ? 'Vitoria' : (res.golsMandante === res.golsVisitante ? 'Empate' : 'Derrota'), res.golsMandante);
+                    $scope.processarBonusContratualCPU(ch.time1, res.golsVisitante > res.golsMandante ? 'Vitoria' : (res.golsVisitante === res.golsMandante ? 'Empate' : 'Derrota'), res.golsVisitante);
                 }
                 var agg1 = ch.golsIda1 + ch.golsVolta1;
                 var agg2 = ch.golsIda2 + ch.golsVolta2;
@@ -6424,6 +6465,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         jg.golsIda1 = res.golsMandante;
                         jg.golsIda2 = res.golsVisitante;
                         jg.jogadoIda = true;
+                        $scope.processarBonusContratualCPU(jg.time1, res.golsMandante > res.golsVisitante ? 'Vitoria' : (res.golsMandante === res.golsVisitante ? 'Empate' : 'Derrota'), res.golsMandante);
+                        $scope.processarBonusContratualCPU(jg.time2, res.golsVisitante > res.golsMandante ? 'Vitoria' : (res.golsMandante === res.golsVisitante ? 'Empate' : 'Derrota'), res.golsVisitante);
                     }
                     if (jg.jogadoIda) {
                         $scope.atualizarTabelaGrupo(jg, grupo.tabela);
@@ -6474,6 +6517,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         ch.golsIda1 = res.golsMandante;
                         ch.golsIda2 = res.golsVisitante;
                         ch.jogadoIda = true;
+                        $scope.processarBonusContratualCPU(ch.time1, res.golsMandante > res.golsVisitante ? 'Vitoria' : (res.golsMandante === res.golsVisitante ? 'Empate' : 'Derrota'), res.golsMandante);
+                        $scope.processarBonusContratualCPU(ch.time2, res.golsVisitante > res.golsMandante ? 'Vitoria' : (res.golsMandante === res.golsVisitante ? 'Empate' : 'Derrota'), res.golsVisitante);
                     }
                 } else {
                     if (!ehDoPlayer) {
@@ -6481,6 +6526,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         ch.golsVolta2 = res.golsMandante;
                         ch.golsVolta1 = res.golsVisitante;
                         ch.jogadoVolta = true;
+                        $scope.processarBonusContratualCPU(ch.time2, res.golsMandante > res.golsVisitante ? 'Vitoria' : (res.golsMandante === res.golsVisitante ? 'Empate' : 'Derrota'), res.golsMandante);
+                        $scope.processarBonusContratualCPU(ch.time1, res.golsVisitante > res.golsMandante ? 'Vitoria' : (res.golsVisitante === res.golsMandante ? 'Empate' : 'Derrota'), res.golsVisitante);
                     }
                     var agg1 = ch.golsIda1 + ch.golsVolta1;
                     var agg2 = ch.golsIda2 + ch.golsVolta2;
@@ -7510,7 +7557,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 acumulado[clube.id] = {
                     orcamento: Number(clube.orcamento) || 0,
                     reputacao: Number(clube.reputacao) || 0,
-                    bloqueioMercadoAteDia: Number(clube.bloqueioMercadoAteDia) || 0
+                    bloqueioMercadoAteDia: Number(clube.bloqueioMercadoAteDia) || 0,
+                    bonusContratuaisTemporada: Number(clube.bonusContratuaisTemporada) || 0,
+                    bonusContratuaisPendentes: Number(clube.bonusContratuaisPendentes) || 0
                 };
                 return acumulado;
             }, {}),
@@ -8064,6 +8113,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if (estadoFinanceiro.orcamento !== undefined) clubeFinanceiro.orcamento = Number(estadoFinanceiro.orcamento) || 0;
                 if (estadoFinanceiro.reputacao !== undefined) clubeFinanceiro.reputacao = Number(estadoFinanceiro.reputacao) || 0;
                 if (estadoFinanceiro.bloqueioMercadoAteDia !== undefined) clubeFinanceiro.bloqueioMercadoAteDia = Number(estadoFinanceiro.bloqueioMercadoAteDia) || 0;
+                if (estadoFinanceiro.bonusContratuaisTemporada !== undefined) clubeFinanceiro.bonusContratuaisTemporada = Number(estadoFinanceiro.bonusContratuaisTemporada) || 0;
+                if (estadoFinanceiro.bonusContratuaisPendentes !== undefined) clubeFinanceiro.bonusContratuaisPendentes = Number(estadoFinanceiro.bonusContratuaisPendentes) || 0;
             });
         }
         if (!$scope.patrocinioAtual) $scope.gerarPatrocinadores();
