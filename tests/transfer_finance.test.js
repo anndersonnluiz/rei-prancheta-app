@@ -63,6 +63,12 @@ const resumoCompromissos = scope.obterResumoCompromissosFinanceiros(clubeHumano.
 assert.strictEqual(resumoCompromissos.compromissos, 1, 'financial summary should count active transfer commitments');
 assert.strictEqual(resumoCompromissos.saldoParcelado, 800000, 'financial summary should expose the remaining transfer balance');
 assert.strictEqual(resumoCompromissos.bonusPendentes, 1000, 'financial summary should expose pending contractual bonuses');
+scope.diaAtual = 5;
+clubeHumano.orcamento = 10000;
+const bonusAmortizado = scope.processarPendenciasBonusContratual();
+assert.strictEqual(bonusAmortizado, 1000, 'financial closing should amortize pending bonuses when cash is available');
+assert.strictEqual(bonusJogadorHumano.bonusContratuaisPendentes, 0, 'monthly amortization should clear the player pending balance');
+assert.strictEqual(clubeHumano.bonusContratuaisPendentes, 0, 'monthly amortization should clear the club pending balance');
 
 clubeCpu.reputacao = 41;
 clubeCpu.bloqueioMercadoAteDia = 20;

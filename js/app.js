@@ -5595,7 +5595,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (item.jogador && valorPago > 0) {
                 item.jogador.bonusRecebidosTemporada = (Number(item.jogador.bonusRecebidosTemporada) || 0) + valorPago;
             }
-            if (item.jogador && valorPago < valor) {
+            if (item.jogador && item.pendencia) {
+                item.jogador.bonusContratuaisPendentes = Math.max(0, (Number(item.jogador.bonusContratuaisPendentes) || 0) - valorPago);
+            } else if (item.jogador && valorPago < valor) {
                 item.jogador.bonusContratuaisPendentes = (Number(item.jogador.bonusContratuaisPendentes) || 0) + (valor - valorPago);
             }
         });
@@ -5605,6 +5607,45 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         clube.bonusContratuaisPendentes = (Number(clube.bonusContratuaisPendentes) || 0) + (devido - pago);
         return { devido: devido, pago: pago, pendente: devido - pago };
     }
+
+    // Pendências são amortizadas no fechamento financeiro, preservando uma
+    // reserva mínima de caixa para a operação do clube.
+    $scope.processarPendenciasBonusContratual = function() {
+        if (!$scope.isFechamentoFinanceiro($scope.diaAtual)) return 0;
+        var totalPago = 0;
+        var atletasDisponiveis = ($scope.jogadores || []).concat($scope.elencoAtual || []).filter(function(jogador, indice, lista) {
+            return jogador && lista.indexOf(jogador) === indice;
+        });
+        ($scope.clubes || []).forEach(function(clube) {
+            var pendentes = atletasDisponiveis.filter(function(jogador) {
+                return jogador && jogador.clubeId === clube.id && (Number(jogador.bonusContratuaisPendentes) || 0) > 0;
+            });
+            var totalPendente = pendentes.reduce(function(total, jogador) {
+                return total + (Number(jogador.bonusContratuaisPendentes) || 0);
+            }, 0);
+            var caixa = Math.max(0, Number(clube.orcamento) || 0);
+            var limite = Math.min(totalPendente, Math.floor(caixa * 0.15));
+            if (!limite) return;
+            var restante = limite;
+            var pagamentos = [];
+            pendentes.forEach(function(jogador) {
+                if (restante <= 0) return;
+                var valor = Math.min(restante, Number(jogador.bonusContratuaisPendentes) || 0);
+                if (valor > 0) {
+                    pagamentos.push({ jogador: jogador, valor: valor, pendencia: true });
+                    restante -= valor;
+                }
+            });
+            var saldoAntes = Number(clube.bonusContratuaisPendentes) || totalPendente;
+            var liquidacao = liquidarBonusContratual(clube, pagamentos);
+            clube.bonusContratuaisPendentes = Math.max(0, saldoAntes - liquidacao.pago);
+            totalPago += liquidacao.pago;
+            if (clube.id === $scope.clubeAtual.id && liquidacao.pago > 0) {
+                $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Amortização de bônus pendentes', valor: liquidacao.pago, data: 'Dia ' + ($scope.diaAtual || 0) });
+            }
+        });
+        return totalPago;
+    };
 
     $scope.processarBonusContratualPartida = function(jogadores, resultado, partida) {
         var pagamentos = [];
@@ -5990,6 +6031,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 data: new Date().toLocaleDateString('pt-BR')
             });
         }
+
+        // Depois das receitas e despesas recorrentes, amortiza bônus vencidos
+        // sem consumir todo o caixa disponível do clube.
+        $scope.processarPendenciasBonusContratual();
 
         $scope.verificarAlertasFinanceiros();
         $scope.historicoFinanceiroMensal = $scope.historicoFinanceiroMensal || {};
