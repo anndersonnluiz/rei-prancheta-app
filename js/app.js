@@ -9973,7 +9973,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                         $scope.jogadores.filter(function(item) { return item.clubeId === clube.id && item.posicao === jovemEmprestimo.posicao; }).length < 3;
                 });
                 if (destinosEmprestimo.length) {
-                    var destinoEmprestimo = destinosEmprestimo[Math.floor(Math.random() * destinosEmprestimo.length)];
+                    destinosEmprestimo.sort(function(a, b) {
+                        function pontuacaoDestino(clube) {
+                            var elencoDestino = $scope.jogadores.filter(function(item) { return item.clubeId === clube.id; });
+                            var naPosicao = elencoDestino.filter(function(item) { return item.posicao === jovemEmprestimo.posicao; });
+                            var profundidade = Math.max(0, 3 - naPosicao.length);
+                            var media = naPosicao.length ? naPosicao.reduce(function(total, item) { return total + $scope.calcularOverall(item); }, 0) / naPosicao.length : 0;
+                            var adequacao = jovemEmprestimo.posicao === 'ATA' || jovemEmprestimo.posicao === 'MEI' ? 3 : 1;
+                            var caixa = Math.min(8, Math.max(0, (Number(clube.orcamento) || 0) / 10000000));
+                            var nivel = ({ B: 6, C: 4, D: 2 }[clube.divisao] || 1);
+                            return profundidade * 10 + Math.max(0, 78 - media) * 0.35 + caixa + nivel * adequacao;
+                        }
+                        return pontuacaoDestino(b) - pontuacaoDestino(a);
+                    });
+                    var destinoEmprestimo = destinosEmprestimo[0];
                     jovemEmprestimo.clubeId = destinoEmprestimo.id;
                     jovemEmprestimo.emCampo = false;
                     var opcaoCompraCpu = Math.max(0, Math.round($scope.calcularValorPasse(jovemEmprestimo) * 1.05));
