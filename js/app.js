@@ -9879,6 +9879,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var bonusPorGol = jogador.posicao === 'ATA' ? Math.round(salario * 0.18 / 100) * 100 : 0;
         var entrada = Math.round(Math.max(0, Number(valorPasse) || 0) * 0.25);
         if ((Number(clube.orcamento) || 0) < entrada + luvas) return null;
+        var compromissosAtuais = $scope.obterResumoCompromissosFinanceiros ? $scope.obterResumoCompromissosFinanceiros(clube.id) : { saldoParcelado: 0, bonusPendentes: 0 };
+        var exposicaoAtual = (Number(compromissosAtuais.saldoParcelado) || 0) + (Number(compromissosAtuais.bonusPendentes) || 0);
+        var exposicaoDepois = exposicaoAtual + Math.max(0, Number(valorPasse) || 0) + (salario * 12);
+        var limiteExposicao = Math.max(1000000, (Number(clube.orcamento) || 0) * 1.5);
+        if (exposicaoDepois > limiteExposicao) return null;
         clube.orcamento -= entrada + luvas;
         if (valorPasse > 0 && $scope.criarParcelamentoTransferencia) {
             $scope.criarParcelamentoTransferencia({ valor: valorPasse, entrada: entrada, parcelas: 4, intervaloDias: 30, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: origemId, clubeDevedorId: clube.id });
