@@ -7441,7 +7441,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.obterAlertasFinanceiros = function() {
         var resumo = $scope.calcularResumoFinanceiro();
-        var chaveCache = [resumo.cotaTransmissaoMensal, resumo.folhaMensal, resumo.resultadoMensalEstimado, $scope.clubeAtual && $scope.clubeAtual.orcamento].join('|');
+        var compromissos = $scope.obterResumoCompromissosFinanceiros ? $scope.obterResumoCompromissosFinanceiros() : { saldoParcelado: 0, bonusPendentes: 0 };
+        var chaveCache = [resumo.cotaTransmissaoMensal, resumo.folhaMensal, resumo.resultadoMensalEstimado, $scope.clubeAtual && $scope.clubeAtual.orcamento, compromissos.saldoParcelado, compromissos.bonusPendentes].join('|');
         if ($scope.alertasFinanceirosCache && $scope.alertasFinanceirosCache.chave === chaveCache) return $scope.alertasFinanceirosCache.itens;
         var alertas = [];
         var receitaMensalBase = resumo.cotaTransmissaoMensal + ((parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 0) * 25000);
@@ -7453,6 +7454,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
         if (($scope.clubeAtual && $scope.clubeAtual.orcamento || 0) < resumo.folhaMensal * 2) {
             alertas.push({ nivel: 'critico', titulo: 'Caixa curto', texto: 'O caixa cobre menos de dois ciclos de folha salarial.' });
+        }
+        var compromissosFuturos = (Number(compromissos.saldoParcelado) || 0) + (Number(compromissos.bonusPendentes) || 0);
+        var caixaAtual = Number($scope.clubeAtual && $scope.clubeAtual.orcamento) || 0;
+        if (compromissosFuturos > caixaAtual * 0.5 && compromissosFuturos > 0) {
+            alertas.push({ nivel: 'atencao', titulo: 'Compromissos elevados', texto: 'Parcelas e bônus pendentes já representam mais de metade do caixa atual. Evite assumir novas obrigações sem receita prevista.' });
+        }
+        if ((Number(compromissos.bonusPendentes) || 0) > 0) {
+            alertas.push({ nivel: 'atencao', titulo: 'Bônus em aberto', texto: 'Existem bônus contratuais pendentes. Eles serão amortizados nos próximos fechamentos financeiros.' });
         }
         $scope.alertasFinanceirosCache = { chave: chaveCache, itens: alertas };
         return alertas;
@@ -9380,9 +9389,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var desembolsoImediato = entrada + luvas;
         var margemCaixa = orcamento - desembolsoImediato;
         var margemDepois = margemCaixa - ((folha + salario) * 12) - compromissoRestante;
+        var compromissosAtuais = $scope.obterResumoCompromissosFinanceiros ? $scope.obterResumoCompromissosFinanceiros() : { saldoParcelado: 0, bonusPendentes: 0 };
+        var obrigaçõesAtuais = (Number(compromissosAtuais.saldoParcelado) || 0) + (Number(compromissosAtuais.bonusPendentes) || 0);
+        var caixaProjetadoCompromissos = margemCaixa - obrigaçõesAtuais;
         var comprometimentoImediato = orcamento ? Math.round((desembolsoImediato / orcamento) * 100) : 0;
         return {
             margemDepois: margemDepois,
+            caixaProjetadoCompromissos: caixaProjetadoCompromissos,
             margemCaixa: margemCaixa,
             percentualOrcamento: orcamento ? Math.round((valorPasse / orcamento) * 100) : 0,
             comprometimentoImediato: comprometimentoImediato,
@@ -9392,7 +9405,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             parcelaMedia: parcelaMedia,
             parcelas: parcelas,
             intervaloDias: intervaloDias,
-            sustentabilidade: margemCaixa < 0 || margemDepois < 0 ? 'Crítica' : (margemCaixa < folha * 6 || margemDepois < folha * 3 ? 'Atenção' : 'Viável')
+            sustentabilidade: margemCaixa < 0 || margemDepois < 0 || caixaProjetadoCompromissos < 0 ? 'Crítica' : (margemCaixa < folha * 6 || margemDepois < folha * 3 || caixaProjetadoCompromissos < folha * 3 ? 'Atenção' : 'Viável')
         };
     };
 
