@@ -7746,7 +7746,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return true;
     };
 
-    $scope.emprestarJogador = function(jogador, clubeDestinoId, duracaoDias, valorOpcaoCompra) {
+    $scope.emprestarJogador = function(jogador, clubeDestinoId, duracaoDias, valorOpcaoCompra, entradaOpcaoCompra, parcelasOpcaoCompra, intervaloOpcaoCompra) {
         if (!jogador || !$scope.clubeAtual || jogador.clubeId !== $scope.clubeAtual.id) return null;
         if (!clubeDestinoId || clubeDestinoId === $scope.clubeAtual.id) return null;
         if (($scope.emprestimosAtivos || []).some(function(item) { return item.jogadorId === jogador.id; })) return null;
@@ -7757,7 +7757,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogadorNome: jogador.nome, clubeOrigemId: $scope.clubeAtual.id,
             clubeDestinoId: destino.id, clubeDestinoNome: destino.nome,
             diasRestantes: Math.max(1, parseInt(duracaoDias, 10) || 30), status: 'ativo',
-            opcaoCompra: Math.max(0, parseInt(valorOpcaoCompra, 10) || 0), jogos: 0, minutos: 0, gols: 0, evolucao: 0
+            opcaoCompra: Math.max(0, parseInt(valorOpcaoCompra, 10) || 0),
+            opcaoCompraEntrada: entradaOpcaoCompra === undefined ? Math.max(0, parseInt(valorOpcaoCompra, 10) || 0) : Math.max(0, parseInt(entradaOpcaoCompra, 10) || 0),
+            opcaoCompraParcelas: Math.max(1, Math.min(12, parseInt(parcelasOpcaoCompra, 10) || 1)),
+            opcaoCompraIntervaloDias: Math.max(7, parseInt(intervaloOpcaoCompra, 10) || 30), jogos: 0, minutos: 0, gols: 0, evolucao: 0
         };
         jogador.clubeId = destino.id;
         var base = ($scope.jogadores || []).find(function(item) { return item.id === jogador.id; });
@@ -7770,13 +7773,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.comprarJogadorEmprestado = function(emprestimo) {
         if (!emprestimo || emprestimo.status !== 'ativo' || !emprestimo.opcaoCompra || !$scope.clubeAtual) return false;
-        if (($scope.clubeAtual.orcamento || 0) < emprestimo.opcaoCompra) {
-            alert('Orçamento insuficiente para exercer a opção de compra.');
+        var entradaOpcao = Math.min(emprestimo.opcaoCompra, Math.max(0, Number(emprestimo.opcaoCompraEntrada) || emprestimo.opcaoCompra));
+        if (($scope.clubeAtual.orcamento || 0) < entradaOpcao) {
+            alert('Orçamento insuficiente para pagar a entrada da opção de compra.');
             return false;
         }
         var jogador = ($scope.jogadores || []).find(function(item) { return item.id === emprestimo.jogadorId; });
         if (!jogador) return false;
-        $scope.clubeAtual.orcamento -= emprestimo.opcaoCompra;
+        $scope.clubeAtual.orcamento -= entradaOpcao;
+        if (emprestimo.opcaoCompra > entradaOpcao && $scope.criarParcelamentoTransferencia) {
+            $scope.criarParcelamentoTransferencia({ valor: emprestimo.opcaoCompra, entrada: entradaOpcao, parcelas: emprestimo.opcaoCompraParcelas, intervaloDias: emprestimo.opcaoCompraIntervaloDias, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: emprestimo.clubeOrigemId, clubeDevedorId: $scope.clubeAtual.id });
+        }
         jogador.clubeId = $scope.clubeAtual.id;
         emprestimo.status = 'comprado';
         emprestimo.diasRestantes = 0;
@@ -7789,7 +7796,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.solicitarEmprestimo = function() {
         var form = $scope.emprestimoForm || {};
         var jogador = ($scope.elencoAtual || []).find(function(item) { return String(item.id) === String(form.jogadorId); });
-        var resultado = $scope.emprestarJogador(jogador, form.clubeDestinoId, form.duracaoDias, form.opcaoCompra);
+        var resultado = $scope.emprestarJogador(jogador, form.clubeDestinoId, form.duracaoDias, form.opcaoCompra, form.opcaoCompraEntrada, form.opcaoCompraParcelas, form.opcaoCompraIntervaloDias);
         if (!resultado) {
             alert('Não foi possível criar o empréstimo. Verifique o jogador, o destino e a duração.');
             return;
@@ -7800,7 +7807,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.abrirEmprestimoJovem = function(jogador) {
         if (!jogador) return;
         var destino = ($scope.clubes || []).find(function(clube) { return clube.id !== $scope.clubeAtual.id; });
-        $scope.emprestimoForm = { jogadorId: jogador.id, clubeDestinoId: destino ? destino.id : '', duracaoDias: 60, opcaoCompra: 0 };
+        $scope.emprestimoForm = { jogadorId: jogador.id, clubeDestinoId: destino ? destino.id : '', duracaoDias: 60, opcaoCompra: 0, opcaoCompraEntrada: 0, opcaoCompraParcelas: 1, opcaoCompraIntervaloDias: 30 };
         $scope.mudarTela('mercado');
     };
 
