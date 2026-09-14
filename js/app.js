@@ -2886,9 +2886,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             jogador.clubeId = destino.id;
             jogador.emNegociacao = false;
             var valorTransferencia = $scope.calcularValorMercadoJogadorInterno ? $scope.calcularValorMercadoJogadorInterno(jogador) : Math.max(250000, (Number(jogador.overall) || 70) * 50000);
-            var entradaCPU = Math.round(valorTransferencia * 0.25);
-            destino.orcamento = Math.max(0, (Number(destino.orcamento) || 0) - entradaCPU);
-            $scope.criarParcelamentoTransferencia({ valor: valorTransferencia, entrada: entradaCPU, parcelas: 4, intervaloDias: 30, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: clubeOrigemId, clubeDevedorId: destino.id });
+            var termosRumor = negociarContratoCpu(jogador, destino, valorTransferencia, clubeOrigemId);
+            if (!termosRumor) {
+                jogador.clubeId = clubeOrigemId;
+                rumor.confirmado = false;
+                rumor.subtipo = 'rumor';
+                return;
+            }
             rumor.valorTransferencia = valorTransferencia;
             rumor.titulo = 'Confirmado: ' + jogador.nome + ' acerta com ' + destino.nome;
             rumor.conteudo = 'A negociação foi concluída. ' + jogador.nome + ' deixa o ' + (($scope.clubes || []).find(function(item) { return item.id === clubeOrigemId; }) || {}).nome + ' e passa a defender o ' + destino.nome + ', com pagamento parcelado e impacto no caixa futuro.';
@@ -9582,6 +9586,32 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return necessidade + reforco + Math.max(0, desenvolvimento) + acessibilidade + redundancia + pressaoDesempenho;
     }
 
+    function negociarContratoCpu(jogador, clube, valorPasse, origemId) {
+        if (!jogador || !clube) return null;
+        var overall = $scope.calcularOverall(jogador);
+        var fatorDivisao = { A: 1.08, B: 1, C: 0.94, D: 0.88 }[clube.divisao] || 1;
+        var salarioBase = Number(jogador.salarioDesejado || jogador.salario || 10000);
+        var salario = Math.max(10000, Math.round(salarioBase * fatorDivisao / 100) * 100);
+        var papel = overall >= 88 ? 'importante' : (overall >= 82 ? 'titular' : 'rotacao');
+        var luvas = Math.round(salario * (overall >= 82 ? 3 : 1.5) / 100) * 100;
+        var bonusPorJogo = Math.round(salario * 0.08 / 100) * 100;
+        var bonusPorGol = jogador.posicao === 'ATA' ? Math.round(salario * 0.18 / 100) * 100 : 0;
+        var entrada = Math.round(Math.max(0, Number(valorPasse) || 0) * 0.25);
+        if ((Number(clube.orcamento) || 0) < entrada + luvas) return null;
+        clube.orcamento -= entrada + luvas;
+        if (valorPasse > 0 && $scope.criarParcelamentoTransferencia) {
+            $scope.criarParcelamentoTransferencia({ valor: valorPasse, entrada: entrada, parcelas: 4, intervaloDias: 30, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: origemId, clubeDevedorId: clube.id });
+        }
+        jogador.salario = salario;
+        jogador.salarioDesejado = salario;
+        jogador.luvasContrato = luvas;
+        jogador.bonusPorJogo = bonusPorJogo;
+        jogador.bonusPorGol = bonusPorGol;
+        jogador.papelElenco = papel;
+        jogador.anosContrato = 2;
+        return { salario: salario, luvas: luvas, bonusPorJogo: bonusPorJogo, bonusPorGol: bonusPorGol, papel: papel, entrada: entrada };
+    }
+
     $scope.simularMercadoCPU = function() {
         if (!$scope.isJanelaTransferenciaAberta()) return;
 
@@ -9727,8 +9757,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var tamanhoElencoComprador = $scope.jogadores.filter(function(j) { return j.clubeId === cComprador.id; }).length;
                 if (tamanhoElencoComprador >= 30) return;
                 var clubeOrigemCPU = contratacao.clubeId;
+                var termosLivreCPU = negociarContratoCpu(contratacao, cComprador, 0, clubeOrigemCPU);
+                if (!termosLivreCPU) return;
                 contratacao.clubeId = cComprador.id;
-                contratacao.anosContrato = 2;
                 $scope.registrarTransferenciaHistorico({
                     tipo: 'cpu',
                     jogadorId: contratacao.id,
@@ -9738,7 +9769,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     clubeDestinoId: cComprador.id,
                     clubeDestinoNome: cComprador.nome,
                     valor: 0,
-                    salario: contratacao.salario,
+                    salario: termosLivreCPU.salario,
+                    luvas: termosLivreCPU.luvas,
+                    papel: termosLivreCPU.papel,
                     anosContrato: contratacao.anosContrato
                 });
 
@@ -9787,12 +9820,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if (vendedorCPU && compradorCPU) {
                     if ($scope.jogadores.filter(function(j) { return j.clubeId === compradorCPU.id; }).length >= 30) return;
                     var valorCPU = Math.floor($scope.calcularValorPasse(atletaCPU) * (0.9 + Math.random() * 0.35));
-                    if ((compradorCPU.orcamento || 0) >= valorCPU) {
-                        compradorCPU.orcamento -= valorCPU;
-                        vendedorCPU.orcamento = (vendedorCPU.orcamento || 0) + valorCPU;
+                    var termosCPU = negociarContratoCpu(atletaCPU, compradorCPU, valorCPU, vendedorCPU.id);
+                    if (termosCPU) {
+                        vendedorCPU.orcamento = (vendedorCPU.orcamento || 0) + termosCPU.entrada;
                         atletaCPU.clubeId = compradorCPU.id;
-                        atletaCPU.anosContrato = 2;
-                        $scope.registrarTransferenciaHistorico({ tipo: 'cpu', jogadorId: atletaCPU.id, jogadorNome: atletaCPU.nome, clubeOrigemId: vendedorCPU.id, clubeOrigemNome: vendedorCPU.nome, clubeDestinoId: compradorCPU.id, clubeDestinoNome: compradorCPU.nome, valor: valorCPU, salario: atletaCPU.salario, anosContrato: 2 });
+                        $scope.registrarTransferenciaHistorico({ tipo: 'cpu', jogadorId: atletaCPU.id, jogadorNome: atletaCPU.nome, clubeOrigemId: vendedorCPU.id, clubeOrigemNome: vendedorCPU.nome, clubeDestinoId: compradorCPU.id, clubeDestinoNome: compradorCPU.nome, valor: valorCPU, salario: termosCPU.salario, luvas: termosCPU.luvas, papel: termosCPU.papel, anosContrato: 2 });
                     }
                 }
             }
