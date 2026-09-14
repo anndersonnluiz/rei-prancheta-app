@@ -7890,11 +7890,37 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             emprestimo.diasRestantes = Math.max(0, (emprestimo.diasRestantes || 0) - 1);
             if (emprestimo.diasRestantes > 0) return;
             var jogador = ($scope.jogadores || []).find(function(item) { return item.id === emprestimo.jogadorId; });
-            if (jogador) jogador.clubeId = emprestimo.clubeOrigemId;
-            ($scope.elencoAtual || []).forEach(function(item) {
-                if (item.id === emprestimo.jogadorId) item.clubeId = emprestimo.clubeOrigemId;
-            });
-            emprestimo.status = 'encerrado';
+            var compraCpu = false;
+            var destinoEmprestimo = ($scope.clubes || []).find(function(clube) { return clube.id === emprestimo.clubeDestinoId; });
+            if (emprestimo.cpu && jogador && destinoEmprestimo && Number(emprestimo.opcaoCompra) > 0) {
+                var desempenhoForte = Number(emprestimo.evolucao) >= 2 || Number(emprestimo.jogos) >= 8;
+                var desempenhoAceitavel = Number(emprestimo.evolucao) >= 1 || Number(emprestimo.jogos) >= 4;
+                var interesseCpu = desempenhoForte || (desempenhoAceitavel && Math.random() < 0.55);
+                if (interesseCpu) {
+                    var termosCompraCpu = negociarContratoCpu(jogador, destinoEmprestimo, Number(emprestimo.opcaoCompra), emprestimo.clubeOrigemId);
+                    if (termosCompraCpu) {
+                        jogador.clubeId = destinoEmprestimo.id;
+                        jogador.emCampo = false;
+                        emprestimo.status = 'comprado';
+                        emprestimo.compraCpu = true;
+                        compraCpu = true;
+                        $scope.registrarTransferenciaHistorico({
+                            tipo: 'cpu_compra_emprestimo', jogadorId: jogador.id, jogadorNome: jogador.nome,
+                            clubeOrigemId: emprestimo.clubeOrigemId, clubeDestinoId: destinoEmprestimo.id,
+                            clubeDestinoNome: destinoEmprestimo.nome, valor: Number(emprestimo.opcaoCompra),
+                            valorEntrada: termosCompraCpu.entrada, salario: termosCompraCpu.salario,
+                            luvas: termosCompraCpu.luvas, papel: termosCompraCpu.papel, anosContrato: 2
+                        });
+                    }
+                }
+            }
+            if (!compraCpu) {
+                if (jogador) jogador.clubeId = emprestimo.clubeOrigemId;
+                ($scope.elencoAtual || []).forEach(function(item) {
+                    if (item.id === emprestimo.jogadorId) item.clubeId = emprestimo.clubeOrigemId;
+                });
+                emprestimo.status = 'encerrado';
+            }
             devolvidos.push(emprestimo);
         });
         $scope.emprestimosAtivos = ($scope.emprestimosAtivos || []).filter(function(item) { return item.status === 'ativo'; });
@@ -9837,7 +9863,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     var destinoEmprestimo = destinosEmprestimo[Math.floor(Math.random() * destinosEmprestimo.length)];
                     jovemEmprestimo.clubeId = destinoEmprestimo.id;
                     jovemEmprestimo.emCampo = false;
-                    var registroEmprestimo = { id: 'cpu_emprestimo_' + jovemEmprestimo.id + '_' + ($scope.diaAtual || 0), jogadorId: jovemEmprestimo.id, clubeOrigemId: origemEmprestimo, clubeDestinoId: destinoEmprestimo.id, clubeDestinoNome: destinoEmprestimo.nome, diasRestantes: 90, jogos: 0, minutos: 0, gols: 0, evolucao: 0, status: 'ativo', cpu: true };
+                    var opcaoCompraCpu = Math.max(0, Math.round($scope.calcularValorPasse(jovemEmprestimo) * 1.05));
+                    var registroEmprestimo = { id: 'cpu_emprestimo_' + jovemEmprestimo.id + '_' + ($scope.diaAtual || 0), jogadorId: jovemEmprestimo.id, clubeOrigemId: origemEmprestimo, clubeDestinoId: destinoEmprestimo.id, clubeDestinoNome: destinoEmprestimo.nome, diasRestantes: 90, jogos: 0, minutos: 0, gols: 0, evolucao: 0, status: 'ativo', cpu: true, opcaoCompra: opcaoCompraCpu, opcaoCompraEntrada: Math.round(opcaoCompraCpu * 0.25), opcaoCompraParcelas: 4, opcaoCompraIntervaloDias: 30 };
                     $scope.emprestimosAtivos.push(registroEmprestimo);
                     $scope.registrarTransferenciaHistorico({ tipo: 'cpu_emprestimo', jogadorId: jovemEmprestimo.id, jogadorNome: jovemEmprestimo.nome, clubeOrigemId: origemEmprestimo, clubeDestinoId: destinoEmprestimo.id, clubeDestinoNome: destinoEmprestimo.nome, valor: 0, salario: jovemEmprestimo.salario, anosContrato: jovemEmprestimo.anosContrato });
                 }

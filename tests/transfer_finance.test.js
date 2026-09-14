@@ -62,6 +62,16 @@ assert.ok(cpuPago >= 16500, 'CPU match should settle appearance and win bonuses'
 assert.strictEqual(clubeCpu.orcamento, cpuAntes - cpuPago, 'CPU contract bonuses should debit its budget');
 assert.strictEqual(clubeCpu.bonusContratuaisTemporada, cpuPago, 'CPU bonus ledger should record settled payments');
 clubeCpu.bonusContratuaisPendentes = 2500;
+
+const clubeDestinoEmprestimo = scope.clubes.find((clube) => clube.id !== clubeHumano.id && clube.id !== clubeCpu.id);
+const jogadorEmprestadoCpu = cpuElenco[0];
+const emprestimoCpu = { id: 'loan_cpu_test', jogadorId: jogadorEmprestadoCpu.id, clubeOrigemId: clubeCpu.id, clubeDestinoId: clubeDestinoEmprestimo.id, clubeDestinoNome: clubeDestinoEmprestimo.nome, diasRestantes: 1, jogos: 10, minutos: 700, gols: 2, evolucao: 2, status: 'ativo', cpu: true, opcaoCompra: 500000, opcaoCompraEntrada: 125000, opcaoCompraParcelas: 3, opcaoCompraIntervaloDias: 30 };
+jogadorEmprestadoCpu.clubeId = clubeDestinoEmprestimo.id;
+scope.emprestimosAtivos.push(emprestimoCpu);
+scope.processarEmprestimosDia();
+assert.strictEqual(emprestimoCpu.status, 'comprado', 'CPU should exercise a successful loan purchase option');
+assert.strictEqual(jogadorEmprestadoCpu.clubeId, clubeDestinoEmprestimo.id, 'purchased loan player should remain with the destination club');
+assert.ok(scope.compromissosTransferencias.some((item) => item.jogadorId === jogadorEmprestadoCpu.id), 'CPU loan purchase should create future installments');
 scope.salvarJogoSilencioso();
 const save = JSON.parse(scope.__storage.reiDaPranchetaSave);
 assert.ok(Array.isArray(save.compromissosTransferencias), 'save should preserve transfer commitments');
