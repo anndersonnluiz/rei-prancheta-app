@@ -52,6 +52,14 @@ assert.strictEqual(impacto.compromissoRestante, 800000, 'preview should expose t
 assert.strictEqual(impacto.parcelaMedia, 200000, 'preview should calculate the average installment');
 assert.ok(scope.obterTetoOfertaTransferencia(scope.elencoAtual[0]) >= 900000, 'offer slider should allow values above current cash when using installments');
 
+const bonusJogadorHumano = scope.elencoAtual[0];
+bonusJogadorHumano.bonusPorJogo = 2000;
+clubeHumano.orcamento = 1000;
+const bonusPagoHumano = scope.processarBonusContratualPartida([bonusJogadorHumano], 'Empate', { telemetriaShots: [] });
+assert.strictEqual(bonusPagoHumano, 1000, 'human club should pay only the available cash when a bonus is due');
+assert.strictEqual(bonusJogadorHumano.bonusRecebidosTemporada, 1000, 'player should record only the paid bonus amount');
+assert.strictEqual(bonusJogadorHumano.bonusContratuaisPendentes, 1000, 'unpaid human bonus should remain pending');
+
 clubeCpu.reputacao = 41;
 clubeCpu.bloqueioMercadoAteDia = 20;
 const cpuElenco = scope.jogadores.filter((jogador) => jogador.clubeId === clubeCpu.id);

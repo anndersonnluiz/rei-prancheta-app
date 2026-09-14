@@ -5580,22 +5580,46 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
     };
 
+    function liquidarBonusContratual(clube, pagamentos) {
+        if (!clube) return { devido: 0, pago: 0, pendente: 0 };
+        var caixaDisponivel = Math.max(0, Number(clube.orcamento) || 0);
+        var devido = 0;
+        var pago = 0;
+        (pagamentos || []).forEach(function(item) {
+            var valor = Math.max(0, Number(item && item.valor) || 0);
+            if (!valor) return;
+            devido += valor;
+            var valorPago = Math.min(caixaDisponivel, valor);
+            caixaDisponivel -= valorPago;
+            pago += valorPago;
+            if (item.jogador && valorPago > 0) {
+                item.jogador.bonusRecebidosTemporada = (Number(item.jogador.bonusRecebidosTemporada) || 0) + valorPago;
+            }
+            if (item.jogador && valorPago < valor) {
+                item.jogador.bonusContratuaisPendentes = (Number(item.jogador.bonusContratuaisPendentes) || 0) + (valor - valorPago);
+            }
+        });
+        if (!devido) return { devido: 0, pago: 0, pendente: 0 };
+        clube.orcamento = caixaDisponivel;
+        clube.bonusContratuaisTemporada = (Number(clube.bonusContratuaisTemporada) || 0) + pago;
+        clube.bonusContratuaisPendentes = (Number(clube.bonusContratuaisPendentes) || 0) + (devido - pago);
+        return { devido: devido, pago: pago, pendente: devido - pago };
+    }
+
     $scope.processarBonusContratualPartida = function(jogadores, resultado, partida) {
-        var total = 0;
+        var pagamentos = [];
         (jogadores || []).forEach(function(jogador) {
             var bonus = Math.max(0, Number(jogador.bonusPorJogo) || 0);
             if (resultado === 'Vitoria') bonus += Math.max(0, Number(jogador.bonusVitoria) || 0);
             var gols = (partida && partida.telemetriaShots || []).filter(function(chute) { return chute.shooterId === jogador.id && chute.result === 'GOL'; }).length;
             bonus += gols * Math.max(0, Number(jogador.bonusPorGol) || 0);
-            if (!bonus) return;
-            total += bonus;
-            jogador.bonusRecebidosTemporada = (Number(jogador.bonusRecebidosTemporada) || 0) + bonus;
+            if (bonus) pagamentos.push({ jogador: jogador, valor: bonus });
         });
-        if (total && $scope.clubeAtual) {
-            $scope.clubeAtual.orcamento = Math.max(0, (Number($scope.clubeAtual.orcamento) || 0) - total);
-            $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Bônus contratuais da partida', valor: total, data: 'Dia ' + ($scope.diaAtual || 0) });
+        var liquidacao = liquidarBonusContratual($scope.clubeAtual, pagamentos);
+        if (liquidacao.pago && $scope.clubeAtual) {
+            $scope.financasHistorico.unshift({ tipo: 'despesa', descricao: 'Bônus contratuais da partida', valor: liquidacao.pago, data: 'Dia ' + ($scope.diaAtual || 0) });
         }
-        return total;
+        return liquidacao.pago;
     };
 
     // A CPU também honra (ou acumula) os bônus de contrato. A escalação
@@ -5609,28 +5633,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             return $scope.calcularOverall(b) - $scope.calcularOverall(a);
         });
         var titulares = elenco.slice(0, 11);
-        var total = 0;
+        var pagamentos = [];
         titulares.forEach(function(jogador) {
             var bonus = Math.max(0, Number(jogador.bonusPorJogo) || 0);
             if (resultado === 'Vitoria') bonus += Math.max(0, Number(jogador.bonusVitoria) || 0);
-            total += bonus;
+            if (bonus) pagamentos.push({ jogador: jogador, valor: bonus });
         });
         var atacantes = elenco.filter(function(jogador) { return jogador.posicao === 'ATA'; });
         var gols = Math.max(0, Number(golsMarcados) || 0);
         for (var i = 0; i < gols; i++) {
             var marcador = atacantes[i % Math.max(1, atacantes.length)];
-            if (marcador) total += Math.max(0, Number(marcador.bonusPorGol) || 0);
+            if (marcador && Number(marcador.bonusPorGol) > 0) pagamentos.push({ jogador: marcador, valor: Number(marcador.bonusPorGol) });
         }
-        if (!total) return 0;
-        var caixaDisponivel = Math.max(0, Number(clube.orcamento) || 0);
-        var pago = Math.min(caixaDisponivel, total);
-        clube.orcamento = caixaDisponivel - pago;
-        clube.bonusContratuaisTemporada = (Number(clube.bonusContratuaisTemporada) || 0) + pago;
-        if (pago < total) {
-            clube.bonusContratuaisPendentes = (Number(clube.bonusContratuaisPendentes) || 0) + (total - pago);
+        var liquidacao = liquidarBonusContratual(clube, pagamentos);
+        if (liquidacao.pendente > 0) {
             clube.reputacao = Math.max(1, (Number(clube.reputacao) || 50) - 0.05);
         }
-        return pago;
+        return liquidacao.pago;
     };
 
     $scope.aplicarEvolucaoElenco = function(motivo) {
