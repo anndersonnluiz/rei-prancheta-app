@@ -84,6 +84,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.menuGrupos = { inicio: true, competicoes: false, clube: false, gestao: false, carreira: false, sistema: false };
     $scope.menuMobileAberto = false;
     $scope.alternarMenuMobile = function() { $scope.menuMobileAberto = !$scope.menuMobileAberto; };
+    $scope.fecharMenuMobile = function() { $scope.menuMobileAberto = false; };
     $scope.alternarGrupoMenu = function(grupo) {
         if (!$scope.menuGrupos.hasOwnProperty(grupo)) return false;
         $scope.menuGrupos[grupo] = !$scope.menuGrupos[grupo];
@@ -8553,12 +8554,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.mudarTela = function(novaTela) {
+        $scope.fecharMenuMobile();
         if ($scope.partidaEmAndamento && !$scope.partidaPausada) {
             alert("Aguarde o fim da partida!");
             return;
         }
         $scope.telaAtual = novaTela;
-        $scope.menuMobileAberto = false;
         if (novaTela === 'mercado') {
             if (!$scope.mercadoUI || !$scope.mercadoUI.aba) $scope.mercadoUI = { aba: 'busca' };
             $scope.atualizarResumoJanelaMercado();

@@ -2442,6 +2442,8 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .bench-list { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
 .bench-item { display: flex; align-items: center; background-color: var(--bg-color); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; cursor: grab; transition: transform 0.2s; border: 1px solid #e1e8ed; }
 .squad-toolbar { align-items: flex-end; display: flex; gap: 10px; justify-content: space-between; margin-bottom: 12px; }
+.squad-header { align-items: center; display: flex; gap: 12px; justify-content: space-between; margin-bottom: 20px; }
+.squad-header > div:first-child { align-items: center; display: flex; gap: 12px; min-width: 0; }
 .squad-toolbar label { color: var(--text-muted); display: flex; flex-direction: column; font-size: 11px; font-weight: 700; gap: 4px; }
 .squad-toolbar select { border: 1px solid #d7e0e7; border-radius: 6px; min-height: 36px; padding: 6px 28px 6px 8px; }
 .bench-item:active { cursor: grabbing; }
@@ -3092,6 +3094,7 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .main-content header { flex-wrap: wrap; gap: 14px; }
 .main-content header > * { min-width: 0; }
 .mobile-menu-bar { display: none; }
+.mobile-menu-backdrop { display: none; }
 button, input, select, textarea { max-width: 100%; }
 table { max-width: 100%; }
 button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
@@ -3120,6 +3123,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .main-content { margin-left: 0; max-width: 100%; padding: 12px; }
     .sidebar { background: var(--sidebar-bg); display: none; left: 0; max-height: calc(100vh - 47px); position: fixed; top: 47px; width: min(88vw, 320px); z-index: 25; }
     .sidebar.mobile-menu-open { display: flex; box-shadow: 8px 0 24px rgba(0,0,0,.25); }
+    .mobile-menu-backdrop { background: rgba(6, 18, 27, .42); border: 0; display: block; inset: 47px 0 0; position: fixed; z-index: 24; }
     .app-layout { display: block; }
     .sidebar-header { padding: 14px; }
     .game-logo-small { max-width: 90px; margin-bottom: 8px; }
@@ -3138,6 +3142,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .club-select-card h4 { font-size: 16px; }
     .club-identity { gap: 8px; }
     .dashboard-side, .summary-kpis, .post-match-kpi-grid, .club-kpis { grid-template-columns: 1fr; }
+    .squad-header { align-items: stretch !important; flex-direction: column; gap: 12px; margin-bottom: 14px !important; }
+    .squad-header > div:first-child { align-items: stretch !important; flex-direction: column; gap: 8px !important; }
+    .squad-header h3 { font-size: 20px; }
+    .squad-header .bulk-contract-button { min-height: 44px; width: 100%; }
     .card { padding: 14px !important; }
     .pre-match-grid, .post-match-grid { grid-template-columns: 1fr; }
     .dashboard-v2 { margin: 0; }

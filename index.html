@@ -91,10 +91,11 @@
 
     <!-- Layout Principal do Jogo -->
     <div class="app-layout" ng-if="telaAtual !== 'loading' && telaAtual !== 'apresentacao' && telaAtual !== 'menu_inicial'" ng-cloak>
-        <div class="mobile-menu-bar"><button ng-click="alternarMenuMobile()" aria-label="Abrir menu">☰ <span>Menu</span></button><strong>Rei da Prancheta</strong><span>Temporada {{dados.anoAtual}}</span></div>
+        <div class="mobile-menu-bar"><button ng-click="alternarMenuMobile()" ng-attr-aria-expanded="{{menuMobileAberto}}" aria-controls="menu-navegacao-mobile" aria-label="Abrir ou fechar menu">☰ <span>Menu</span></button><strong>Rei da Prancheta</strong><span>Temporada {{dados.anoAtual}}</span></div>
+        <button class="mobile-menu-backdrop" ng-if="menuMobileAberto" ng-click="fecharMenuMobile()" aria-label="Fechar menu"></button>
         
         <!-- Sidebar -->
-        <nav class="sidebar" ng-class="{'mobile-menu-open': menuMobileAberto}" aria-label="Navegação principal do clube">
+        <nav id="menu-navegacao-mobile" class="sidebar" ng-class="{'mobile-menu-open': menuMobileAberto}" aria-label="Navegação principal do clube">
             <div class="sidebar-header">
                 <img src="assets/logo.png" alt="Rei da Prancheta" class="game-logo-small">
                 <div class="manager-name">👤 Prof. {{ dados.nomeTreinador }}</div>
@@ -952,7 +953,7 @@
             <!-- TELA: MEU ELENCO -->
             <div class="squad-screen" ng-if="telaAtual === 'elenco'">
                 <div class="card" style="padding: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div class="squad-header">
                         <div style="display:flex; align-items:center; gap:12px;"><h3 style="color: var(--text-dark); margin:0;">Meu Elenco</h3><button class="bulk-contract-button" ng-click="abrirRenovacaoGeral()">📋 Renovar contratos em lote</button></div>
                         <div class="squad-toolbar"><label>Filtrar posição<select ng-model="filtroPosicaoElenco"><option value="TODOS">Todas</option><option value="GOL">Goleiros</option><option value="LAT">Laterais</option><option value="ZAG">Zagueiros</option><option value="VOL">Volantes</option><option value="MEI">Meias</option><option value="ATA">Atacantes</option></select></label><span style="background: var(--bg-light); padding: 8px 15px; border-radius: 6px; font-weight: bold; border: 1px solid #ddd;">Total: {{elencoAtual.length}} jogadores</span></div>
                     </div>
