@@ -7735,6 +7735,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.salvarJogo = function() {
+        if ($scope.partidaEmAndamento) {
+            alert('Finalize a partida antes de salvar manualmente.');
+            return false;
+        }
         var slot = $scope.slotSaveAtual || 0;
         var existente = $scope.listarSlotsSave().find(function(item) { return item.id === slot && item.save; });
         if (existente && !confirm('Sobrescrever a carreira do Slot ' + (slot + 1) + '?')) return false;
@@ -8121,6 +8125,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     // Backup manual da carreira para permitir transporte entre navegadores/dispositivos.
     $scope.exportarSave = function() {
+        if ($scope.partidaEmAndamento) {
+            alert('Finalize a partida antes de exportar o save.');
+            return;
+        }
         if (!$scope.clubeAtual) {
             alert('Inicie uma carreira antes de exportar o save.');
             return;
@@ -8146,10 +8154,37 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.validarSaveImportado = function(saveImportado) {
         if (!saveImportado || typeof saveImportado !== 'object' || Array.isArray(saveImportado)) return false;
-        return !!saveImportado.clubeAtualId && Array.isArray(saveImportado.elencoAtual);
+        if (!saveImportado.clubeAtualId || !Array.isArray(saveImportado.elencoAtual)) return false;
+        if (saveImportado.saveVersion !== undefined && (!Number.isFinite(Number(saveImportado.saveVersion)) || Number(saveImportado.saveVersion) < 1)) return false;
+        if (saveImportado.calendarioGeral !== undefined && !Array.isArray(saveImportado.calendarioGeral)) return false;
+        if (saveImportado.tabelas !== undefined && (typeof saveImportado.tabelas !== 'object' || Array.isArray(saveImportado.tabelas))) return false;
+        return true;
     };
 
+    function salvarBackupAntesDeImportar() {
+        var saveLocal = window.localStorage.getItem('reiDaPranchetaSave');
+        if (!saveLocal) return false;
+        try {
+            var slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}');
+            var backup = {
+                backupAt: new Date().toISOString(),
+                slotAtual: Number($scope.slotSaveAtual) || 0,
+                save: JSON.parse(saveLocal),
+                slots: slots
+            };
+            window.localStorage.setItem('reiDaPranchetaBackupAntesImportacao', JSON.stringify(backup));
+            return true;
+        } catch (erro) {
+            return false;
+        }
+    }
+
     $scope.selecionarArquivoSave = function(input) {
+        if ($scope.partidaEmAndamento) {
+            alert('Finalize a partida antes de importar um save.');
+            if (input) input.value = '';
+            return;
+        }
         var arquivo = input && input.files && input.files[0];
         if (!arquivo) return;
         var leitor = new FileReader();
@@ -8159,7 +8194,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 if (!$scope.validarSaveImportado(saveImportado)) throw new Error('estrutura');
                 if (!window.confirm('Importar este save substituirá a carreira atual. Deseja continuar?')) return;
                 saveImportado = $scope.migrarSave(saveImportado);
+                salvarBackupAntesDeImportar();
                 window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveImportado));
+                var slots = {};
+                try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (erroSlots) { slots = {}; }
+                slots[String(Number($scope.slotSaveAtual) || 0)] = saveImportado;
+                window.localStorage.setItem('reiDaPranchetaSaveSlots', JSON.stringify(slots));
                 alert('Save importado com sucesso. O jogo será recarregado.');
                 window.location.reload();
             } catch (erro) {
@@ -8176,8 +8216,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.abrirImportadorSave = function() {
+        if ($scope.partidaEmAndamento) {
+            alert('Finalize a partida antes de importar um save.');
+            return false;
+        }
         var input = document.getElementById('arquivo-save-input');
         if (input) input.click();
+        return !!input;
     };
 
     // Exportar telemetria da partida atual como CSV para download

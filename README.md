@@ -31,7 +31,7 @@ Abrir o `index.html` diretamente pelo sistema de arquivos pode bloquear o carreg
 
 ## Estado dos dados
 
-O jogo usa `localStorage` para o save do navegador. Para preservar uma carreira, use o botão **Salvar Jogo** antes de limpar os dados do site. Ainda não há sincronização em nuvem nem múltiplos slots de save.
+O jogo usa `localStorage` para o save do navegador. Há quatro slots locais de carreira e as opções **Salvar Jogo**, **Exportar Save** e **Importar Save** no menu Sistema. A importação valida a estrutura, atualiza o slot ativo e guarda automaticamente uma cópia local da carreira anterior antes de substituir o save. Ainda não há sincronização em nuvem.
 
 ## Limites atuais
 

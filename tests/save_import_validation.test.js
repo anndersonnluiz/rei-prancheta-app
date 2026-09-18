@@ -27,5 +27,9 @@ assert.strictEqual(scope.validarSaveImportado({ clubeAtualId: 1 }), false);
 assert.strictEqual(scope.validarSaveImportado({ elencoAtual: [] }), false);
 assert.strictEqual(scope.validarSaveImportado({ clubeAtualId: 1, elencoAtual: [] }), true);
 assert.strictEqual(scope.validarSaveImportado({ clubeAtualId: 'clube', elencoAtual: [{ id: 1 }] }), true);
+assert.strictEqual(scope.validarSaveImportado({ clubeAtualId: 1, elencoAtual: [], saveVersion: 11, calendarioGeral: [] }), true);
+assert.strictEqual(scope.validarSaveImportado({ clubeAtualId: 1, elencoAtual: [], saveVersion: 0 }), false);
+assert.strictEqual(scope.validarSaveImportado({ clubeAtualId: 1, elencoAtual: [], calendarioGeral: {} }), false);
+assert.strictEqual(scope.validarSaveImportado({ clubeAtualId: 1, elencoAtual: [], tabelas: [] }), false);
 
 console.log('save_import_validation.test.js passed');

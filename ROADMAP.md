@@ -18,7 +18,7 @@ Objetivo: garantir que uma carreira completa possa ser jogada sem bloqueios.
 
 - [ ] Testar manualmente início de carreira, partida, save, recarga e avanço de dia.
 - [ ] Testar contratação, renovação, promoção da base e virada de temporada.
-- [ ] Adicionar exportação/importação manual do save em JSON.
+- [x] Adicionar exportação/importação manual do save em JSON, com validação, slot ativo e backup antes da substituição.
 - [ ] Revisar mensagens de erro e confirmações de ações irreversíveis.
 - [ ] Registrar bugs encontrados em `BUGS.md`, com reprodução e prioridade.
 
@@ -80,4 +80,3 @@ Cada mudança deve incluir:
 2. teste automatizado ou roteiro manual reproduzível;
 3. validação de `npm run check` e `npm test`;
 4. atualização deste roadmap quando uma etapa for concluída.
-

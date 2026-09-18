@@ -148,6 +148,9 @@ assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"salvarJogo()\""
 assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"exportarSave()\""), 'system menu should expose export action');
 assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"abrirImportadorSave()\""), 'system menu should expose import action');
 assert.ok(html.includes("ng-if=\"menuGrupos.sistema\" ng-click=\"alternarSom()\""), 'system menu should expose sound action');
+assert.ok(js.includes('Finalize a partida antes de importar um save.'), 'save import should be blocked during a live match');
+assert.ok(js.includes('reiDaPranchetaBackupAntesImportacao'), 'save import should keep a local safety backup');
+assert.ok(js.includes("slots[String(Number($scope.slotSaveAtual) || 0)] = saveImportado"), 'imported save should replace the active slot');
 assert.ok(js.includes('resumoExigenciasJogadorCache'), 'negotiation summary should be cached to avoid digest loops');
 assert.ok(js.includes('lesoesNaPartida = 0'), 'match injury counter should reset at kickoff');
 assert.ok(js.includes('($scope.lesoesNaPartida || 0) < 2'), 'match injury simulation should limit repeated injuries');
