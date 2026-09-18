@@ -41,6 +41,8 @@ assert.ok(css.includes('.bench-status-utilizado'), 'bench should style already u
 assert.ok(html.includes('voltarParaPartidaAoVivo()'), 'paused match should offer a direct return action');
 assert.ok(html.includes('class="live-match-context"'), 'other screens should show live match context');
 assert.ok(css.includes('.live-match-context'), 'live match context should have a visible banner');
+assert.ok(html.includes('class="live-pause-actions"'), 'live pause actions should have a responsive hook');
+assert.ok(css.includes('.live-pause-actions button'), 'live pause actions should remain usable on narrow screens');
 assert.ok(html.includes('posJogo.resumo.gestao.substituicoes'), 'post-match should report substitutions');
 assert.ok(html.includes('posJogo.resumo.gestao.pausasTaticas'), 'post-match should report tactical pauses');
 assert.ok(html.includes('historicoPartidas'), 'career screen should include match history');

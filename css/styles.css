@@ -3048,6 +3048,10 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
     font-weight: bold;
     background-color: #e1e8ed;
 }
+.live-pause-actions button {
+    flex: 1 1 220px;
+    min-height: 44px;
+}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
@@ -3572,6 +3576,14 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     }
 
     .live-match-context button {
+        width: 100%;
+    }
+
+    .live-pause-actions {
+        flex-direction: column;
+    }
+
+    .live-pause-actions button {
         width: 100%;
     }
 
