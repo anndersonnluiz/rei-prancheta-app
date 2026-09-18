@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rei da Prancheta</title>
     <link rel="icon" href="assets/logo.png" type="image/png">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=20260918-layout2">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="js/app.js"></script>
 </head>
@@ -95,7 +95,7 @@
         <button class="mobile-menu-backdrop" ng-if="menuMobileAberto" ng-click="fecharMenuMobile()" aria-label="Fechar menu"></button>
         
         <!-- Sidebar -->
-        <nav id="menu-navegacao-mobile" class="sidebar" ng-class="{'mobile-menu-open': menuMobileAberto}" aria-label="Navegação principal do clube">
+        <nav id="menu-navegacao-mobile" class="sidebar" ng-class="{'mobile-menu-open': menuMobileAberto}" ng-attr-data-menu-open="{{menuMobileAberto}}" aria-label="Navegação principal do clube">
             <div class="sidebar-header">
                 <img src="assets/logo.png" alt="Rei da Prancheta" class="game-logo-small">
                 <div class="manager-name">👤 Prof. {{ dados.nomeTreinador }}</div>
@@ -1873,7 +1873,7 @@
                         <label ng-if="emprestimoForm.opcaoCompra > 0">Entrada da opção<input type="number" min="0" step="100000" ng-model="emprestimoForm.opcaoCompraEntrada" placeholder="À vista se vazio" style="width: 100%; padding: 8px; margin-top: 4px;"></label>
                         <label ng-if="emprestimoForm.opcaoCompra > 0">Parcelas<input type="number" min="1" max="12" ng-model="emprestimoForm.opcaoCompraParcelas" style="width: 100%; padding: 8px; margin-top: 4px;"></label>
                         <label ng-if="emprestimoForm.opcaoCompra > 0">Intervalo (dias)<input type="number" min="7" step="7" ng-model="emprestimoForm.opcaoCompraIntervaloDias" style="width: 100%; padding: 8px; margin-top: 4px;"></label>
-                        <button class="btn-play-quick" ng-click="solicitarEmprestimo()">Enviar por empréstimo</button>
+                        <button class="btn-play-quick market-loan-submit-button" ng-click="solicitarEmprestimo()">Enviar por empréstimo</button>
                     </div>
                     <div ng-if="emprestimosAtivos.length > 0" style="margin-top: 12px; color: var(--text-muted); font-size: 13px;"><div ng-repeat="emprestimo in emprestimosAtivos" style="display: flex; gap: 8px; align-items: center; margin-top: 5px; flex-wrap: wrap;"><span>{{emprestimo.jogadorNome}} em {{emprestimo.clubeDestinoNome}} ({{emprestimo.diasRestantes}}d) · {{emprestimo.jogos}} jogos · {{emprestimo.minutos}} min · {{emprestimo.gols}} gols · +{{emprestimo.evolucao}} OVR</span><button ng-if="emprestimo.opcaoCompra" ng-click="comprarJogadorEmprestado(emprestimo)" style="padding: 4px 8px; border: 1px solid var(--br-green); background: white; color: var(--br-green-dark); border-radius: 4px; cursor: pointer;">Comprar {{formatarMoeda(emprestimo.opcaoCompra)}}</button></div></div>
                 </div>
