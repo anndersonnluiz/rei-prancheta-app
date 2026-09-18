@@ -2535,31 +2535,35 @@
     </div>
 
     <!-- SISTEMA DE NEGOCIAÇÃO -->
-    <div ng-if="negociacaoAtiva" class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; justify-content: center; align-items: center;" ng-cloak>
-        <div class="modal-content" style="background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                <h2 style="margin: 0; color: var(--text-dark);">🤝 Negociação</h2>
-                <button style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;" ng-click="fecharNegociacao()">&times;</button>
+    <div ng-if="negociacaoAtiva" class="modal-overlay negotiation-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; justify-content: center; align-items: center;" ng-cloak>
+        <div class="modal-content negotiation-modal" style="background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <div class="negotiation-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                <div>
+                    <span class="negotiation-eyebrow">MERCADO DA BOLA</span>
+                    <h2>🤝 Negociação</h2>
+                </div>
+                <button class="negotiation-close" aria-label="Fechar negociação" ng-click="fecharNegociacao()">&times;</button>
             </div>
-            
-            <div style="display: flex; gap: 15px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                <div style="background: var(--br-blue); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold;">
+
+            <div class="negotiation-modal-scroll">
+            <div class="negotiation-player-card" style="display: flex; gap: 15px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                <div class="negotiation-overall" style="background: var(--br-blue); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold;">
                     {{calcularOverall(jogadorNegociacao)}}
                 </div>
-                <div>
-                    <h3 style="margin: 0; font-size: 18px; color: var(--text-main);">{{jogadorNegociacao.nome}}</h3>
-                    <div style="font-size: 13px; color: var(--text-muted);">{{jogadorNegociacao.idade}} anos &bull; {{jogadorNegociacao.posicao}}</div>
-                    <div style="font-size: 13px; color: var(--text-muted); font-weight: bold;">{{obterNomeClube(jogadorNegociacao.clubeId)}}</div>
+                <div class="negotiation-player-info">
+                    <h3>{{jogadorNegociacao.nome}}</h3>
+                    <div>{{jogadorNegociacao.idade}} anos &bull; {{jogadorNegociacao.posicao}}</div>
+                    <strong>{{obterNomeClube(jogadorNegociacao.clubeId)}}</strong>
                 </div>
             </div>
 
             <!-- PASSO 1: PROPOSTA AO CLUBE -->
             <div ng-if="estadoNegociacao === 'proposta_clube'">
                 <p style="font-size: 14px; margin-bottom: 15px;">Este jogador tem contrato com o <strong>{{obterNomeClube(jogadorNegociacao.clubeId)}}</strong>. O passe está avaliado em <strong style="color: var(--br-green-dark);">{{formatarMoeda(calcularValorPasse(jogadorNegociacao))}}</strong>.</p>
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Sua Oferta de Compra (R$):</label>
-                    <input type="range" min="{{calcularValorPasse(jogadorNegociacao) * 0.5}}" max="{{obterTetoOfertaTransferencia(jogadorNegociacao)}}" step="100000" ng-model="ofertaValores.clube" style="width: 100%;">
-                    <div style="font-size: 24px; font-weight: bold; color: var(--br-blue); text-align: center; margin-top: 10px;">{{formatarMoeda(ofertaValores.clube)}}</div>
+                <div class="negotiation-form-section">
+                    <label class="negotiation-section-label">Sua oferta de compra <span>R$</span></label>
+                    <input class="negotiation-range" type="range" min="{{calcularValorPasse(jogadorNegociacao) * 0.5}}" max="{{obterTetoOfertaTransferencia(jogadorNegociacao)}}" step="100000" ng-model="ofertaValores.clube" style="width: 100%;">
+                    <div class="negotiation-highlight-value">{{formatarMoeda(ofertaValores.clube)}}</div>
                 <div class="negotiation-finance-preview" ng-class="'risk-' + obterImpactoFinanceiroNegociacao().sustentabilidade.toLowerCase().replace('ã','a')">
                     <div class="negotiation-risk-line"><span>Saúde financeira da proposta</span><strong>{{obterImpactoFinanceiroNegociacao().sustentabilidade}}</strong></div>
                     <div class="negotiation-finance-grid">
@@ -2569,16 +2573,16 @@
                         <span>Caixa após compromissos <b>{{formatarMoeda(obterImpactoFinanceiroNegociacao().caixaProjetadoCompromissos)}}</b></span>
                     </div>
                 </div>
-                    <div ng-if="tipoNegociacao === 'compra'" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; font-size:12px;">
-                        <label>Entrada (R$)<input type="number" min="0" step="100000" ng-model="ofertaValores.entrada" style="width:100%; padding:6px;"></label>
-                        <label>Parcelas<input type="number" min="1" max="12" ng-model="ofertaValores.parcelas" style="width:100%; padding:6px;"></label>
-                        <label>Intervalo (dias)<input type="number" min="7" step="7" ng-model="ofertaValores.intervaloDias" style="width:100%; padding:6px;"></label>
+                    <div ng-if="tipoNegociacao === 'compra'" class="negotiation-field-grid negotiation-field-grid--three">
+                        <label class="negotiation-field"><span>Entrada (R$)</span><input type="number" min="0" step="100000" ng-model="ofertaValores.entrada"></label>
+                        <label class="negotiation-field"><span>Parcelas</span><input type="number" min="1" max="12" ng-model="ofertaValores.parcelas"></label>
+                        <label class="negotiation-field"><span>Intervalo (dias)</span><input type="number" min="7" step="7" ng-model="ofertaValores.intervaloDias"></label>
                     </div>
                     <small ng-if="tipoNegociacao === 'compra'" style="display:block; margin-top:6px; color:var(--text-muted);">O saldo será lançado como compromisso futuro e descontado automaticamente no calendário.</small>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button style="flex: 1; padding: 12px; background: var(--br-green); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="enviarPropostaClube(ofertaValores.clube)">Enviar Proposta</button>
-                    <button style="padding: 12px; background: #ccc; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="fecharNegociacao()">Cancelar</button>
+                <div class="negotiation-actions">
+                    <button class="negotiation-primary-action" ng-click="enviarPropostaClube(ofertaValores.clube)">Enviar proposta</button>
+                    <button class="negotiation-secondary-action" ng-click="fecharNegociacao()">Cancelar</button>
                 </div>
             </div>
 
@@ -2602,36 +2606,44 @@
                     <span ng-if="obterResumoExigenciasJogador().concorrencia" style="display:block; margin-top: 5px; color:#d35400;">⚔️ Concorrência: {{obterResumoExigenciasJogador().concorrencia.clubeNome}} oferece {{formatarMoeda(obterResumoExigenciasJogador().concorrencia.salarioOferta)}} por mês.</span>
                 </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Duração do Contrato:</label>
-                    <select ng-model="ofertaValores.anos" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px;">
+                <div class="negotiation-form-section negotiation-form-section--compact">
+                    <label class="negotiation-section-label">Duração do contrato</label>
+                    <select class="negotiation-control negotiation-control--large" ng-model="ofertaValores.anos">
                         <option value="1">1 Temporada</option>
                         <option value="2">2 Temporadas</option>
                         <option value="3">3 Temporadas</option>
                     </select>
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Salário Mensal Oferecido (R$):</label>
-                    <input type="range" min="{{jogadorNegociacao.salario * 0.5}}" max="{{jogadorNegociacao.salario * 5}}" step="10000" ng-model="ofertaValores.salario" style="width: 100%;">
-                    <div style="font-size: 24px; font-weight: bold; color: var(--br-blue); text-align: center; margin-top: 10px;">{{formatarMoeda(ofertaValores.salario)}}</div>
+                <div class="negotiation-form-section negotiation-salary-section">
+                    <label class="negotiation-section-label">Salário mensal oferecido <span>R$</span></label>
+                    <input class="negotiation-range" type="range" min="{{jogadorNegociacao.salario * 0.5}}" max="{{jogadorNegociacao.salario * 5}}" step="10000" ng-model="ofertaValores.salario" style="width: 100%;">
+                    <div class="negotiation-highlight-value">{{formatarMoeda(ofertaValores.salario)}}</div>
                 </div>
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px; font-size:12px;">
-                    <label>Papel no elenco<select ng-model="ofertaValores.papel" style="width:100%; padding:7px;"><option value="rotacao">Rotação</option><option value="reserva">Reserva</option><option value="titular">Titular</option><option value="importante">Importante</option><option value="crucial">Crucial</option></select></label>
-                    <label>Luvas (R$)<input type="number" min="0" step="10000" ng-model="ofertaValores.luvas" style="width:100%; padding:7px;"></label>
-                    <label>Bônus por jogo<input type="number" min="0" step="1000" ng-model="ofertaValores.bonusJogo" style="width:100%; padding:7px;"></label>
+                <div class="negotiation-terms-section">
+                    <div class="negotiation-section-heading">
+                        <div>
+                            <strong>Condições do contrato</strong>
+                            <span>Defina como o jogador será valorizado no elenco.</span>
+                        </div>
+                    </div>
+                    <div class="negotiation-field-grid negotiation-field-grid--three">
+                    <label class="negotiation-field"><span>Papel no elenco</span><select ng-model="ofertaValores.papel"><option value="rotacao">Rotação</option><option value="reserva">Reserva</option><option value="titular">Titular</option><option value="importante">Importante</option><option value="crucial">Crucial</option></select></label>
+                    <label class="negotiation-field"><span>Luvas (R$)</span><input type="number" min="0" step="10000" ng-model="ofertaValores.luvas"></label>
+                    <label class="negotiation-field"><span>Bônus por jogo</span><input type="number" min="0" step="1000" ng-model="ofertaValores.bonusJogo"></label>
                 </div>
-                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; font-size:12px;">
-                    <label>Bônus por gol<input type="number" min="0" step="1000" ng-model="ofertaValores.bonusGol" style="width:100%; padding:7px;"></label>
-                    <label>Bônus por vitória<input type="number" min="0" step="1000" ng-model="ofertaValores.bonusVitoria" style="width:100%; padding:7px;"></label>
-                    <label>Bônus por título<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusTitulo" style="width:100%; padding:7px;"></label>
-                    <label>Bônus por acesso<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusAcesso" style="width:100%; padding:7px;"></label>
-                    <label>Bônus por permanência<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusPermanencia" style="width:100%; padding:7px;"></label>
-                    <label>Bônus Top 4<input type="number" min="0" step="10000" ng-model="ofertaValores.bonusClassificacao" style="width:100%; padding:7px;"></label>
-                    <label>Cláusula de rescisão<input type="number" min="0" step="100000" ng-model="ofertaValores.clausulaRescisao" style="width:100%; padding:7px;"></label>
+                    <div class="negotiation-field-grid negotiation-field-grid--three negotiation-field-grid--bonus">
+                    <label class="negotiation-field"><span>Bônus por gol</span><input type="number" min="0" step="1000" ng-model="ofertaValores.bonusGol"></label>
+                    <label class="negotiation-field"><span>Bônus por vitória</span><input type="number" min="0" step="1000" ng-model="ofertaValores.bonusVitoria"></label>
+                    <label class="negotiation-field"><span>Bônus por título</span><input type="number" min="0" step="10000" ng-model="ofertaValores.bonusTitulo"></label>
+                    <label class="negotiation-field"><span>Bônus por acesso</span><input type="number" min="0" step="10000" ng-model="ofertaValores.bonusAcesso"></label>
+                    <label class="negotiation-field"><span>Bônus por permanência</span><input type="number" min="0" step="10000" ng-model="ofertaValores.bonusPermanencia"></label>
+                    <label class="negotiation-field"><span>Bônus Top 4</span><input type="number" min="0" step="10000" ng-model="ofertaValores.bonusClassificacao"></label>
+                    <label class="negotiation-field negotiation-field--wide"><span>Cláusula de rescisão</span><input type="number" min="0" step="100000" ng-model="ofertaValores.clausulaRescisao"></label>
+                    </div>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button style="flex: 1; padding: 12px; background: var(--br-green); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="enviarPropostaJogador(ofertaValores.salario, ofertaValores.anos)">Fazer Oferta</button>
-                    <button style="padding: 12px; background: #ccc; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;" ng-click="fecharNegociacao()">Desistir</button>
+                <div class="negotiation-actions">
+                    <button class="negotiation-primary-action" ng-click="enviarPropostaJogador(ofertaValores.salario, ofertaValores.anos)">Fazer oferta</button>
+                    <button class="negotiation-secondary-action" ng-click="fecharNegociacao()">Desistir</button>
                 </div>
             </div>
 
@@ -2646,6 +2658,7 @@
                 <h3 style="color: var(--br-green);">Contrato Assinado! ✍️</h3>
                 <p>{{motivoRejeicao}}</p>
                 <button style="margin-top: 15px; padding: 10px 20px; background: var(--br-green-dark); color: white; border: none; border-radius: 6px; cursor: pointer;" ng-click="fecharNegociacao()">Continuar</button>
+            </div>
             </div>
         </div>
     </div>

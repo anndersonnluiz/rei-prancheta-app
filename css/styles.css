@@ -2468,6 +2468,61 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
 .counteroffer-actions button { border: 0; border-radius: 6px; cursor: pointer; font-weight: 700; padding: 11px 14px; }
 .counteroffer-accept { background: var(--br-green); color: #fff; flex: 1; }
 .counteroffer-reject { background: #e9ecef; color: #4a5560; }
+.negotiation-overlay { background: rgba(7, 18, 31, .76) !important; backdrop-filter: blur(5px); padding: 16px; }
+.negotiation-modal { background: #f7fafc !important; border: 1px solid rgba(255, 255, 255, .55); border-radius: 22px !important; box-shadow: 0 28px 80px rgba(0, 20, 45, .35) !important; color: var(--text-main); max-height: calc(100vh - 32px) !important; max-width: 680px !important; overflow: hidden; padding: 0 !important; width: min(680px, 100%) !important; }
+.negotiation-modal-header { align-items: center; background: linear-gradient(135deg, #06275c, #064d8e); border: 0 !important; color: #fff; margin: 0 !important; padding: 20px 24px 17px !important; }
+.negotiation-modal-header h2 { color: #fff; font-size: 20px; letter-spacing: -.02em; margin: 3px 0 0; }
+.negotiation-eyebrow { color: rgba(255, 255, 255, .7); display: block; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
+.negotiation-close { align-items: center; background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .2); border-radius: 10px; color: #fff; cursor: pointer; display: inline-flex; font-size: 25px; height: 38px; justify-content: center; line-height: 1; transition: background .2s, transform .2s; width: 38px; }
+.negotiation-close:hover { background: rgba(255, 255, 255, .24); transform: rotate(4deg); }
+.negotiation-modal-scroll { max-height: calc(100vh - 104px); overflow-y: auto; padding: 22px 24px 24px; scrollbar-color: #b9c8d5 transparent; scrollbar-width: thin; }
+.negotiation-player-card { align-items: center; background: linear-gradient(135deg, #eef5ff, #f5fbf7) !important; border: 1px solid #d9e5ee; border-radius: 15px !important; box-shadow: 0 6px 16px rgba(31, 71, 102, .06); padding: 14px 16px !important; }
+.negotiation-overall { box-shadow: 0 6px 12px rgba(0, 39, 118, .24); flex: 0 0 54px; height: 54px !important; width: 54px !important; }
+.negotiation-player-info { min-width: 0; }
+.negotiation-player-info h3 { color: var(--text-main); font-size: 18px; margin: 0 0 4px; overflow-wrap: anywhere; }
+.negotiation-player-info div { color: var(--text-muted); font-size: 12px; }
+.negotiation-player-info strong { color: var(--br-blue); display: block; font-size: 12px; margin-top: 4px; }
+.negotiation-modal-scroll > div > p { color: #516577; line-height: 1.5; }
+.negotiation-modal-scroll > div > p strong { color: var(--br-blue); }
+.negotiation-form-section { margin: 0 0 20px; }
+.negotiation-form-section--compact { margin-bottom: 18px; }
+.negotiation-section-label { color: #334e68; display: flex; font-size: 12px; font-weight: 800; justify-content: space-between; letter-spacing: .02em; margin-bottom: 9px; text-transform: uppercase; }
+.negotiation-section-label span { color: var(--text-muted); font-size: 10px; font-weight: 700; }
+.negotiation-highlight-value { color: var(--br-blue); font-size: clamp(25px, 5vw, 31px); font-weight: 900; letter-spacing: -.04em; margin-top: 8px; text-align: center; }
+.negotiation-range { accent-color: var(--br-green); cursor: pointer; height: 5px; }
+.negotiation-control, .negotiation-field input, .negotiation-field select { appearance: none; background: #fff; border: 1px solid #d3dee7; border-radius: 10px; color: #243b53; font: inherit; min-height: 42px; outline: none; padding: 9px 11px; transition: border-color .2s, box-shadow .2s, background .2s; width: 100%; }
+.negotiation-control--large { font-size: 14px; }
+.negotiation-control:focus, .negotiation-field input:focus, .negotiation-field select:focus { background: #fff; border-color: #4b8ed8; box-shadow: 0 0 0 3px rgba(75, 142, 216, .14); }
+.negotiation-field-grid { display: grid; gap: 11px; }
+.negotiation-field-grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.negotiation-field { color: #60758a; display: flex; flex-direction: column; font-size: 10px; font-weight: 800; gap: 6px; letter-spacing: .02em; min-width: 0; text-transform: uppercase; }
+.negotiation-field input, .negotiation-field select { font-size: 13px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.negotiation-field--wide { grid-column: span 2; }
+.negotiation-terms-section { background: #fff; border: 1px solid #dfe8ef; border-radius: 15px; box-shadow: 0 8px 22px rgba(31, 71, 102, .06); margin-bottom: 20px; padding: 15px; }
+.negotiation-section-heading { align-items: center; border-bottom: 1px solid #edf1f4; display: flex; justify-content: space-between; margin-bottom: 14px; padding-bottom: 12px; }
+.negotiation-section-heading strong { color: #243b53; display: block; font-size: 13px; }
+.negotiation-section-heading span { color: var(--text-muted); display: block; font-size: 11px; margin-top: 3px; }
+.negotiation-field-grid--bonus { margin-top: 11px; }
+.negotiation-actions { display: flex; gap: 10px; margin-top: 20px; }
+.negotiation-primary-action, .negotiation-secondary-action { border: 0; border-radius: 11px; cursor: pointer; font-size: 13px; font-weight: 800; min-height: 44px; padding: 11px 15px; transition: transform .2s, box-shadow .2s, background .2s; }
+.negotiation-primary-action { background: linear-gradient(135deg, #00a843, #008b38); box-shadow: 0 8px 18px rgba(0, 156, 59, .22); color: #fff; flex: 1; }
+.negotiation-primary-action:hover { box-shadow: 0 10px 22px rgba(0, 156, 59, .3); transform: translateY(-1px); }
+.negotiation-secondary-action { background: #edf1f4; color: #526577; }
+.negotiation-secondary-action:hover { background: #e1e8ed; }
+.negotiation-modal .negotiation-finance-preview { box-shadow: none; }
+@media (max-width: 620px) {
+    .negotiation-overlay { align-items: flex-end !important; padding: 0; }
+    .negotiation-modal { border-radius: 20px 20px 0 0 !important; max-height: 94dvh !important; width: 100% !important; }
+    .negotiation-modal-scroll { max-height: calc(94dvh - 91px); padding: 18px 16px 22px; }
+    .negotiation-modal-header { padding: 16px 16px 14px !important; }
+    .negotiation-field-grid--three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .negotiation-field--wide { grid-column: 1 / -1; }
+}
+@media (max-width: 390px) {
+    .negotiation-field-grid--three { grid-template-columns: 1fr; }
+    .negotiation-actions { flex-direction: column; }
+    .negotiation-secondary-action { min-height: 40px; }
+}
 .bench-item .jogador-nome { flex-grow: 1; margin-left: 10px; font-weight: 600; font-size: 14px; }
 .dragging { opacity: 0.5; }
 
