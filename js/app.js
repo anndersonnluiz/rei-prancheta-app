@@ -60,6 +60,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.jogadores = [];
     $scope.clubeAtual = null;
     $scope.elencoAtual = [];
+    // Modelos usados diretamente em ng-repeat precisam manter a mesma
+    // referência entre ciclos do AngularJS. Sem este cache, getters que
+    // montam arrays/objetos novos a cada leitura podem provocar infdig.
+    var modelosVisuaisCache = Object.create(null);
+    function obterModeloVisualCache(nome, chave, construir) {
+        var existente = modelosVisuaisCache[nome];
+        if (!existente || existente.chave !== chave) {
+            existente = { chave: chave, valor: construir() };
+            modelosVisuaisCache[nome] = existente;
+        }
+        return existente.valor;
+    }
+    function chaveColecaoVisual(lista, selecionar) {
+        return (Array.isArray(lista) ? lista : []).map(function(item, indice) {
+            return selecionar(item, indice);
+        }).join('|');
+    }
     var ordemPosicoes = { GOL: 1, LAT: 2, ZAG: 3, VOL: 4, MEI: 5, ATA: 6 };
     $scope.ordemPosicaoJogador = function(jogador) {
         return ordemPosicoes[jogador && jogador.posicao] || 99;
@@ -101,47 +118,64 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
     $scope.obterResumoHistoricoPartidas = function() {
         var partidas = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
-        var resumo = { jogos: partidas.length, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0, xgTotal: 0, xgPartidas: 0 };
-        partidas.forEach(function(partida) {
-            var resultado = partida.placar && partida.placar.resultadoMeuTime;
-            if (resultado === 'Vitoria') resumo.vitorias++;
-            else if (resultado === 'Empate') resumo.empates++;
-            else if (resultado === 'Derrota') resumo.derrotas++;
-            var meuTimeMandante = partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id;
-            if (partida.placar) {
-                resumo.golsMarcados += Number(meuTimeMandante ? partida.placar.mandante : partida.placar.visitante) || 0;
-                resumo.golsSofridos += Number(meuTimeMandante ? partida.placar.visitante : partida.placar.mandante) || 0;
-            }
-            if (partida.xg) {
-                resumo.xgTotal += (Number(partida.xg.mandante) || 0) + (Number(partida.xg.visitante) || 0);
-                resumo.xgPartidas++;
-            }
+        var clubeId = $scope.clubeAtual && $scope.clubeAtual.id;
+        var chave = String(clubeId || '') + '|' + chaveColecaoVisual(partidas, function(partida) {
+            var placar = partida.placar || {}, xg = partida.xg || {};
+            return [partida.temporada, partida.dia, partida.origem, placar.resultadoMeuTime, placar.mandante, placar.visitante, xg.mandante, xg.visitante].join(':');
         });
-        resumo.mediaXg = resumo.xgPartidas ? (resumo.xgTotal / resumo.xgPartidas).toFixed(2) : '0.00';
-        return resumo;
+        return obterModeloVisualCache('resumoHistoricoPartidas', chave, function() {
+            var resumo = { jogos: partidas.length, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0, xgTotal: 0, xgPartidas: 0 };
+            partidas.forEach(function(partida) {
+                var resultado = partida.placar && partida.placar.resultadoMeuTime;
+                if (resultado === 'Vitoria') resumo.vitorias++;
+                else if (resultado === 'Empate') resumo.empates++;
+                else if (resultado === 'Derrota') resumo.derrotas++;
+                var meuTimeMandante = partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id;
+                if (partida.placar) {
+                    resumo.golsMarcados += Number(meuTimeMandante ? partida.placar.mandante : partida.placar.visitante) || 0;
+                    resumo.golsSofridos += Number(meuTimeMandante ? partida.placar.visitante : partida.placar.mandante) || 0;
+                }
+                if (partida.xg) {
+                    resumo.xgTotal += (Number(partida.xg.mandante) || 0) + (Number(partida.xg.visitante) || 0);
+                    resumo.xgPartidas++;
+                }
+            });
+            resumo.mediaXg = resumo.xgPartidas ? (resumo.xgTotal / resumo.xgPartidas).toFixed(2) : '0.00';
+            return resumo;
+        });
     };
     $scope.obterResumoPorTemporada = function() {
-        var grupos = {};
-        (Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : []).forEach(function(partida) {
-            var temporada = partida.temporada || 'Não identificada';
-            if (!grupos[temporada]) grupos[temporada] = { temporada: temporada, jogos: 0, vitorias: 0, empates: 0, derrotas: 0, gols: 0, sofridos: 0, xgTotal: 0, xgPartidas: 0 };
-            var grupo = grupos[temporada];
-            grupo.jogos++;
-            if (partida.placar && partida.placar.resultadoMeuTime === 'Vitoria') grupo.vitorias++;
-            else if (partida.placar && partida.placar.resultadoMeuTime === 'Empate') grupo.empates++;
-            else if (partida.placar && partida.placar.resultadoMeuTime === 'Derrota') grupo.derrotas++;
-            var mandante = partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id;
-            if (partida.placar) { grupo.gols += Number(mandante ? partida.placar.mandante : partida.placar.visitante) || 0; grupo.sofridos += Number(mandante ? partida.placar.visitante : partida.placar.mandante) || 0; }
-            if (partida.xg) { grupo.xgTotal += (Number(partida.xg.mandante) || 0) + (Number(partida.xg.visitante) || 0); grupo.xgPartidas++; }
+        var partidas = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
+        var historicoTreinador = Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : [];
+        var chave = chaveColecaoVisual(partidas, function(partida) {
+            var placar = partida.placar || {}, xg = partida.xg || {};
+            return [partida.temporada, partida.dia, partida.mandante && partida.mandante.id, partida.visitante && partida.visitante.id, placar.resultadoMeuTime, placar.mandante, placar.visitante, xg.mandante, xg.visitante].join(':');
+        }) + '|' + chaveColecaoVisual(historicoTreinador, function(registro) {
+            return [registro.tipo, registro.temporada, registro.competicoes && JSON.stringify(registro.competicoes)].join(':');
         });
-        (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).forEach(function(registro) {
-            if (registro.tipo !== 'temporada' || !grupos[registro.temporada] || !registro.competicoes) return;
-            grupos[registro.temporada].competicoes = registro.competicoes;
-        });
-        return Object.keys(grupos).sort().reverse().map(function(chave) {
-            var grupo = grupos[chave];
-            grupo.mediaXg = grupo.xgPartidas ? (grupo.xgTotal / grupo.xgPartidas).toFixed(2) : '0.00';
-            return grupo;
+        return obterModeloVisualCache('resumoPorTemporada', chave, function() {
+            var grupos = {};
+            partidas.forEach(function(partida) {
+                var temporada = partida.temporada || 'Não identificada';
+                if (!grupos[temporada]) grupos[temporada] = { temporada: temporada, jogos: 0, vitorias: 0, empates: 0, derrotas: 0, gols: 0, sofridos: 0, xgTotal: 0, xgPartidas: 0 };
+                var grupo = grupos[temporada];
+                grupo.jogos++;
+                if (partida.placar && partida.placar.resultadoMeuTime === 'Vitoria') grupo.vitorias++;
+                else if (partida.placar && partida.placar.resultadoMeuTime === 'Empate') grupo.empates++;
+                else if (partida.placar && partida.placar.resultadoMeuTime === 'Derrota') grupo.derrotas++;
+                var mandante = partida.mandante && $scope.clubeAtual && partida.mandante.id === $scope.clubeAtual.id;
+                if (partida.placar) { grupo.gols += Number(mandante ? partida.placar.mandante : partida.placar.visitante) || 0; grupo.sofridos += Number(mandante ? partida.placar.visitante : partida.placar.mandante) || 0; }
+                if (partida.xg) { grupo.xgTotal += (Number(partida.xg.mandante) || 0) + (Number(partida.xg.visitante) || 0); grupo.xgPartidas++; }
+            });
+            historicoTreinador.forEach(function(registro) {
+                if (registro.tipo !== 'temporada' || !grupos[registro.temporada] || !registro.competicoes) return;
+                grupos[registro.temporada].competicoes = registro.competicoes;
+            });
+            return Object.keys(grupos).sort().reverse().map(function(nomeTemporada) {
+                var grupo = grupos[nomeTemporada];
+                grupo.mediaXg = grupo.xgPartidas ? (grupo.xgTotal / grupo.xgPartidas).toFixed(2) : '0.00';
+                return grupo;
+            });
         });
     };
     $scope.obterTendenciaCarreira = function() {
@@ -168,21 +202,29 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
     $scope.obterComparativoTemporadas = function() {
         var temporadas = ($scope.historicoTreinador || []).filter(function(item) { return item.tipo === 'temporada'; });
-        if (temporadas.length < 2) return null;
-        var atual = temporadas[0], anterior = temporadas[1];
-        var pontosFormaAtual = Number(atual.pontosForma) || 0, pontosFormaAnterior = Number(anterior.pontosForma) || 0;
-        return { atual: atual.temporada, anterior: anterior.temporada, deltaPosicao: (Number(anterior.posicao) || 0) - (Number(atual.posicao) || 0), deltaPontos: (Number(atual.pontos) || 0) - (Number(anterior.pontos) || 0), deltaSaldo: (Number(atual.saldo) || 0) - (Number(anterior.saldo) || 0), deltaForma: pontosFormaAtual - pontosFormaAnterior, tendencia: $scope.obterTendenciaTemporada(atual) };
+        var chave = chaveColecaoVisual(temporadas, function(item) {
+            return [item.temporada, item.posicao, item.pontos, item.saldo, item.pontosForma, JSON.stringify(item.forma)].join(':');
+        });
+        return obterModeloVisualCache('comparativoTemporadas', chave, function() {
+            if (temporadas.length < 2) return null;
+            var atual = temporadas[0], anterior = temporadas[1];
+            var pontosFormaAtual = Number(atual.pontosForma) || 0, pontosFormaAnterior = Number(anterior.pontosForma) || 0;
+            return { atual: atual.temporada, anterior: anterior.temporada, deltaPosicao: (Number(anterior.posicao) || 0) - (Number(atual.posicao) || 0), deltaPontos: (Number(atual.pontos) || 0) - (Number(anterior.pontos) || 0), deltaSaldo: (Number(atual.saldo) || 0) - (Number(anterior.saldo) || 0), deltaForma: pontosFormaAtual - pontosFormaAnterior, tendencia: $scope.obterTendenciaTemporada(atual) };
+        });
     };
     $scope.obterRecomendacoesCarreira = function() {
         var resumo = $scope.obterResumoHistoricoPartidas();
         var tendencia = $scope.obterTendenciaCarreira();
-        var recomendacoes = [];
-        if (resumo.jogos === 0) return [{ titulo: 'Construa sua base de dados', detalhe: 'Finalize partidas para receber recomendações personalizadas.', tipo: 'base' }];
-        if (resumo.golsSofridos > resumo.golsMarcados) recomendacoes.push({ titulo: 'Reforce a proteção defensiva', detalhe: 'O time sofreu mais gols do que marcou no histórico recente.', tipo: 'defesa' });
-        if (resumo.mediaXg < 1.2) recomendacoes.push({ titulo: 'Aumente a criação de chances', detalhe: 'A média de xG está baixa; avalie mentalidade, foco de passes e qualidade do elenco.', tipo: 'ataque' });
-        if (tendencia.classe === 'baixa') recomendacoes.push({ titulo: 'Revise a estratégia', detalhe: 'A tendência de queda indica necessidade de ajustes antes da próxima temporada.', tipo: 'alerta' });
-        if (recomendacoes.length === 0) recomendacoes.push({ titulo: 'Mantenha o planejamento', detalhe: 'Os indicadores estão equilibrados; priorize continuidade e evolução gradual.', tipo: 'manter' });
-        return recomendacoes;
+        var chave = [resumo.jogos, resumo.vitorias, resumo.empates, resumo.derrotas, resumo.golsMarcados, resumo.golsSofridos, resumo.mediaXg, tendencia.classe].join('|');
+        return obterModeloVisualCache('recomendacoesCarreira', chave, function() {
+            var recomendacoes = [];
+            if (resumo.jogos === 0) return [{ titulo: 'Construa sua base de dados', detalhe: 'Finalize partidas para receber recomendações personalizadas.', tipo: 'base' }];
+            if (resumo.golsSofridos > resumo.golsMarcados) recomendacoes.push({ titulo: 'Reforce a proteção defensiva', detalhe: 'O time sofreu mais gols do que marcou no histórico recente.', tipo: 'defesa' });
+            if (resumo.mediaXg < 1.2) recomendacoes.push({ titulo: 'Aumente a criação de chances', detalhe: 'A média de xG está baixa; avalie mentalidade, foco de passes e qualidade do elenco.', tipo: 'ataque' });
+            if (tendencia.classe === 'baixa') recomendacoes.push({ titulo: 'Revise a estratégia', detalhe: 'A tendência de queda indica necessidade de ajustes antes da próxima temporada.', tipo: 'alerta' });
+            if (recomendacoes.length === 0) recomendacoes.push({ titulo: 'Mantenha o planejamento', detalhe: 'Os indicadores estão equilibrados; priorize continuidade e evolução gradual.', tipo: 'manter' });
+            return recomendacoes;
+        });
     };
     $scope.aplicarRecomendacaoComoMeta = function(recomendacao) {
         if (!recomendacao || !$scope.clubeAtual) return false;
@@ -347,16 +389,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var lista = Array.isArray($scope.historicoPartidas) ? $scope.historicoPartidas : [];
         var filtro = $scope.historicoPartidasFiltro || 'TODAS';
         if (filtro === 'TODAS') return lista;
-        return lista.filter(function(partida) {
-            if (filtro === 'VITORIAS' || filtro === 'EMPATES' || filtro === 'DERROTAS') {
-                return (partida.placar && partida.placar.resultadoMeuTime || '').toUpperCase() === filtro.slice(0, -1) ||
-                    (filtro === 'VITORIAS' && partida.placar.resultadoMeuTime === 'Vitoria') ||
-                    (filtro === 'EMPATES' && partida.placar.resultadoMeuTime === 'Empate') ||
-                    (filtro === 'DERROTAS' && partida.placar.resultadoMeuTime === 'Derrota');
-            }
-            if (filtro === 'COMPLETAS') return partida.origem === 'completo';
-            if (filtro === 'RAPIDAS') return partida.origem === 'rapido';
-            return true;
+        var chave = filtro + '|' + chaveColecaoVisual(lista, function(partida) {
+            var placar = partida.placar || {};
+            return [partida.dia, partida.origem, placar.resultadoMeuTime].join(':');
+        });
+        return obterModeloVisualCache('historicoPartidasFiltrado', chave, function() {
+            return lista.filter(function(partida) {
+                if (filtro === 'VITORIAS' || filtro === 'EMPATES' || filtro === 'DERROTAS') {
+                    return (partida.placar && partida.placar.resultadoMeuTime || '').toUpperCase() === filtro.slice(0, -1) ||
+                        (filtro === 'VITORIAS' && partida.placar.resultadoMeuTime === 'Vitoria') ||
+                        (filtro === 'EMPATES' && partida.placar.resultadoMeuTime === 'Empate') ||
+                        (filtro === 'DERROTAS' && partida.placar.resultadoMeuTime === 'Derrota');
+                }
+                if (filtro === 'COMPLETAS') return partida.origem === 'completo';
+                if (filtro === 'RAPIDAS') return partida.origem === 'rapido';
+                return true;
+            });
         });
     };
     $scope.mudancaClubePendente = null;
@@ -2289,17 +2337,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.obterSugestoesPromocaoBase = function() {
-        var necessidades = $scope.obterResumoNecessidadesBase().carencias;
+        var elenco = Array.isArray($scope.elencoAtual) ? $scope.elencoAtual : [];
         var atletas = ($scope.baseResumo && $scope.baseResumo.atletasVisiveis) || [];
         var orientacao = $scope.obterOrientacaoCategoriasBase();
-        return necessidades.map(function(necessidade) {
-            var candidatos = atletas.filter(function(atleta) {
-                return atleta.posicao === necessidade.posicao && $scope.obterStatusPromocaoBase(atleta).elegivel;
-            }).sort(function(a, b) {
-                return ((b.overallAtual || 0) + (b.potencial || 0) * 0.2) - ((a.overallAtual || 0) + (a.potencial || 0) * 0.2);
-            });
-            return { posicao: necessidade.posicao, label: necessidade.label, atleta: candidatos[0] || null, orientacao: orientacao.classe === 'emprestar' ? 'Priorizar minutos por empréstimo' : (orientacao.classe === 'proteger' ? 'Promover apenas se houver necessidade' : 'Boa oportunidade de integração') };
-        }).filter(function(item) { return !!item.atleta; });
+        var chave = orientacao.classe + '|' + chaveColecaoVisual(elenco, function(jogador) { return [jogador.id, jogador.posicao].join(':'); }) + '|' + chaveColecaoVisual(atletas, function(atleta) { return [atleta.id, atleta.posicao, atleta.overallAtual, atleta.potencial, atleta.categoriaBase].join(':'); });
+        return obterModeloVisualCache('sugestoesPromocaoBase', chave, function() {
+            var necessidades = $scope.obterResumoNecessidadesBase().carencias;
+            return necessidades.map(function(necessidade) {
+                var candidatos = atletas.filter(function(atleta) {
+                    return atleta.posicao === necessidade.posicao && $scope.obterStatusPromocaoBase(atleta).elegivel;
+                }).sort(function(a, b) {
+                    return ((b.overallAtual || 0) + (b.potencial || 0) * 0.2) - ((a.overallAtual || 0) + (a.potencial || 0) * 0.2);
+                });
+                return { posicao: necessidade.posicao, label: necessidade.label, atleta: candidatos[0] || null, orientacao: orientacao.classe === 'emprestar' ? 'Priorizar minutos por empréstimo' : (orientacao.classe === 'proteger' ? 'Promover apenas se houver necessidade' : 'Boa oportunidade de integração') };
+            }).filter(function(item) { return !!item.atleta; });
+        });
     };
 
     $scope.promoverSugestaoBase = function(sugestao) {
@@ -2310,18 +2362,24 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.obterRelatorioAdaptacaoJovens = function() {
-        return ($scope.elencoAtual || []).filter(function(jogador) { return !!jogador.categoriaOrigem; }).map(function(jogador) {
-            var minutos = jogador.minutosTemporada || 0;
-            var recomendacao = minutos < 450 ? 'Receber mais minutos' : (minutos >= 1200 ? 'Permanecer no elenco' : 'Monitorar adaptação');
-            if (minutos < 180 && (jogador.moral || 0) < 60) recomendacao = 'Considerar empréstimo';
-            var historico = Array.isArray(jogador.historicoTemporadas) ? jogador.historicoTemporadas : [];
-            var mediaMinutos = historico.length ? Math.round(historico.reduce(function(total, item) { return total + (Number(item.minutos) || 0); }, 0) / historico.length) : 0;
-            var mediaGols = historico.length ? (historico.reduce(function(total, item) { return total + (Number(item.gols) || 0); }, 0) / historico.length).toFixed(1) : '0.0';
-            var tendencia = historico.length === 0 ? 'estreia' : ((Number(jogador.evolucaoTemporada) || 0) > 0 ? 'em alta' : ((Number(jogador.evolucaoTemporada) || 0) < 0 ? 'em queda' : 'estável'));
-            var aproveitamentoMinutos = mediaMinutos > 0 ? Math.round((minutos / mediaMinutos) * 100) : null;
-            if (historico.length >= 2 && minutos < mediaMinutos * 0.65 && (jogador.moral || 0) < 70) recomendacao = 'Recuperar espaço ou emprestar';
-            else if (historico.length >= 2 && minutos >= mediaMinutos * 1.25 && tendencia === 'em alta') recomendacao = 'Consolidar no elenco';
-            return { jogador: jogador, minutos: minutos, jogos: jogador.jogosTemporada || 0, xp: jogador.xpTemporada || 0, evolucao: jogador.evolucaoTemporada || 0, moral: jogador.moral || 0, recomendacao: recomendacao, mediaMinutos: mediaMinutos, mediaGols: mediaGols, tendencia: tendencia, aproveitamentoMinutos: aproveitamentoMinutos };
+        var elenco = Array.isArray($scope.elencoAtual) ? $scope.elencoAtual : [];
+        var chave = chaveColecaoVisual(elenco, function(jogador) {
+            return [jogador.id, jogador.categoriaOrigem, jogador.minutosTemporada, jogador.jogosTemporada, jogador.xpTemporada, jogador.evolucaoTemporada, jogador.moral, JSON.stringify(jogador.historicoTemporadas || [])].join(':');
+        });
+        return obterModeloVisualCache('relatorioAdaptacaoJovens', chave, function() {
+            return elenco.filter(function(jogador) { return !!jogador.categoriaOrigem; }).map(function(jogador) {
+                var minutos = jogador.minutosTemporada || 0;
+                var recomendacao = minutos < 450 ? 'Receber mais minutos' : (minutos >= 1200 ? 'Permanecer no elenco' : 'Monitorar adaptação');
+                if (minutos < 180 && (jogador.moral || 0) < 60) recomendacao = 'Considerar empréstimo';
+                var historico = Array.isArray(jogador.historicoTemporadas) ? jogador.historicoTemporadas : [];
+                var mediaMinutos = historico.length ? Math.round(historico.reduce(function(total, item) { return total + (Number(item.minutos) || 0); }, 0) / historico.length) : 0;
+                var mediaGols = historico.length ? (historico.reduce(function(total, item) { return total + (Number(item.gols) || 0); }, 0) / historico.length).toFixed(1) : '0.0';
+                var tendencia = historico.length === 0 ? 'estreia' : ((Number(jogador.evolucaoTemporada) || 0) > 0 ? 'em alta' : ((Number(jogador.evolucaoTemporada) || 0) < 0 ? 'em queda' : 'estável'));
+                var aproveitamentoMinutos = mediaMinutos > 0 ? Math.round((minutos / mediaMinutos) * 100) : null;
+                if (historico.length >= 2 && minutos < mediaMinutos * 0.65 && (jogador.moral || 0) < 70) recomendacao = 'Recuperar espaço ou emprestar';
+                else if (historico.length >= 2 && minutos >= mediaMinutos * 1.25 && tendencia === 'em alta') recomendacao = 'Consolidar no elenco';
+                return { jogador: jogador, minutos: minutos, jogos: jogador.jogosTemporada || 0, xp: jogador.xpTemporada || 0, evolucao: jogador.evolucaoTemporada || 0, moral: jogador.moral || 0, recomendacao: recomendacao, mediaMinutos: mediaMinutos, mediaGols: mediaGols, tendencia: tendencia, aproveitamentoMinutos: aproveitamentoMinutos };
+            });
         });
     };
 
@@ -2337,27 +2395,31 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.obterPrioridadesColetivasTreino = function() {
-        var grupos = {};
-        ($scope.elencoAtual || []).forEach(function(jogador) {
-            if (!jogador || !jogador.posicao) return;
-            var setor = jogador.posicao === 'GOL' ? 'Goleiros' : (jogador.posicao === 'ZAG' || jogador.posicao === 'LAT' ? 'Defesa' : (jogador.posicao === 'VOL' || jogador.posicao === 'MEI' ? 'Meio-campo' : 'Ataque'));
-            if (!grupos[setor]) grupos[setor] = { setor: setor, jogadores: 0, fisico: 0, moral: 0, minutos: 0 };
-            grupos[setor].jogadores++;
-            grupos[setor].fisico += Number(jogador.condicaoFisica) || 100;
-            grupos[setor].moral += Number(jogador.moral) || 70;
-            grupos[setor].minutos += Number(jogador.minutosTemporada) || 0;
+        var elenco = Array.isArray($scope.elencoAtual) ? $scope.elencoAtual : [];
+        var chave = chaveColecaoVisual(elenco, function(jogador) { return [jogador.id, jogador.posicao, jogador.condicaoFisica, jogador.moral, jogador.minutosTemporada].join(':'); });
+        return obterModeloVisualCache('prioridadesColetivasTreino', chave, function() {
+            var grupos = {};
+            elenco.forEach(function(jogador) {
+                if (!jogador || !jogador.posicao) return;
+                var setor = jogador.posicao === 'GOL' ? 'Goleiros' : (jogador.posicao === 'ZAG' || jogador.posicao === 'LAT' ? 'Defesa' : (jogador.posicao === 'VOL' || jogador.posicao === 'MEI' ? 'Meio-campo' : 'Ataque'));
+                if (!grupos[setor]) grupos[setor] = { setor: setor, jogadores: 0, fisico: 0, moral: 0, minutos: 0 };
+                grupos[setor].jogadores++;
+                grupos[setor].fisico += Number(jogador.condicaoFisica) || 100;
+                grupos[setor].moral += Number(jogador.moral) || 70;
+                grupos[setor].minutos += Number(jogador.minutosTemporada) || 0;
+            });
+            return Object.keys(grupos).map(function(nomeSetor) {
+                var grupo = grupos[nomeSetor];
+                grupo.fisicoMedio = Math.round(grupo.fisico / grupo.jogadores);
+                grupo.moralMedia = Math.round(grupo.moral / grupo.jogadores);
+                grupo.minutosMedios = Math.round(grupo.minutos / grupo.jogadores);
+                if (grupo.fisicoMedio < 70) { grupo.prioridade = 'Recuperação física'; grupo.detalhe = 'Reduza a carga e priorize recuperação antes de novo treino intenso.'; grupo.ordem = 1; }
+                else if (grupo.moralMedia < 58) { grupo.prioridade = 'Gestão de moral'; grupo.detalhe = 'Reveja minutos e conversas individuais para recuperar confiança.'; grupo.ordem = 2; }
+                else if (grupo.minutosMedios < 450) { grupo.prioridade = 'Mais utilização'; grupo.detalhe = 'O setor tem pouca participação; avalie rodízio, formação ou empréstimos.'; grupo.ordem = 3; }
+                else { grupo.prioridade = 'Manter evolução'; grupo.detalhe = 'Indicadores equilibrados; mantenha o plano atual.'; grupo.ordem = 4; }
+                return grupo;
+            }).sort(function(a, b) { return a.ordem - b.ordem || a.setor.localeCompare(b.setor); });
         });
-        return Object.keys(grupos).map(function(chave) {
-            var grupo = grupos[chave];
-            grupo.fisicoMedio = Math.round(grupo.fisico / grupo.jogadores);
-            grupo.moralMedia = Math.round(grupo.moral / grupo.jogadores);
-            grupo.minutosMedios = Math.round(grupo.minutos / grupo.jogadores);
-            if (grupo.fisicoMedio < 70) { grupo.prioridade = 'Recuperação física'; grupo.detalhe = 'Reduza a carga e priorize recuperação antes de novo treino intenso.'; grupo.ordem = 1; }
-            else if (grupo.moralMedia < 58) { grupo.prioridade = 'Gestão de moral'; grupo.detalhe = 'Reveja minutos e conversas individuais para recuperar confiança.'; grupo.ordem = 2; }
-            else if (grupo.minutosMedios < 450) { grupo.prioridade = 'Mais utilização'; grupo.detalhe = 'O setor tem pouca participação; avalie rodízio, formação ou empréstimos.'; grupo.ordem = 3; }
-            else { grupo.prioridade = 'Manter evolução'; grupo.detalhe = 'Indicadores equilibrados; mantenha o plano atual.'; grupo.ordem = 4; }
-            return grupo;
-        }).sort(function(a, b) { return a.ordem - b.ordem || a.setor.localeCompare(b.setor); });
     };
 
     $scope.aplicarPrioridadeColetivaTreino = function(prioridade) {
@@ -2933,7 +2995,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.obterMovimentacoesMundo = function() {
-        return ($scope.transferenciasHistorico || []).filter(function(item) { return item.tipo === 'cpu'; }).slice(0, 20);
+        var historico = Array.isArray($scope.transferenciasHistorico) ? $scope.transferenciasHistorico : [];
+        var chave = chaveColecaoVisual(historico, function(item) {
+            return [item.tipo, item.jogadorId, item.clubeDestinoId, item.dia, item.valor, item.status].join(':');
+        });
+        return obterModeloVisualCache('movimentacoesMundo', chave, function() {
+            return historico.filter(function(item) { return item.tipo === 'cpu'; }).slice(0, 20);
+        });
     };
 
     $scope.processarDinamicaClubesCpu = function() {
@@ -4687,14 +4755,19 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
     $scope.obterResumoPausaTatica = function() {
         var elenco = Array.isArray($scope.elencoAtual) ? $scope.elencoAtual : [];
-        var impedidos = elenco.filter(function(jogador) {
-            return jogador && (jogador.expulso || jogador.lesionado || jogador.suspenso || jogador.substituidoNaPartida);
+        var chave = String($scope.substituicoesFeitas || 0) + '|' + chaveColecaoVisual(elenco, function(jogador) {
+            return [jogador.id, jogador.expulso, jogador.lesionado, jogador.suspenso, jogador.substituidoNaPartida].join(':');
         });
-        return {
-            feitas: $scope.substituicoesFeitas || 0,
-            restantes: Math.max(0, 5 - ($scope.substituicoesFeitas || 0)),
-            impedidos: impedidos
-        };
+        return obterModeloVisualCache('resumoPausaTatica', chave, function() {
+            var impedidos = elenco.filter(function(jogador) {
+                return jogador && (jogador.expulso || jogador.lesionado || jogador.suspenso || jogador.substituidoNaPartida);
+            });
+            return {
+                feitas: $scope.substituicoesFeitas || 0,
+                restantes: Math.max(0, 5 - ($scope.substituicoesFeitas || 0)),
+                impedidos: impedidos
+            };
+        });
     };
     $scope.obterSugestaoSubstituicao = function() {
         if (!$scope.partidaPausada || ($scope.substituicoesFeitas || 0) >= 5) return null;
@@ -6316,8 +6389,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.obterFormaClube = function(clube) {
         var forma = clube && Array.isArray(clube.formaRecente) ? clube.formaRecente.slice(0, 5) : [];
-        var pontos = forma.reduce(function(total, resultado) { return total + (resultado === 'V' ? 3 : (resultado === 'E' ? 1 : 0)); }, 0);
-        return { resultados: forma, pontos: pontos, label: forma.length ? forma.join(' ') : '—' };
+        var chaveClube = clube && (clube.id || clube.nome) || 'sem-clube';
+        var chave = String(chaveClube) + '|' + forma.join(',');
+        return obterModeloVisualCache('formaClube_' + chaveClube, chave, function() {
+            var pontos = forma.reduce(function(total, resultado) { return total + (resultado === 'V' ? 3 : (resultado === 'E' ? 1 : 0)); }, 0);
+            return { resultados: forma, pontos: pontos, label: forma.length ? forma.join(' ') : '—' };
+        });
     };
 
     function registrarFormaClube(clube, golsPro, golsContra) {
@@ -6794,19 +6871,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return { resumo: resumo, recordes: recordes, conquistas: conquistas, aproveitamento: resumo.partidas ? Math.round(((resumo.vitorias * 3 + resumo.empates) / (resumo.partidas * 3)) * 100) : 0 };
     };
     $scope.obterResumoCarreiraPorClube = function() {
-        var grupos = {};
-        (Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : []).filter(function(item) { return item.tipo === 'temporada'; }).forEach(function(item) {
-            var chave = item.clubeId || item.clubeNome || 'clube_desconhecido';
-            if (!grupos[chave]) grupos[chave] = { clubeId: item.clubeId, clubeNome: item.clubeNome || 'Clube não identificado', temporadas: 0, partidas: 0, vitorias: 0, empates: 0, derrotas: 0, conquistas: 0 };
-            var grupo = grupos[chave];
-            grupo.temporadas++;
-            grupo.vitorias += item.vitorias || 0;
-            grupo.empates += item.empates || 0;
-            grupo.derrotas += item.derrotas || 0;
-            grupo.partidas += (item.vitorias || 0) + (item.empates || 0) + (item.derrotas || 0);
-            grupo.conquistas += Array.isArray(item.conquistas) ? item.conquistas.length : 0;
+        var historico = Array.isArray($scope.historicoTreinador) ? $scope.historicoTreinador : [];
+        var chave = chaveColecaoVisual(historico, function(item) {
+            return [item.tipo, item.clubeId, item.clubeNome, item.temporada, item.vitorias, item.empates, item.derrotas, JSON.stringify(item.conquistas || [])].join(':');
         });
-        return Object.keys(grupos).map(function(chave) { return grupos[chave]; }).sort(function(a, b) { return b.temporadas - a.temporadas || b.vitorias - a.vitorias; });
+        return obterModeloVisualCache('resumoCarreiraPorClube', chave, function() {
+            var grupos = {};
+            historico.filter(function(item) { return item.tipo === 'temporada'; }).forEach(function(item) {
+                var chaveClube = item.clubeId || item.clubeNome || 'clube_desconhecido';
+                if (!grupos[chaveClube]) grupos[chaveClube] = { clubeId: item.clubeId, clubeNome: item.clubeNome || 'Clube não identificado', temporadas: 0, partidas: 0, vitorias: 0, empates: 0, derrotas: 0, conquistas: 0 };
+                var grupo = grupos[chaveClube];
+                grupo.temporadas++;
+                grupo.vitorias += item.vitorias || 0;
+                grupo.empates += item.empates || 0;
+                grupo.derrotas += item.derrotas || 0;
+                grupo.partidas += (item.vitorias || 0) + (item.empates || 0) + (item.derrotas || 0);
+                grupo.conquistas += Array.isArray(item.conquistas) ? item.conquistas.length : 0;
+            });
+            return Object.keys(grupos).map(function(chaveClube) { return grupos[chaveClube]; }).sort(function(a, b) { return b.temporadas - a.temporadas || b.vitorias - a.vitorias; });
+        });
     };
     $scope.obterPlanoProximaTemporada = function(resumo, posicao, divisao) {
         var projecao = $scope.obterProjecaoFinanceiraTemporada ? $scope.obterProjecaoFinanceiraTemporada() : null;
