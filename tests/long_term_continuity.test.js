@@ -26,9 +26,27 @@ scope.dados.nomeTreinador = 'Stress de Continuidade';
 const clubeTeste = process.env.TEST_CLUB ? scope.clubes.find((clube) => clube.nome === process.env.TEST_CLUB) : scope.clubes[0];
 assert.ok(clubeTeste, 'requested simulation club should exist');
 const divisaoInicial = clubeTeste.divisao;
+const temporadasParaSimular = Math.max(1, Number(process.env.TEST_SEASONS) || 3);
+const reputacaoInicial = Number(clubeTeste.reputacao) || 50;
 scope.iniciarNovoJogo(clubeTeste);
 scope.assinarPatrocinio(scope.patrocinadoresDisponiveis[1]);
 scope.atualizarTaticas = function() {};
+
+function simularGestaoCpuDoClubeAuditado() {
+  if (process.env.TEST_CPU_MANAGED !== '1' || typeof scope.simularMercadoCPU !== 'function') return;
+  const clubeHumano = scope.clubeAtual;
+  const elencoHumano = scope.elencoAtual;
+  // O motor de mercado exclui o clube atual por padrão. Durante a auditoria,
+  // um clube sentinela permite medir o mesmo elenco sob decisões automáticas
+  // sem alterar o comportamento normal do jogo para o jogador humano.
+  scope.clubeAtual = { id: '__auditoria_cpu__', nome: 'Auditoria CPU', divisao: 'A', reputacao: 50, orcamento: 0 };
+  try {
+    scope.simularMercadoCPU();
+  } finally {
+    scope.clubeAtual = clubeHumano;
+    scope.elencoAtual = elencoHumano;
+  }
+}
 
 const partidaCompleta = scope.obterMeuJogoHoje();
 let telemetriaCompleta = null;
@@ -50,7 +68,9 @@ let menorOrcamento = Infinity;
 let cartoes = 0;
 let lesoes = 0;
 const competicoes = {};
-for (let temporada = 0; temporada < 3; temporada += 1) {
+const trajetoriaDivisoes = [];
+const trajetoriaReputacao = [];
+for (let temporada = 0; temporada < temporadasParaSimular; temporada += 1) {
   scope.elencoAtual.slice(0, 11).forEach((jogador) => { jogador.emCampo = true; jogador.anosContrato = 3; });
   for (let dia = 0; dia < scope.calendarioGeral.length && scope.telaAtual !== 'cerimonia'; dia += 1) {
     const jogo = scope.obterMeuJogoHoje();
@@ -65,6 +85,7 @@ for (let temporada = 0; temporada < 3; temporada += 1) {
       const golsMandanteAntesDoEncerramento = Number(jogo.golsMandante) || 0;
       const golsVisitanteAntesDoEncerramento = Number(jogo.golsVisitante) || 0;
       scope.concluirPartida(jogo, 'rapido');
+      simularGestaoCpuDoClubeAuditado();
       const souMandante = mandanteIdAntesDoEncerramento === scope.clubeAtual.id;
       const meuResultado = souMandante ? golsMandanteAntesDoEncerramento - golsVisitanteAntesDoEncerramento : golsVisitanteAntesDoEncerramento - golsMandanteAntesDoEncerramento;
       resumoCompeticao.golsMarcados += souMandante ? golsMandanteAntesDoEncerramento : golsVisitanteAntesDoEncerramento;
@@ -87,13 +108,17 @@ for (let temporada = 0; temporada < 3; temporada += 1) {
   assert.strictEqual(scope.telaAtual, 'cerimonia', 'season should reach ceremony');
   assert.ok(Number.isFinite(scope.clubeAtual.orcamento), 'budget should remain finite after season');
   assert.ok(scope.elencoAtual.length > 0, 'squad should remain available after season');
+  trajetoriaReputacao.push({ temporada: scope.dados.anoAtual, antes: (Number(scope.clubeAtual.reputacao) || 50) - (Number(scope.clubeAtual.ultimaVariacaoReputacao) || 0), depois: Number(scope.clubeAtual.reputacao) || 0, delta: Number(scope.clubeAtual.ultimaVariacaoReputacao) || 0 });
+  const divisaoAntesDaVirada = scope.clubeAtual.divisao;
+  const posicaoAntesDaVirada = scope.ordenarTabela(divisaoAntesDaVirada).findIndex((linha) => linha.clube.id === scope.clubeAtual.id) + 1;
   scope.executarViradaDeAno(false);
+  trajetoriaDivisoes.push({ temporada: anosIniciais + temporada, divisao: divisaoAntesDaVirada, posicao: posicaoAntesDaVirada, proximaDivisao: scope.clubeAtual.divisao });
   assert.strictEqual(scope.telaAtual, 'dashboard', 'new season should return to dashboard');
   assert.ok(scope.calendarioGeral.length > 0, 'new season should have a calendar');
   assert.ok(scope.financasHistorico.length > 0, 'financial history should persist across seasons');
 }
 
-assert.strictEqual(scope.dados.anoAtual, anosIniciais + 3, 'three seasons should advance the year');
+assert.strictEqual(scope.dados.anoAtual, anosIniciais + temporadasParaSimular, 'simulated seasons should advance the year');
 assert.ok(partidas > 30, 'long-term stress should conclude matches');
 assert.ok(gols >= partidas, 'long-term stress should produce goals');
 if (partidaCompleta) {
@@ -106,13 +131,13 @@ assert.ok(partidasComPosse >= 0 && partidasComPosse <= partidas, 'possession met
 if (partidasComPosse > 0) assert.ok(posseAcumulada / partidasComPosse > 35 && posseAcumulada / partidasComPosse < 65, 'average home possession should remain plausible');
 assert.ok(Number.isFinite(maiorFolha) && Number.isFinite(menorOrcamento), 'financial metrics should remain finite');
 assert.ok(cartoes >= 0 && lesoes >= 0, 'disciplinary and injury metrics should remain valid');
-assert.ok(scope.historicoTreinador.filter((item) => item.tipo === 'temporada').length >= 3, 'career history should retain all seasons');
+assert.ok(scope.historicoTreinador.filter((item) => item.tipo === 'temporada').length >= temporadasParaSimular, 'career history should retain all seasons');
 scope.elencoAtual.forEach((jogador) => assert.ok(jogador.clubeId === scope.clubeAtual.id, 'squad player should remain linked to managed club'));
 console.log('long_term_continuity.test.js balance report:', JSON.stringify({
   clube: clubeTeste.nome,
   divisaoInicial,
   divisaoFinal: clubeTeste.divisao,
-  temporadas: 3,
+  temporadas: temporadasParaSimular,
   partidas: partidas,
   gols: gols,
   golsPorPartida: Number((gols / partidas).toFixed(2)),
@@ -122,6 +147,12 @@ console.log('long_term_continuity.test.js balance report:', JSON.stringify({
   cartoesAcumulados: cartoes,
   lesoesObservadas: lesoes,
   competicoes: competicoes,
+  trajetoriaDivisoes: trajetoriaDivisoes,
+  reputacaoInicial: reputacaoInicial,
+  reputacaoFinal: Number(scope.clubeAtual.reputacao) || 0,
+  reputacaoMinima: Math.min.apply(null, trajetoriaReputacao.map((item) => item.depois)),
+  reputacaoMaxima: Math.max.apply(null, trajetoriaReputacao.map((item) => item.depois)),
+  variacoesReputacao: trajetoriaReputacao,
   maiorFolha: maiorFolha,
   menorOrcamento: menorOrcamento
 }));

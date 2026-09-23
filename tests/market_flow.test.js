@@ -99,7 +99,40 @@ assert.strictEqual(typeof scope.obterDiagnosticoNecessidadesClube, 'function', '
 const perfilElite = scope.obterPerfilClubeCpu(scope.clubeAtual);
 assert.strictEqual(perfilElite.nivelCompetitivo, 'elite', 'high reputation Serie A club should be classified as elite');
 assert.ok(perfilElite.limiteInvestimentoVista > 0, 'club profile should expose a cash investment limit');
+assert.strictEqual(perfilElite.estrategiaCodigo, 'competir_por_titulos', 'elite club should prioritize title contention');
+assert.ok(perfilElite.pesoEstrelas > perfilElite.pesoPotencial, 'title contender should prioritize ready-made stars');
+assert.ok(perfilElite.objetivoTemporada.includes('títulos'), 'club profile should expose a seasonal objective');
+assert.ok(perfilElite.limiteFolhaReceita > perfilElite.pesoCusto / 3, 'club profile should expose a payroll sustainability limit');
+assert.ok(perfilElite.reservaOperacionalMeses >= 2, 'club profile should reserve operating cash');
 assert.deepStrictEqual(perfilElite, scope.obterPerfilClubeCpu(scope.clubeAtual), 'club profile should be deterministic for the same state');
+
+const perfilChapecoense = scope.obterPerfilClubeCpu({ id: 3, nome: 'Chapecoense', divisao: 'A', reputacao: 73, orcamento: 30000000 });
+assert.strictEqual(perfilChapecoense.estrategiaCodigo, 'sobreviver_e_recompor', 'smaller Serie A club should prioritize survival and immediate needs');
+assert.ok(perfilElite.alvoOverall > perfilChapecoense.alvoOverall, 'club reputation should raise the quality target');
+assert.ok(perfilElite.poderAtracao > perfilChapecoense.poderAtracao, 'club reputation should raise market attraction');
+
+const perfilFormador = scope.obterPerfilClubeCpu({ id: 4, nome: 'Base FC', divisao: 'D', reputacao: 55, orcamento: 1000000 });
+assert.strictEqual(perfilFormador.estrategiaCodigo, 'formar_e_revender', 'lower division club should prioritize development and resale');
+assert.ok(perfilFormador.pesoPotencial > perfilFormador.pesoEstrelas, 'development club should prioritize potential over stars');
+
+assert.strictEqual(typeof scope.obterPerfilNegociacaoJogador, 'function', 'player negotiation profile helper should exist');
+const perfilEstrelaJogador = scope.obterPerfilNegociacaoJogador({
+  id: 'estrela-teste',
+  nome: 'Estrela Teste',
+  clubeId: 2,
+  posicao: 'ATA',
+  idade: 27,
+  salario: 100000,
+  salarioDesejado: 100000,
+  potencial: 93,
+  reputacaoIndividual: 'estrela_nacional',
+  personalidade: 'ambicioso',
+  atributos: { finalizacao: 90, passe: 90, marcacao: 90, velocidade: 90, fisico: 90 }
+}, scope.clubeAtual);
+assert.strictEqual(perfilEstrelaJogador.papelMinimo, 'importante', 'national star should demand an important squad role');
+assert.ok(perfilEstrelaJogador.anosMinimos >= 2, 'national star should expect a multi-season contract');
+assert.ok(perfilEstrelaJogador.luvasMinimas > 0, 'recognized player should negotiate signing bonuses');
+assert.ok(perfilEstrelaJogador.salarioMinimo > 100000, 'recognized player should have an individual salary premium');
 
 scope.jogadores = [
   { id: 'perfil-goleiro', nome: 'Goleiro Teste', clubeId: 1, posicao: 'GOL', atributos: { reflexo: 74, posicionamento: 74, distribuicao: 74, fisico: 74 } }
@@ -202,5 +235,84 @@ scope.selecionarJogadorParaTatica(titularTeste);
 scope.selecionarJogadorParaTatica(reservaTeste);
 assert.strictEqual(scope.substituicoesFeitas, 1, 'an effective titular-to-reserve swap should consume one substitution');
 assert.strictEqual(titularTeste.substituidoNaPartida, true, 'the player leaving the field should be marked as substituted');
+
+// A reputação dos clubes deve reagir ao contexto esportivo e financeiro da
+// temporada, sem transformar a divisão inicial em um destino permanente.
+scope.dados.anoAtual = 2026;
+scope.clubes = [
+  { id: 'rep-campeao', nome: 'Campeão FC', divisao: 'A', reputacao: 50, orcamento: 180000000 },
+  { id: 'rep-promovido', nome: 'Promovido FC', divisao: 'B', reputacao: 50, orcamento: 45000000 },
+  { id: 'rep-rebaixado', nome: 'Rebaixado FC', divisao: 'A', reputacao: 70, orcamento: 1000000 }
+];
+scope.jogadores = [];
+const linhaVazia = (id) => ({ clube: { id, nome: `Clube ${id}`, divisao: 'A', reputacao: 50, orcamento: 10000000 }, pontos: 15, jogos: 10 });
+const tabelaAReputacao = [
+  { clube: scope.clubes[0], pontos: 30, jogos: 10 },
+  ...Array.from({ length: 18 }, (_, indice) => linhaVazia(`a-${indice}`)),
+  { clube: scope.clubes[2], pontos: 4, jogos: 10 }
+];
+const tabelaBReputacao = [
+  { clube: scope.clubes[1], pontos: 27, jogos: 10 },
+  ...Array.from({ length: 19 }, (_, indice) => linhaVazia(`b-${indice}`))
+];
+scope.ordenarTabela = (divisao) => divisao === 'A' ? tabelaAReputacao : (divisao === 'B' ? tabelaBReputacao : []);
+scope.copaBrasil = { chaves: [[{ vencedor: { id: 'rep-promovido' } }]] };
+scope.historicoReputacaoClubes = [];
+scope._reputacaoClubesTemporadaAplicada = null;
+const reputacoesAntes = scope.clubes.map((clube) => clube.reputacao);
+const alteracoesReputacao = scope.atualizarReputacaoClubesTemporada();
+assert.ok(scope.clubes[0].reputacao > reputacoesAntes[0], 'a title contender should gain reputation');
+assert.ok(scope.clubes[1].reputacao > reputacoesAntes[1], 'a promoted club and cup champion should gain reputation');
+assert.ok(scope.clubes[2].reputacao < reputacoesAntes[2], 'a relegated club with weak results should lose reputation');
+assert.ok(alteracoesReputacao.find((item) => item.clubeId === 'rep-promovido').componentes.movimento > 0, 'promotion should be recorded as a positive reputation component');
+assert.ok(alteracoesReputacao.find((item) => item.clubeId === 'rep-rebaixado').componentes.movimento < 0, 'relegation should be recorded as a negative reputation component');
+assert.strictEqual(scope.historicoReputacaoClubes[0].clubesAvaliados, 3, 'reputation history should record the number of evaluated clubs');
+assert.strictEqual(scope.atualizarReputacaoClubesTemporada(), false, 'reputation should be applied once per season');
+const resumoReputacao = scope.obterResumoReputacaoClube(scope.clubes[1]);
+assert.strictEqual(resumoReputacao.tendencia, 'ascendente', 'reputation summary should expose the current trend');
+assert.ok(resumoReputacao.fatores.some((fator) => fator.chave === 'movimento' && fator.valor > 0), 'reputation summary should explain promotion impact');
+assert.ok(resumoReputacao.impacto.poderAtracao > 0, 'reputation summary should expose market attraction impact');
+
+// A continuidade da CPU deve renovar atletas estruturais antes do vencimento,
+// recompor uma carência mínima e jamais alterar o elenco do clube humano.
+scope.dados = { anoAtual: 2026 };
+scope.diaAtual = 7;
+const clubeHumanoContinuidade = { id: 'humano-continuidade', nome: 'Meu Clube', divisao: 'A', reputacao: 80, orcamento: 50000000 };
+const clubeCpuContinuidade = { id: 'cpu-continuidade', nome: 'CPU FC', divisao: 'C', reputacao: 60, orcamento: 20000000 };
+scope.clubeAtual = clubeHumanoContinuidade;
+scope.clubes = [clubeHumanoContinuidade, clubeCpuContinuidade];
+scope.transferenciasHistorico = [];
+scope.propostasPendentes = [];
+scope.caixaEntrada = [];
+const atributosContinuidade = { reflexo: 78, posicionamento: 78, distribuicao: 78, finalizacao: 78, passe: 78, marcacao: 78, velocidade: 78, fisico: 78 };
+const goleiroCpuExpirando = {
+  id: 'cpu-goleiro-expirando', nome: 'Goleiro CPU', clubeId: clubeCpuContinuidade.id, posicao: 'GOL',
+  idade: 25, salario: 20000, salarioDesejado: 20000, anosContrato: 0, potencial: 80,
+  atributos: atributosContinuidade, papelElenco: 'titular'
+};
+const atacanteCpu = {
+  id: 'cpu-atacante', nome: 'Atacante CPU', clubeId: clubeCpuContinuidade.id, posicao: 'ATA',
+  idade: 24, salario: 18000, salarioDesejado: 18000, anosContrato: 2, potencial: 76,
+  atributos: atributosContinuidade
+};
+const goleiroLivre = {
+  id: 'cpu-goleiro-livre', nome: 'Goleiro Livre', clubeId: 'mercado', posicao: 'GOL',
+  idade: 22, salario: 15000, salarioDesejado: 15000, anosContrato: 0, potencial: 78,
+  atributos: atributosContinuidade
+};
+const jogadorHumanoExpirando = {
+  id: 'humano-contrato', nome: 'Humano Expirando', clubeId: clubeHumanoContinuidade.id, posicao: 'MEI',
+  idade: 27, salario: 25000, salarioDesejado: 25000, anosContrato: 0, potencial: 75,
+  atributos: atributosContinuidade
+};
+scope.jogadores = [goleiroCpuExpirando, atacanteCpu, goleiroLivre, jogadorHumanoExpirando];
+assert.strictEqual(typeof scope.garantirContinuidadeElencoCPU, 'function', 'CPU continuity helper should exist');
+const relatorioContinuidade = scope.garantirContinuidadeElencoCPU(clubeCpuContinuidade, { motivo: 'teste', forcar: true, maxContratacoes: 1 });
+assert.ok(relatorioContinuidade.renovados.some((item) => item.id === goleiroCpuExpirando.id), 'CPU should renew an expiring structural player');
+assert.strictEqual(goleiroCpuExpirando.anosContrato, 2, 'CPU renewal should create a new multi-season contract');
+assert.ok(relatorioContinuidade.contratados.some((item) => item.id === goleiroLivre.id), 'CPU should fill a critical position from the free market');
+assert.strictEqual(goleiroLivre.clubeId, clubeCpuContinuidade.id, 'free player should join the CPU club');
+assert.strictEqual(jogadorHumanoExpirando.anosContrato, 0, 'continuity automation must not alter the human club');
+assert.strictEqual(scope.garantirContinuidadeElencoCPU(clubeHumanoContinuidade, { motivo: 'teste', forcar: true }).ignorado, true, 'human club should be excluded from CPU continuity');
 
 console.log('market_flow.test.js passed');

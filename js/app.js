@@ -2371,21 +2371,100 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var poderAtracao = Math.round(limitarNumero(base.atracaoBase + (reputacao - 50) * 0.45 + (proporcaoCaixa - 1) * 8, 0, 100));
         var alvoOverall = Math.round(limitarNumero(base.alvoOverall + (reputacao - 65) * 0.18 + (poderAtracao - 60) * 0.05, 55, 88));
         var toleranciaRisco = Math.round(limitarNumero(base.riscoBase + (saudeFinanceira - 50) * 0.22 + (variacao % 11) - 5, 15, 85));
-        var estrategia;
-        var focoIdade;
-        if (reputacao >= 90 && saudeFinanceira >= 70) {
-            estrategia = 'estrelas e titulares';
-            focoIdade = 'jogadores prontos';
-        } else if (variacao % 3 === 0) {
-            estrategia = 'desenvolvimento e revenda';
-            focoIdade = 'jovens';
+        var estrategiaPerfil;
+        if (saudeFinanceira <= 38 || orcamento < base.orcamentoReferencia * 0.25) {
+            estrategiaPerfil = {
+                codigo: 'preservar_caixa',
+                nome: 'preservar caixa e reduzir risco',
+                focoIdade: 'livres, empréstimos e jovens de baixo custo',
+                objetivo: 'equilibrar o caixa sem perder competitividade',
+                pesoEstrelas: 0.25,
+                pesoPotencial: 0.85,
+                pesoCusto: 1.5,
+                prioridadeVenda: 0.14,
+                prioridadeEmprestimos: 0.9,
+                limiteFolhaReceita: 0.42,
+                reservaOperacionalMeses: 5,
+                notaMinimaLivre: Math.max(58, alvoOverall - 9)
+            };
+        } else if (divisao === 'A' && reputacao >= 88 && saudeFinanceira >= 62) {
+            estrategiaPerfil = {
+                codigo: 'competir_por_titulos',
+                nome: 'estrelas e titulares',
+                focoIdade: 'jogadores prontos',
+                objetivo: 'brigar por títulos e competições continentais',
+                pesoEstrelas: 1.45,
+                pesoPotencial: 0.45,
+                pesoCusto: 0.55,
+                prioridadeVenda: 0.02,
+                prioridadeEmprestimos: 0.25,
+                limiteFolhaReceita: 0.62,
+                reservaOperacionalMeses: 2,
+                notaMinimaLivre: Math.max(68, alvoOverall - 5)
+            };
+        } else if (divisao === 'D' || reputacao <= 66) {
+            estrategiaPerfil = {
+                codigo: 'formar_e_revender',
+                nome: 'desenvolvimento e revenda',
+                focoIdade: 'jovens com potencial',
+                objetivo: 'formar atletas e criar valor para o clube',
+                pesoEstrelas: 0.4,
+                pesoPotencial: 1.45,
+                pesoCusto: 1.15,
+                prioridadeVenda: 0.05,
+                prioridadeEmprestimos: 1,
+                limiteFolhaReceita: 0.48,
+                reservaOperacionalMeses: 4,
+                notaMinimaLivre: Math.max(58, alvoOverall - 10)
+            };
+        } else if ((divisao === 'A' || divisao === 'B') && (reputacao < 80 || saudeFinanceira < 55)) {
+            estrategiaPerfil = {
+                codigo: 'sobreviver_e_recompor',
+                nome: 'oportunidades de mercado',
+                focoIdade: 'jogadores em pico de rendimento',
+                objetivo: 'garantir permanência e corrigir carências imediatas',
+                pesoEstrelas: 0.85,
+                pesoPotencial: 0.65,
+                pesoCusto: 1.05,
+                prioridadeVenda: 0.08,
+                prioridadeEmprestimos: 0.75,
+                limiteFolhaReceita: 0.54,
+                reservaOperacionalMeses: 3,
+                notaMinimaLivre: Math.max(62, alvoOverall - 8)
+            };
         } else if (variacao % 3 === 1) {
-            estrategia = 'oportunidades de mercado';
-            focoIdade = 'pico de rendimento';
+            estrategiaPerfil = {
+                codigo: 'equilibrar_elenco',
+                nome: 'equilibrio entre experiência e juventude',
+                focoIdade: 'elenco misto',
+                objetivo: 'manter um elenco competitivo e sustentável',
+                pesoEstrelas: 0.9,
+                pesoPotencial: 0.9,
+                pesoCusto: 0.85,
+                prioridadeVenda: 0.04,
+                prioridadeEmprestimos: 0.45,
+                limiteFolhaReceita: 0.52,
+                reservaOperacionalMeses: 3,
+                notaMinimaLivre: Math.max(62, alvoOverall - 7)
+            };
         } else {
-            estrategia = 'equilibrio entre experiência e juventude';
-            focoIdade = 'elenco misto';
+            estrategiaPerfil = {
+                codigo: 'equilibrar_elenco',
+                nome: 'equilibrio entre experiência e juventude',
+                focoIdade: 'elenco misto',
+                objetivo: 'manter um elenco competitivo e sustentável',
+                pesoEstrelas: 0.9,
+                pesoPotencial: 0.9,
+                pesoCusto: 0.85,
+                prioridadeVenda: 0.04,
+                prioridadeEmprestimos: 0.45,
+                limiteFolhaReceita: 0.52,
+                reservaOperacionalMeses: 3,
+                notaMinimaLivre: Math.max(62, alvoOverall - 7)
+            };
         }
+        var estrategia = estrategiaPerfil.nome;
+        var focoIdade = estrategiaPerfil.focoIdade;
         var percentualInvestimento = 0.12 + toleranciaRisco / 1000;
         var limiteInvestimento = Math.max(250000, Math.round(orcamento * percentualInvestimento / 10000) * 10000);
         return {
@@ -2402,7 +2481,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             profundidadeMinima: base.profundidadeMinima,
             toleranciaRisco: toleranciaRisco,
             estrategiaMercado: estrategia,
+            estrategiaCodigo: estrategiaPerfil.codigo,
+            objetivoTemporada: estrategiaPerfil.objetivo,
             focoIdade: focoIdade,
+            pesoEstrelas: estrategiaPerfil.pesoEstrelas,
+            pesoPotencial: estrategiaPerfil.pesoPotencial,
+            pesoCusto: estrategiaPerfil.pesoCusto,
+            prioridadeVenda: estrategiaPerfil.prioridadeVenda,
+            prioridadeEmprestimos: estrategiaPerfil.prioridadeEmprestimos,
+            limiteFolhaReceita: estrategiaPerfil.limiteFolhaReceita,
+            reservaOperacionalMeses: estrategiaPerfil.reservaOperacionalMeses,
+            notaMinimaLivre: estrategiaPerfil.notaMinimaLivre,
             limiteInvestimentoVista: limiteInvestimento,
             aceitaParcelamento: toleranciaRisco >= 35,
             prioridadeBase: reputacao < 65 ? 'integrar jovens e reduzir folha' : (reputacao >= 90 ? 'manter nível competitivo' : 'corrigir carências sem comprometer o caixa')
@@ -6959,8 +7048,20 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             if (resultado === 'Vitoria') resumo.vitorias++;
             else if (resultado === 'Empate') resumo.empates++;
             else if (resultado === 'Derrota') resumo.derrotas++;
-            resumo.golsMarcados += Number(partida.placar && partida.placar.meuTime) || 0;
-            resumo.golsSofridos += Number(partida.placar && partida.placar.adversario) || 0;
+            var placar = partida.placar || {};
+            var mandanteDoClube = partida.mandante && String(partida.mandante.id) === String(clubeId);
+            var visitanteDoClube = partida.visitante && String(partida.visitante.id) === String(clubeId);
+            if (mandanteDoClube) {
+                resumo.golsMarcados += Number(placar.mandante !== undefined ? placar.mandante : placar.meuTime) || 0;
+                resumo.golsSofridos += Number(placar.visitante !== undefined ? placar.visitante : placar.adversario) || 0;
+            } else if (visitanteDoClube) {
+                resumo.golsMarcados += Number(placar.visitante !== undefined ? placar.visitante : placar.meuTime) || 0;
+                resumo.golsSofridos += Number(placar.mandante !== undefined ? placar.mandante : placar.adversario) || 0;
+            } else {
+                // Compatibilidade com registros antigos que já guardavam o placar relativo ao clube.
+                resumo.golsMarcados += Number(placar.meuTime) || 0;
+                resumo.golsSofridos += Number(placar.adversario) || 0;
+            }
             resumo.xgMedio += Number(partida.xg && (partida.xg.meuTime || partida.xg.favor)) || 0;
         });
         resumo.xgMedio = resumo.jogos ? Math.round((resumo.xgMedio / resumo.jogos) * 100) / 100 : 0;
@@ -7092,6 +7193,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.atualizarReputacaoClubesTemporada = function() {
         if ($scope._reputacaoClubesTemporadaAplicada === $scope.dados.anoAtual) return false;
         var alteracoes = [];
+        var aumentos = 0;
+        var quedas = 0;
+        var ultimaFaseCopa = $scope.copaBrasil && Array.isArray($scope.copaBrasil.chaves) ? $scope.copaBrasil.chaves[$scope.copaBrasil.chaves.length - 1] : null;
+        var campeaoCopa = ultimaFaseCopa && ultimaFaseCopa[0] && ultimaFaseCopa[0].vencedor ? ultimaFaseCopa[0].vencedor : null;
+        var cotasPorDivisao = { A: 8000000, B: 2500000, C: 1200000, D: 600000 };
         ['A', 'B', 'C', 'D'].forEach(function(divisao) {
             var tabela = $scope.ordenarTabela(divisao) || [];
             var total = tabela.length;
@@ -7099,27 +7205,93 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var clube = linha && linha.clube;
                 if (!clube) return;
                 var posicao = indice + 1;
-                var delta = 0;
-                if (posicao === 1) delta += 4;
-                else if (posicao <= 4) delta += 2;
-                else if (posicao >= Math.max(1, total - 3)) delta -= 2;
-                if (posicao === total) delta -= 1;
+                var componentes = { classificacao: 0, movimento: 0, competicao: 0, financeiro: 0 };
+                if (posicao === 1) componentes.classificacao += 4;
+                else if (posicao <= 4) componentes.classificacao += 2;
+                else if (posicao > Math.max(0, total - 4)) componentes.classificacao -= 2;
+                if (posicao === total) componentes.classificacao -= 1;
                 var aproveitamento = Number(linha.pontos || 0) / Math.max(1, (Number(linha.jogos || linha.jogosRealizados || 0) * 3));
-                if (aproveitamento >= 0.7) delta += 1;
-                if (aproveitamento > 0 && aproveitamento < 0.35) delta -= 1;
+                if (aproveitamento >= 0.7) componentes.classificacao += 1;
+                if (aproveitamento > 0 && aproveitamento < 0.35) componentes.classificacao -= 1;
+                var acesso = divisao !== 'A' && total > 0 && posicao <= Math.min(4, total);
+                var rebaixamento = divisao !== 'D' && total > 0 && posicao > Math.max(0, total - 4);
+                if (acesso) componentes.movimento += 4;
+                if (rebaixamento) componentes.movimento -= 4;
+                if (campeaoCopa && campeaoCopa.id === clube.id) componentes.competicao += 3;
+
+                var perfilFinanceiro = parametrosPerfilMercadoClubeCpu[divisao] || parametrosPerfilMercadoClubeCpu.D;
+                var caixa = Math.max(0, Number(clube.orcamento) || 0);
+                var proporcaoCaixa = perfilFinanceiro.orcamentoReferencia > 0 ? caixa / perfilFinanceiro.orcamentoReferencia : 0;
+                if (proporcaoCaixa < 0.25) componentes.financeiro -= 1;
+                else if (proporcaoCaixa >= 1.5) componentes.financeiro += 1;
+                var elencoClube = ($scope.jogadores || []).filter(function(jogador) { return jogador && String(jogador.clubeId) === String(clube.id); });
+                var folhaClube = elencoClube.reduce(function(totalFolha, jogador) { return totalFolha + (Number(jogador.salario) || Number(jogador.salarioDesejado) || 0); }, 0);
+                var receitaRecorrente = (cotasPorDivisao[divisao] || 600000) + (Number(clube.reputacao) || 50) * 25000;
+                if (folhaClube > 0 && folhaClube > receitaRecorrente * 0.7) componentes.financeiro -= 1;
+                else if (folhaClube > 0 && folhaClube < receitaRecorrente * 0.4 && proporcaoCaixa >= 0.75) componentes.financeiro += 1;
+
+                var delta = componentes.classificacao + componentes.movimento + componentes.competicao + componentes.financeiro;
                 var anterior = Number(clube.reputacao) || 50;
-                var nova = Math.max(25, Math.min(95, anterior + delta));
+                var nova = Math.max(20, Math.min(98, anterior + delta));
+                var variacao = nova - anterior;
+                clube.ultimaVariacaoReputacao = variacao;
+                clube.ultimaReputacaoTemporada = $scope.dados.anoAtual;
+                clube.tendenciaReputacao = variacao > 0 ? 'ascendente' : (variacao < 0 ? 'descendente' : 'estável');
+                clube.historicoReputacao = Array.isArray(clube.historicoReputacao) ? clube.historicoReputacao : [];
+                clube.historicoReputacao.unshift({ temporada: $scope.dados.anoAtual, antes: anterior, depois: nova, delta: variacao, componentes: componentes, posicao: posicao, divisao: divisao, acesso: acesso, rebaixamento: rebaixamento });
+                clube.historicoReputacao = clube.historicoReputacao.slice(0, 10);
                 if (nova !== anterior) {
                     clube.reputacao = nova;
-                    alteracoes.push({ clubeId: clube.id, clubeNome: clube.nome, antes: anterior, depois: nova, delta: nova - anterior });
+                    if (variacao > 0) aumentos++;
+                    if (variacao < 0) quedas++;
+                    alteracoes.push({ clubeId: clube.id, clubeNome: clube.nome, antes: anterior, depois: nova, delta: variacao, componentes: componentes, posicao: posicao, divisao: divisao, acesso: acesso, rebaixamento: rebaixamento, tendencia: clube.tendenciaReputacao });
                 }
             });
         });
         $scope.historicoReputacaoClubes = Array.isArray($scope.historicoReputacaoClubes) ? $scope.historicoReputacaoClubes : [];
-        $scope.historicoReputacaoClubes.unshift({ temporada: $scope.dados.anoAtual, alteracoes: alteracoes });
+        $scope.historicoReputacaoClubes.unshift({ temporada: $scope.dados.anoAtual, alteracoes: alteracoes, aumentos: aumentos, quedas: quedas, clubesAvaliados: ($scope.clubes || []).length });
         $scope.historicoReputacaoClubes = $scope.historicoReputacaoClubes.slice(0, 5);
         $scope._reputacaoClubesTemporadaAplicada = $scope.dados.anoAtual;
         return alteracoes;
+    };
+
+    $scope.obterResumoReputacaoClube = function(clubeOuId) {
+        var clube = clubeOuId;
+        if (!clube || typeof clube !== 'object') {
+            clube = ($scope.clubes || []).find(function(item) { return item && String(item.id) === String(clubeOuId); });
+        }
+        if (!clube) return null;
+        var historico = Array.isArray(clube.historicoReputacao) ? clube.historicoReputacao : [];
+        var ultima = historico.length > 0 ? historico[0] : null;
+        var componentes = ultima && ultima.componentes ? ultima.componentes : { classificacao: 0, movimento: 0, competicao: 0, financeiro: 0 };
+        var delta = ultima ? Number(ultima.delta) || 0 : (Number(clube.ultimaVariacaoReputacao) || 0);
+        var perfil = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(clube) : null;
+        var fatores = [
+            { chave: 'classificacao', label: 'Campanha e forma', valor: Number(componentes.classificacao) || 0 },
+            { chave: 'movimento', label: 'Acesso ou rebaixamento', valor: Number(componentes.movimento) || 0 },
+            { chave: 'competicao', label: 'Títulos e competições', valor: Number(componentes.competicao) || 0 },
+            { chave: 'financeiro', label: 'Saúde financeira', valor: Number(componentes.financeiro) || 0 }
+        ];
+        return {
+            clubeId: clube.id,
+            clubeNome: clube.nome,
+            valor: Number(clube.reputacao) || 50,
+            delta: delta,
+            tendencia: delta > 0 ? 'ascendente' : (delta < 0 ? 'descendente' : 'estável'),
+            tendenciaLabel: delta > 0 ? 'Em alta' : (delta < 0 ? 'Em queda' : 'Estável'),
+            temporada: ultima ? ultima.temporada : null,
+            posicao: ultima ? ultima.posicao : null,
+            divisao: ultima ? ultima.divisao : clube.divisao,
+            fatores: fatores,
+            temHistorico: !!ultima,
+            impacto: perfil ? {
+                nivelCompetitivo: perfil.nivelCompetitivo,
+                poderAtracao: perfil.poderAtracao,
+                alvoOverall: perfil.alvoOverall,
+                objetivo: perfil.objetivoTemporada,
+                saudeFinanceira: perfil.saudeFinanceira
+            } : null
+        };
     };
 
     $scope.prepararCerimonia = function() {
@@ -7430,6 +7602,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     j.historicoTemporadas = j.historicoTemporadas.slice(0, 10);
                 }
                 j.idade++; 
+                // Os contratos da CPU pertencem ao cadastro global e precisam
+                // avançar junto com a temporada. O elenco do jogador humano é
+                // uma cópia operacional tratada no bloco acima, portanto não
+                // decrementamos novamente o clube atualmente controlado.
+                if (String(j.clubeId) !== String($scope.clubeAtual && $scope.clubeAtual.id) && j.clubeId !== 'mercado' && Number(j.anosContrato) > 0) {
+                    j.anosContrato--;
+                }
                 j.golsTemporada = 0;
                 j.partidasJogadas = 0; // Reset
                 j.xpTemporada = 0;
@@ -7437,10 +7616,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 j.minutosTemporada = 0;
                 j.evolucaoTemporada = 0;
                 var temPreContrato = ($scope.propostasPendentes || []).some(function(proposta) { return proposta.tipo === 'pre_contrato' && proposta.jogadorId === j.id && proposta.status === 'em_jogador'; });
-                if ((!j.anosContrato || j.anosContrato <= 0) && !temPreContrato) j.anosContrato = Math.floor(Math.random() * 3) + 1; 
+                if ((!j.anosContrato || j.anosContrato <= 0) && !temPreContrato) {
+                    // Atletas livres continuam livres. A continuidade da CPU
+                    // decide conscientemente entre renovar e repor a posição;
+                    // um contrato aleatório aqui mascarava a falta de gestão.
+                    j.anosContrato = 0;
+                    j.emNegociacao = false;
+                }
             });
         }
         $scope.processarPreContratos();
+        if ($scope.garantirContinuidadeElencoCPU) {
+            $scope.ultimaContinuidadeElencoCPU = ($scope.clubes || []).filter(function(clube) {
+                return !$scope.clubeAtual || String(clube.id) !== String($scope.clubeAtual.id);
+            }).map(function(clube) {
+                return $scope.garantirContinuidadeElencoCPU(clube, { motivo: 'virada', forcar: true, maxContratacoes: 3 });
+            });
+        }
         if (trocouDeClube && $scope.clubeAtual) {
             // A virada ajusta contratos no cadastro global; reconstrói o elenco ativo
             // para não manter a lista do clube anterior ou uma lista vazia.
@@ -9845,6 +10037,73 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return jogador && jogador.valorMercadoDinamico !== undefined ? jogador.valorMercadoDinamico : ((jogador.salario || 0) * 100);
     };
 
+    function obterPerfilNegociacaoJogadorInterno(jogador, clube) {
+        if (!jogador) return null;
+        clube = clube || $scope.clubeAtual || {};
+        normalizarEstadoContratoJogadorInterno(jogador);
+        var overall = $scope.calcularOverall(jogador);
+        var potencial = Math.max(overall, Number(jogador.potencial) || overall);
+        var idade = Number(jogador.idade) || 25;
+        var salarioBase = Math.max(10000, Number(jogador.salarioDesejado || jogador.salario) || 10000);
+        var reputacaoIndividual = jogador.reputacaoIndividual || (idade <= 23 ? 'promissor' : 'profissional_consolidado');
+        var parametrosReputacao = {
+            estrela_mundial: { label: 'Estrela mundial', fatorSalario: 0.18, papel: 'crucial', anos: 2, fatorLuvas: 1.2 },
+            estrela_nacional: { label: 'Estrela nacional', fatorSalario: 0.12, papel: 'importante', anos: 2, fatorLuvas: 0.8 },
+            alto_nivel: { label: 'Alto nível', fatorSalario: 0.07, papel: 'titular', anos: 1, fatorLuvas: 0.35 },
+            profissional_consolidado: { label: 'Profissional consolidado', fatorSalario: 0.02, papel: 'rotacao', anos: 1, fatorLuvas: 0 },
+            promissor: { label: 'Promessa', fatorSalario: 0.04, papel: 'rotacao', anos: 1, fatorLuvas: 0.1 },
+            ficticio: { label: 'Jogador em avaliação', fatorSalario: 0, papel: 'rotacao', anos: 1, fatorLuvas: 0 }
+        };
+        var reputacao = parametrosReputacao[reputacaoIndividual] || parametrosReputacao.profissional_consolidado;
+        var fatorDivisao = { A: 0.96, B: 1, C: 1.04, D: 1.08 }[clube.divisao] || 1;
+        var reputacaoClube = Number(clube.reputacao) || 70;
+        var fator = fatorDivisao + reputacao.fatorSalario;
+        if (overall >= 90) fator += 0.1;
+        else if (overall >= 84) fator += 0.06;
+        else if (overall >= 78) fator += 0.02;
+        if (idade <= 23 && potencial - overall >= 5) fator += 0.04;
+        if ((Number(jogador.jogosTemporada) || 0) >= 20 || (Number(jogador.minutosTemporada) || 0) >= 1800 || (Number(jogador.evolucaoTemporada) || 0) >= 3) fator += 0.03;
+        if (idade >= 34) fator -= 0.05;
+        if (reputacaoClube >= 88) fator -= 0.04;
+        else if (reputacaoClube < 65) fator += 0.04;
+        if (jogador.personalidade === 'ambicioso') fator += 0.03;
+        else if (jogador.personalidade === 'lider') fator += 0.02;
+        else if (jogador.personalidade === 'paciente') fator -= 0.02;
+        fator = limitarNumero(fator, 0.78, 1.6);
+
+        var papelMinimo = reputacao.papel;
+        if (overall >= 88 && papelMinimo === 'rotacao') papelMinimo = 'titular';
+        if (overall >= 82 && papelMinimo === 'rotacao') papelMinimo = 'titular';
+        if (idade <= 23 && potencial >= 82 && overall >= 75 && papelMinimo === 'rotacao') papelMinimo = 'titular';
+        if (jogador.personalidade === 'lider' && overall >= 80 && papelMinimo === 'rotacao') papelMinimo = 'titular';
+        if (idade >= 35 && overall < 84 && papelMinimo === 'importante') papelMinimo = 'titular';
+        var anosMinimos = Math.max(reputacao.anos, idade <= 23 && potencial >= 82 ? 2 : 1);
+        var salarioMinimo = Math.ceil((salarioBase * fator) / 100) * 100;
+        var luvasMinimas = reputacao.fatorLuvas > 0 ? Math.ceil((salarioMinimo * reputacao.fatorLuvas) / 100) * 100 : 0;
+        if (papelMinimo === 'crucial') luvasMinimas = Math.max(luvasMinimas, Math.ceil(salarioMinimo * 1.4 / 100) * 100);
+        return {
+            jogadorId: jogador.id,
+            reputacaoIndividual: reputacaoIndividual,
+            reputacaoLabel: reputacao.label,
+            overall: overall,
+            potencial: potencial,
+            idade: idade,
+            personalidade: jogador.personalidade || 'profissional',
+            salarioBase: salarioBase,
+            fatorExigencia: fator,
+            salarioMinimo: salarioMinimo,
+            anosMinimos: anosMinimos,
+            papelMinimo: papelMinimo,
+            luvasMinimas: luvasMinimas,
+            bonusJogoMinimo: reputacaoIndividual === 'estrela_mundial' ? Math.ceil(salarioMinimo * 0.03 / 100) * 100 : 0,
+            motivacao: reputacaoIndividual === 'estrela_mundial' || reputacaoIndividual === 'estrela_nacional' ? 'protagonismo e projeto competitivo' : (idade <= 23 && potencial - overall >= 5 ? 'minutos e desenvolvimento' : 'remuneração e estabilidade')
+        };
+    }
+
+    $scope.obterPerfilNegociacaoJogador = function(jogador, clube) {
+        return obterPerfilNegociacaoJogadorInterno(jogador, clube);
+    };
+
     $scope.iniciarNegociacao = function(jogador, ehRenovacao) {
         if (!$scope.isJanelaTransferenciaAberta() && !ehRenovacao) {
             alert("A Janela de Transferências está fechada! Só é possível negociar no início ou no meio do ano.");
@@ -9875,6 +10134,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             clausulaRescisao: propostaAberta && propostaAberta.clausulaRescisao ? propostaAberta.clausulaRescisao : Math.round($scope.calcularValorPasse(jogador) * 1.5),
             clubeAceita: propostaAberta && propostaAberta.status === 'clube_aceitou' ? propostaAberta.valorOferta : 0
         };
+        if (!propostaAberta) {
+            var perfilNegociacaoInicial = obterPerfilNegociacaoJogadorInterno(jogador, $scope.clubeAtual);
+            if (perfilNegociacaoInicial) {
+                $scope.ofertaValores.salario = Math.max(Number($scope.ofertaValores.salario) || 0, perfilNegociacaoInicial.salarioMinimo);
+                $scope.ofertaValores.anos = String(Math.max(Number($scope.ofertaValores.anos) || 1, perfilNegociacaoInicial.anosMinimos));
+                $scope.ofertaValores.papel = perfilNegociacaoInicial.papelMinimo;
+                $scope.ofertaValores.luvas = perfilNegociacaoInicial.luvasMinimas;
+                $scope.ofertaValores.bonusJogo = perfilNegociacaoInicial.bonusJogoMinimo;
+            }
+        }
 
         if (propostaAberta && propostaAberta.status === 'clube_contraproposta') {
             $scope.estadoNegociacao = 'contraproposta_clube';
@@ -10037,19 +10306,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     $scope.enviarPropostaJogador = function(salario, anos) {
         normalizarEstadoContratoJogadorInterno($scope.jogadorNegociacao);
-        var salarioBase = $scope.jogadorNegociacao.salarioDesejado || $scope.jogadorNegociacao.salario || 10000;
-        var reputacaoClube = parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 70;
-        var bonusDivisao = { A: 0.96, B: 1, C: 1.04, D: 1.08 };
-        var fatorExigencia = bonusDivisao[$scope.clubeAtual && $scope.clubeAtual.divisao] || 1;
-        var overallJogador = $scope.calcularOverall($scope.jogadorNegociacao);
-        var idadeJogador = Number($scope.jogadorNegociacao.idade) || 25;
-        if (overallJogador >= 88) fatorExigencia += 0.12;
-        else if (overallJogador >= 82) fatorExigencia += 0.06;
-        if (idadeJogador <= 23 && overallJogador >= 75) fatorExigencia += 0.04;
-        if (idadeJogador >= 34) fatorExigencia -= 0.05;
-        if (reputacaoClube >= 85) fatorExigencia -= 0.04;
-        else if (reputacaoClube < 65) fatorExigencia += 0.04;
-        var margemAceitacao = salarioBase * fatorExigencia;
+        var perfilJogador = obterPerfilNegociacaoJogadorInterno($scope.jogadorNegociacao, $scope.clubeAtual);
+        var margemAceitacao = perfilJogador ? perfilJogador.salarioMinimo : (Number($scope.jogadorNegociacao.salarioDesejado || $scope.jogadorNegociacao.salario) || 10000);
         var origemId = $scope.tipoNegociacao === 'renovacao' ? $scope.clubeAtual.id : $scope.jogadorNegociacao.clubeId;
         var proposta = $scope.registrarOuAtualizarProposta(Object.assign({
             id: $scope.propostaNegociacaoAtualId,
@@ -10064,8 +10322,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             anosContrato: anos,
             exigenciasJogador: {
                 salarioMinimo: Math.round(margemAceitacao),
-                anosMinimos: 1,
-                fatorDivisao: fatorExigencia
+                anosMinimos: perfilJogador ? perfilJogador.anosMinimos : 1,
+                papelMinimo: perfilJogador ? perfilJogador.papelMinimo : 'rotacao',
+                luvasMinimas: perfilJogador ? perfilJogador.luvasMinimas : 0,
+                motivacao: perfilJogador ? perfilJogador.motivacao : 'remuneração e estabilidade'
             }
         }, obterTermosOfertaContrato()));
         $scope.propostaNegociacaoAtualId = proposta ? proposta.id : null;
@@ -10076,11 +10336,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             salarioMinimoComConcorrencia = Math.max(salarioMinimoComConcorrencia, propostaAtual.concorrencia.salarioOferta);
         }
         var anosOferecidos = parseInt(anos, 10) || 0;
-        var contratoAdequado = anosOferecidos >= 1;
-        var overallNegociacao = $scope.calcularOverall($scope.jogadorNegociacao);
-        var papelMinimo = overallNegociacao >= 88 ? 'importante' : (overallNegociacao >= 82 ? 'titular' : 'rotacao');
+        var contratoAdequado = anosOferecidos >= (perfilJogador ? perfilJogador.anosMinimos : 1);
+        var papelMinimo = perfilJogador ? perfilJogador.papelMinimo : 'rotacao';
         var ordemPapel = { reserva: 0, rotacao: 1, titular: 2, importante: 3, crucial: 4 };
         var papelAdequado = (ordemPapel[$scope.ofertaValores.papel || 'rotacao'] || 0) >= (ordemPapel[papelMinimo] || 0);
+        var luvasAdequadas = !perfilJogador || (Number($scope.ofertaValores && $scope.ofertaValores.luvas) || 0) >= perfilJogador.luvasMinimas;
         function obterTermosOfertaContrato() {
             return {
                 entrada: Number($scope.ofertaValores && $scope.ofertaValores.entrada) || 0,
@@ -10098,7 +10358,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 clausulaRescisao: Number($scope.ofertaValores && $scope.ofertaValores.clausulaRescisao) || 0
             };
         }
-        if (salario >= salarioMinimoComConcorrencia && contratoAdequado && papelAdequado) {
+        if (salario >= salarioMinimoComConcorrencia && contratoAdequado && papelAdequado && luvasAdequadas) {
             $scope.estadoNegociacao = 'sucesso';
             $scope.motivoRejeicao = $scope.tipoNegociacao === 'compra' ? "O jogador aceitou sua oferta de salário e assinou o contrato!" : "Renovação concluída com sucesso!";
             $scope.registrarOuAtualizarProposta(Object.assign({
@@ -10117,7 +10377,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             $scope.concluirTransferencia($scope.jogadorNegociacao, salario, anos, $scope.ofertaValores.clubeAceita);
         } else {
             $scope.estadoNegociacao = 'rejeitado';
-            $scope.motivoRejeicao = !contratoAdequado ? "O jogador exige pelo menos 1 ano de contrato." : (!papelAdequado ? "O jogador exige um papel mínimo de " + papelMinimo + " no elenco." : "O jogador e seu agente recusaram a oferta. Para este clube, eles esperavam algo na casa de " + $scope.formatarMoeda(salarioMinimoComConcorrencia) + ".");
+            $scope.motivoRejeicao = !contratoAdequado ? "O jogador exige pelo menos " + (perfilJogador ? perfilJogador.anosMinimos : 1) + " ano(s) de contrato." : (!papelAdequado ? "O jogador exige um papel mínimo de " + papelMinimo + " no elenco." : (!luvasAdequadas ? "O jogador exige luvas de pelo menos " + $scope.formatarMoeda(perfilJogador.luvasMinimas) + "." : "O jogador e seu agente recusaram a oferta. Para este clube, eles esperavam algo na casa de " + $scope.formatarMoeda(salarioMinimoComConcorrencia) + "."));
             $scope.registrarOuAtualizarProposta({
                 id: $scope.propostaNegociacaoAtualId,
                 tipo: $scope.tipoNegociacao,
@@ -10138,25 +10398,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.obterResumoExigenciasJogador = function() {
         var jogador = $scope.jogadorNegociacao;
         if (!jogador) return null;
-        var salarioBase = parseFloat(jogador.salarioDesejado || jogador.salario || 10000);
-        var reputacaoClube = parseFloat($scope.clubeAtual && $scope.clubeAtual.reputacao) || 70;
-        var bonusDivisao = { A: 0.96, B: 1, C: 1.04, D: 1.08 };
-        var fator = bonusDivisao[$scope.clubeAtual && $scope.clubeAtual.divisao] || 1;
-        var overallResumo = $scope.calcularOverall(jogador);
-        var idadeResumo = Number(jogador.idade) || 25;
-        if (overallResumo >= 88) fator += 0.12;
-        else if (overallResumo >= 82) fator += 0.06;
-        if (idadeResumo <= 23 && overallResumo >= 75) fator += 0.04;
-        if (idadeResumo >= 34) fator -= 0.05;
-        if (reputacaoClube >= 85) fator -= 0.04;
-        else if (reputacaoClube < 65) fator += 0.04;
+        var perfil = obterPerfilNegociacaoJogadorInterno(jogador, $scope.clubeAtual);
         var proposta = ($scope.propostasPendentes || []).find(function(item) { return item.id === $scope.propostaNegociacaoAtualId; });
         var concorrencia = proposta && proposta.concorrencia ? proposta.concorrencia : null;
-        var chave = [jogador.id, salarioBase, reputacaoClube, $scope.clubeAtual && $scope.clubeAtual.divisao, $scope.propostaNegociacaoAtualId, concorrencia && concorrencia.clubeNome, concorrencia && concorrencia.salarioOferta, concorrencia && concorrencia.criadaNoDia].join('|');
+        var chave = [jogador.id, perfil && perfil.salarioMinimo, perfil && perfil.papelMinimo, perfil && perfil.anosMinimos, $scope.clubeAtual && $scope.clubeAtual.divisao, $scope.propostaNegociacaoAtualId, concorrencia && concorrencia.clubeNome, concorrencia && concorrencia.salarioOferta, concorrencia && concorrencia.criadaNoDia].join('|');
         if (resumoExigenciasJogadorCache.chave === chave) return resumoExigenciasJogadorCache.valor;
         resumoExigenciasJogadorCache = {
             chave: chave,
-            valor: { salarioMinimo: salarioBase * fator, anosMinimos: 1, concorrencia: concorrencia }
+            valor: Object.assign({}, perfil || {}, { concorrencia: concorrencia })
         };
         return resumoExigenciasJogadorCache.valor;
     };
@@ -10385,17 +10634,25 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var mediaAlvo = setor ? Math.max(mediaPosicao, setor.mediaTitulares || 0) : mediaPosicao;
         var reforco = Math.max(0, overall - mediaAlvo) * 1.8;
         var idade = Number(jogador.idade) || 25;
-        var desenvolvimento = idade <= 23 ? Math.min(8, Number(jogador.potencial || overall) - overall) : 0;
+        var pesoPotencial = perfil ? Number(perfil.pesoPotencial) || 1 : 1;
+        var pesoEstrelas = perfil ? Number(perfil.pesoEstrelas) || 1 : 1;
+        var pesoCusto = perfil ? Number(perfil.pesoCusto) || 1 : 1;
+        var desenvolvimento = idade <= 23 ? Math.min(10, Math.max(0, Number(jogador.potencial || overall) - overall)) * pesoPotencial : 0;
         var custo = $scope.calcularValorPasse(jogador);
         var orcamento = Number(clubeDestino.orcamento) || 0;
-        var acessibilidade = custo > orcamento ? -100 : (custo > orcamento * 0.45 ? -8 : 0);
+        var acessibilidade = custo > orcamento ? -100 : (custo > orcamento * 0.45 ? -8 * pesoCusto : 0);
         var redundancia = mesmaPosicao.length >= 4 && overall <= mediaPosicao + 2 ? -18 : 0;
         var historicoTreino = Array.isArray(clubeDestino.historicoTreinoCPU) ? clubeDestino.historicoTreinoCPU : [];
         var ultimoTreino = historicoTreino[0];
         var pressaoDesempenho = ultimoTreino && (ultimoTreino.condicaoMedia < 65 || ultimoTreino.moralMedia < 52) ? (overall >= 75 ? 7 : 0) : 0;
-        var estrategia = perfil && perfil.estrategiaMercado === 'desenvolvimento e revenda' ? (idade <= 25 ? 5 : -3) : 0;
+        var destaqueEstrela = perfil && overall >= perfil.alvoOverall + 6 ? (overall - perfil.alvoOverall) * 0.7 * pesoEstrelas : 0;
+        var experienciaImediata = perfil && perfil.estrategiaCodigo === 'sobreviver_e_recompor' && idade >= 26 && idade <= 32 ? 4 : 0;
+        var estrategia = perfil && perfil.estrategiaCodigo === 'formar_e_revender' ? (idade <= 25 ? 5 : -3) : 0;
+        if (perfil && perfil.estrategiaCodigo === 'preservar_caixa' && custo > 0) {
+            estrategia -= Math.min(8, (custo / Math.max(orcamento, 1)) * 10 * pesoCusto);
+        }
         var qualidadeInsuficiente = setor ? Math.max(0, (setor.alvoQualidade || 0) - overall) * -0.6 : 0;
-        return necessidade + reforco + Math.max(0, desenvolvimento) + acessibilidade + redundancia + pressaoDesempenho + estrategia + qualidadeInsuficiente;
+        return necessidade + reforco + Math.max(0, desenvolvimento) + acessibilidade + redundancia + pressaoDesempenho + destaqueEstrela + experienciaImediata + estrategia + qualidadeInsuficiente;
     }
 
     function negociarContratoCpu(jogador, clube, valorPasse, origemId) {
@@ -10423,6 +10680,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var fatorExposicao = perfil ? 1.1 + (perfil.toleranciaRisco / 100) : 1.5;
         var limiteExposicao = Math.max(1000000, (Number(clube.orcamento) || 0) * fatorExposicao);
         if (exposicaoDepois > limiteExposicao) return null;
+        // A CPU também precisa sustentar a contratação mês a mês: o caixa
+        // disponível não pode esconder uma folha e parcelas que já ficaram
+        // incompatíveis com a receita recorrente do clube.
+        var elencoClube = ($scope.jogadores || []).filter(function(item) { return item && String(item.clubeId) === String(clube.id); });
+        var folhaAtual = elencoClube.reduce(function(total, item) { return total + (Number(item.salario) || Number(item.salarioDesejado) || 0); }, 0);
+        var folhaProjetada = folhaAtual + salario;
+        var parcelaNova = parcelas ? Math.ceil(Math.max(0, valorTransferencia - entrada) / parcelas) : 0;
+        var parcelasProjetadas = (Number(compromissosAtuais.parcelasAtuais) || 0) + parcelaNova;
+        var cotasPorDivisao = { A: 8000000, B: 2500000, C: 1200000, D: 600000 };
+        var receitaRecorrente = (cotasPorDivisao[clube.divisao] || 600000) + (Number(clube.reputacao) || 0) * 25000;
+        var limiteFolha = receitaRecorrente * (perfil ? perfil.limiteFolhaReceita : 0.55);
+        var mesesReserva = perfil ? perfil.reservaOperacionalMeses : 3;
+        var reservaObrigatoria = (folhaProjetada + parcelasProjetadas) * mesesReserva + (Number(compromissosAtuais.bonusPendentes) || 0) * 0.25;
+        var caixaDepoisDaContratacao = (Number(clube.orcamento) || 0) - entrada - luvas;
+        var caixaLivreProjetado = caixaDepoisDaContratacao - (Number(compromissosAtuais.saldoParcelado) || 0) * 0.2;
+        if (folhaProjetada > limiteFolha || caixaLivreProjetado < reservaObrigatoria) return null;
         clube.orcamento -= entrada + luvas;
         if (parcelas && $scope.criarParcelamentoTransferencia) {
             $scope.criarParcelamentoTransferencia({ valor: valorTransferencia, entrada: entrada, parcelas: parcelas, intervaloDias: intervaloDias, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: origemId, clubeDevedorId: clube.id });
@@ -10437,8 +10710,235 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return { salario: salario, luvas: luvas, bonusPorJogo: bonusPorJogo, bonusPorGol: bonusPorGol, papel: papel, entrada: entrada, parcelas: parcelas, intervaloDias: intervaloDias, aceitaParcelamento: aceitaParcelamento };
     }
 
+    function calcularPrioridadeContinuidadeCpu(jogador, clube, perfil, elenco, contagens) {
+        var overall = $scope.calcularOverall(jogador);
+        var potencial = Math.max(overall, Number(jogador.potencial) || overall);
+        var idade = Number(jogador.idade) || 25;
+        var setor = posicoesDiagnosticoClubeCpu.find(function(item) { return item.posicao === jogador.posicao; });
+        var quantidadePosicao = contagens[jogador.posicao] || 0;
+        var minimoPosicao = setor ? setor.minimo : 1;
+        var papel = jogador.papelElenco || '';
+        var carenciaEstrutural = quantidadePosicao <= minimoPosicao ? 100 : 0;
+        var titularidade = jogador.emCampo ? 18 : 0;
+        var papelImportante = papel === 'importante' ? 20 : (papel === 'titular' ? 9 : 0);
+        var qualidade = Math.max(0, overall - ((perfil && perfil.alvoOverall) || 68)) * 1.4;
+        var potencialJovem = idade <= 25 ? Math.max(0, potencial - overall) * 0.8 : 0;
+        var idadeAvancada = idade >= 34 ? Math.min(18, idade - 33) : 0;
+        return carenciaEstrutural + titularidade + papelImportante + qualidade + potencialJovem - idadeAvancada;
+    }
+
+    function renovarContratoCpuPorContinuidade(jogador, clube, perfil, elenco) {
+        if (!jogador || !clube || !perfil) return null;
+        var salarioAtual = Math.max(10000, Number(jogador.salario) || Number(jogador.salarioDesejado) || 10000);
+        var overall = $scope.calcularOverall(jogador);
+        var idade = Number(jogador.idade) || 25;
+        var papel = jogador.papelElenco || (overall >= perfil.alvoOverall + 8 ? 'importante' : (overall >= perfil.alvoOverall - 2 ? 'titular' : 'rotacao'));
+        var fatorAjuste = papel === 'importante' ? 1.08 : (papel === 'titular' ? 1.05 : 1.03);
+        var salarioDesejado = Number(jogador.salarioDesejado) || salarioAtual;
+        var salario = Math.max(salarioAtual, Math.round(Math.max(salarioAtual * fatorAjuste, salarioDesejado * 1.01) / 100) * 100);
+        var luvas = Math.round(salario * (papel === 'importante' ? 2.6 : (papel === 'titular' ? 1.7 : 1.05)) / 100) * 100;
+        var compromissos = $scope.obterResumoCompromissosFinanceiros ? ($scope.obterResumoCompromissosFinanceiros(clube.id) || {}) : {};
+        var folhaAtual = elenco.reduce(function(total, item) {
+            return total + (Number(item.salario) || Number(item.salarioDesejado) || 0);
+        }, 0);
+        var folhaProjetada = folhaAtual - salarioAtual + salario;
+        var cotasPorDivisao = { A: 8000000, B: 2500000, C: 1200000, D: 600000 };
+        var receitaRecorrente = (cotasPorDivisao[clube.divisao] || 600000) + (Number(clube.reputacao) || 0) * 25000;
+        var limiteFolha = receitaRecorrente * (Number(perfil.limiteFolhaReceita) || 0.5);
+        var mesesReserva = Number(perfil.reservaOperacionalMeses) || 3;
+        var reservaObrigatoria = (folhaProjetada + (Number(compromissos.parcelasAtuais) || 0)) * mesesReserva + (Number(compromissos.bonusPendentes) || 0) * 0.25;
+        var caixaDepois = (Number(clube.orcamento) || 0) - luvas;
+        // A renovação não pode salvar a profundidade à custa de uma folha
+        // impossível. Se o clube não comportar o vínculo, a reposição livre
+        // será tentada pelo mesmo ciclo.
+        if (folhaProjetada > limiteFolha || caixaDepois < reservaObrigatoria) return null;
+
+        clube.orcamento = Math.max(0, (Number(clube.orcamento) || 0) - luvas);
+        jogador.salario = salario;
+        jogador.salarioDesejado = Math.max(salario, salarioDesejado);
+        jogador.luvasContrato = luvas;
+        jogador.papelElenco = papel;
+        jogador.anosContrato = 2;
+        jogador.emNegociacao = false;
+        jogador.statusContrato = calcularStatusContratoJogadorInterno(jogador);
+        jogador.statusContratoLabel = obterLabelStatusContrato(jogador.statusContrato);
+        jogador.valorMercadoDinamico = calcularValorMercadoJogadorInterno(jogador);
+        return { jogador: jogador, salario: salario, luvas: luvas, papel: papel, idade: idade, overall: overall };
+    }
+
+    // Mantém os clubes da CPU operacionais sem criar uma força artificial:
+    // renova quem é estruturalmente importante, libera contratos inviáveis e
+    // repõe somente as carências mínimas que o mercado e o caixa comportam.
+    $scope.garantirContinuidadeElencoCPU = function(clubeOuId, opcoes) {
+        opcoes = opcoes || {};
+        var clube = obterClubePerfilCpu(clubeOuId);
+        var dia = Number($scope.diaAtual) || 0;
+        var motivo = opcoes.motivo || 'janela';
+        if (!clube || !$scope.jogadores || ($scope.clubeAtual && String(clube.id) === String($scope.clubeAtual.id))) {
+            return { clubeId: clube && clube.id, renovados: [], contratados: [], saidas: [], ignorado: true };
+        }
+        if (!opcoes.forcar && motivo === 'janela' && Number(clube.ultimaContinuidadeElencoDia) === dia) {
+            return clube.ultimoRelatorioContinuidadeCPU || { clubeId: clube.id, renovados: [], contratados: [], saidas: [], repetido: true };
+        }
+
+        var perfil = $scope.obterPerfilClubeCpu(clube);
+        var elenco = $scope.jogadores.filter(function(jogador) { return jogador && String(jogador.clubeId) === String(clube.id); });
+        var relatorio = { clubeId: clube.id, clubeNome: clube.nome, motivo: motivo, renovados: [], contratados: [], saidas: [], antes: elenco.length, carenciasAntes: 0, carenciasDepois: 0 };
+        if (!perfil) return relatorio;
+
+        function contarPorPosicao(lista) {
+            return lista.reduce(function(contagens, jogador) {
+                contagens[jogador.posicao] = (contagens[jogador.posicao] || 0) + 1;
+                return contagens;
+            }, {});
+        }
+
+        var contagens = contarPorPosicao(elenco);
+        elenco.forEach(function(jogador) { normalizarEstadoContratoJogadorInterno(jogador); });
+        elenco.filter(function(jogador) {
+            return Number(jogador.anosContrato) <= 1 && !jogador.emNegociacao;
+        }).sort(function(a, b) {
+            return calcularPrioridadeContinuidadeCpu(b, clube, perfil, elenco, contagens) - calcularPrioridadeContinuidadeCpu(a, clube, perfil, elenco, contagens);
+        }).forEach(function(jogador) {
+            var setor = posicoesDiagnosticoClubeCpu.find(function(item) { return item.posicao === jogador.posicao; });
+            var quantidade = contagens[jogador.posicao] || 0;
+            var minimo = setor ? setor.minimo : 1;
+            var overall = $scope.calcularOverall(jogador);
+            var potencial = Math.max(overall, Number(jogador.potencial) || overall);
+            var idade = Number(jogador.idade) || 25;
+            var deveManter = quantidade <= minimo || jogador.papelElenco === 'importante' || overall >= perfil.alvoOverall - 6 || (idade <= 25 && potencial >= perfil.alvoOverall + 4);
+            if (deveManter) {
+                var termos = renovarContratoCpuPorContinuidade(jogador, clube, perfil, elenco);
+                if (termos) {
+                    relatorio.renovados.push({ id: jogador.id, nome: jogador.nome, posicao: jogador.posicao, overall: termos.overall, salario: termos.salario });
+                } else if (Number(jogador.anosContrato) <= 0) {
+                    // Contrato vencido e sem margem financeira: libera o
+                    // atleta para que a carência possa ser recomposta por uma
+                    // opção sustentável, sem manter vínculo fantasma.
+                    jogador.clubeId = 'mercado';
+                    jogador.emCampo = false;
+                    jogador.anosContrato = 0;
+                    jogador.emNegociacao = false;
+                    contagens[jogador.posicao] = Math.max(0, (contagens[jogador.posicao] || 1) - 1);
+                    relatorio.saidas.push({ id: jogador.id, nome: jogador.nome, motivo: 'limite financeiro' });
+                }
+            } else if (Number(jogador.anosContrato) <= 0) {
+                jogador.clubeId = 'mercado';
+                jogador.emCampo = false;
+                jogador.anosContrato = 0;
+                jogador.emNegociacao = false;
+                contagens[jogador.posicao] = Math.max(0, (contagens[jogador.posicao] || 1) - 1);
+                relatorio.saidas.push({ id: jogador.id, nome: jogador.nome, motivo: 'fim de ciclo' });
+            }
+        });
+
+        function obterCarenciasEstruturais() {
+            var elencoAtualCpu = $scope.jogadores.filter(function(jogador) { return jogador && String(jogador.clubeId) === String(clube.id); });
+            var diagnostico = $scope.obterDiagnosticoNecessidadesClube(clube);
+            if (!diagnostico) return { diagnostico: null, setores: [] };
+            var setores = diagnostico.setores.filter(function(setor) {
+                return setor.quantidade < setor.minimoProfundidade || setor.disponiveis < setor.minimoProfundidade;
+            }).sort(function(a, b) { return b.gravidade - a.gravidade; });
+            if (elencoAtualCpu.length < perfil.profundidadeMinima && !setores.length) {
+                setores = diagnostico.setores.slice().sort(function(a, b) {
+                    return a.quantidade - b.quantidade || b.gravidade - a.gravidade;
+                }).slice(0, 1);
+            }
+            return { diagnostico: diagnostico, setores: setores };
+        }
+
+        var carenciasAntes = obterCarenciasEstruturais();
+        relatorio.carenciasAntes = carenciasAntes.setores.length;
+        var maxContratacoes = Number(opcoes.maxContratacoes) || 2;
+        while (relatorio.contratados.length < maxContratacoes) {
+            var carencias = obterCarenciasEstruturais();
+            if (!carencias.setores.length) break;
+            var setorAlvo = null;
+            var notaMinima = 0;
+            var candidatos = [];
+            // A maior carência nem sempre tem uma opção disponível. Procura
+            // pelas prioridades em ordem, sem deixar uma vaga de zagueiro sem
+            // candidato bloquear, por exemplo, a reposição de um goleiro.
+            carencias.setores.some(function(setor) {
+                var corte = Math.max(55, Math.min(Number(perfil.notaMinimaLivre) || 60, (Number(setor.alvoQualidade) || perfil.alvoOverall) - 8));
+                var disponiveis = $scope.jogadores.filter(function(jogador) {
+                    if (!jogador || jogador.clubeId !== 'mercado' || jogador.posicao !== setor.posicao || jogador.lesionado || jogador.suspenso) return false;
+                    return $scope.calcularOverall(jogador) >= corte;
+                });
+                if (!disponiveis.length) return false;
+                setorAlvo = setor;
+                notaMinima = corte;
+                candidatos = disponiveis;
+                return true;
+            });
+            candidatos.sort(function(a, b) {
+                var pontuar = function(jogador) {
+                    var overall = $scope.calcularOverall(jogador);
+                    var idade = Number(jogador.idade) || 25;
+                    var potencial = Math.max(overall, Number(jogador.potencial) || overall);
+                    return overall + Math.max(0, potencial - overall) * 0.35 - Math.max(0, idade - 32) * 0.45;
+                };
+                return pontuar(b) - pontuar(a);
+            });
+            var candidato = candidatos[0];
+            if (!candidato) {
+                // Em uma carência crítica, aceita uma opção de rotação um
+                // pouco abaixo do corte, sem transformar o clube em favorito.
+                carencias.setores.some(function(setor) {
+                    var corte = Math.max(50, Math.min(Number(perfil.notaMinimaLivre) || 60, (Number(setor.alvoQualidade) || perfil.alvoOverall) - 14));
+                    var disponiveis = $scope.jogadores.filter(function(jogador) {
+                        return jogador && jogador.clubeId === 'mercado' && jogador.posicao === setor.posicao && !jogador.lesionado && !jogador.suspenso && $scope.calcularOverall(jogador) >= corte;
+                    });
+                    if (!disponiveis.length) return false;
+                    setorAlvo = setor;
+                    notaMinima = corte;
+                    candidatos = disponiveis;
+                    return true;
+                });
+                candidato = candidatos.sort(function(a, b) { return $scope.calcularOverall(b) - $scope.calcularOverall(a); })[0];
+                if (!candidato) break;
+            }
+            var termosLivre = negociarContratoCpu(candidato, clube, 0, 'mercado');
+            if (!termosLivre) break;
+            candidato.clubeId = clube.id;
+            candidato.emCampo = false;
+            candidato.emNegociacao = false;
+            normalizarEstadoContratoJogadorInterno(candidato);
+            relatorio.contratados.push({ id: candidato.id, nome: candidato.nome, posicao: candidato.posicao, overall: $scope.calcularOverall(candidato), salario: termosLivre.salario });
+            if ($scope.registrarTransferenciaHistorico) {
+                $scope.registrarTransferenciaHistorico({
+                    tipo: 'cpu_continuidade', jogadorId: candidato.id, jogadorNome: candidato.nome,
+                    clubeOrigemId: 'mercado', clubeOrigemNome: 'Mercado Livre', clubeDestinoId: clube.id,
+                    clubeDestinoNome: clube.nome, valor: 0, entrada: 0, parcelas: 0, intervaloDias: 0,
+                    salario: termosLivre.salario, luvas: termosLivre.luvas, papel: termosLivre.papel,
+                    anosContrato: candidato.anosContrato
+                });
+            }
+        }
+
+        relatorio.depois = $scope.jogadores.filter(function(jogador) { return jogador && String(jogador.clubeId) === String(clube.id); }).length;
+        relatorio.carenciasDepois = obterCarenciasEstruturais().setores.length;
+        clube.ultimaContinuidadeElencoDia = dia;
+        clube.ultimaContinuidadeElencoTemporada = $scope.dados && $scope.dados.anoAtual;
+        clube.ultimoRelatorioContinuidadeCPU = relatorio;
+        return relatorio;
+    };
+
     $scope.simularMercadoCPU = function() {
         if (!$scope.isJanelaTransferenciaAberta()) return;
+
+        // A revisão semanal antecipa renovações e recompõe carências antes que
+        // as transferências discricionárias da CPU sejam processadas.
+        var diaContinuidade = Number($scope.diaAtual) || 0;
+        ($scope.clubes || []).filter(function(clube) {
+            return !$scope.clubeAtual || String(clube.id) !== String($scope.clubeAtual.id);
+        }).forEach(function(clube) {
+            // A cada duas semanas é suficiente para antecipar vencimentos;
+            // a virada de temporada também força uma revisão completa.
+            if (diaContinuidade % 14 === 0 || !Number.isFinite(Number(clube.ultimaContinuidadeElencoDia))) {
+                $scope.garantirContinuidadeElencoCPU(clube, { motivo: 'janela', maxContratacoes: 1 });
+            }
+        });
 
         // Limite operacional: a CPU precisa liberar excesso antes de continuar comprando.
         ($scope.clubes || []).filter(function(clube) { return clube.id !== $scope.clubeAtual.id; }).forEach(function(clube) {
@@ -10465,7 +10965,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var folhaCPU = elencoCPU.reduce(function(total, jogador) { return total + (Number(jogador.salario) || Number(jogador.salarioDesejado) || 0); }, 0);
             var caixaCPU = Number(clube.orcamento) || 0;
             var vendaPorPressaoFinanceira = caixaCPU < Math.max(1000000, folhaCPU * 8);
-            if (elencoCPU.length > 18 && (Math.random() < 0.04 || vendaPorPressaoFinanceira)) {
+            var perfilClubeMercado = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(clube) : null;
+            var chanceVendaEstrategica = perfilClubeMercado ? Number(perfilClubeMercado.prioridadeVenda) || 0.04 : 0.04;
+            if (elencoCPU.length > 18 && (Math.random() < chanceVendaEstrategica || vendaPorPressaoFinanceira)) {
                 var candidatosVendaCPU = elencoCPU.filter(function(jogador) {
                     var repeticaoPosicao = elencoCPU.filter(function(item) { return item.posicao === jogador.posicao; }).length;
                     var overall = $scope.calcularOverall(jogador);
@@ -10521,7 +11023,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                             var adequacao = jovemEmprestimo.posicao === 'ATA' || jovemEmprestimo.posicao === 'MEI' ? 3 : 1;
                             var caixa = Math.min(8, Math.max(0, (Number(clube.orcamento) || 0) / 10000000));
                             var nivel = ({ B: 6, C: 4, D: 2 }[clube.divisao] || 1);
-                            return profundidade * 10 + Math.max(0, 78 - media) * 0.35 + caixa + nivel * adequacao;
+                            var perfilDestino = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(clube) : null;
+                            var prioridadeEmprestimo = perfilDestino ? Number(perfilDestino.prioridadeEmprestimos) || 0.4 : 0.4;
+                            return profundidade * 10 + Math.max(0, 78 - media) * 0.35 + caixa + nivel * adequacao + prioridadeEmprestimo * 5;
                         }
                         return pontuacaoDestino(b) - pontuacaoDestino(a);
                     });
@@ -10592,21 +11096,22 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 return urgencia(b) - urgencia(a);
             })[0];
 
-            // Escolher um jogador Livre no Mercado e bom (> 70)
+            // Escolher um jogador livre conforme o padrão de qualidade do comprador.
             var diagnosticoCompradorLivre = $scope.obterDiagnosticoNecessidadesClube ? $scope.obterDiagnosticoNecessidadesClube(cComprador) : null;
+            var perfilCompradorLivre = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(cComprador) : null;
+            var notaMinimaLivre = perfilCompradorLivre ? perfilCompradorLivre.notaMinimaLivre : 70;
             var posicoesPrioritariasLivre = diagnosticoCompradorLivre && diagnosticoCompradorLivre.prioridades ? diagnosticoCompradorLivre.prioridades.map(function(item) { return item.posicao; }) : [];
             var livresBons = $scope.jogadores.filter(function(j) {
-                if (j.clubeId !== 'mercado' || $scope.calcularOverall(j) <= 70) return false;
+                if (j.clubeId !== 'mercado' || $scope.calcularOverall(j) < notaMinimaLivre) return false;
                 if (posicoesPrioritariasLivre.length && posicoesPrioritariasLivre.indexOf(j.posicao) < 0) return false;
                 var mediaPosicao = $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id && item.posicao === j.posicao; }).reduce(function(total, item, _, lista) { return total + ($scope.calcularOverall(item) / lista.length); }, 0);
-                return $scope.calcularOverall(j) >= Math.max(70, mediaPosicao + 1);
+                return $scope.calcularOverall(j) >= Math.max(notaMinimaLivre, mediaPosicao + 1);
             });
             if (livresBons.length > 0) {
                 var contratacao = livresBons.slice().sort(function(a, b) {
                     return pontuarAlvoMercadoCPU(b, cComprador, $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id; })) - pontuarAlvoMercadoCPU(a, cComprador, $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id; }));
                 })[0];
                 var tamanhoElencoComprador = $scope.jogadores.filter(function(j) { return j.clubeId === cComprador.id; }).length;
-                var perfilCompradorLivre = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(cComprador) : null;
                 if (tamanhoElencoComprador >= (perfilCompradorLivre ? perfilCompradorLivre.profundidadeAlvo + 5 : 30)) return;
                 var clubeOrigemCPU = contratacao.clubeId;
                 var termosLivreCPU = negociarContratoCpu(contratacao, cComprador, 0, clubeOrigemCPU);
@@ -10648,6 +11153,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var clubesAtivos = $scope.clubes.filter(function(c) { return c.id !== $scope.clubeAtual.id && c.orcamento > 0; });
             if (clubesAtivos.length > 0) {
                 var compradorCPU = clubesAtivos[Math.floor(Math.random() * clubesAtivos.length)];
+                var perfilCompradorCPU = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(compradorCPU) : null;
+                var notaMinimaAlvoCPU = perfilCompradorCPU ? Math.max(60, perfilCompradorCPU.alvoOverall - 7) : 72;
                 var diagnosticoComprador = $scope.obterDiagnosticoNecessidadesClube ? $scope.obterDiagnosticoNecessidadesClube(compradorCPU) : null;
                 var necessidadesCPU = diagnosticoComprador && diagnosticoComprador.setores ? diagnosticoComprador.setores.map(function(setor) {
                     return { posicao: setor.posicao, necessidade: setor.gravidade };
@@ -10666,10 +11173,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 var alvosCPU = $scope.jogadores.filter(function(j) {
                     var valorAlvo = $scope.calcularValorPasse(j);
                     var caixaComprador = Number(compradorCPU.orcamento) || 0;
-                    return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= Math.max(72, (mediaPorPosicaoCPU[j.posicao] || 70) + 1) && valorAlvo <= Math.max(1000000, caixaComprador * 1.5) && !j.lesionado && !j.emNegociacao && posicoesPrioritarias.indexOf(j.posicao) >= 0;
+                    return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= Math.max(notaMinimaAlvoCPU, (mediaPorPosicaoCPU[j.posicao] || 70) + 1) && valorAlvo <= Math.max(1000000, caixaComprador * 1.5) && !j.lesionado && !j.emNegociacao && posicoesPrioritarias.indexOf(j.posicao) >= 0;
                 });
                 if (alvosCPU.length === 0) alvosCPU = $scope.jogadores.filter(function(j) {
-                    return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= 72 && $scope.calcularValorPasse(j) <= Math.max(1000000, (Number(compradorCPU.orcamento) || 0) * 1.5) && !j.lesionado && !j.emNegociacao;
+                    return j.clubeId !== 'mercado' && j.clubeId !== $scope.clubeAtual.id && j.clubeId !== compradorCPU.id && $scope.calcularOverall(j) >= notaMinimaAlvoCPU && $scope.calcularValorPasse(j) <= Math.max(1000000, (Number(compradorCPU.orcamento) || 0) * 1.5) && !j.lesionado && !j.emNegociacao;
                 });
                 if (alvosCPU.length > 0) {
                     var elencoComprador = $scope.jogadores.filter(function(j) { return j.clubeId === compradorCPU.id; });

@@ -363,6 +363,39 @@
                         <button class="strategy-open-area" ng-click="irParaFocoEstrategico()">Abrir área</button>
                     </div>
                 </section>
+                <section class="club-reputation-panel" ng-if="clubeAtual && obterResumoReputacaoClube(clubeAtual)">
+                    <div class="club-reputation-header">
+                        <div>
+                            <span class="dashboard-eyebrow">Identidade do clube</span>
+                            <h3>Reputação do {{clubeAtual.nome}}</h3>
+                            <p>O momento do clube influencia mercado, finanças e a atração de jogadores.</p>
+                        </div>
+                        <div class="club-reputation-score">
+                            <strong>{{obterResumoReputacaoClube(clubeAtual).valor}}</strong><span>/100</span>
+                            <small ng-class="'club-reputation-trend-' + obterResumoReputacaoClube(clubeAtual).tendencia">
+                                {{obterResumoReputacaoClube(clubeAtual).delta > 0 ? '+' : ''}}{{obterResumoReputacaoClube(clubeAtual).delta}} · {{obterResumoReputacaoClube(clubeAtual).tendenciaLabel}}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="club-reputation-impact" ng-if="obterResumoReputacaoClube(clubeAtual).impacto">
+                        <div><span>Atração no mercado</span><strong>{{obterResumoReputacaoClube(clubeAtual).impacto.poderAtracao}}/100</strong></div>
+                        <div><span>Alvo de overall</span><strong>{{obterResumoReputacaoClube(clubeAtual).impacto.alvoOverall}}</strong></div>
+                        <div><span>Saúde financeira</span><strong>{{obterResumoReputacaoClube(clubeAtual).impacto.saudeFinanceira}}/100</strong></div>
+                        <div><span>Perfil atual</span><strong>{{obterResumoReputacaoClube(clubeAtual).impacto.nivelCompetitivo}}</strong></div>
+                    </div>
+                    <div class="club-reputation-factors" ng-if="obterResumoReputacaoClube(clubeAtual).temHistorico">
+                        <div class="club-reputation-factor" ng-repeat="fator in obterResumoReputacaoClube(clubeAtual).fatores track by fator.chave" ng-class="{'is-positive': fator.valor > 0, 'is-negative': fator.valor < 0}">
+                            <span>{{fator.label}}</span>
+                            <strong>{{fator.valor > 0 ? '+' : ''}}{{fator.valor}}</strong>
+                        </div>
+                    </div>
+                    <div class="club-reputation-empty" ng-if="!obterResumoReputacaoClube(clubeAtual).temHistorico">
+                        A reputação será atualizada ao final da primeira temporada completa.
+                    </div>
+                    <p class="club-reputation-footnote" ng-if="obterResumoReputacaoClube(clubeAtual).temHistorico">
+                        Temporada {{obterResumoReputacaoClube(clubeAtual).temporada}} · posição {{obterResumoReputacaoClube(clubeAtual).posicao || '—'}} · Série {{obterResumoReputacaoClube(clubeAtual).divisao}}. Os fatores acima explicam a última variação registrada.
+                    </p>
+                </section>
                 <section class="season-briefing-panel" ng-if="diretoriaStatus && !diretoriaStatus.briefingInicialConcluido && preparacaoTemporada && !preparacaoTemporada.concluida">
                     <div class="dashboard-panel-header compact-header">
                         <div><span class="dashboard-eyebrow">Reunião de abertura</span><h3>Defina a prioridade da temporada</h3></div>
@@ -1862,6 +1895,11 @@
                     <strong>{{obterOrientacaoMercadoDiretoria().titulo}}</strong>
                     <span>{{obterOrientacaoMercadoDiretoria().detalhe}}</span>
                 </div>
+                <div class="market-reputation-strip" ng-if="clubeAtual && obterResumoReputacaoClube(clubeAtual)">
+                    <div><span>Reputação do clube</span><strong>{{obterResumoReputacaoClube(clubeAtual).valor}}/100</strong><small ng-class="'club-reputation-trend-' + obterResumoReputacaoClube(clubeAtual).tendencia">{{obterResumoReputacaoClube(clubeAtual).tendenciaLabel}}</small></div>
+                    <div><span>Atração no mercado</span><strong>{{obterResumoReputacaoClube(clubeAtual).impacto.poderAtracao}}/100</strong><small>influencia o interesse dos jogadores</small></div>
+                    <div><span>Alvo de overall</span><strong>{{obterResumoReputacaoClube(clubeAtual).impacto.alvoOverall}}</strong><small>referência para decisões da CPU</small></div>
+                </div>
 
                 <!-- Sub-Navegação do Mercado -->
                 <div class="card" style="margin-bottom: 20px; padding: 16px; border-left: 4px solid var(--br-blue);">
@@ -2672,7 +2710,9 @@
                 <p style="font-size: 14px; margin-bottom: 15px; color: var(--br-green-dark); font-weight: bold;" ng-if="jogadorNegociacao.clubeId !== 'mercado' && tipoNegociacao === 'compra'">O clube aceitou sua oferta de {{formatarMoeda(ofertaValores.clubeAceita)}}! Agora negocie com o jogador.</p>
                 <div ng-if="obterResumoExigenciasJogador()" style="background: #f8f9fa; border-left: 4px solid var(--br-blue); padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 13px;">
                     <strong>Exigências do jogador</strong>
-                    <span style="display:block; margin-top: 4px;">Salário mínimo estimado: <strong>{{formatarMoeda(obterResumoExigenciasJogador().salarioMinimo)}}</strong> · Contrato mínimo: <strong>{{obterResumoExigenciasJogador().anosMinimos}} ano</strong></span>
+                    <span style="display:block; margin-top: 4px;">Salário mínimo estimado: <strong>{{formatarMoeda(obterResumoExigenciasJogador().salarioMinimo)}}</strong> · Contrato mínimo: <strong>{{obterResumoExigenciasJogador().anosMinimos}} ano(s)</strong></span>
+                    <span style="display:block; margin-top: 5px;">Papel esperado: <strong>{{obterResumoExigenciasJogador().papelMinimo}}</strong><span ng-if="obterResumoExigenciasJogador().luvasMinimas > 0"> · Luvas: <strong>{{formatarMoeda(obterResumoExigenciasJogador().luvasMinimas)}}</strong></span></span>
+                    <span style="display:block; margin-top: 5px; color: var(--text-muted);">Motivação: {{obterResumoExigenciasJogador().motivacao}}</span>
                     <span ng-if="obterResumoExigenciasJogador().concorrencia" style="display:block; margin-top: 5px; color:#d35400;">⚔️ Concorrência: {{obterResumoExigenciasJogador().concorrencia.clubeNome}} oferece {{formatarMoeda(obterResumoExigenciasJogador().concorrencia.salarioOferta)}} por mês.</span>
                 </div>
                 

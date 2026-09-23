@@ -1148,6 +1148,49 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
 .club-strategy-alert-ok { background: var(--br-green-light); border-left-color: var(--br-green); }
 .club-strategy-alert button { align-self: start; background: white; border: 1px solid var(--br-blue); border-radius: 6px; color: var(--br-blue); cursor: pointer; font-size: 11px; font-weight: 800; margin-top: 4px; padding: 6px 9px; }
 .club-strategy-alert .strategy-open-area { max-width: 140px; width: auto; }
+.club-reputation-panel { background: linear-gradient(145deg, #102f3d, #173f50); border: 1px solid rgba(161, 222, 191, .28); border-radius: 16px; box-shadow: 0 10px 24px rgba(23, 33, 43, .12); color: #fff; margin-bottom: 18px; overflow: hidden; padding: 18px; position: relative; }
+.club-reputation-panel::before { background: linear-gradient(90deg, #f1c40f, #2fd27b); content: ''; height: 4px; left: 0; position: absolute; right: 0; top: 0; }
+.club-reputation-header { align-items: flex-start; display: flex; gap: 18px; justify-content: space-between; }
+.club-reputation-header h3 { color: #fff; font-size: 19px; margin: 5px 0 4px; }
+.club-reputation-header p { color: #c7dbe2; font-size: 12px; margin: 0; }
+.club-reputation-score { align-items: baseline; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .18); border-radius: 13px; display: grid; grid-template-columns: auto auto; min-width: 112px; padding: 8px 11px; text-align: right; }
+.club-reputation-score strong { color: #f8d44e; font-size: 32px; line-height: 1; }
+.club-reputation-score > span { color: #d5e4e8; font-size: 12px; font-weight: 800; margin-left: 3px; }
+.club-reputation-score small { font-size: 10px; font-weight: 800; grid-column: 1 / -1; margin-top: 5px; }
+.club-reputation-trend-ascendente { color: #87efb0; }
+.club-reputation-trend-descendente { color: #ff9d91; }
+.club-reputation-trend-estável { color: #d4e0e4; }
+.club-reputation-impact { display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 16px; }
+.club-reputation-impact > div { background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px; min-width: 0; padding: 10px; }
+.club-reputation-impact span, .club-reputation-impact strong { display: block; }
+.club-reputation-impact span { color: #b9d0d7; font-size: 10px; text-transform: uppercase; }
+.club-reputation-impact strong { color: #fff; font-size: 15px; margin-top: 5px; overflow-wrap: anywhere; }
+.club-reputation-factors { display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 10px; }
+.club-reputation-factor { align-items: center; background: rgba(0, 0, 0, .14); border-left: 3px solid #a9c0c7; border-radius: 8px; display: flex; gap: 8px; justify-content: space-between; padding: 8px 10px; }
+.club-reputation-factor span { color: #c7dbe2; font-size: 11px; line-height: 1.25; }
+.club-reputation-factor strong { color: #d4e0e4; font-size: 14px; }
+.club-reputation-factor.is-positive { border-left-color: #65e49b; }
+.club-reputation-factor.is-positive strong { color: #87efb0; }
+.club-reputation-factor.is-negative { border-left-color: #ff8e83; }
+.club-reputation-factor.is-negative strong { color: #ff9d91; }
+.club-reputation-empty, .club-reputation-footnote { color: #b9d0d7; font-size: 11px; line-height: 1.45; margin: 12px 0 0; }
+.club-reputation-empty { background: rgba(255, 255, 255, .08); border-radius: 8px; padding: 9px 10px; }
+.market-reputation-strip { background: linear-gradient(105deg, #eef8f2, #f8fbff); border: 1px solid #d8e8e2; border-left: 4px solid var(--br-green); border-radius: 11px; display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: -7px 0 18px; padding: 11px 13px; }
+.market-reputation-strip > div { min-width: 0; }
+.market-reputation-strip span, .market-reputation-strip strong, .market-reputation-strip small { display: block; }
+.market-reputation-strip span { color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.market-reputation-strip strong { color: var(--text-main); font-size: 16px; margin-top: 3px; }
+.market-reputation-strip small { color: var(--text-muted); font-size: 10px; margin-top: 3px; }
+.market-reputation-strip small.club-reputation-trend-ascendente { color: var(--br-green-dark); }
+.market-reputation-strip small.club-reputation-trend-descendente { color: #c0392b; }
+@media (max-width: 760px) {
+    .club-reputation-impact, .club-reputation-factors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+    .club-reputation-header { align-items: stretch; flex-direction: column; }
+    .club-reputation-score { align-self: flex-start; text-align: left; }
+    .club-reputation-impact, .club-reputation-factors, .market-reputation-strip { grid-template-columns: 1fr; }
+}
 .season-preparation-panel { background: #f8fbfd; border: 1px solid #dfe8ee; border-radius: 10px; margin-top: 14px; padding: 14px; }
 .season-briefing-panel { background: #fffaf0; border: 1px solid #f1d79d; border-left: 4px solid #e7a629; border-radius: 10px; margin-bottom: 14px; padding: 14px; }
 .season-briefing-panel > p { color: var(--text-muted); font-size: 12px; margin: 0 0 10px; }

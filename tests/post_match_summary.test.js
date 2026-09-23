@@ -196,6 +196,12 @@ assert.ok(Number.isFinite(resumoRapido.xg.visitante), 'fallback xG should be num
 assert.ok(Array.isArray(resumoRapido.zonas), 'fallback zones should be an array');
 assert.ok(Array.isArray(resumoRapido.destaques), 'fallback highlights should be an array');
 
+scope.historicoPartidas = [resumoCompleto, resumoRapido];
+const resumoGerencial = scope.obterResumoGerencialTemporada(resumoCompleto.temporada, meuTime.id);
+assert.strictEqual(resumoGerencial.jogos, 2, 'season report should count the managed club matches');
+assert.strictEqual(resumoGerencial.golsMarcados, 2, 'season report should count goals scored when home and away');
+assert.strictEqual(resumoGerencial.golsSofridos, 1, 'season report should count goals conceded when home and away');
+
 scope.telaAtual = 'pos_jogo';
 scope.posJogo = { disponivel: true, resumo: resumoCompleto };
 scope.fecharPosJogo();
