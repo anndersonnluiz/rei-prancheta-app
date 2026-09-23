@@ -161,9 +161,29 @@ function calcularOverall(jogador) {
   return ((attr.finalizacao || 75) + (attr.passe || 75) + (attr.marcacao || 75) + (attr.velocidade || 75) + (attr.fisico || 75)) / 5;
 }
 
+function calcularForcaElencoPreJogo(clube) {
+  const elenco = jogadores.filter(j => j.clubeId === clube.id && !j.lesionado && !j.suspenso && !j.expulso);
+  const vagas = ['GOL', 'LAT', 'ZAG', 'ZAG', 'LAT', 'VOL', 'VOL', 'MEI', 'ATA', 'ATA', 'ATA'];
+  const ordenados = elenco.slice().sort((a, b) => calcularOverall(b) - calcularOverall(a));
+  const usados = new Set();
+  const selecionados = [];
+  vagas.forEach(posicao => {
+    const indice = ordenados.findIndex((jogador, index) => !usados.has(index) && jogador.posicao === posicao);
+    if (indice >= 0) {
+      usados.add(indice);
+      selecionados.push(ordenados[indice]);
+    }
+  });
+  ordenados.forEach((jogador, index) => {
+    if (selecionados.length < 11 && !usados.has(index)) selecionados.push(jogador);
+  });
+  if (selecionados.length === 0) return clube.reputacao || 70;
+  return selecionados.reduce((sum, jogador) => sum + calcularOverall(jogador), 0) / selecionados.length;
+}
+
 function calcularPlacarAleatorioCPU(mandante, visitante, aplicaCasa) {
-  const forcaM = mandante.reputacao + (aplicaCasa ? 10 : 0);
-  const forcaV = visitante.reputacao;
+  const forcaM = calcularForcaElencoPreJogo(mandante) + (aplicaCasa ? 4 : 0);
+  const forcaV = calcularForcaElencoPreJogo(visitante);
   const taticaM = sortearTaticaCPU();
   const taticaV = sortearTaticaCPU();
   const ataqueM = forcaM * calcularModificadorAtaqueTatica(taticaM);

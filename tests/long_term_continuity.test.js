@@ -32,6 +32,19 @@ scope.iniciarNovoJogo(clubeTeste);
 scope.assinarPatrocinio(scope.patrocinadoresDisponiveis[1]);
 scope.atualizarTaticas = function() {};
 
+// A auditoria precisa representar uma gestão minimamente competente. Os
+// dados-base são agrupados por posição (e não por ordem de força), então usar
+// os 11 primeiros jogadores colocaria goleiros e zagueiros no ataque. A
+// formação automática seleciona os melhores atletas para cada slot válido.
+function prepararEscalacaoCompetitiva() {
+  scope.elencoAtual.forEach((jogador) => {
+    jogador.emCampo = false;
+    jogador.posX = 0;
+    jogador.posY = 0;
+  });
+  scope.aplicarFormacao('4-3-3');
+}
+
 function simularGestaoCpuDoClubeAuditado() {
   if (process.env.TEST_CPU_MANAGED !== '1' || typeof scope.simularMercadoCPU !== 'function') return;
   const clubeHumano = scope.clubeAtual;
@@ -52,11 +65,18 @@ const partidaCompleta = scope.obterMeuJogoHoje();
 let telemetriaCompleta = null;
 let estatisticasCompletas = null;
 if (partidaCompleta) {
-  scope.elencoAtual.slice(0, 11).forEach((jogador) => { jogador.emCampo = true; });
+  prepararEscalacaoCompetitiva();
   scope.iniciarPartidaCompleta(partidaCompleta);
   telemetriaCompleta = partidaCompleta.telemetriaShots || [];
   estatisticasCompletas = scope.estatisticas ? JSON.parse(JSON.stringify(scope.estatisticas)) : null;
 }
+// A partida acima valida o modo completo, mas a auditoria de continuidade
+// abaixo usa resultados rápidos independentes. Não carregue o estado de jogo
+// ao vivo para esse ciclo, senão a regra de reorganização durante a partida
+// impede a recomposição dos titulares entre rodadas.
+scope.partidaAoVivo = null;
+scope.partidaEmAndamento = false;
+scope.partidaPausada = false;
 
 const anosIniciais = scope.dados.anoAtual;
 let partidas = 0;
@@ -71,8 +91,10 @@ const competicoes = {};
 const trajetoriaDivisoes = [];
 const trajetoriaReputacao = [];
 for (let temporada = 0; temporada < temporadasParaSimular; temporada += 1) {
-  scope.elencoAtual.slice(0, 11).forEach((jogador) => { jogador.emCampo = true; jogador.anosContrato = 3; });
+  prepararEscalacaoCompetitiva();
+  scope.elencoAtual.filter((jogador) => jogador.emCampo).forEach((jogador) => { jogador.anosContrato = 3; });
   for (let dia = 0; dia < scope.calendarioGeral.length && scope.telaAtual !== 'cerimonia'; dia += 1) {
+    if (process.env.TEST_CPU_MANAGED === '1') prepararEscalacaoCompetitiva();
     const jogo = scope.obterMeuJogoHoje();
     if (jogo) {
       const calendarioHoje = scope.calendarioGeral[scope.diaAtual] || {};

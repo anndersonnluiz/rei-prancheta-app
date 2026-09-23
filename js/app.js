@@ -698,8 +698,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var adversario = candidatos[Math.floor(Math.random() * candidatos.length)];
         var forcaMeuTime = $scope.calcularForcaTime ? $scope.calcularForcaTime() : 70;
         var forcaAdversario = $scope.calcularForcaElencoPreJogo(adversario, false);
-        var golsMeu = $scope.gerarGols ? $scope.gerarGols(forcaMeuTime) : 0;
-        var golsAdversario = $scope.gerarGols ? $scope.gerarGols(forcaAdversario) : 0;
+        var golsMeu = $scope.gerarGols ? $scope.gerarGols(forcaMeuTime, forcaAdversario, 3) : 0;
+        var golsAdversario = $scope.gerarGols ? $scope.gerarGols(forcaAdversario, forcaMeuTime, 0) : 0;
         preparacao.amistosoRealizado = true;
         preparacao.entrosamentoGeral = Math.min(100, preparacao.entrosamentoGeral + 4);
         ['defesa', 'meio', 'ataque'].forEach(function(setor) { preparacao.entrosamentoSetores[setor] = Math.min(100, preparacao.entrosamentoSetores[setor] + 3); });
@@ -4449,6 +4449,35 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         });
     }
 
+    // A CPU não deve montar um onze apenas pelos maiores overalls brutos:
+    // isso pode escalar três goleiros, seis laterais e nenhum zagueiro. O
+    // elenco continua podendo ser desequilibrado, mas a força pré-jogo deve
+    // representar uma escalação plausível em 4-3-3, com fallback apenas para
+    // posições que o clube realmente não consegue preencher.
+    function selecionarOnzeBalanceadoPreJogo(jogadores) {
+        var ordenados = ordenarPorOverallPreJogo(jogadores);
+        var vagas = ['GOL', 'LAT', 'ZAG', 'ZAG', 'LAT', 'VOL', 'VOL', 'MEI', 'ATA', 'ATA', 'ATA'];
+        var selecionados = [];
+        var usados = [];
+
+        vagas.forEach(function(posicao) {
+            var indice = ordenados.findIndex(function(jogador, index) {
+                return usados.indexOf(index) < 0 && jogador.posicao === posicao;
+            });
+            if (indice >= 0) {
+                usados.push(indice);
+                selecionados.push(ordenados[indice]);
+            }
+        });
+
+        ordenados.forEach(function(jogador, indice) {
+            if (selecionados.length >= 11) return;
+            if (usados.indexOf(indice) < 0) selecionados.push(jogador);
+        });
+
+        return selecionados.slice(0, 11);
+    }
+
     function calcularCondicaoMediaPreJogo(elenco) {
         var disponiveis = obterJogadoresDisponiveisPreJogo(elenco);
         if (disponiveis.length === 0) return elenco && elenco.length > 0 ? 0 : 100;
@@ -4541,9 +4570,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
         if (preferirEscalacao) {
             jogadoresBase = candidatos.filter(function(j) { return j.emCampo; });
+            // Entre partidas, lesões e suspensões podem deixar a escalação
+            // visual incompleta. Recompõe o cálculo com um onze elegível,
+            // sem alterar a regra de jogo ao vivo: durante a partida, os
+            // atletas realmente em campo continuam sendo a única fonte.
+            if (jogadoresBase.length < 11 && !$scope.partidaEmAndamento) {
+                jogadoresBase = selecionarOnzeBalanceadoPreJogo(candidatos);
+            }
         }
         if (jogadoresBase.length === 0) {
-            jogadoresBase = ordenarPorOverallPreJogo(candidatos).slice(0, 11);
+            jogadoresBase = selecionarOnzeBalanceadoPreJogo(candidatos);
         }
         if (jogadoresBase.length === 0) {
             var reputacao = clube && typeof clube.reputacao === 'number' ? clube.reputacao : 70;
@@ -4781,12 +4817,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     $scope.calcularForcaTime = function() {
+        // Antes do apito, o clube humano precisa ser comparado com os
+        // adversários pela mesma régua de pré-jogo. A fórmula detalhada abaixo
+        // continua reservada ao jogo ao vivo, quando expulsões, fadiga e
+        // substituições alteram o onze minuto a minuto.
+        if (!$scope.partidaEmAndamento && typeof $scope.calcularForcaElencoPreJogo === 'function') {
+            return $scope.calcularForcaElencoPreJogo($scope.clubeAtual, true);
+        }
         var forcaTime = 0;
         var emCampo = $scope.elencoAtual.filter(function(j) { return j.emCampo; });
-        if (emCampo.length < 11 && typeof $scope.calcularForcaElencoPreJogo === 'function') {
-            emCampo = obterJogadoresDisponiveisPreJogo($scope.elencoAtual).sort(function(a, b) {
-                return calcularOverallPreJogo(b) - calcularOverallPreJogo(a);
-            }).slice(0, 11);
+        if (emCampo.length < 11 && !$scope.partidaEmAndamento && typeof $scope.calcularForcaElencoPreJogo === 'function') {
+            emCampo = selecionarOnzeBalanceadoPreJogo(obterJogadoresDisponiveisPreJogo($scope.elencoAtual));
         }
         emCampo.forEach(function(j) { 
             var penalty = 1;
@@ -4825,8 +4866,17 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return Math.round(valor * (1 - perda * 0.35));
     };
 
-    $scope.gerarGols = function(forcaBase) {
-        var chanceBase = forcaBase / 100; // ex: 75 de overall = 0.75
+    $scope.gerarGols = function(forcaBase, forcaAdversaria, vantagemMando) {
+        var base = Number(forcaBase) || 70;
+        var chanceBase = base / 100; // ex: 75 de overall = 0.75
+        var adversaria = Number(forcaAdversaria);
+        var mando = Number(vantagemMando) || 0;
+        // Mantém espaço para zebras, mas evita que as forças sejam sorteadas
+        // como se não existisse adversário: a diferença altera moderadamente
+        // a chance relativa de marcar.
+        var diferencaRelativa = Number.isFinite(adversaria) ? (base + mando - adversaria) : 0;
+        var ajusteForca = 1 + Math.max(-0.25, Math.min(0.25, diferencaRelativa * 0.025));
+        chanceBase *= ajusteForca;
         var gols = 0;
         for(var i=0; i<5; i++) {
             if (Math.random() < (chanceBase * 0.30)) gols++;
@@ -4868,8 +4918,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var adversario = userIsMandante ? partida.visitante : partida.mandante;
         var forcaAdv = $scope.calcularForcaElencoPreJogo(adversario, false);
 
-        var golsUser = $scope.gerarGols(forcaUsuario);
-        var golsAdv = $scope.gerarGols(forcaAdv);
+        var vantagemUsuario = userIsMandante ? 3 : 0;
+        var vantagemAdversario = userIsMandante ? 0 : 3;
+        var golsUser = $scope.gerarGols(forcaUsuario, forcaAdv, vantagemUsuario);
+        var golsAdv = $scope.gerarGols(forcaAdv, forcaUsuario, vantagemAdversario);
 
         if (userIsMandante) {
             partida.golsMandante = golsUser;
@@ -6670,8 +6722,18 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var ajusteMoral = ((Number(historico.moralMedia) || 70) - 65) * 0.04;
             return Math.max(-3, Math.min(3, ajusteFisico + ajusteMoral));
         }
-        var forcaM = mandante.reputacao + formaRecente(mandante) + (aplicaCasa ? 10 : 0);
-        var forcaV = visitante.reputacao + formaRecente(visitante);
+        var forcaBaseM = typeof $scope.calcularForcaElencoPreJogo === 'function'
+            ? $scope.calcularForcaElencoPreJogo(mandante, false)
+            : (Number(mandante.reputacao) || 70);
+        var forcaBaseV = typeof $scope.calcularForcaElencoPreJogo === 'function'
+            ? $scope.calcularForcaElencoPreJogo(visitante, false)
+            : (Number(visitante.reputacao) || 70);
+        // A reputação continua influenciando o contexto e a estabilidade,
+        // mas a qualidade do elenco é o principal componente do resultado.
+        // O mando acrescenta uma vantagem curta, sem transformar qualquer
+        // mandante em favorito automático.
+        var forcaM = forcaBaseM + formaRecente(mandante) + (aplicaCasa ? 4 : 0);
+        var forcaV = forcaBaseV + formaRecente(visitante);
         var taticaM = $scope.sortearTaticaCPU();
         var taticaV = $scope.sortearTaticaCPU();
         // A CPU mais forte tende a assumir o jogo; a mais fraca protege-se,
