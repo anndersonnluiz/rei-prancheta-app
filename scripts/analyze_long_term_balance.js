@@ -1,10 +1,23 @@
 const { spawnSync } = require('child_process');
+const clubes = require('../data/clubes.json');
 
 const amostras = Number(process.argv[2]) || 5;
 const resultados = [];
+const divisoes = ['A', 'B', 'C', 'D'];
+const clubesPorDivisao = divisoes.reduce((grupos, divisao) => {
+  grupos[divisao] = clubes.filter((clube) => clube.divisao === divisao);
+  return grupos;
+}, {});
 
 for (let i = 0; i < amostras; i += 1) {
-  const execucao = spawnSync(process.execPath, ['tests/long_term_continuity.test.js'], { encoding: 'utf8', maxBuffer: 10 * 1024 * 1024 });
+  const divisao = divisoes[i % divisoes.length];
+  const candidatos = clubesPorDivisao[divisao];
+  const clube = candidatos[Math.floor(i / divisoes.length) % candidatos.length];
+  const execucao = spawnSync(process.execPath, ['tests/long_term_continuity.test.js'], {
+    encoding: 'utf8',
+    maxBuffer: 10 * 1024 * 1024,
+    env: { ...process.env, TEST_CLUB: clube.nome }
+  });
   if (execucao.status !== 0) {
     process.stderr.write(execucao.stderr || execucao.stdout);
     process.exit(execucao.status || 1);
@@ -23,9 +36,29 @@ function faixa(campo) {
   return { minimo: Math.min(...valores), maximo: Math.max(...valores) };
 }
 
+function resumirDivisao(divisao) {
+  const amostrasDivisao = resultados.filter((item) => item.divisaoInicial === divisao);
+  if (amostrasDivisao.length === 0) return null;
+  const mediaDivisao = (campo) => amostrasDivisao.reduce((total, item) => total + (Number(item[campo]) || 0), 0) / amostrasDivisao.length;
+  return {
+    amostras: amostrasDivisao.length,
+    clubes: amostrasDivisao.map((item) => item.clube),
+    divisoesFinais: amostrasDivisao.reduce((contagem, item) => {
+      contagem[item.divisaoFinal] = (contagem[item.divisaoFinal] || 0) + 1;
+      return contagem;
+    }, {}),
+    golsPorPartida: Number(mediaDivisao('golsPorPartida').toFixed(2)),
+    cartoes: Number(mediaDivisao('cartoesAcumulados').toFixed(1)),
+    lesoes: Number(mediaDivisao('lesoesObservadas').toFixed(1)),
+    maiorFolha: Number(mediaDivisao('maiorFolha').toFixed(2)),
+    menorOrcamento: Number(mediaDivisao('menorOrcamento').toFixed(2))
+  };
+}
+
 console.log(JSON.stringify({
   amostras,
   temporadasPorAmostra: 3,
+  clubesAvaliados: resultados.map((item) => item.clube),
   medias: {
     golsPorPartida: Number(media('golsPorPartida').toFixed(2)),
     cartoes: Number(media('cartoesAcumulados').toFixed(1)),
@@ -38,5 +71,9 @@ console.log(JSON.stringify({
     cartoes: faixa('cartoesAcumulados'),
     lesoes: faixa('lesoesObservadas'),
     menorOrcamento: faixa('menorOrcamento')
-  }
+  },
+  porDivisao: divisoes.reduce((grupos, divisao) => {
+    grupos[divisao] = resumirDivisao(divisao);
+    return grupos;
+  }, {})
 }, null, 2));

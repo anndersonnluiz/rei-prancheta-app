@@ -7796,6 +7796,46 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         }
     };
 
+    function obterDivisoesClubesSalvas(saveInfo) {
+        var mapa = {};
+        var divisoesValidas = { A: true, B: true, C: true, D: true };
+        if (!saveInfo || typeof saveInfo !== 'object') return mapa;
+
+        if (saveInfo.divisoesClubes && typeof saveInfo.divisoesClubes === 'object' && !Array.isArray(saveInfo.divisoesClubes)) {
+            Object.keys(saveInfo.divisoesClubes).forEach(function(clubeId) {
+                var divisao = saveInfo.divisoesClubes[clubeId];
+                if (divisoesValidas[divisao]) mapa[clubeId] = divisao;
+            });
+        }
+
+        // Compatibilidade: saves antigos não tinham o mapa global, mas as tabelas
+        // já carregavam o clube com a divisão resultante da temporada encerrada.
+        if (saveInfo.tabelas && typeof saveInfo.tabelas === 'object') {
+            Object.keys(saveInfo.tabelas).forEach(function(divisao) {
+                if (!divisoesValidas[divisao] || !Array.isArray(saveInfo.tabelas[divisao])) return;
+                saveInfo.tabelas[divisao].forEach(function(linha) {
+                    var clube = linha && linha.clube;
+                    if (clube && clube.id !== undefined && mapa[clube.id] === undefined) mapa[clube.id] = divisao;
+                });
+            });
+        }
+
+        if (saveInfo.clubeAtualInfo && saveInfo.clubeAtualInfo.id !== undefined && divisoesValidas[saveInfo.clubeAtualInfo.divisao] && mapa[saveInfo.clubeAtualInfo.id] === undefined) {
+            mapa[saveInfo.clubeAtualInfo.id] = saveInfo.clubeAtualInfo.divisao;
+        }
+        return mapa;
+    }
+
+    function aplicarDivisoesClubesSalvas(saveInfo) {
+        var mapa = obterDivisoesClubesSalvas(saveInfo);
+        if (!$scope.clubes || !Object.keys(mapa).length) return mapa;
+        $scope.clubes.forEach(function(clube) {
+            if (!clube || clube.id === undefined || mapa[clube.id] === undefined) return;
+            clube.divisao = mapa[clube.id];
+        });
+        return mapa;
+    }
+
     $scope.migrarSave = function(saveInfo) {
         if (!saveInfo) return saveInfo;
 
@@ -7821,6 +7861,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         if (!Array.isArray(saveInfo.telemetriaHistorico)) saveInfo.telemetriaHistorico = [];
         if (!Array.isArray(saveInfo.transferenciasHistorico)) saveInfo.transferenciasHistorico = [];
         if (!Array.isArray(saveInfo.propostasPendentes)) saveInfo.propostasPendentes = [];
+        if (!saveInfo.divisoesClubes || typeof saveInfo.divisoesClubes !== 'object' || Array.isArray(saveInfo.divisoesClubes)) {
+            saveInfo.divisoesClubes = obterDivisoesClubesSalvas(saveInfo);
+        }
         if (saveInfo.ultimoResumoPartida === undefined) saveInfo.ultimoResumoPartida = null;
         if (!Array.isArray(saveInfo.relatorioEvolucao)) saveInfo.relatorioEvolucao = [];
         if (saveInfo.ultimoDiaEvolucao === undefined) saveInfo.ultimoDiaEvolucao = 0;
@@ -7878,6 +7921,11 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     bonusContratuaisTemporada: Number(clube.bonusContratuaisTemporada) || 0,
                     bonusContratuaisPendentes: Number(clube.bonusContratuaisPendentes) || 0
                 };
+                return acumulado;
+            }, {}),
+            divisoesClubes: ($scope.clubes || []).reduce(function(acumulado, clube) {
+                if (!clube || clube.id === undefined || !clube.divisao) return acumulado;
+                acumulado[clube.id] = clube.divisao;
                 return acumulado;
             }, {}),
             anoAtual: $scope.dados.anoAtual || 2024,
@@ -8510,6 +8558,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         $scope.caixaEntrada = $scope.saveInfo.caixaEntrada || [];
         $scope.noticiasFeed = $scope.saveInfo.noticiasFeed || [];
         $scope.patrocinioAtual = $scope.saveInfo.patrocinioAtual || null;
+        aplicarDivisoesClubesSalvas($scope.saveInfo);
         $scope.clubeAtual = $scope.clubes.find(function(c) { return c.id === $scope.saveInfo.clubeAtualId; });
         if ($scope.saveInfo.estadosFinanceirosClubes && typeof $scope.saveInfo.estadosFinanceirosClubes === 'object') {
             Object.keys($scope.saveInfo.estadosFinanceirosClubes).forEach(function(clubeId) {

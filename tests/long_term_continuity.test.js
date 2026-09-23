@@ -25,6 +25,7 @@ scope.jogadores = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 
 scope.dados.nomeTreinador = 'Stress de Continuidade';
 const clubeTeste = process.env.TEST_CLUB ? scope.clubes.find((clube) => clube.nome === process.env.TEST_CLUB) : scope.clubes[0];
 assert.ok(clubeTeste, 'requested simulation club should exist');
+const divisaoInicial = clubeTeste.divisao;
 scope.iniciarNovoJogo(clubeTeste);
 scope.assinarPatrocinio(scope.patrocinadoresDisponiveis[1]);
 scope.atualizarTaticas = function() {};
@@ -108,6 +109,9 @@ assert.ok(cartoes >= 0 && lesoes >= 0, 'disciplinary and injury metrics should r
 assert.ok(scope.historicoTreinador.filter((item) => item.tipo === 'temporada').length >= 3, 'career history should retain all seasons');
 scope.elencoAtual.forEach((jogador) => assert.ok(jogador.clubeId === scope.clubeAtual.id, 'squad player should remain linked to managed club'));
 console.log('long_term_continuity.test.js balance report:', JSON.stringify({
+  clube: clubeTeste.nome,
+  divisaoInicial,
+  divisaoFinal: clubeTeste.divisao,
   temporadas: 3,
   partidas: partidas,
   gols: gols,
