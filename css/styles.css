@@ -245,6 +245,36 @@
     .ceremony-section-heading p, .ceremony-awards-heading p { font-size: 11px; }
 }
 
+/* Refinamento da ação final da diretoria */
+.ceremony-director-body { gap: 28px; }
+.ceremony-director-body > div:first-child { display: grid; gap: 12px; }
+.ceremony-director-body > div > p[style*="font-size: 18px"] { align-items: center; display: flex; gap: 8px; }
+.ceremony-director-body > div > p[style*="font-size: 18px"] strong { color: #435a66; }
+.ceremony-continue-button {
+    align-items: center;
+    appearance: none;
+    background: linear-gradient(135deg, var(--br-green), #08b94f) !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex;
+    font-weight: 800 !important;
+    justify-content: center;
+    min-height: 50px;
+    outline: none;
+    transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.ceremony-director-card--dismissed .ceremony-continue-button { background: linear-gradient(135deg, #c0392b, #e04e3e) !important; box-shadow: 0 8px 18px rgba(192, 57, 43, .24) !important; }
+.ceremony-continue-button:hover { background: linear-gradient(135deg, var(--br-green-dark), var(--br-green)) !important; box-shadow: 0 11px 22px rgba(0, 156, 59, .3) !important; transform: translateY(-2px); }
+.ceremony-director-card--dismissed .ceremony-continue-button:hover { background: linear-gradient(135deg, #a93226, #c0392b) !important; box-shadow: 0 11px 22px rgba(192, 57, 43, .32) !important; }
+.ceremony-continue-button:focus-visible { box-shadow: 0 0 0 4px rgba(0, 156, 59, .2), 0 8px 18px rgba(0, 156, 59, .24) !important; }
+.ceremony-director-card--dismissed .ceremony-continue-button:focus-visible { box-shadow: 0 0 0 4px rgba(192, 57, 43, .2), 0 8px 18px rgba(192, 57, 43, .24) !important; }
+.ceremony-continue-button:active { transform: translateY(0); }
+
+@media (max-width: 760px) {
+    .ceremony-director-body { gap: 18px; }
+    .ceremony-director-body > div:first-child { gap: 10px; }
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 html { min-height: 100%; width: 100%; }
 body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; width: 100%; overflow-x: hidden; }
