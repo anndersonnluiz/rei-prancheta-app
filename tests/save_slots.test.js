@@ -72,6 +72,7 @@ const legacy = createHarness({ reiDaPranchetaSave: JSON.stringify(primeiro) }, t
 legacy.scope.checarSaveExistente();
 const migratedSlots = JSON.parse(legacy.storage.reiDaPranchetaSaveSlots);
 assert.strictEqual(migratedSlots['0'].clubeAtualId, primeiro.clubeAtualId);
-assert.strictEqual(migratedSlots['0'].elencoAtual[0].id, primeiro.elencoAtual[0].id);
+assert.strictEqual(migratedSlots['0'].__reiDaPranchetaSlotRef, 'reiDaPranchetaSave');
+assert.strictEqual(JSON.parse(legacy.storage.reiDaPranchetaSave).elencoAtual[0].id, primeiro.elencoAtual[0].id);
 
 console.log('save_slots.test.js passed');

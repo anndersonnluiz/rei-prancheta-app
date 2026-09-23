@@ -2320,10 +2320,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var categoria = atleta.categoriaBase || (atleta.idade <= 17 ? 'Sub-17' : 'Sub-20');
         var overall = atleta.overallAtual || calcularOverallBaseJogador(atleta);
         var quantidadePosicao = ($scope.elencoAtual || []).filter(function(jogador) { return jogador.posicao === atleta.posicao; }).length;
-        if (quantidadePosicao >= 5 && overall < 80) return { elegivel: false, texto: 'Elenco cheio nesta posição' };
-        if (categoria === 'Sub-17' && atleta.idade < 17 && (atleta.potencial || 0) < 84) return { elegivel: false, texto: 'Desenvolver no Sub-17' };
-        if (overall < 50 && (atleta.potencial || 0) < 78) return { elegivel: false, texto: 'Aguardando evolução' };
-        return { elegivel: true, texto: categoria === 'Sub-17' ? 'Promoção acelerada' : 'Pronto para o profissional' };
+        if (quantidadePosicao >= 5 && overall < 80) return { elegivel: false, codigo: 'posicao_cheia', texto: 'Posição cheia (5/5 no elenco)' };
+        if (categoria === 'Sub-17' && atleta.idade < 17 && (atleta.potencial || 0) < 84) return { elegivel: false, codigo: 'sub17', texto: 'Desenvolver no Sub-17' };
+        if (overall < 50 && (atleta.potencial || 0) < 78) return { elegivel: false, codigo: 'aguardando_evolucao', texto: 'Aguardando evolução' };
+        return { elegivel: true, codigo: 'elegivel', texto: categoria === 'Sub-17' ? 'Promoção acelerada' : 'Pronto para o profissional' };
     };
 
     // Perfil de mercado derivado do estado atual do clube. O perfil não fixa
@@ -2697,6 +2697,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var idx = $scope.clubeAtual.base.atletas.findIndex(function(a) { return String(a.id) === String(atletaId); });
         if (idx < 0) return null;
         var atleta = normalizarAtletaBase($scope.clubeAtual.base.atletas[idx], $scope.clubeAtual.id);
+        var statusPromocao = $scope.obterStatusPromocaoBase(atleta);
+        if (!statusPromocao.elegivel) {
+            $scope.feedbackPromocaoBase = {
+                atletaId: atleta.id,
+                mensagem: statusPromocao.texto
+            };
+            return null;
+        }
         var promovido = angular.copy(atleta);
         var idOriginal = promovido.id;
         var idEmUso = function(id) {
@@ -7779,6 +7787,100 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     };
 
     // LÓGICA DE SALVAR E CARREGAR
+    function ehErroQuotaStorage(erro) {
+        if (!erro) return false;
+        var descricao = String(erro.name || '') + ' ' + String(erro.message || '');
+        return erro.code === 22 || /quota|exceeded|storage/i.test(descricao);
+    }
+
+    function tentarGravarStorage(chave, valor) {
+        try {
+            window.localStorage.setItem(chave, valor);
+            return true;
+        } catch (erro) {
+            if (ehErroQuotaStorage(erro)) return false;
+            throw erro;
+        }
+    }
+
+    function lerSlotsStorage() {
+        try {
+            return JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}') || {};
+        } catch (erro) {
+            return {};
+        }
+    }
+
+    function criarReferenciaSlotPrincipal(saveObj) {
+        var clubeInfo = saveObj && saveObj.clubeAtualInfo ? saveObj.clubeAtualInfo : {};
+        return {
+            __reiDaPranchetaSlotRef: 'reiDaPranchetaSave',
+            saveVersion: saveObj && saveObj.saveVersion,
+            savedAt: saveObj && saveObj.savedAt,
+            dataSave: saveObj && saveObj.dataSave,
+            nomeTreinador: saveObj && saveObj.nomeTreinador,
+            clubeAtualId: saveObj && saveObj.clubeAtualId,
+            clubeAtualInfo: {
+                id: clubeInfo.id,
+                nome: clubeInfo.nome,
+                divisao: clubeInfo.divisao
+            }
+        };
+    }
+
+    function limitarHistoricoSave(lista, limite) {
+        return Array.isArray(lista) ? lista.slice(0, limite) : [];
+    }
+
+    // O estado de jogo continua completo em memória. Esta cópia reduz apenas
+    // históricos e telemetria, que são dados de consulta e não fazem parte da
+    // simulação atual. Ela serve como fallback quando o navegador já está perto
+    // do limite do localStorage após várias temporadas.
+    function criarSaveCompactoParaStorage(saveObj) {
+        var compacto;
+        try {
+            compacto = JSON.parse(JSON.stringify(saveObj));
+        } catch (erro) {
+            return null;
+        }
+
+        compacto.historicoTreinador = limitarHistoricoSave(compacto.historicoTreinador, 30);
+        compacto.historicoPartidas = limitarHistoricoSave(compacto.historicoPartidas, 120);
+        compacto.historicoDecisoesGestao = limitarHistoricoSave(compacto.historicoDecisoesGestao, 30);
+        compacto.historicoReputacaoClubes = limitarHistoricoSave(compacto.historicoReputacaoClubes, 60);
+        compacto.financasHistorico = limitarHistoricoSave(compacto.financasHistorico, 180);
+        compacto.caixaEntrada = limitarHistoricoSave(compacto.caixaEntrada, 120);
+        compacto.noticiasFeed = limitarHistoricoSave(compacto.noticiasFeed, 60);
+        compacto.transferenciasHistorico = limitarHistoricoSave(compacto.transferenciasHistorico, 100);
+        compacto.relatorioEvolucao = limitarHistoricoSave(compacto.relatorioEvolucao, 50);
+
+        if (Array.isArray(compacto.telemetriaHistorico)) {
+            compacto.telemetriaHistorico = compacto.telemetriaHistorico.slice(-60).map(function(item) {
+                var telemetria = {
+                    matchKey: item && item.matchKey,
+                    homeId: item && item.homeId,
+                    awayId: item && item.awayId,
+                    shots: []
+                };
+                if (item && Array.isArray(item.shots)) telemetria.shots = item.shots.slice(-40);
+                return telemetria;
+            });
+        } else {
+            compacto.telemetriaHistorico = [];
+        }
+
+        if (compacto.estadosOperacionaisClubes && typeof compacto.estadosOperacionaisClubes === 'object') {
+            Object.keys(compacto.estadosOperacionaisClubes).forEach(function(clubeId) {
+                var estado = compacto.estadosOperacionaisClubes[clubeId];
+                if (!estado || typeof estado !== 'object') return;
+                estado.financasHistorico = limitarHistoricoSave(estado.financasHistorico, 120);
+                estado.caixaEntrada = limitarHistoricoSave(estado.caixaEntrada, 80);
+                estado.propostasPendentes = limitarHistoricoSave(estado.propostasPendentes, 40);
+            });
+        }
+        return compacto;
+    }
+
     $scope.checarSaveExistente = function() {
         var saveLocal = window.localStorage.getItem('reiDaPranchetaSave');
         if (saveLocal) {
@@ -7787,8 +7889,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var slotsExistentes = {};
             try { slotsExistentes = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slotsExistentes = {}; }
             if (!slotsExistentes['0']) {
-                slotsExistentes['0'] = $scope.saveInfo;
-                window.localStorage.setItem('reiDaPranchetaSaveSlots', JSON.stringify(slotsExistentes));
+                slotsExistentes['0'] = criarReferenciaSlotPrincipal($scope.saveInfo);
+                tentarGravarStorage('reiDaPranchetaSaveSlots', JSON.stringify(slotsExistentes));
             }
         } else {
             $scope.existeSave = false;
@@ -7959,13 +8061,62 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             diretoriaStatus: normalizarDiretoriaStatusInterno($scope.diretoriaStatus || criarDiretoriaStatusPadrao()),
             contextoExterno: normalizarContextoExternoInterno($scope.contextoExterno || criarContextoExternoPadrao())
         };
-        window.localStorage.setItem('reiDaPranchetaSave', JSON.stringify(saveObj));
-        var slots = {};
-        try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
-        slots[String($scope.slotSaveAtual || 0)] = saveObj;
-        window.localStorage.setItem('reiDaPranchetaSaveSlots', JSON.stringify(slots));
+        var savePersistido = saveObj;
+        var jsonSave = JSON.stringify(saveObj);
+        var gravado = tentarGravarStorage('reiDaPranchetaSave', jsonSave);
+
+        if (!gravado) {
+            // Slot 0 antigo duplicava o save completo e podia consumir quase
+            // toda a cota sozinho. Removemos apenas essa duplicação, mantendo
+            // os demais slots intactos, antes de tentar o fallback compacto.
+            var slotsAntesDoFallback = lerSlotsStorage();
+            if (slotsAntesDoFallback['0'] && !slotsAntesDoFallback['0'].__reiDaPranchetaSlotRef) {
+                var slotsSemDuplicacao = angular.copy(slotsAntesDoFallback);
+                delete slotsSemDuplicacao['0'];
+                tentarGravarStorage('reiDaPranchetaSaveSlots', JSON.stringify(slotsSemDuplicacao));
+            }
+
+            var compacto = criarSaveCompactoParaStorage(saveObj);
+            var jsonCompacto = compacto ? JSON.stringify(compacto) : null;
+            if (jsonCompacto) {
+                gravado = tentarGravarStorage('reiDaPranchetaSave', jsonCompacto);
+                if (gravado) savePersistido = compacto;
+            }
+        }
+
+        if (!gravado) {
+            $scope.statusPersistenciaSave = {
+                sucesso: false,
+                mensagem: 'O navegador está sem espaço para salvar a carreira. Exporte o save e limpe um slot antigo.',
+                atualizadoEm: new Date().toISOString()
+            };
+            if (typeof console !== 'undefined' && console.warn) console.warn('Não foi possível persistir a carreira: cota do localStorage excedida.');
+            return false;
+        }
+
+        var slots = lerSlotsStorage();
+        var slotAtual = String($scope.slotSaveAtual || 0);
+        slots[slotAtual] = slotAtual === '0' ? criarReferenciaSlotPrincipal(savePersistido) : savePersistido;
+        var slotsGravados = tentarGravarStorage('reiDaPranchetaSaveSlots', JSON.stringify(slots));
+
+        // Se ainda houver cópias grandes nos slots, a referência do slot 0 é
+        // tentada novamente com o save compacto. A carreira principal já está
+        // persistida, então uma falha aqui não desfaz a renovação.
+        if (!slotsGravados && slotAtual === '0') {
+            var slotsCompactos = lerSlotsStorage();
+            slotsCompactos['0'] = criarReferenciaSlotPrincipal(savePersistido);
+            slotsGravados = tentarGravarStorage('reiDaPranchetaSaveSlots', JSON.stringify(slotsCompactos));
+        }
+
+        $scope.statusPersistenciaSave = {
+            sucesso: true,
+            compacto: savePersistido !== saveObj,
+            mensagem: savePersistido !== saveObj ? 'Carreira salva com histórico antigo compactado.' : 'Carreira salva com sucesso.',
+            atualizadoEm: new Date().toISOString()
+        };
         $scope.atualizarSlotsSaveVisiveis();
         $scope.checarSaveExistente(); 
+        return true;
     };
 
     $scope.slotSaveAtual = 0;
@@ -8003,6 +8154,10 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         try { slots = JSON.parse(window.localStorage.getItem('reiDaPranchetaSaveSlots') || '{}'); } catch (e) { slots = {}; }
         var salvo = slots[String(parseInt(indice, 10) || 0)];
         if (!salvo) return false;
+        if (salvo.__reiDaPranchetaSlotRef === 'reiDaPranchetaSave') {
+            try { salvo = JSON.parse(window.localStorage.getItem('reiDaPranchetaSave') || 'null'); } catch (erroPrincipal) { salvo = null; }
+            if (!salvo) return false;
+        }
         $scope.slotSaveAtual = parseInt(indice, 10) || 0;
         $scope.saveInfo = salvo;
         $scope.carregarJogo();
@@ -8033,9 +8188,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var slot = $scope.slotSaveAtual || 0;
         var existente = $scope.listarSlotsSave().find(function(item) { return item.id === slot && item.save; });
         if (existente && !confirm('Sobrescrever a carreira do Slot ' + (slot + 1) + '?')) return false;
-        $scope.salvarJogoSilencioso();
-        alert('Jogo salvo com sucesso!');
-        return true;
+        var salvo = $scope.salvarJogoSilencioso();
+        alert(salvo === false ? 'Não foi possível salvar a carreira. Exporte o save e limpe um slot antigo.' : 'Jogo salvo com sucesso!');
+        return salvo !== false;
     };
 
     $scope.contratarStaff = function(vaga) {

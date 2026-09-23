@@ -3103,6 +3103,11 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
     font-size: 16px;
 }
 
+.youth-promotion-blocked {
+    color: #b23a32 !important;
+    font-weight: 800;
+}
+
 .youth-actions {
     display: grid;
     gap: 8px;
@@ -3118,6 +3123,13 @@ tbody tr:hover { background-color: var(--br-green-light); transform: scale(1.01)
     font-size: 12px;
     font-weight: 900;
     padding: 9px;
+}
+
+.youth-actions button:disabled {
+    background: #c6cdd2;
+    color: #66727b;
+    cursor: not-allowed;
+    opacity: 0.85;
 }
 
 .youth-actions button.muted {

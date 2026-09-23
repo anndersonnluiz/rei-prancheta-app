@@ -155,6 +155,23 @@ assert.strictEqual(scope.clubeAtual.base.atletas.length, 0, 'promotion should re
 assert.ok(scope.elencoAtual.some((j) => j.id === atleta.id), 'promotion should add player to senior squad');
 assert.ok(scope.jogadores.some((j) => j.id === atleta.id), 'promotion should sync player into global database');
 
+for (let i = 0; i < 4; i++) {
+  scope.elencoAtual.push({ id: 'same-position-' + i, posicao: promovido.posicao });
+}
+const bloqueadoPorPosicao = scope.gerarAtletaBase('bloqueado-posicao', 3);
+bloqueadoPorPosicao.posicao = promovido.posicao;
+bloqueadoPorPosicao.potencial = 70;
+bloqueadoPorPosicao.atributos = Object.keys(bloqueadoPorPosicao.atributos).reduce((atributos, chave) => {
+  atributos[chave] = 45;
+  return atributos;
+}, {});
+scope.clubeAtual.base.atletas = [bloqueadoPorPosicao];
+scope.atualizarResumoBase();
+assert.strictEqual(scope.obterStatusPromocaoBase(bloqueadoPorPosicao).elegivel, false, 'promotion should be blocked when the position already has five players');
+assert.strictEqual(scope.obterStatusPromocaoBase(bloqueadoPorPosicao).codigo, 'posicao_cheia');
+assert.strictEqual(scope.promoverAtletaBase(bloqueadoPorPosicao.id), null, 'direct promotion calls should respect the same position limit');
+assert.strictEqual(scope.clubeAtual.base.atletas.length, 1, 'blocked youth player should remain in the academy');
+
 const dispensado = scope.gerarAtletaBase('dispensa', 1);
 scope.clubeAtual.base.atletas = [dispensado];
 scope.atualizarResumoBase();
