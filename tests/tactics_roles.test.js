@@ -31,5 +31,9 @@ formations.forEach((formation) => {
 assert.ok(app.includes("String(j.id) === String(jogadorId)"), 'drag and drop must support string player IDs');
 assert.ok(app.includes('$scope.obterStatusPosicao'), 'position adaptation status should be exposed to the UI');
 assert.ok(app.includes('Posição adaptada'), 'field should explain acceptable position adaptations');
+assert.ok(app.includes('var estavaEmCampo = !!jogador.emCampo'), 'moving an already benched player must be a no-op');
+assert.ok(app.includes('if (selecionado && String(selecionado.id) === String(jogador.id))'), 'touch selection should be cancellable');
+assert.ok(html.includes("{{ minutoAtual }}' / 90 min"), 'match progress label should fit narrow screens');
+assert.ok(app.includes('jogador.posX = 0;') && app.includes('jogador.posY = 0;'), 'players returned to the bench should clear field coordinates');
 
 console.log('tactics_roles.test.js passed');

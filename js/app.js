@@ -2326,6 +2326,164 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         return { elegivel: true, texto: categoria === 'Sub-17' ? 'Promoção acelerada' : 'Pronto para o profissional' };
     };
 
+    // Perfil de mercado derivado do estado atual do clube. O perfil não fixa
+    // resultados: ele apenas traduz divisão, reputação e caixa em parâmetros
+    // para as decisões futuras da CPU.
+    var parametrosPerfilMercadoClubeCpu = {
+        A: { alvoOverall: 78, profundidadeAlvo: 25, profundidadeMinima: 21, orcamentoReferencia: 100000000, riscoBase: 58, atracaoBase: 76 },
+        B: { alvoOverall: 71, profundidadeAlvo: 24, profundidadeMinima: 20, orcamentoReferencia: 30000000, riscoBase: 48, atracaoBase: 62 },
+        C: { alvoOverall: 65, profundidadeAlvo: 23, profundidadeMinima: 19, orcamentoReferencia: 5000000, riscoBase: 40, atracaoBase: 50 },
+        D: { alvoOverall: 60, profundidadeAlvo: 22, profundidadeMinima: 18, orcamentoReferencia: 1000000, riscoBase: 32, atracaoBase: 40 }
+    };
+
+    var posicoesDiagnosticoClubeCpu = [
+        { posicao: 'GOL', label: 'goleiros', alvo: 3, minimo: 2 },
+        { posicao: 'ZAG', label: 'zagueiros', alvo: 5, minimo: 4 },
+        { posicao: 'LAT', label: 'laterais', alvo: 4, minimo: 3 },
+        { posicao: 'VOL', label: 'volantes', alvo: 4, minimo: 3 },
+        { posicao: 'MEI', label: 'meias', alvo: 4, minimo: 3 },
+        { posicao: 'ATA', label: 'atacantes', alvo: 5, minimo: 3 }
+    ];
+
+    function obterSementeClubeCpu(clube) {
+        var texto = String(clube && clube.id !== undefined ? clube.id : (clube && clube.nome ? clube.nome : 'clube'));
+        var soma = 0;
+        for (var indice = 0; indice < texto.length; indice++) soma += texto.charCodeAt(indice) * (indice + 1);
+        return Math.abs(soma) % 100;
+    }
+
+    function obterClubePerfilCpu(clubeOuId) {
+        if (!clubeOuId) return null;
+        if (typeof clubeOuId === 'object') return clubeOuId;
+        return ($scope.clubes || []).find(function(clube) { return String(clube.id) === String(clubeOuId); }) || null;
+    }
+
+    $scope.obterPerfilClubeCpu = function(clubeOuId) {
+        var clube = obterClubePerfilCpu(clubeOuId);
+        if (!clube) return null;
+        var divisao = parametrosPerfilMercadoClubeCpu[clube.divisao] ? clube.divisao : 'D';
+        var base = parametrosPerfilMercadoClubeCpu[divisao];
+        var reputacao = limitarNumero(Number(clube.reputacao) || 50, 0, 100);
+        var orcamento = Math.max(0, Number(clube.orcamento) || 0);
+        var proporcaoCaixa = base.orcamentoReferencia > 0 ? Math.min(1.75, orcamento / base.orcamentoReferencia) : 0;
+        var variacao = obterSementeClubeCpu(clube);
+        var saudeFinanceira = Math.round(limitarNumero(35 + proporcaoCaixa * 25 + (reputacao - 50) * 0.5, 0, 100));
+        var poderAtracao = Math.round(limitarNumero(base.atracaoBase + (reputacao - 50) * 0.45 + (proporcaoCaixa - 1) * 8, 0, 100));
+        var alvoOverall = Math.round(limitarNumero(base.alvoOverall + (reputacao - 65) * 0.18 + (poderAtracao - 60) * 0.05, 55, 88));
+        var toleranciaRisco = Math.round(limitarNumero(base.riscoBase + (saudeFinanceira - 50) * 0.22 + (variacao % 11) - 5, 15, 85));
+        var estrategia;
+        var focoIdade;
+        if (reputacao >= 90 && saudeFinanceira >= 70) {
+            estrategia = 'estrelas e titulares';
+            focoIdade = 'jogadores prontos';
+        } else if (variacao % 3 === 0) {
+            estrategia = 'desenvolvimento e revenda';
+            focoIdade = 'jovens';
+        } else if (variacao % 3 === 1) {
+            estrategia = 'oportunidades de mercado';
+            focoIdade = 'pico de rendimento';
+        } else {
+            estrategia = 'equilibrio entre experiência e juventude';
+            focoIdade = 'elenco misto';
+        }
+        var percentualInvestimento = 0.12 + toleranciaRisco / 1000;
+        var limiteInvestimento = Math.max(250000, Math.round(orcamento * percentualInvestimento / 10000) * 10000);
+        return {
+            clubeId: clube.id,
+            clubeNome: clube.nome,
+            divisao: divisao,
+            nivelCompetitivo: divisao === 'A' && reputacao >= 90 ? 'elite' : (divisao === 'A' ? 'competitivo' : (reputacao >= 75 ? 'ambicioso' : 'contenção')),
+            reputacao: reputacao,
+            orcamento: orcamento,
+            saudeFinanceira: saudeFinanceira,
+            poderAtracao: poderAtracao,
+            alvoOverall: alvoOverall,
+            profundidadeAlvo: base.profundidadeAlvo,
+            profundidadeMinima: base.profundidadeMinima,
+            toleranciaRisco: toleranciaRisco,
+            estrategiaMercado: estrategia,
+            focoIdade: focoIdade,
+            limiteInvestimentoVista: limiteInvestimento,
+            aceitaParcelamento: toleranciaRisco >= 35,
+            prioridadeBase: reputacao < 65 ? 'integrar jovens e reduzir folha' : (reputacao >= 90 ? 'manter nível competitivo' : 'corrigir carências sem comprometer o caixa')
+        };
+    };
+
+    $scope.obterDiagnosticoNecessidadesClube = function(clubeOuId) {
+        var clube = obterClubePerfilCpu(clubeOuId);
+        var perfil = $scope.obterPerfilClubeCpu(clube);
+        if (!clube || !perfil) return null;
+        var elenco = ($scope.jogadores || []).filter(function(jogador) { return jogador && String(jogador.clubeId) === String(clube.id); });
+        var setores = posicoesDiagnosticoClubeCpu.map(function(configuracao) {
+            var jogadoresPosicao = elenco.filter(function(jogador) { return jogador.posicao === configuracao.posicao; });
+            var disponiveis = jogadoresPosicao.filter(function(jogador) { return !jogador.lesionado && !jogador.suspenso && !jogador.expulso; });
+            var notas = disponiveis.map(function(jogador) {
+                var overall = jogador.atributos && $scope.calcularOverall ? $scope.calcularOverall(jogador) : calcularOverallBaseJogador(jogador);
+                return Number(overall) || 0;
+            }).sort(function(a, b) { return b - a; });
+            var melhor = notas[0] || 0;
+            var media = notas.length ? notas.reduce(function(total, nota) { return total + nota; }, 0) / notas.length : 0;
+            var titulares = notas.slice(0, 2);
+            var mediaTitulares = titulares.length ? titulares.reduce(function(total, nota) { return total + nota; }, 0) / titulares.length : 0;
+            var alvoQualidade = perfil.alvoOverall + (configuracao.posicao === 'MEI' || configuracao.posicao === 'ATA' ? 1 : 0);
+            var deficitDisponibilidade = Math.max(0, configuracao.minimo - disponiveis.length);
+            var deficitProfundidade = Math.max(0, configuracao.alvo - jogadoresPosicao.length);
+            var deficitQualidade = Math.max(0, alvoQualidade - mediaTitulares);
+            var gravidade = Math.round(deficitDisponibilidade * 42 + deficitProfundidade * 10 + deficitQualidade * 1.4);
+            var estado;
+            var recomendacao;
+            if (deficitDisponibilidade > 0 || (jogadoresPosicao.length === 0 && configuracao.posicao !== 'GOL')) {
+                estado = 'critica';
+                recomendacao = 'Contratar imediatamente';
+            } else if (gravidade >= 35) {
+                estado = 'prioritaria';
+                recomendacao = 'Buscar reforço';
+            } else if (jogadoresPosicao.length > configuracao.alvo + 1 && deficitQualidade < 4) {
+                estado = 'saturada';
+                recomendacao = 'Avaliar saída ou empréstimo';
+            } else {
+                estado = 'equilibrada';
+                recomendacao = 'Manter e monitorar';
+            }
+            return {
+                posicao: configuracao.posicao,
+                label: configuracao.label,
+                quantidade: jogadoresPosicao.length,
+                disponiveis: disponiveis.length,
+                lesionados: jogadoresPosicao.filter(function(jogador) { return !!jogador.lesionado; }).length,
+                suspensos: jogadoresPosicao.filter(function(jogador) { return !!jogador.suspenso; }).length,
+                melhorOverall: melhor,
+                mediaOverall: Math.round(media),
+                mediaTitulares: Math.round(mediaTitulares),
+                alvoProfundidade: configuracao.alvo,
+                minimoProfundidade: configuracao.minimo,
+                alvoQualidade: alvoQualidade,
+                deficitDisponibilidade: deficitDisponibilidade,
+                deficitProfundidade: deficitProfundidade,
+                deficitQualidade: Math.round(deficitQualidade),
+                gravidade: gravidade,
+                estado: estado,
+                recomendacao: recomendacao
+            };
+        }).sort(function(a, b) {
+            return b.gravidade - a.gravidade || a.posicao.localeCompare(b.posicao);
+        });
+        var prioridades = setores.filter(function(setor) { return setor.estado === 'critica' || setor.estado === 'prioritaria'; });
+        return {
+            clubeId: clube.id,
+            clubeNome: clube.nome,
+            perfil: perfil,
+            totalJogadores: elenco.length,
+            jogadoresDisponiveis: elenco.filter(function(jogador) { return !jogador.lesionado && !jogador.suspenso && !jogador.expulso; }).length,
+            prioridades: prioridades,
+            carencias: setores.filter(function(setor) { return setor.estado === 'critica' || setor.estado === 'prioritaria'; }),
+            saturadas: setores.filter(function(setor) { return setor.estado === 'saturada'; }),
+            equilibradas: setores.filter(function(setor) { return setor.estado === 'equilibrada'; }),
+            setores: setores,
+            resumo: prioridades.length ? prioridades.length + ' setor(es) exigem atenção' : 'Elenco sem carência estrutural imediata'
+        };
+    };
+
     $scope.obterResumoNecessidadesBase = function() {
         var posicoes = ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'];
         var labels = { GOL: 'goleiro', ZAG: 'zaga', LAT: 'lateral', VOL: 'volante', MEI: 'meia', ATA: 'ataque' };
@@ -2956,12 +3114,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 rumor.subtipo = 'rumor';
                 return;
             }
+            var origemRumor = ($scope.clubes || []).find(function(item) { return String(item.id) === String(clubeOrigemId); });
+            if (origemRumor) origemRumor.orcamento = (Number(origemRumor.orcamento) || 0) + termosRumor.entrada;
             rumor.valorTransferencia = valorTransferencia;
             rumor.titulo = 'Confirmado: ' + jogador.nome + ' acerta com ' + destino.nome;
             rumor.conteudo = 'A negociação foi concluída. ' + jogador.nome + ' deixa o ' + (($scope.clubes || []).find(function(item) { return item.id === clubeOrigemId; }) || {}).nome + ' e passa a defender o ' + destino.nome + ', com pagamento parcelado e impacto no caixa futuro.';
             confirmados.push(rumor);
             if (!$scope.transferenciasHistorico) $scope.transferenciasHistorico = [];
-            $scope.transferenciasHistorico.unshift({ tipo: 'cpu', jogadorId: jogador.id, jogadorNome: jogador.nome, clubeOrigemId: clubeOrigemId, clubeDestinoId: destino.id, clubeDestinoNome: destino.nome, valor: valorTransferencia, dia: dia, confirmadoPor: 'rumor' });
+            $scope.transferenciasHistorico.unshift({ tipo: 'cpu', jogadorId: jogador.id, jogadorNome: jogador.nome, clubeOrigemId: clubeOrigemId, clubeDestinoId: destino.id, clubeDestinoNome: destino.nome, valor: valorTransferencia, entrada: termosRumor.entrada, parcelas: termosRumor.parcelas, intervaloDias: termosRumor.intervaloDias, dia: dia, confirmadoPor: 'rumor' });
             $scope.transferenciasHistorico = $scope.transferenciasHistorico.slice(0, 100);
         });
         return confirmados;
@@ -8865,6 +9025,13 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
     $scope.selecionarJogadorParaTatica = function(jogador) {
         if (!jogador || $scope.jogadorBloqueadoParaEntrar(jogador)) return false;
         var selecionado = $scope.jogadorTaticaSelecionado;
+        // Tocar novamente no mesmo atleta cancela a seleção. Isso evita que
+        // um toque acidental no banco deixe uma ação pendente para o próximo
+        // toque e nunca pode consumir uma substituição.
+        if (selecionado && String(selecionado.id) === String(jogador.id)) {
+            $scope.jogadorTaticaSelecionado = null;
+            return true;
+        }
         // A troca por toque deve funcionar nas duas ordens:
         // titular -> banco e banco -> titular.
         if (selecionado && selecionado.id !== jogador.id && selecionado.emCampo && jogador.emCampo) {
@@ -8998,8 +9165,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     jogador.posY = posY;
                 }
             } else {
-                $scope.marcarSubstituidoNaPartida(jogador);
+                // Soltar/clicar um atleta que já está no banco é uma operação
+                // neutra. Antes, esse caminho marcava o reserva como
+                // substituído, mesmo sem ele ter entrado em campo.
+                var estavaEmCampo = !!jogador.emCampo;
+                if (estavaEmCampo) $scope.marcarSubstituidoNaPartida(jogador);
                 jogador.emCampo = false;
+                jogador.posX = 0;
+                jogador.posY = 0;
             }
         } else if (jogador && jogador.expulso) {
             alert("Este jogador foi expulso e não pode voltar pro campo!");
@@ -10001,8 +10174,12 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var overall = $scope.calcularOverall(jogador);
         var mesmaPosicao = elencoDestino.filter(function(item) { return item.posicao === jogador.posicao; });
         var mediaPosicao = mesmaPosicao.length ? mesmaPosicao.reduce(function(total, item) { return total + $scope.calcularOverall(item); }, 0) / mesmaPosicao.length : 0;
-        var necessidade = Math.max(0, 2 - mesmaPosicao.length) * 12;
-        var reforco = Math.max(0, overall - mediaPosicao) * 1.8;
+        var perfil = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(clubeDestino) : null;
+        var diagnostico = $scope.obterDiagnosticoNecessidadesClube ? $scope.obterDiagnosticoNecessidadesClube(clubeDestino) : null;
+        var setor = diagnostico && diagnostico.setores ? diagnostico.setores.find(function(item) { return item.posicao === jogador.posicao; }) : null;
+        var necessidade = setor ? setor.gravidade * 0.45 : Math.max(0, 2 - mesmaPosicao.length) * 12;
+        var mediaAlvo = setor ? Math.max(mediaPosicao, setor.mediaTitulares || 0) : mediaPosicao;
+        var reforco = Math.max(0, overall - mediaAlvo) * 1.8;
         var idade = Number(jogador.idade) || 25;
         var desenvolvimento = idade <= 23 ? Math.min(8, Number(jogador.potencial || overall) - overall) : 0;
         var custo = $scope.calcularValorPasse(jogador);
@@ -10012,29 +10189,39 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var historicoTreino = Array.isArray(clubeDestino.historicoTreinoCPU) ? clubeDestino.historicoTreinoCPU : [];
         var ultimoTreino = historicoTreino[0];
         var pressaoDesempenho = ultimoTreino && (ultimoTreino.condicaoMedia < 65 || ultimoTreino.moralMedia < 52) ? (overall >= 75 ? 7 : 0) : 0;
-        return necessidade + reforco + Math.max(0, desenvolvimento) + acessibilidade + redundancia + pressaoDesempenho;
+        var estrategia = perfil && perfil.estrategiaMercado === 'desenvolvimento e revenda' ? (idade <= 25 ? 5 : -3) : 0;
+        var qualidadeInsuficiente = setor ? Math.max(0, (setor.alvoQualidade || 0) - overall) * -0.6 : 0;
+        return necessidade + reforco + Math.max(0, desenvolvimento) + acessibilidade + redundancia + pressaoDesempenho + estrategia + qualidadeInsuficiente;
     }
 
     function negociarContratoCpu(jogador, clube, valorPasse, origemId) {
         if (!jogador || !clube) return null;
         var overall = $scope.calcularOverall(jogador);
+        var perfil = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(clube) : null;
         var fatorDivisao = { A: 1.08, B: 1, C: 0.94, D: 0.88 }[clube.divisao] || 1;
+        var fatorAtracao = perfil ? 1 + Math.max(-0.04, Math.min(0.1, (perfil.poderAtracao - 65) * 0.002)) : 1;
         var salarioBase = Number(jogador.salarioDesejado || jogador.salario || 10000);
-        var salario = Math.max(10000, Math.round(salarioBase * fatorDivisao / 100) * 100);
-        var papel = overall >= 88 ? 'importante' : (overall >= 82 ? 'titular' : 'rotacao');
-        var luvas = Math.round(salario * (overall >= 82 ? 3 : 1.5) / 100) * 100;
+        var salario = Math.max(10000, Math.round(salarioBase * fatorDivisao * fatorAtracao / 100) * 100);
+        var alvoPapel = perfil ? perfil.alvoOverall : ({ A: 82, B: 76, C: 71, D: 66 }[clube.divisao] || 70);
+        var papel = overall >= alvoPapel + 10 ? 'importante' : (overall >= alvoPapel - 2 ? 'titular' : 'rotacao');
+        var luvas = Math.round(salario * (papel === 'importante' ? 3.4 : (papel === 'titular' ? 2.3 : 1.5)) / 100) * 100;
         var bonusPorJogo = Math.round(salario * 0.08 / 100) * 100;
         var bonusPorGol = jogador.posicao === 'ATA' ? Math.round(salario * 0.18 / 100) * 100 : 0;
-        var entrada = Math.round(Math.max(0, Number(valorPasse) || 0) * 0.25);
+        var valorTransferencia = Math.max(0, Number(valorPasse) || 0);
+        var aceitaParcelamento = !perfil || perfil.aceitaParcelamento || valorTransferencia === 0;
+        var parcelas = aceitaParcelamento && valorTransferencia > 0 ? 4 : 0;
+        var intervaloDias = parcelas ? 30 : 0;
+        var entrada = parcelas ? Math.round(valorTransferencia * 0.25) : valorTransferencia;
         if ((Number(clube.orcamento) || 0) < entrada + luvas) return null;
         var compromissosAtuais = $scope.obterResumoCompromissosFinanceiros ? $scope.obterResumoCompromissosFinanceiros(clube.id) : { saldoParcelado: 0, bonusPendentes: 0 };
         var exposicaoAtual = (Number(compromissosAtuais.saldoParcelado) || 0) + (Number(compromissosAtuais.bonusPendentes) || 0);
-        var exposicaoDepois = exposicaoAtual + Math.max(0, Number(valorPasse) || 0) + (salario * 12);
-        var limiteExposicao = Math.max(1000000, (Number(clube.orcamento) || 0) * 1.5);
+        var exposicaoDepois = exposicaoAtual + valorTransferencia + (salario * 12);
+        var fatorExposicao = perfil ? 1.1 + (perfil.toleranciaRisco / 100) : 1.5;
+        var limiteExposicao = Math.max(1000000, (Number(clube.orcamento) || 0) * fatorExposicao);
         if (exposicaoDepois > limiteExposicao) return null;
         clube.orcamento -= entrada + luvas;
-        if (valorPasse > 0 && $scope.criarParcelamentoTransferencia) {
-            $scope.criarParcelamentoTransferencia({ valor: valorPasse, entrada: entrada, parcelas: 4, intervaloDias: 30, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: origemId, clubeDevedorId: clube.id });
+        if (parcelas && $scope.criarParcelamentoTransferencia) {
+            $scope.criarParcelamentoTransferencia({ valor: valorTransferencia, entrada: entrada, parcelas: parcelas, intervaloDias: intervaloDias, jogadorId: jogador.id, jogadorNome: jogador.nome, clubeCredorId: origemId, clubeDevedorId: clube.id });
         }
         jogador.salario = salario;
         jogador.salarioDesejado = salario;
@@ -10043,7 +10230,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         jogador.bonusPorGol = bonusPorGol;
         jogador.papelElenco = papel;
         jogador.anosContrato = 2;
-        return { salario: salario, luvas: luvas, bonusPorJogo: bonusPorJogo, bonusPorGol: bonusPorGol, papel: papel, entrada: entrada };
+        return { salario: salario, luvas: luvas, bonusPorJogo: bonusPorJogo, bonusPorGol: bonusPorGol, papel: papel, entrada: entrada, parcelas: parcelas, intervaloDias: intervaloDias, aceitaParcelamento: aceitaParcelamento };
     }
 
     $scope.simularMercadoCPU = function() {
@@ -10190,17 +10377,23 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var cComprador = clubesComGrana.slice().sort(function(a, b) {
                 function urgencia(clube) {
                     var elenco = $scope.jogadores.filter(function(j) { return j.clubeId === clube.id; });
-                    var porPosicao = {};
-                    elenco.forEach(function(j) { porPosicao[j.posicao] = (porPosicao[j.posicao] || 0) + 1; });
-                    var menorProfundidade = Math.min.apply(null, ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'].map(function(p) { return porPosicao[p] || 0; }));
-                    return (30 - elenco.length) + (menorProfundidade < 2 ? 8 : 0) + Math.max(0, 70 - (Number(clube.reputacao) || 70)) * 0.05;
+                    var diagnostico = $scope.obterDiagnosticoNecessidadesClube ? $scope.obterDiagnosticoNecessidadesClube(clube) : null;
+                    var perfil = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(clube) : null;
+                    var maiorCarencia = diagnostico && diagnostico.prioridades && diagnostico.prioridades.length ? diagnostico.prioridades[0].gravidade : 0;
+                    var alvoElenco = perfil ? perfil.profundidadeAlvo : 25;
+                    var faltaElenco = Math.max(0, alvoElenco - elenco.length) * 1.5;
+                    var pressaoCaixa = perfil && perfil.saudeFinanceira < 45 ? 4 : 0;
+                    return maiorCarencia + faltaElenco + pressaoCaixa + Math.max(0, 70 - (Number(clube.reputacao) || 70)) * 0.05;
                 }
                 return urgencia(b) - urgencia(a);
             })[0];
 
             // Escolher um jogador Livre no Mercado e bom (> 70)
+            var diagnosticoCompradorLivre = $scope.obterDiagnosticoNecessidadesClube ? $scope.obterDiagnosticoNecessidadesClube(cComprador) : null;
+            var posicoesPrioritariasLivre = diagnosticoCompradorLivre && diagnosticoCompradorLivre.prioridades ? diagnosticoCompradorLivre.prioridades.map(function(item) { return item.posicao; }) : [];
             var livresBons = $scope.jogadores.filter(function(j) {
                 if (j.clubeId !== 'mercado' || $scope.calcularOverall(j) <= 70) return false;
+                if (posicoesPrioritariasLivre.length && posicoesPrioritariasLivre.indexOf(j.posicao) < 0) return false;
                 var mediaPosicao = $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id && item.posicao === j.posicao; }).reduce(function(total, item, _, lista) { return total + ($scope.calcularOverall(item) / lista.length); }, 0);
                 return $scope.calcularOverall(j) >= Math.max(70, mediaPosicao + 1);
             });
@@ -10209,7 +10402,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     return pontuarAlvoMercadoCPU(b, cComprador, $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id; })) - pontuarAlvoMercadoCPU(a, cComprador, $scope.jogadores.filter(function(item) { return item.clubeId === cComprador.id; }));
                 })[0];
                 var tamanhoElencoComprador = $scope.jogadores.filter(function(j) { return j.clubeId === cComprador.id; }).length;
-                if (tamanhoElencoComprador >= 30) return;
+                var perfilCompradorLivre = $scope.obterPerfilClubeCpu ? $scope.obterPerfilClubeCpu(cComprador) : null;
+                if (tamanhoElencoComprador >= (perfilCompradorLivre ? perfilCompradorLivre.profundidadeAlvo + 5 : 30)) return;
                 var clubeOrigemCPU = contratacao.clubeId;
                 var termosLivreCPU = negociarContratoCpu(contratacao, cComprador, 0, clubeOrigemCPU);
                 if (!termosLivreCPU) return;
@@ -10250,12 +10444,16 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             var clubesAtivos = $scope.clubes.filter(function(c) { return c.id !== $scope.clubeAtual.id && c.orcamento > 0; });
             if (clubesAtivos.length > 0) {
                 var compradorCPU = clubesAtivos[Math.floor(Math.random() * clubesAtivos.length)];
-                var necessidadesCPU = ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'].map(function(posicao) {
+                var diagnosticoComprador = $scope.obterDiagnosticoNecessidadesClube ? $scope.obterDiagnosticoNecessidadesClube(compradorCPU) : null;
+                var necessidadesCPU = diagnosticoComprador && diagnosticoComprador.setores ? diagnosticoComprador.setores.map(function(setor) {
+                    return { posicao: setor.posicao, necessidade: setor.gravidade };
+                }) : ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'].map(function(posicao) {
                     var quantidade = $scope.jogadores.filter(function(j) { return j.clubeId === compradorCPU.id && j.posicao === posicao; }).length;
                     return { posicao: posicao, necessidade: Math.max(0, 2 - quantidade) };
                 });
                 var maiorNecessidade = Math.max.apply(null, necessidadesCPU.map(function(item) { return item.necessidade; }));
-                var posicoesPrioritarias = necessidadesCPU.filter(function(item) { return item.necessidade === maiorNecessidade; }).map(function(item) { return item.posicao; });
+                var corteNecessidade = diagnosticoComprador ? Math.max(10, maiorNecessidade * 0.72) : maiorNecessidade;
+                var posicoesPrioritarias = necessidadesCPU.filter(function(item) { return item.necessidade >= corteNecessidade; }).map(function(item) { return item.posicao; });
                 var mediaPorPosicaoCPU = {};
                 posicoesPrioritarias.forEach(function(posicao) {
                     var jogadoresPosicao = $scope.jogadores.filter(function(j) { return j.clubeId === compradorCPU.id && j.posicao === posicao; });
@@ -10285,7 +10483,7 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                     if (termosCPU) {
                         vendedorCPU.orcamento = (vendedorCPU.orcamento || 0) + termosCPU.entrada;
                         atletaCPU.clubeId = compradorCPU.id;
-                        $scope.registrarTransferenciaHistorico({ tipo: 'cpu', jogadorId: atletaCPU.id, jogadorNome: atletaCPU.nome, clubeOrigemId: vendedorCPU.id, clubeOrigemNome: vendedorCPU.nome, clubeDestinoId: compradorCPU.id, clubeDestinoNome: compradorCPU.nome, valor: valorCPU, entrada: termosCPU.entrada, parcelas: 4, intervaloDias: 30, salario: termosCPU.salario, luvas: termosCPU.luvas, papel: termosCPU.papel, anosContrato: 2 });
+                        $scope.registrarTransferenciaHistorico({ tipo: 'cpu', jogadorId: atletaCPU.id, jogadorNome: atletaCPU.nome, clubeOrigemId: vendedorCPU.id, clubeOrigemNome: vendedorCPU.nome, clubeDestinoId: compradorCPU.id, clubeDestinoNome: compradorCPU.nome, valor: valorCPU, entrada: termosCPU.entrada, parcelas: termosCPU.parcelas, intervaloDias: termosCPU.intervaloDias, salario: termosCPU.salario, luvas: termosCPU.luvas, papel: termosCPU.papel, anosContrato: 2 });
                     }
                 }
             }
