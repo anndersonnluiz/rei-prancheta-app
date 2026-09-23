@@ -135,3 +135,40 @@ O ciclo de virada foi reforçado antes de qualquer nova calibração esportiva:
 - `npm run check` e `git diff --check`: passaram.
 
 Esta etapa corrige a continuidade gerencial sem calibrar gols, lesões, cartões, evolução ou receitas. A próxima medição longa deve comparar novamente os grupos passivo e gerido, agora com contratos realmente envelhecendo e elencos sendo recompostos por posição.
+
+## Auditoria corrigida de longo prazo
+
+Data da medição: 23/09/2026
+
+Depois da correção do escopo de recomposição da escalação, a auditoria foi repetida em dois grupos separados. No modo `managed`, a CPU recompõe o clube acompanhado somente antes de partidas reais; no modo `passive`, o clube acompanhado não recebe decisões automáticas de elenco. Os demais clubes continuam seguindo o motor normal do jogo.
+
+- 20 clubes avaliados, cinco por divisão.
+- 60 temporadas no grupo gerenciado: três temporadas por clube.
+- 40 temporadas no grupo passivo: duas temporadas por clube.
+- 100 temporadas observadas no total, sem misturar os grupos na mesma média.
+
+### Grupo gerenciado
+
+| Divisão inicial | Clubes avaliados | Gols por partida | Cartões acumulados | Lesões observadas | Reputação final média | Posição média | Divisões finais |
+|---|---|---:|---:|---:|---:|---:|---|
+| A | Flamengo, Palmeiras, São Paulo, Corinthians, Atlético-MG | 2,47 | 1.533,6 | 44,0 | 96,6 | 10,8 | 3 A, 2 B |
+| B | Fortaleza, Sport, América-MG, Atlético-GO, Juventude | 2,04 | 1.260,4 | 57,6 | 80,6 | 13,5 | 2 B, 2 C, 1 D |
+| C | Figueirense, Paysandu, Itabaiana, Anápolis, Santa Cruz | 1,86 | 1.285,6 | 72,2 | 58,0 | 16,7 | 2 C, 3 D |
+| D | São José-RS, Caldense, Campinense, Treze, Brasil de Pelotas | 1,85 | 1.280,0 | 61,6 | 39,6 | 18,7 | 5 D |
+
+### Grupo passivo
+
+| Divisão inicial | Clubes avaliados | Gols por partida | Cartões acumulados | Lesões observadas | Reputação final média | Posição média | Divisões finais |
+|---|---|---:|---:|---:|---:|---:|---|
+| A | Flamengo, Palmeiras, São Paulo, Corinthians, Atlético-MG | 2,17 | 347,6 | 40,4 | 86,6 | 18,0 | 2 B, 3 C |
+| B | Fortaleza, Sport, América-MG, Atlético-GO, Juventude | 1,85 | 339,8 | 39,4 | 73,0 | 17,6 | 2 C, 3 D |
+| C | Figueirense, Paysandu, Itabaiana, Anápolis, Santa Cruz | 1,92 | 330,4 | 41,4 | 53,6 | 18,2 | 5 D |
+| D | São José-RS, Caldense, Campinense, Treze, Brasil de Pelotas | 1,78 | 370,6 | 42,2 | 41,0 | 17,8 | 5 D |
+
+### Decisão técnica
+
+- A força inicial e a reputação dos clubes de A continuam aparecendo no grupo gerenciado: a divisão A terminou com reputação média 96,6 e posição média 10,8, enquanto a divisão D ficou em 39,6 e 18,7.
+- A diferença entre os grupos confirma que a gestão de elenco, renovação e recomposição de posições tem impacto real. O modo passivo derruba deliberadamente os clubes acompanhados: na divisão A, foram 2 quedas para B e 3 para C em dez observações.
+- A média geral de gols ficou em 2,06 no grupo gerenciado, com faixa de 1,63 a 2,60 entre cenários; no passivo, ficou em 1,93, com faixa de 1,66 a 2,42. A diferença não é suficiente para justificar uma alteração isolada no motor de gols.
+- Cartões e lesões não devem ser comparados diretamente entre os dois grupos sem uma telemetria comum: o modo passivo não percorre exatamente as mesmas decisões e calendários de gestão.
+- Não calibrar gols, lesões, cartões, evolução ou receitas nesta etapa. A próxima mudança deve ser uma investigação específica da gestão automática e da profundidade de elenco, seguida por uma nova amostra com sementes controladas.

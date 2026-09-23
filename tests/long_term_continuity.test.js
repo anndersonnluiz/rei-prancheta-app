@@ -94,9 +94,9 @@ for (let temporada = 0; temporada < temporadasParaSimular; temporada += 1) {
   prepararEscalacaoCompetitiva();
   scope.elencoAtual.filter((jogador) => jogador.emCampo).forEach((jogador) => { jogador.anosContrato = 3; });
   for (let dia = 0; dia < scope.calendarioGeral.length && scope.telaAtual !== 'cerimonia'; dia += 1) {
-    if (process.env.TEST_CPU_MANAGED === '1') prepararEscalacaoCompetitiva();
     const jogo = scope.obterMeuJogoHoje();
     if (jogo) {
+      if (process.env.TEST_CPU_MANAGED === '1') prepararEscalacaoCompetitiva();
       const calendarioHoje = scope.calendarioGeral[scope.diaAtual] || {};
       const chaveCompeticao = calendarioHoje.tipo || jogo.tipo || jogo.competicao || jogo.torneio || jogo.categoria || 'OUTRA';
       if (!competicoes[chaveCompeticao]) competicoes[chaveCompeticao] = { jogos: 0, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0 };
