@@ -227,6 +227,70 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
 .competition-screen .standings-table small,
 .continental-screen .table-club-identity small { color: var(--text-muted); font-size: 10px; font-weight: 700; margin-left: 3px; }
 .competition-screen .club-crest-table { background: #fff; border: 1px solid #e1e8ed; border-radius: 7px; height: 26px; object-fit: contain; padding: 2px; width: 26px; }
+.copa-bracket-scroll {
+    align-items: stretch;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 4px 18px;
+    scrollbar-color: #9fb5c2 transparent;
+    scrollbar-width: thin;
+    width: 100%;
+}
+.copa-bracket-scroll::-webkit-scrollbar { height: 8px; }
+.copa-bracket-scroll::-webkit-scrollbar-thumb { background: #9fb5c2; border-radius: 999px; }
+.copa-bracket-column {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.copa-bracket-stage-title {
+    border-bottom: 2px solid #e4ebef;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin: 0 0 15px;
+    min-height: 28px;
+    padding-bottom: 6px;
+    text-align: center;
+    white-space: nowrap;
+}
+.copa-bracket-games { display: flex; flex-direction: column; gap: 15px; }
+.copa-bracket-match {
+    background: #fff;
+    border: 1px solid #dce5ea;
+    border-radius: 9px;
+    box-shadow: 0 3px 8px rgba(18, 47, 64, .08);
+    min-width: 0;
+    padding: 10px;
+    position: relative;
+}
+.copa-bracket-team-row {
+    align-items: center;
+    border-bottom: 1px solid #f0f3f5;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    min-width: 0;
+    padding-bottom: 5px;
+}
+.copa-bracket-team-row:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+.copa-bracket-team-row > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.copa-bracket-score {
+    background: #f3f7f9;
+    border-radius: 5px;
+    color: var(--text-main);
+    flex: 0 0 auto;
+    min-width: 24px;
+    padding: 2px 6px;
+    text-align: center;
+}
+@media (max-width: 1100px) {
+    .copa-bracket-column { flex: 0 0 220px; min-width: 220px; }
+}
 @media (max-width: 560px) {
     .competition-screen .card { border-radius: 12px; }
     .competition-screen h3 { font-size: 17px; }
@@ -3433,6 +3497,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
     .continental-screen table td:first-child { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .continental-screen table th:not(:first-child), .continental-screen table td:not(:first-child) { width: 36px; }
     .competition-screen .card > div[style*="overflow-x: auto"] { margin-right: -4px; }
+    .copa-bracket-scroll { gap: 12px; margin-right: -4px; padding-left: 2px; padding-right: 2px; }
+    .copa-bracket-column { flex-basis: 205px; min-width: 205px; }
+    .copa-bracket-match { padding: 9px; }
     .squad-screen > .card, .medical-screen > div { border-radius: 10px; padding: 12px !important; }
     .squad-screen .tabela-classificacao { min-width: 760px; }
     .squad-screen .development-panel { margin-bottom: 12px; }

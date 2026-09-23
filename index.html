@@ -1433,27 +1433,27 @@
                     <div class="card" style="padding: 20px;">
                         <h3 style="margin-bottom: 20px; color: var(--text-dark);">🏆 Copa do Brasil - Mata-Mata</h3>
                         
-                        <div style="display: flex; gap: 30px; overflow-x: auto; padding-bottom: 20px;">
-                            <div ng-repeat="fase in copaBrasil.chaves" style="min-width: 250px;">
-                                <h4 style="text-align: center; color: var(--text-muted); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
+                        <div class="copa-bracket-scroll">
+                            <div class="copa-bracket-column" ng-repeat="fase in copaBrasil.chaves">
+                                <h4 class="copa-bracket-stage-title">
                                     {{fase.length === 32 ? '1ª Fase' : (fase.length === 16 ? 'Dezesseis-avos' : (fase.length === 8 ? 'Oitavas' : (fase.length === 4 ? 'Quartas' : (fase.length === 2 ? 'Semifinal' : 'Final'))))}}
                                 </h4>
                                 
-                                <div style="display: flex; flex-direction: column; gap: 15px;">
-                                    <div ng-repeat="jogo in fase" style="background: white; border: 1px solid #ddd; border-radius: 6px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative;">
+                                <div class="copa-bracket-games">
+                                    <div class="copa-bracket-match" ng-repeat="jogo in fase">
                                         
-                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #f0f0f0;">
+                                        <div class="copa-bracket-team-row">
                                             <span style="font-weight: {{jogo.vencedor && jogo.vencedor.id === jogo.time1.id ? 'bold' : 'normal'}}; color: {{jogo.time1.id === clubeAtual.id ? 'var(--br-green-dark)' : 'var(--text-main)'}}">
                                                 {{jogo.time1.nome}}
                                             </span>
-                                            <strong style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">{{jogo.jogadoIda ? (jogo.golsIda1 + jogo.golsVolta1) : '-'}}</strong>
+                                            <strong class="copa-bracket-score">{{jogo.jogadoIda ? (jogo.golsIda1 + jogo.golsVolta1) : '-'}}</strong>
                                         </div>
                                         
-                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div class="copa-bracket-team-row">
                                             <span style="font-weight: {{jogo.vencedor && jogo.vencedor.id === jogo.time2.id ? 'bold' : 'normal'}}; color: {{jogo.time2.id === clubeAtual.id ? 'var(--br-green-dark)' : 'var(--text-main)'}}">
                                                 {{jogo.time2.nome}}
                                             </span>
-                                            <strong style="background: #f8f9fa; padding: 2px 6px; border-radius: 4px;">{{jogo.jogadoIda ? (jogo.golsIda2 + jogo.golsVolta2) : '-'}}</strong>
+                                            <strong class="copa-bracket-score">{{jogo.jogadoIda ? (jogo.golsIda2 + jogo.golsVolta2) : '-'}}</strong>
                                         </div>
                                     </div>
                                 </div>
