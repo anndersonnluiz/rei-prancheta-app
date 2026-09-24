@@ -9,7 +9,17 @@ function createScope() {
   AudioContextStub.prototype.createOscillator = function() { return { frequency: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() {}, start() {}, stop() {} }; };
   AudioContextStub.prototype.createGain = function() { return { gain: { setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() {} }; };
   AudioContextStub.prototype.resume = function() {};
-  const context = { angular: { module() { return appStub; }, copy(value) { return JSON.parse(JSON.stringify(value)); } }, window: { AudioContext: AudioContextStub, webkitAudioContext: AudioContextStub, localStorage: { getItem() { return null; }, setItem() {}, removeItem() {} }, URL: { createObjectURL() { return 'blob:long'; }, revokeObjectURL() {} } }, document: { getElementById() { return null; }, createElement() { return { click() {}, setAttribute() {} }; }, body: { appendChild() {}, removeChild() {} } }, alert() {}, confirm() { return true; }, console, Date, Math, setTimeout, clearTimeout, Blob: function Blob() {} };
+  let math = Math;
+  const seedInformada = Number(process.env.TEST_SEED);
+  if (Number.isFinite(seedInformada)) {
+    let estadoAleatorio = (seedInformada >>> 0) || 1;
+    math = Object.create(Math);
+    math.random = function() {
+      estadoAleatorio = (estadoAleatorio * 1664525 + 1013904223) >>> 0;
+      return estadoAleatorio / 4294967296;
+    };
+  }
+  const context = { angular: { module() { return appStub; }, copy(value) { return JSON.parse(JSON.stringify(value)); } }, window: { AudioContext: AudioContextStub, webkitAudioContext: AudioContextStub, localStorage: { getItem() { return null; }, setItem() {}, removeItem() {} }, URL: { createObjectURL() { return 'blob:long'; }, revokeObjectURL() {} } }, document: { getElementById() { return null; }, createElement() { return { click() {}, setAttribute() {} }; }, body: { appendChild() {}, removeChild() {} } }, alert() {}, confirm() { return true; }, console, Date, Math: math, setTimeout, clearTimeout, Blob: function Blob() {} };
   const appPath = path.join(__dirname, '..', 'js', 'app.js');
   vm.runInNewContext(fs.readFileSync(appPath, 'utf8'), context, { filename: appPath });
   const scope = {};
@@ -157,6 +167,7 @@ assert.ok(scope.historicoTreinador.filter((item) => item.tipo === 'temporada').l
 scope.elencoAtual.forEach((jogador) => assert.ok(jogador.clubeId === scope.clubeAtual.id, 'squad player should remain linked to managed club'));
 console.log('long_term_continuity.test.js balance report:', JSON.stringify({
   clube: clubeTeste.nome,
+  seed: Number.isFinite(Number(process.env.TEST_SEED)) ? Number(process.env.TEST_SEED) : null,
   divisaoInicial,
   divisaoFinal: clubeTeste.divisao,
   temporadas: temporadasParaSimular,

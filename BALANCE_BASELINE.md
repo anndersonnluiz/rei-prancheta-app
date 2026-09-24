@@ -172,3 +172,29 @@ Depois da correção do escopo de recomposição da escalação, a auditoria foi
 - A média geral de gols ficou em 2,06 no grupo gerenciado, com faixa de 1,63 a 2,60 entre cenários; no passivo, ficou em 1,93, com faixa de 1,66 a 2,42. A diferença não é suficiente para justificar uma alteração isolada no motor de gols.
 - Cartões e lesões não devem ser comparados diretamente entre os dois grupos sem uma telemetria comum: o modo passivo não percorre exatamente as mesmas decisões e calendários de gestão.
 - Não calibrar gols, lesões, cartões, evolução ou receitas nesta etapa. A próxima mudança deve ser uma investigação específica da gestão automática e da profundidade de elenco, seguida por uma nova amostra com sementes controladas.
+
+## Auditoria direcionada com sementes controladas
+
+Data da medição: 23/09/2026
+
+Para investigar individualmente a percepção de que clubes fortes poderiam terminar muito abaixo do esperado, foi criada a execução `npm run analyze:targeted -- 2 2`. Ela compara os mesmos clubes, com as mesmas duas sementes reproduzíveis, em dois modos: gestão automática e clube passivo. Cada combinação percorreu duas temporadas completas.
+
+| Clube | Divisão inicial | Gerenciado: gols / posição / reputação final | Gerenciado: divisões finais | Passivo: gols / posição / reputação final | Passivo: divisões finais |
+|---|---|---:|---|---:|---|
+| Flamengo | A | 2,42 / 8,3 / 98,0 | 2 A | 2,08 / 15,3 / 91,5 | 2 B |
+| Palmeiras | A | 2,47 / 7,8 / 98,0 | 2 A | 2,16 / 17,8 / 88,5 | 1 B, 1 C |
+| Cruzeiro | A | 2,50 / 10,3 / 91,0 | 1 A, 1 B | 2,14 / 16,0 / 88,5 | 2 B |
+| Chapecoense | A | 2,14 / 11,8 / 77,5 | 1 A, 1 B | 2,13 / 17,3 / 68,0 | 1 B, 1 C |
+| Figueirense | C | 1,94 / 12,5 / 60,5 | 1 C, 1 D | 1,85 / 14,3 / 61,5 | 1 C, 1 D |
+
+### Leitura individual
+
+- Flamengo e Palmeiras não apresentaram o comportamento de clubes fracos quando receberam gestão automática: ambos permaneceram na Série A nas quatro temporadas observadas por clube.
+- Cruzeiro teve uma queda em quatro temporadas gerenciadas, mas ficou muito acima do comportamento passivo, no qual caiu nas duas observações.
+- Chapecoense não superou os grandes no grupo gerenciado: ficou abaixo de Flamengo, Palmeiras e Cruzeiro em gols por partida e posição média. A proximidade com Cruzeiro em uma amostra curta ainda precisa de mais sementes, mas não reproduz o cenário de oito atacantes artificialmente dominantes.
+- Figueirense apresentou comportamento compatível com um clube de Série C, sem diferença relevante entre os modos nesta amostra curta.
+- A mesma semente foi usada no par gerenciado/passivo de cada clube. Isso não elimina toda a variância, mas torna a comparação de gestão muito mais controlada do que a auditoria anterior.
+
+### Decisão técnica
+
+Não há evidência suficiente para alterar o cálculo de força, gols ou reputação. O próximo experimento deve ampliar as sementes para cinco por clube e incluir a decomposição da força por posição, profundidade do elenco, lesões e suspensões. Se a diferença entre clubes fortes e médios permanecer coerente nessa amostra maior, a próxima etapa será validar confrontos diretos e não recalibrar o motor por causa de uma temporada isolada.
