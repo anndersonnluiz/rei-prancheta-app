@@ -158,6 +158,20 @@ assert.ok(
   'stronger opponent should generate a cautionary tactical recommendation'
 );
 
+// A reputação isolada não pode fazer um elenco fraco aparecer acima de um
+// adversário com jogadores muito melhores: o pré-jogo deve usar a mesma régua
+// de força do motor para elenco, posições e disponibilidade.
+meuTime.reputacao = 99;
+adversarioForte.reputacao = 50;
+const analiseReputacaoInvertida = scope.montarAnalisePreJogo(partida, 'rapido');
+assert.ok(analiseReputacaoInvertida.forcaAdversario > analiseReputacaoInvertida.forcaMeuTime, 'pre-match strength should follow squad quality even when reputation is inverted');
+assert.ok(analiseReputacaoInvertida.forcaAdversario - analiseReputacaoInvertida.forcaMeuTime >= 15, 'strong squad gap should remain visible in the pre-match report');
+
+const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+assert.ok(indexHtml.includes('Forca estimada'), 'pre-match UI should expose estimated opponent strength');
+assert.ok(indexHtml.includes('Indisponiveis'), 'pre-match UI should expose unavailable players');
+assert.ok(indexHtml.includes('Alertas taticos'), 'pre-match UI should expose tactical alerts');
+
 const adversarioSemDados = { id: 99, nome: 'Sem Dados FC', sigla: 'SDF', reputacao: 65 };
 scope.elencoAtual = [];
 scope.jogadores = [];

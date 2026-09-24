@@ -315,4 +315,30 @@ assert.strictEqual(goleiroLivre.clubeId, clubeCpuContinuidade.id, 'free player s
 assert.strictEqual(jogadorHumanoExpirando.anosContrato, 0, 'continuity automation must not alter the human club');
 assert.strictEqual(scope.garantirContinuidadeElencoCPU(clubeHumanoContinuidade, { motivo: 'teste', forcar: true }).ignorado, true, 'human club should be excluded from CPU continuity');
 
+// O caminho público de mercado deve acionar a mesma continuidade usada na
+// virada: uma revisão de janela precisa renovar e recompor a CPU por posição,
+// sem tocar no elenco humano.
+const cpuFlowScope = createControllerScope();
+const clubeHumanoFluxo = { id: 'humano-fluxo', nome: 'Humano Fluxo', divisao: 'A', reputacao: 85, orcamento: 50000000 };
+const clubeCpuFluxo = { id: 'cpu-fluxo', nome: 'CPU Fluxo', divisao: 'C', reputacao: 60, orcamento: 20000000 };
+const atributosFluxo = { reflexo: 78, posicionamento: 78, distribuicao: 78, finalizacao: 78, passe: 78, marcacao: 78, velocidade: 78, fisico: 78 };
+const goleiroFluxo = { id: 'fluxo-goleiro', nome: 'Goleiro Fluxo', clubeId: clubeCpuFluxo.id, posicao: 'GOL', idade: 24, salario: 18000, salarioDesejado: 18000, anosContrato: 0, potencial: 80, atributos: atributosFluxo, papelElenco: 'titular' };
+const livreFluxo = { id: 'fluxo-livre', nome: 'Goleiro Livre Fluxo', clubeId: 'mercado', posicao: 'GOL', idade: 22, salario: 14000, salarioDesejado: 14000, anosContrato: 0, potencial: 78, atributos: atributosFluxo };
+cpuFlowScope.clubeAtual = clubeHumanoFluxo;
+cpuFlowScope.clubes = [clubeHumanoFluxo, clubeCpuFluxo];
+cpuFlowScope.jogadores = [goleiroFluxo, livreFluxo];
+cpuFlowScope.elencoAtual = [];
+cpuFlowScope.diaAtual = 14;
+cpuFlowScope.calendarioGeral = Array.from({ length: 15 }, (_, indice) => ({ titulo: 'Dia ' + indice, tipo: 'TREINO' }));
+cpuFlowScope.transferenciasHistorico = [];
+cpuFlowScope.transferenciasHistoricoVisivel = [];
+cpuFlowScope.propostasPendentes = [];
+cpuFlowScope.caixaEntrada = [];
+cpuFlowScope.mensagensNaoLidas = 0;
+cpuFlowScope.emprestimosAtivos = [];
+cpuFlowScope.simularMercadoCPU();
+assert.strictEqual(goleiroFluxo.anosContrato, 2, 'public CPU market flow should renew an expiring structural player');
+assert.strictEqual(livreFluxo.clubeId, clubeCpuFluxo.id, 'public CPU market flow should fill a critical positional need');
+assert.strictEqual(cpuFlowScope.elencoAtual.length, 0, 'public CPU market flow must not mutate the human squad');
+
 console.log('market_flow.test.js passed');
