@@ -2054,12 +2054,21 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
 
     function obterConfigUpgradeInfraestrutura(area) {
         var configs = {
-            centroTreinamento: { nome: 'Centro de Treinamento', campoNivel: 'nivel', custos: [0, 5000000, 12000000], duracoes: [0, 3, 5] },
-            departamentoMedico: { nome: 'Departamento Medico', campoNivel: 'nivel', custos: [0, 5000000, 15000000], duracoes: [0, 3, 5] },
-            comercial: { nome: 'Comercial', campoNivel: 'nivel', custos: [0, 3000000, 8000000], duracoes: [0, 3, 4] },
-            estadio: { nome: 'Conforto do Estadio', campoNivel: 'nivelConforto', custos: [0, 4000000, 10000000], duracoes: [0, 4, 6] }
+            // Os valores usam o nivel de destino como indice. A posicao 1 fica
+            // reservada para manter o indice dos niveis alinhado com o valor
+            // exibido no card (nivel 2 e nivel 3).
+            centroTreinamento: { nome: 'Centro de Treinamento', campoNivel: 'nivel', custos: [0, 0, 5000000, 12000000], duracoes: [0, 0, 3, 5] },
+            departamentoMedico: { nome: 'Departamento Medico', campoNivel: 'nivel', custos: [0, 0, 5000000, 15000000], duracoes: [0, 0, 3, 5] },
+            comercial: { nome: 'Comercial', campoNivel: 'nivel', custos: [0, 0, 3000000, 8000000], duracoes: [0, 0, 3, 4] },
+            estadio: { nome: 'Conforto do Estadio', campoNivel: 'nivelConforto', custos: [0, 0, 4000000, 10000000], duracoes: [0, 0, 4, 6] }
         };
         return configs[area] || null;
+    }
+
+    function obterParametroUpgradeInfraestrutura(config, campo, nivel) {
+        if (!config || !config[campo]) return null;
+        var valor = Number(config[campo][nivel]);
+        return isFinite(valor) && valor > 0 ? valor : null;
     }
 
     function criarResumoInfraestrutura(clube) {
@@ -2071,6 +2080,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         function montarCard(area, titulo, nivel, beneficio, emObra, diasRestantes) {
             var config = obterConfigUpgradeInfraestrutura(area);
             var proximoNivel = nivel < 3 ? nivel + 1 : null;
+            var proximoCusto = proximoNivel && config ? obterParametroUpgradeInfraestrutura(config, 'custos', proximoNivel) : null;
+            var proximoDias = proximoNivel && config ? obterParametroUpgradeInfraestrutura(config, 'duracoes', proximoNivel) : null;
             return {
                 id: area,
                 titulo: titulo,
@@ -2079,8 +2090,9 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
                 emObra: emObra,
                 diasRestantes: diasRestantes,
                 proximoNivel: proximoNivel,
-                proximoCusto: proximoNivel && config ? config.custos[proximoNivel] : 0,
-                proximoDias: proximoNivel && config ? config.duracoes[proximoNivel] : 0
+                proximoCusto: proximoCusto || 0,
+                proximoDias: proximoDias || 0,
+                upgradeDisponivel: !!proximoNivel && proximoCusto !== null && proximoDias !== null
             };
         }
 
@@ -2159,12 +2171,14 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
         var nivelAtual = dadosArea[campoNivel] || 1;
         if (dadosArea.obraEmAndamento || nivelAtual >= 3) return null;
         var proximoNivel = nivelAtual + 1;
-        var custo = config.custos[proximoNivel] || 0;
+        var custo = obterParametroUpgradeInfraestrutura(config, 'custos', proximoNivel);
+        var duracao = obterParametroUpgradeInfraestrutura(config, 'duracoes', proximoNivel);
+        if (custo === null || duracao === null) return null;
         if (($scope.clubeAtual.orcamento || 0) < custo) return null;
 
         $scope.clubeAtual.orcamento -= custo;
         dadosArea.obraEmAndamento = true;
-        dadosArea.diasRestantes = config.duracoes[proximoNivel] || 3;
+        dadosArea.diasRestantes = duracao;
         dadosArea.nivelAlvo = proximoNivel;
         $scope.financasHistorico = Array.isArray($scope.financasHistorico) ? $scope.financasHistorico : [];
         $scope.financasHistorico.unshift({

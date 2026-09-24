@@ -1221,7 +1221,7 @@
                                     <span ng-if="card.emObra">{{card.diasRestantes}}d</span>
                                 </div>
                                 <p>{{card.beneficio}}</p>
-                                <div class="infrastructure-upgrade-box" ng-if="card.proximoNivel && !card.emObra">
+                                <div class="infrastructure-upgrade-box" ng-if="card.proximoNivel && !card.emObra && card.upgradeDisponivel">
                                     <strong>Próximo nível {{card.proximoNivel}}</strong>
                                     <small>{{formatarMoeda(card.proximoCusto)}} · {{card.proximoDias}} dia(s) de obra</small>
                                     <button ng-click="iniciarUpgradeInfraestrutura(card.id)" ng-disabled="clubeAtual.orcamento < card.proximoCusto">

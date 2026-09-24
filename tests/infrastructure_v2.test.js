@@ -181,6 +181,31 @@ const duplicate = scope.iniciarUpgradeInfraestrutura('centroTreinamento');
 assert.strictEqual(duplicate, null, 'same area should not start a duplicate upgrade');
 assert.strictEqual(scope.clubeAtual.orcamento, budgetAfterUpgrade, 'duplicate upgrade should not charge budget');
 
+// Regression: level 2 -> 3 must use the destination-level price/duration
+// instead of reading an absent array slot and silently charging zero.
+scope.atualizarResumoInfraestrutura();
+const medicalCard = scope.infraestruturaResumo.cards.find((card) => card.id === 'departamentoMedico');
+assert.strictEqual(medicalCard.nivel, 2);
+assert.strictEqual(medicalCard.proximoNivel, 3);
+assert.strictEqual(medicalCard.proximoCusto, 15000000, 'medical level 3 should have a finite configured cost');
+assert.strictEqual(medicalCard.proximoDias, 5, 'medical level 3 should have a finite configured duration');
+assert.strictEqual(medicalCard.upgradeDisponivel, true);
+
+const budgetBeforeMedicalUpgrade = scope.clubeAtual.orcamento;
+const medicalUpgrade = scope.iniciarUpgradeInfraestrutura('departamentoMedico');
+assert.ok(medicalUpgrade, 'medical upgrade from level 2 should start');
+assert.strictEqual(medicalUpgrade.custo, 15000000);
+assert.strictEqual(medicalUpgrade.diasRestantes, 5);
+assert.strictEqual(scope.clubeAtual.orcamento, budgetBeforeMedicalUpgrade - 15000000, 'medical upgrade should debit its configured cost');
+assert.strictEqual(scope.financasHistorico[0].valor, 15000000, 'medical upgrade history should record the configured cost');
+assert.ok(Number.isFinite(scope.financasHistorico[0].valor));
+assert.ok(Number.isFinite(medicalCard.proximoCusto));
+
+while (scope.clubeAtual.infraestrutura.departamentoMedico.obraEmAndamento) {
+  scope.processarInfraestruturaDia();
+}
+assert.strictEqual(scope.clubeAtual.infraestrutura.departamentoMedico.nivel, 3, 'medical upgrade should increase to level 3');
+
 while (scope.clubeAtual.infraestrutura.centroTreinamento.obraEmAndamento) {
   scope.processarInfraestruturaDia();
 }
