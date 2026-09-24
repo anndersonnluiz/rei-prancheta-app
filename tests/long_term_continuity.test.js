@@ -55,6 +55,30 @@ function prepararEscalacaoCompetitiva() {
   scope.aplicarFormacao('4-3-3');
 }
 
+function resumirForcaInicial() {
+  const posicoes = ['GOL', 'LAT', 'ZAG', 'VOL', 'MEI', 'ATA'];
+  const porPosicao = posicoes.reduce((resumo, posicao) => {
+    const jogadores = scope.elencoAtual.filter((jogador) => jogador.posicao === posicao).map((jogador) => ({
+      overall: scope.calcularOverall(jogador),
+      emCampo: !!jogador.emCampo
+    })).sort((a, b) => b.overall - a.overall);
+    const titulares = jogadores.filter((jogador) => jogador.emCampo);
+    const media = (lista) => lista.length ? lista.reduce((total, jogador) => total + jogador.overall, 0) / lista.length : 0;
+    resumo[posicao] = {
+      profundidade: jogadores.length,
+      melhorOverall: jogadores.length ? jogadores[0].overall : 0,
+      mediaElenco: Number(media(jogadores).toFixed(1)),
+      titulares: titulares.length,
+      mediaTitulares: Number(media(titulares).toFixed(1))
+    };
+    return resumo;
+  }, {});
+  return {
+    totalPreJogo: scope.calcularForcaElencoPreJogo(scope.clubeAtual, true),
+    porPosicao
+  };
+}
+
 function simularGestaoCpuDoClubeAuditado() {
   if (process.env.TEST_CPU_MANAGED !== '1' || typeof scope.simularMercadoCPU !== 'function') return;
   const clubeHumano = scope.clubeAtual;
@@ -89,6 +113,8 @@ scope.partidaEmAndamento = false;
 scope.partidaPausada = false;
 
 const anosIniciais = scope.dados.anoAtual;
+prepararEscalacaoCompetitiva();
+const forcaInicial = resumirForcaInicial();
 let partidas = 0;
 let gols = 0;
 let posseAcumulada = 0;
@@ -98,6 +124,8 @@ let menorOrcamento = Infinity;
 let cartoes = 0;
 let lesoes = 0;
 const competicoes = {};
+const nomesClubesConfrontoAlvo = new Set(['Flamengo', 'Palmeiras', 'Cruzeiro', 'Chapecoense', 'Figueirense']);
+const confrontosDiretos = [];
 const trajetoriaDivisoes = [];
 const trajetoriaReputacao = [];
 for (let temporada = 0; temporada < temporadasParaSimular; temporada += 1) {
@@ -112,10 +140,25 @@ for (let temporada = 0; temporada < temporadasParaSimular; temporada += 1) {
       if (!competicoes[chaveCompeticao]) competicoes[chaveCompeticao] = { jogos: 0, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0 };
       const resumoCompeticao = competicoes[chaveCompeticao];
       resumoCompeticao.jogos += 1;
+      const clubeMandante = scope.clubes.find((clube) => clube.id === jogo.mandante.id) || jogo.mandante;
+      const clubeVisitante = scope.clubes.find((clube) => clube.id === jogo.visitante.id) || jogo.visitante;
+      const registrarConfronto = clubeMandante && clubeVisitante &&
+        nomesClubesConfrontoAlvo.has(clubeMandante.nome) && nomesClubesConfrontoAlvo.has(clubeVisitante.nome);
+      const confrontoDireto = registrarConfronto ? {
+        mandante: clubeMandante.nome,
+        visitante: clubeVisitante.nome,
+        forcaMandante: scope.calcularForcaElencoPreJogo(clubeMandante, false),
+        forcaVisitante: scope.calcularForcaElencoPreJogo(clubeVisitante, false)
+      } : null;
       scope.calcularResultadoRapido(jogo);
       const mandanteIdAntesDoEncerramento = jogo.mandante && jogo.mandante.id;
       const golsMandanteAntesDoEncerramento = Number(jogo.golsMandante) || 0;
       const golsVisitanteAntesDoEncerramento = Number(jogo.golsVisitante) || 0;
+      if (confrontoDireto) {
+        confrontoDireto.golsMandante = golsMandanteAntesDoEncerramento;
+        confrontoDireto.golsVisitante = golsVisitanteAntesDoEncerramento;
+        confrontosDiretos.push(confrontoDireto);
+      }
       scope.concluirPartida(jogo, 'rapido');
       simularGestaoCpuDoClubeAuditado();
       const souMandante = mandanteIdAntesDoEncerramento === scope.clubeAtual.id;
@@ -168,6 +211,8 @@ scope.elencoAtual.forEach((jogador) => assert.ok(jogador.clubeId === scope.clube
 console.log('long_term_continuity.test.js balance report:', JSON.stringify({
   clube: clubeTeste.nome,
   seed: Number.isFinite(Number(process.env.TEST_SEED)) ? Number(process.env.TEST_SEED) : null,
+  forcaInicial,
+  confrontosDiretos,
   divisaoInicial,
   divisaoFinal: clubeTeste.divisao,
   temporadas: temporadasParaSimular,

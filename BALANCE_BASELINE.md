@@ -198,3 +198,52 @@ Para investigar individualmente a percepção de que clubes fortes poderiam term
 ### Decisão técnica
 
 Não há evidência suficiente para alterar o cálculo de força, gols ou reputação. O próximo experimento deve ampliar as sementes para cinco por clube e incluir a decomposição da força por posição, profundidade do elenco, lesões e suspensões. Se a diferença entre clubes fortes e médios permanecer coerente nessa amostra maior, a próxima etapa será validar confrontos diretos e não recalibrar o motor por causa de uma temporada isolada.
+
+## Auditoria ampliada por posição e sementes
+
+Data da medição: 24/09/2026
+
+A auditoria direcionada foi ampliada para cinco sementes por clube, uma temporada por semente e os dois modos de gestão. Foram observadas 50 temporadas: 25 com gestão automática e 25 em modo passivo.
+
+| Clube | Força inicial pré-jogo | ATA: média dos titulares | MEI: média dos titulares | Gerenciado: posição média / divisões finais | Passivo: posição média / divisões finais |
+|---|---:|---:|---:|---|---|
+| Flamengo | 82 | 83,7 | 79,0 | 11,6 / 4 A, 1 B | 16,4 / 1 A, 4 B |
+| Palmeiras | 82 | 79,7 | 75,0 | 11,6 / 4 A, 1 B | 17,6 / 1 A, 4 B |
+| Cruzeiro | 80 | 78,0 | 76,0 | 13,6 / 3 A, 2 B | 19,0 / 1 A, 4 B |
+| Chapecoense | 78 | 77,3 | 70,0 | 14,4 / 2 A, 3 B | 19,8 / 5 B |
+| Figueirense | 63 | 65,3 | 60,0 | 13,8 / 3 C, 2 D | 10,8 / 3 C, 1 B, 1 D |
+
+### Leitura da amostra ampliada
+
+- A força inicial preserva a hierarquia esperada: Flamengo e Palmeiras acima de Cruzeiro, Chapecoense e Figueirense.
+- A Chapecoense não apresenta ataque ou meio-campo superior aos grandes. O meio-campo é o ponto mais fraco entre os clubes de Série A avaliados, com média de titulares 70,0.
+- A gestão automática reduziu a queda dos clubes fortes: Flamengo, Palmeiras e Cruzeiro permaneceram na Série A em 4/5, 4/5 e 3/5 observações, respectivamente.
+- No modo passivo, Flamengo, Palmeiras e Cruzeiro foram rebaixados em 4/5 observações cada. Isso reforça que a continuidade de contratos, recomposição e decisões de elenco são determinantes.
+- A amostra de Figueirense confirma a compatibilidade geral com a Série C, mas também mostra a variância natural: uma campanha passiva terminou na Série B e uma gerenciada terminou na Série D.
+- Os confrontos diretos foram registrados por clube, com força, mando e placar. Como o clube acompanhado recebe contexto de ambiente diferente do adversário, esses registros servem como diagnóstico inicial; a próxima medição deve usar um replay neutro do mesmo confronto antes de concluir sobre qualquer viés de resultado.
+
+### Decisão técnica
+
+Não alterar o cálculo de força, gols, lesões ou reputação. A força por posição está coerente com a hierarquia dos elencos. O próximo passo é criar um replay neutro de confrontos diretos, com as mesmas escalações e sementes, alternando mando e executando centenas de partidas por par. Esse teste isolará o efeito da diferença de força e do mando da variância de temporada e dos negócios de mercado.
+
+## Replay neutro de confrontos diretos
+
+Data da medição: 24/09/2026
+
+Foi criado o comando `npm run analyze:matchups -- 500`. Ele fixa os elencos, remove o contexto do clube acompanhado, calcula a força pré-jogo e executa 500 partidas em cada mando para cada par. Ao todo foram 7.000 partidas controladas.
+
+| Confronto | Forças | Favorito como mandante | Favorito como visitante | Gols por partida |
+|---|---:|---:|---:|---:|
+| Flamengo x Palmeiras | 82 x 82 | 38,2% | 33,4% | 2,54 |
+| Flamengo x Cruzeiro | 82 x 80 | 40,0% | 37,0% | 2,48 |
+| Flamengo x Chapecoense | 82 x 78 | 53,8% | 46,0% | 2,50 |
+| Palmeiras x Cruzeiro | 82 x 80 | 42,4% | 33,4% | 2,48 |
+| Palmeiras x Chapecoense | 82 x 78 | 48,0% | 37,6% | 2,52 |
+| Cruzeiro x Chapecoense | 80 x 78 | 42,4% | 34,8% | 2,44 |
+| Flamengo x Figueirense | 82 x 63 | 64,2% | 58,6% | 2,30 |
+
+As taxas de empate completam o restante dos resultados. O replay mostra que a diferença de força influencia o resultado sem eliminar a zebra: força 82 contra 78 gera vantagem real, mas ainda permite vitórias do clube inferior; força 82 contra 63 produz uma separação maior. Clubes de força equivalente permanecem equilibrados, com o mando como principal diferença.
+
+### Decisão técnica
+
+O cálculo atual de força e a influência do mando estão coerentes nesta medição controlada. Não alterar a fórmula de gols nem aplicar um bônus artificial para Flamengo, Palmeiras ou outros clubes. A próxima etapa deve sair da calibração estrutural e avançar para a validação visual e funcional dos relatórios de força, confrontos e decisões da CPU dentro do jogo.

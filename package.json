@@ -9,7 +9,8 @@
     "analyze:market": "node scripts/analyze_market_balance.js",
     "analyze:finance": "node scripts/analyze_financial_sustainability.js",
     "analyze:longterm": "node scripts/analyze_long_term_balance.js",
-    "analyze:targeted": "node scripts/analyze_targeted_balance.js"
+    "analyze:targeted": "node scripts/analyze_targeted_balance.js",
+    "analyze:matchups": "node scripts/analyze_direct_matchups.js"
   },
   "dependencies": {
     "acorn": "^8.17.0"

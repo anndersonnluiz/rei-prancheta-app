@@ -66,7 +66,52 @@ function media(linhas, campo) {
   return linhas.reduce((total, linha) => total + (Number(linha[campo]) || 0), 0) / linhas.length;
 }
 
-function resumoModo(linhas) {
+function resumirForcaInicial(linhas) {
+  const posicoes = ['GOL', 'LAT', 'ZAG', 'VOL', 'MEI', 'ATA'];
+  const forcas = linhas.map((linha) => linha.forcaInicial).filter(Boolean);
+  if (!forcas.length) return null;
+  return {
+    totalPreJogo: Number(media(forcas, 'totalPreJogo').toFixed(1)),
+    porPosicao: posicoes.reduce((resumo, posicao) => {
+      const dados = forcas.map((forca) => forca.porPosicao && forca.porPosicao[posicao]).filter(Boolean);
+      resumo[posicao] = {
+        profundidade: Number(media(dados, 'profundidade').toFixed(1)),
+        melhorOverall: Number(media(dados, 'melhorOverall').toFixed(1)),
+        mediaElenco: Number(media(dados, 'mediaElenco').toFixed(1)),
+        mediaTitulares: Number(media(dados, 'mediaTitulares').toFixed(1))
+      };
+      return resumo;
+    }, {})
+  };
+}
+
+function resumirConfrontos(linhas, nomeClube) {
+  const confrontos = linhas.flatMap((linha) => linha.confrontosDiretos || []);
+  return Object.values(confrontos.reduce((resumo, confronto) => {
+    const souMandante = confronto.mandante === nomeClube;
+    const adversario = souMandante ? confronto.visitante : confronto.mandante;
+    const meusGols = souMandante ? confronto.golsMandante : confronto.golsVisitante;
+    const golsAdversario = souMandante ? confronto.golsVisitante : confronto.golsMandante;
+    const minhaForca = souMandante ? confronto.forcaMandante : confronto.forcaVisitante;
+    const forcaAdversario = souMandante ? confronto.forcaVisitante : confronto.forcaMandante;
+    const chave = adversario;
+    if (!resumo[chave]) resumo[chave] = { adversario, jogos: 0, vitorias: 0, empates: 0, derrotas: 0, golsMarcados: 0, golsSofridos: 0, diferencaForcaMedia: 0 };
+    const item = resumo[chave];
+    item.jogos += 1;
+    item.golsMarcados += meusGols;
+    item.golsSofridos += golsAdversario;
+    item.diferencaForcaMedia += minhaForca - forcaAdversario;
+    if (meusGols > golsAdversario) item.vitorias += 1;
+    else if (meusGols < golsAdversario) item.derrotas += 1;
+    else item.empates += 1;
+    return resumo;
+  }, {})).map((item) => ({
+    ...item,
+    diferencaForcaMedia: Number((item.diferencaForcaMedia / item.jogos).toFixed(1))
+  }));
+}
+
+function resumoModo(linhas, nomeClube) {
   const trajetorias = linhas.flatMap((linha) => linha.trajetoriaDivisoes || []);
   const divisoesFinais = linhas.reduce((resultado, linha) => {
     resultado[linha.divisaoFinal] = (resultado[linha.divisaoFinal] || 0) + 1;
@@ -81,7 +126,9 @@ function resumoModo(linhas) {
     variacaoReputacao: Number((media(linhas, 'reputacaoFinal') - media(linhas, 'reputacaoInicial')).toFixed(1)),
     posicaoMedia: trajetorias.length ? Number((media(trajetorias, 'posicao')).toFixed(1)) : null,
     divisoesFinais,
-    sementes: linhas.map((linha) => linha.seed)
+    sementes: linhas.map((linha) => linha.seed),
+    forcaInicial: resumirForcaInicial(linhas),
+    confrontosDiretos: resumirConfrontos(linhas, nomeClube)
   };
 }
 
@@ -108,8 +155,8 @@ executarAuditoria().then((resultados) => {
     saida[clube.nome] = {
       divisaoInicial: clube.divisao,
       reputacaoInicialBase: clube.reputacao,
-      managed: resumoModo(linhasClube.filter((linha) => linha.modoGestao === 'managed')),
-      passive: resumoModo(linhasClube.filter((linha) => linha.modoGestao === 'passive'))
+      managed: resumoModo(linhasClube.filter((linha) => linha.modoGestao === 'managed'), clube.nome),
+      passive: resumoModo(linhasClube.filter((linha) => linha.modoGestao === 'passive'), clube.nome)
     };
     return saida;
   }, {});
