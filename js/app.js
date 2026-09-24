@@ -651,7 +651,8 @@ app.controller('DashboardController', function($scope, $http, $timeout) {
             fisico: { nome: 'Treino físico', geral: 2, setor: null, fisico: -6, moral: 0 },
             tatico: { nome: 'Treino tático', geral: 3, setor: 'meio', fisico: -3, moral: 1 },
             tecnico: { nome: 'Treino técnico', geral: 2, setor: 'ataque', fisico: -2, moral: 1 },
-            defensivo: { nome: 'Treino defensivo', geral: 2, setor: 'defesa', fisico: -2, moral: 1 }
+            defensivo: { nome: 'Treino defensivo', geral: 2, setor: 'defesa', fisico: -2, moral: 1 },
+            equilibrio: { nome: 'Treino equilibrado', geral: 1, setor: null, fisico: -1, moral: 1 }
         };
         var config = tipos[tipo];
         var preparacao = atualizarResumoPreparacao();

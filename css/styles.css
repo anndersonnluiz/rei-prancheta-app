@@ -760,12 +760,13 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
     border: 1px solid rgba(255, 255, 255, .2);
     border-radius: 14px;
     display: flex;
-    flex: 0 0 245px;
+    flex: 0 1 290px;
     flex-direction: column;
+    min-width: 0;
     padding: 14px 16px;
 }
 .finance-page-balance span, .finance-page-balance small { color: #b8d0d9; font-size: 11px; }
-.finance-page-balance strong { color: #fff; font-size: clamp(20px, 2.2vw, 28px); line-height: 1.2; margin: 5px 0; overflow-wrap: anywhere; }
+.finance-page-balance strong { color: #fff; font-size: clamp(18px, 2vw, 27px); font-variant-numeric: tabular-nums; letter-spacing: -.035em; line-height: 1.2; margin: 5px 0; white-space: nowrap; }
 .finance-page-balance small { color: #8bd9aa; }
 .finance-screen .finance-director-guidance { align-items: center; border-radius: 12px; display: flex; gap: 12px; margin: 0; min-height: 54px; padding: 12px 15px; }
 .finance-screen .finance-director-guidance > div { display: grid; gap: 3px; min-width: 0; }

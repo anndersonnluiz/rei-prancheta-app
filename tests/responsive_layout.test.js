@@ -132,6 +132,7 @@ assert.ok(css.includes('.medical-screen .infrastructure-management-grid'), 'medi
 assert.ok(html.includes('youth-screen'), 'youth screen should be identifiable for mobile layout');
 assert.ok(css.includes('.market-screen .market-director-guidance'), 'market screen should have mobile spacing rules');
 assert.ok(css.includes('.finance-screen table { min-width: 520px; }'), 'finance tables should preserve readable columns on mobile');
+assert.ok(css.includes('white-space: nowrap;') && css.includes('.finance-page-balance strong'), 'finance header balance should keep large currency values on one readable line');
 assert.ok(css.includes('.finance-screen [style*="repeat(3, 1fr)"]'), 'finance summary cards should stack on mobile');
 assert.ok(html.includes('messages-layout'), 'messages should expose a mobile layout hook');
 assert.ok(css.includes('.messages-screen .messages-layout'), 'messages should stack list and reader on mobile');

@@ -219,6 +219,12 @@ scope.atualizarFasePreparacao();
 assert.strictEqual(scope.preparacaoTemporada.concluida, true, 'pre-season should close after its preparation window');
 assert.strictEqual(scope.preparacaoTemporada.fase, 'temporada', 'season phase should advance after pre-season');
 
+// A collective recommendation with order 4 maps to the balanced training
+// focus and must remain usable after the pre-season has ended.
+scope.diaAtual = 12;
+scope.preparacaoTemporada.ultimoTreinoDia = -1;
+assert.strictEqual(scope.aplicarPrioridadeColetivaTreino({ setor: 'Meio-campo', prioridade: 'Manter evolução', ordem: 4 }), true, 'balanced collective recommendation should apply during the season');
+
 scope.gerarMetaDiretoria();
 assert.strictEqual(scope.confirmarPrioridadeTemporada('financeira'), true, 'board briefing should accept a valid seasonal priority');
 assert.strictEqual(scope.diretoriaStatus.prioridadeTemporada, 'financeira', 'board should persist the chosen seasonal priority');
